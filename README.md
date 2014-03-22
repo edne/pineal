@@ -1,7 +1,6 @@
 PinealLoopProject
 =================
 
-
 * Play your music
 * Run PinealLoopProject.py
 * Run analysis.scd with SuperCollider

@@ -1,23 +1,32 @@
 def loop():
 	identity()
 	
-	prove4()
+	#prove2()
+	linew(2)
 	
 	identity()
-	#recursive(8)
+	recursive(6)
 
 def recursive(rec=1):
 	push()
-	palette(HSV[2:4])
-	p = Polygon(4)
-	p.h = note
-	p.a = high
-	p.r = amp*rec
+	palette(HSV[2:])
+	p = Polygon(6)
+	p.h = note+0.1*rec
+	p.sa = amp+5*high
+	p.fa = 0.2*amp
+	p.r = amp*rec+bass + noise()*high
 	
-	rotate(high*(2-1))
-	rotatey(high*(2-1))
+	
+	rotatey(time%(2*pi)+bass)
 	p.draw()
 	
+	p.r = bass
+	rotate(1)
+	rotatey(time%(2*pi)+bass)
+	p.draw()
+	
+	
+	translate(amp/2,0)
 	if rec>1:
 		recursive(rec-1)
 	

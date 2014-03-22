@@ -101,26 +101,37 @@ class Polygon(Centered):
 		Centered.__init__(self, x,y,r, h,a)
 		self.n = n
 		self.ang = ang
+		
+		vx = np.cos(np.linspace(0,2*pi, self.n+1))
+		vy = np.sin(np.linspace(0,2*pi, self.n+1))
+		self._vertex = np.column_stack((vx,vy))
 	
 	def draw(self, dx=0, dy=0, da=1, dh=0):
-		vx = self.r*np.cos(self.ang+np.linspace(0,2*pi, self.n+1)) + self.x+dx
-		vy = self.r*np.sin(self.ang+np.linspace(0,2*pi, self.n+1)) + self.y+dy
-		vertex = np.column_stack((vx,vy))
+		#vx = self.r*np.cos(self.ang+np.linspace(0,2*pi, self.n+1)) + self.x+dx
+		#vy = self.r*np.sin(self.ang+np.linspace(0,2*pi, self.n+1)) + self.y+dy
 		
-		glVertexPointerd( vertex )
+		push()
+		translate(self.x+dx, self.y+dy)
+		rotate(self.ang)
+		scale(self.r)
+		
+		glVertexPointerd( self._vertex )
 		
 		set_color(self.h+self.fh+dh, self.a*self.fa*da)
-		glDrawArrays( GL_POLYGON, 0, len(vertex) )
+		glDrawArrays( GL_POLYGON, 0, len(self._vertex) )
 		
 		set_color(self.h+self.sh+dh, self.a*self.sa*da)
-		glDrawArrays( GL_LINE_LOOP, 0, len(vertex) )
+		glDrawArrays( GL_LINE_LOOP, 0, len(self._vertex) )
+		
+		pop()
 		
 	
 	def vertex(self):
 		vx = self.r*np.cos(self.ang+np.linspace(0,2*pi, self.n+1)) + self.x
 		vy = self.r*np.sin(self.ang+np.linspace(0,2*pi, self.n+1)) + self.y
 		#return np.column_stack((vx,vy))[:-1]
-		return np.column_stack((vx,vy))
+		#return np.column_stack((vx,vy))
+		return self._vertex
 
 class Circle(Polygon):
 	def __init__(self, x=0, y=0, r=1, h=0, a=1):
@@ -163,9 +174,11 @@ def rotatex(angle):
 def rotatey(angle):
 	glRotatef(180.0*angle/pi, 0,1, 0)
 
-
 def translate(x,y):
 	glTranslatef(x, y, 0)
+
+def scale(ratio):
+	glScalef(ratio, ratio, ratio)
 
 def push():
 	glPushMatrix()
@@ -175,6 +188,14 @@ def pop():
 
 def identity():
 	glLoadIdentity()
+	glOrtho(-1, 1, -1, 1, -1, 1)
+	
+	(w,h) = RESOLUTION	
+	glScalef(
+		float(min(w,h))/w,
+		-float(min(w,h))/h,
+		1
+	)
 
 
 def random(a=0, b=1):
