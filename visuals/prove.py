@@ -4,7 +4,7 @@ def loop():
 	prove4()
 	
 	identity()
-	recursive(8)
+	#recursive(8)
 
 def recursive(rec=1):
 	push()
