@@ -1,5 +1,7 @@
-PinealLoopProject
-=================
+Pineal Loop Project
+===================
+
+![alt tag](https://raw.githubusercontent.com/edne/PinealLoopProject/master/icon.png)
 
 * Play your music
 * Run PinealLoopProject.py
