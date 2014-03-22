@@ -1,4 +1,109 @@
 def loop():
+	identity()
+	
+	prove4()
+	
+	identity()
+	recursive(8)
+
+def recursive(rec=1):
+	push()
+	palette(HSV[2:4])
+	p = Polygon(4)
+	p.h = note
+	p.a = high
+	p.r = amp*rec
+	
+	rotate(high*(2-1))
+	rotatey(high*(2-1))
+	p.draw()
+	
+	if rec>1:
+		recursive(rec-1)
+	
+	pop()
+
+def prove4():
+	push()
+	
+	#rotatex(time%(2*pi))
+	rotatex(0.2*time%(2*pi)+bass)
+	#rotatex(4*bass)
+	
+	n = 16
+	#p = Polygon(4)
+	p = Polygon(4)
+	
+	
+	rotatex(-bass)
+	
+	#translate(-pi,0)
+	for i in xrange(n):
+		rotate(2*pi/n)
+		#translate(2*pi/n,0)
+		push()
+		
+		linew(2)
+		p.fa = amp
+		p.sa = 1
+		
+		p.h = note
+		p.r = bass + 0.1*noise()*high
+		#p.x = 3*bass + 2*high*noise()
+		p.x = amp
+		
+		rotate(0.2*time%(2*pi)+bass)
+		#rotate(time%(2*pi))
+		
+		linew(1.5)
+		palette(HSV[2:4])
+		#p.a = note+high
+		p.a = amp+bass
+		p.draw()
+		
+		rotatey(time%(2*pi))
+		
+		#p = Polygon(3)
+		linew(2)
+		p.h = 0.21+high*4
+		p.sa = 1
+		p.fa = bass
+		p.x *= 2.05+bass
+		p.r += 2*high
+		p.draw()
+		
+		
+		p.a = 1
+		p.sa = 1
+		
+		rotatey(bass*10)
+		
+		
+		palette(HSV[:2])
+		p.h = note
+		p.x *= 1.5
+		p.r *= high*4
+		p.draw()
+		
+		rotatey(-bass*30)
+		rotatex(-bass*30)
+		
+		p.h = note
+		p.x *= 0.5
+		p.r *= high*3
+		p.draw()
+		
+		palette(GREY)
+		p.h = note+0.3
+		p.x *= 0.5
+		p.r *= high*2
+		p.draw()
+		
+		pop()
+	
+	pop()
+
+def prove1():
 	#palette([cY,cR,cY])
 	#palette([cC,cB,cBL])
 	palette(HSV)
@@ -158,9 +263,9 @@ def loop():
 	
 	pop()
 
-def __loop():
+def prove2():
 	
-	palette(HSV)
+	palette(HSV[:2])
 	p = Polygon(4)
 	p.a = 1
 	p.h = note
@@ -182,7 +287,7 @@ def __loop():
 		
 	
 
-def _loop():
+def prove3():
 	palette(GREY)
 	
 	

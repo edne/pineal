@@ -8,7 +8,7 @@ IP = "127.0.0.1"
 PORT = 7001
 
 TITLE = 'PinealLoopProject'
-DEVILSPIE = False
+#DEVILSPIE = False
 
 LOCAL_MSG = (
 	"alpha",

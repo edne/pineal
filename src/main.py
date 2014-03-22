@@ -7,21 +7,18 @@ class MainClass:
 	def __init__(self):
 		
 		glutInit(sys.argv)
+		glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH)
 		
+		#glutInitWindowPosition(1366, 0)
 		glutInitWindowSize(RESOLUTION[0], RESOLUTION[1])
 		glutCreateWindow(TITLE)
+		
 		glutDisplayFunc(self.update)
 		glutReshapeFunc(self.reshape)
 		
 		
-		#glutInitWindowSize(RESOLUTION[0]/2, RESOLUTION[1]/2)
-		#glutCreateWindow('Overview')
-		#glutDisplayFunc(self.update)
-		#glutReshapeFunc(self.reshape)
-		
 		glutSetCursor(GLUT_CURSOR_NONE)
 		
-		#glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION)
 		
 		glEnable(GL_BLEND)
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
@@ -35,7 +32,8 @@ class MainClass:
 		
 		glEnable( GL_VERTEX_ARRAY )
 		
-		self.lastTime = glutGet(GLUT_ELAPSED_TIME);
+		#self.lastTime = glutGet(GLUT_ELAPSED_TIME);
+		self.lastTime = time.time()
 		
 		self.visuals = Visuals(self)
 		self.server = Server(self)
@@ -44,8 +42,7 @@ class MainClass:
 		self.loader.start()
 		self.server.start()
 		
-		if DEVILSPIE:
-			self.devilspie = subprocess.Popen("devilspie")
+		
 		
 	def run(self):
 		try:
@@ -59,9 +56,6 @@ class MainClass:
 		print
 		self.loader.stop()
 		self.server.stop()
-		
-		if DEVILSPIE:
-			self.devilspie.kill()
 	
 	def update(self):
 		newTime = time.time()
@@ -80,14 +74,12 @@ class MainClass:
 		
 		self.visuals.update()
 		
-		glFlush()
+		#glFlush()
+		glutSwapBuffers()
+		glutPostRedisplay()
 	
 	def reshape(self, w,h):
-		
-		# sembra essere necessaria per il KeyboardInterrupt e stampa FPS
-		#glutReshapeWindow( RESOLUTION[0], RESOLUTION[1])
-		glutReshapeWindow( w,h )
-		# problema di timing...
+		#glutReshapeWindow( w,h )
 		
 		#(w,h) = RESOLUTION
 		
@@ -101,6 +93,4 @@ class MainClass:
 			-float(min(w,h))/h,
 			1
 		)
-		None
 	
-

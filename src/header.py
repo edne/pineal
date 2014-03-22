@@ -16,6 +16,9 @@ cWH = (1,1,1)
 GREY = [cBL, cWH, cBL]
 HSV = [cR, cY, cG, cC, cB, cM, cR]
 
+#P3 = Polygon(3)
+#P4 = Polygon(4)
+
 _palette = HSV
 
 def palette(p):
@@ -152,8 +155,14 @@ class Group(Shape, list):
 		return l
 
 def rotate(angle):
-	#ctx.rotate(angle)
 	glRotatef(180.0*angle/pi, 0,0, 1)
+
+def rotatex(angle):
+	glRotatef(180.0*angle/pi, 1,0, 0)
+
+def rotatey(angle):
+	glRotatef(180.0*angle/pi, 0,1, 0)
+
 
 def translate(x,y):
 	glTranslatef(x, y, 0)
@@ -163,6 +172,9 @@ def push():
 
 def pop():
 	glPopMatrix()
+
+def identity():
+	glLoadIdentity()
 
 
 def random(a=0, b=1):
