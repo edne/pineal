@@ -1,11 +1,83 @@
 def loop():
 	identity()
 	
-	#prove2()
+	#rec_cube(2)
+	
+	n = 3
+	for i in xrange(n):
+		
+		rotate(2*pi/n)
+		push()
+		
+		
+		translate(bass*2,0)
+		prove5(HSV)
+		
+		prove5(GREY)
+		
+		pop()
+	
+	#rec_cube(2)
+	
+
+def prove5(pal=HSV):
+	palette(pal)
+	
+	#p = Polygon(3)
+	p = Tetrahedron()
+	
+	p.a = 0.6
+	p.h = 0.2+note*0.5
+	#p.a = 2*bass
+	p.fa = 0.5*amp
+	p.sa = 1*amp*5
+	p.r = 2*bass
+	
+	n = 3
+	
+	rotatex(amp*2+0.2*time%(2*pi))
+	
+	for i in xrange(n):
+		p.draw()
+		
+		p.r -= bass
+		rotate(amp+bass)
+		
+		rotatey(high+time%(2*pi))
+		
+		translate(0,0,bass)
+
+def rec_cube(i=1):
+	rotatex(0.5*time%(2*pi)+bass)
+	
+	push()
+	
 	linew(2)
 	
-	identity()
-	recursive(6)
+	palette(HSV)
+	#c = Polygon(4)
+	c = Tetrahedron()
+	
+	rotate(0.3)
+	rotatey(0.1)
+	
+	
+	c.h = 0.1*(i*i)+note + 0.2*time%(2*pi)
+	
+	
+	c.a = 2*amp
+	c.fa = 0.05
+	c.sa = 1
+	c.r = 0.5/(i*2+high) + bass
+	c.draw()
+	
+	rotatey((time/10)%(2*pi))
+	
+	if i>1:
+		#rec_cube(i-(0.2+high))
+		rec_cube(i-0.3)
+	
+	pop()
 
 def recursive(rec=1):
 	push()
@@ -14,7 +86,7 @@ def recursive(rec=1):
 	p.h = note+0.1*rec
 	p.sa = amp+5*high
 	p.fa = 0.2*amp
-	p.r = amp*rec+bass + noise()*high
+	p.r = bass*(amp*rec+bass + noise()*high)
 	
 	
 	rotatey(time%(2*pi)+bass)
@@ -22,7 +94,7 @@ def recursive(rec=1):
 	
 	p.r = bass
 	rotate(1)
-	rotatey(time%(2*pi)+bass)
+	rotatey(time%(0.2*pi)+bass)
 	p.draw()
 	
 	
@@ -40,7 +112,6 @@ def prove4():
 	#rotatex(4*bass)
 	
 	n = 16
-	#p = Polygon(4)
 	p = Polygon(4)
 	
 	

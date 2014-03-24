@@ -96,6 +96,146 @@ class Centered(Shape):
 		Shape.__init__(self, x,y, h,a)
 		self.r = r
 
+class Cube(Centered):
+	def __init__(self, x=0, y=0, r=1, ang=0, h=0, a=1):
+		Centered.__init__(self, x,y,r, h,a)
+		self.ang = ang
+		
+	def draw(self, dx=0, dy=0, da=1, dh=0):
+		push()
+		translate(self.x+dx, self.y+dy)
+		rotate(self.ang)
+		#scale(self.r)
+		
+		set_color(self.h+self.fh+dh, self.a*self.fa*da)
+		glutSolidCube(self.r*2)
+		
+		set_color(self.h+self.sh+dh, self.a*self.sa*da)
+		glutWireCube(self.r*2)
+		
+		pop()
+
+
+class Sphere(Centered):
+	def __init__(self, x=0, y=0, r=1, ang=0, h=0, a=1):
+		Centered.__init__(self, x,y,r, h,a)
+		self.ang = ang
+		self.slaces = 15
+		self.stacks = 15
+		
+	def draw(self, dx=0, dy=0, da=1, dh=0):
+		push()
+		translate(self.x+dx, self.y+dy)
+		rotate(self.ang)
+		#scale(self.r)
+		
+		set_color(self.h+self.fh+dh, self.a*self.fa*da)
+		glutSolidSphere(self.r*2, self.slaces, self.stacks)
+		
+		set_color(self.h+self.sh+dh, self.a*self.sa*da)
+		glutWireSphere(self.r*2, self.slaces, self.stacks)
+		
+		pop()
+
+
+class Tetrahedron(Centered):
+	def __init__(self, x=0, y=0, r=1, ang=0, h=0, a=1):
+		Centered.__init__(self, x,y,r, h,a)
+		self.ang = ang
+		
+	def draw(self, dx=0, dy=0, da=1, dh=0):
+		push()
+		translate(self.x+dx, self.y+dy)
+		rotate(self.ang)
+		scale(self.r)
+		
+		set_color(self.h+self.fh+dh, self.a*self.fa*da)
+		glutSolidTetrahedron()
+		
+		set_color(self.h+self.sh+dh, self.a*self.sa*da)
+		glutWireTetrahedron()
+		
+		pop()
+
+class Dodecahedron(Centered):
+	def __init__(self, x=0, y=0, r=1, ang=0, h=0, a=1):
+		Centered.__init__(self, x,y,r, h,a)
+		self.ang = ang
+		
+	def draw(self, dx=0, dy=0, da=1, dh=0):
+		push()
+		translate(self.x+dx, self.y+dy)
+		rotate(self.ang)
+		scale(self.r)
+		
+		set_color(self.h+self.fh+dh, self.a*self.fa*da)
+		glutSolidDodecahedron()
+		
+		set_color(self.h+self.sh+dh, self.a*self.sa*da)
+		glutWireDodecahedron()
+		
+		pop()
+
+
+class Octahedron(Centered):
+	def __init__(self, x=0, y=0, r=1, ang=0, h=0, a=1):
+		Centered.__init__(self, x,y,r, h,a)
+		self.ang = ang
+		
+	def draw(self, dx=0, dy=0, da=1, dh=0):
+		push()
+		translate(self.x+dx, self.y+dy)
+		rotate(self.ang)
+		scale(self.r)
+		
+		set_color(self.h+self.fh+dh, self.a*self.fa*da)
+		glutSolidOctahedron()
+		
+		set_color(self.h+self.sh+dh, self.a*self.sa*da)
+		glutWireOctahedron()
+		
+		pop()
+
+
+class Icosahedron(Centered):
+	def __init__(self, x=0, y=0, r=1, ang=0, h=0, a=1):
+		Centered.__init__(self, x,y,r, h,a)
+		self.ang = ang
+		
+	def draw(self, dx=0, dy=0, da=1, dh=0):
+		push()
+		translate(self.x+dx, self.y+dy)
+		rotate(self.ang)
+		scale(self.r)
+		
+		set_color(self.h+self.fh+dh, self.a*self.fa*da)
+		glutSolidIcosahedron()
+		
+		set_color(self.h+self.sh+dh, self.a*self.sa*da)
+		glutWireIcosahedron()
+		
+		pop()
+
+
+class Teapot(Centered):
+	def __init__(self, x=0, y=0, r=1, ang=0, h=0, a=1):
+		Centered.__init__(self, x,y,r, h,a)
+		self.ang = ang
+		
+	def draw(self, dx=0, dy=0, da=1, dh=0):
+		push()
+		translate(self.x+dx, self.y+dy)
+		rotate(self.ang)
+		#scale(self.r)
+		
+		set_color(self.h+self.fh+dh, self.a*self.fa*da)
+		glutSolidTeapot(self.r*2)
+		
+		set_color(self.h+self.sh+dh, self.a*self.sa*da)
+		glutWireTeapot(self.r*2)
+		
+		pop()
+
 class Polygon(Centered):
 	def __init__(self, n, x=0, y=0, r=1, ang=0, h=0, a=1):
 		Centered.__init__(self, x,y,r, h,a)
@@ -174,8 +314,8 @@ def rotatex(angle):
 def rotatey(angle):
 	glRotatef(180.0*angle/pi, 0,1, 0)
 
-def translate(x,y):
-	glTranslatef(x, y, 0)
+def translate(x,y, z=0):
+	glTranslatef(x, y, z)
 
 def scale(ratio):
 	glScalef(ratio, ratio, ratio)
