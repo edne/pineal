@@ -10,3 +10,9 @@ Pineal Loop Project
 * edit a .py file in the `visuals` folder or create a new one
 (the drawing functions are defined in `scr/header.py`)
 * Have fun!
+
+
+Dependencies:
+* supercollider
+* python-numpy
+* python-opengl
