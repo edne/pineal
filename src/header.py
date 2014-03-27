@@ -19,7 +19,7 @@ HSV = [cR, cY, cG, cC, cB, cM, cR]
 #P3 = Polygon(3)
 #P4 = Polygon(4)
 
-_palette = HSV
+_palette = GREY
 
 def palette(p):
 	global _palette
@@ -47,7 +47,7 @@ def set_color(h,a):
 	glColor4f(r,g,b, a)
 
 class Shape:
-	def __init__(self, x=0, y=0, h=0, a=1):
+	def __init__(self, x=0, y=0, h=0.5, a=1):
 		self.x = x
 		self.y = y
 		self.h = h
@@ -62,8 +62,8 @@ class Shape:
 		return list()
 
 class Triangle(Shape):
-	def __init__(self, x=0, y=0, l=1, m=0.6, h=0.25, a=1):
-		Shape.__init__(self, x,y, h,a)
+	def __init__(self, x=0, y=0, l=1, m=0.6):
+		Shape.__init__(self, x,y)
 		self.l = l
 		self.m = m
 		self.h = h
@@ -92,13 +92,13 @@ class Triangle(Shape):
 			]
 
 class Centered(Shape):
-	def __init__(self, x=0, y=0, r=1, h=0, a=1):
-		Shape.__init__(self, x,y, h,a)
+	def __init__(self, x=0, y=0, r=1):
+		Shape.__init__(self, x,y)
 		self.r = r
 
 class Cube(Centered):
-	def __init__(self, x=0, y=0, r=1, ang=0, h=0, a=1):
-		Centered.__init__(self, x,y,r, h,a)
+	def __init__(self, x=0, y=0, r=1, ang=0):
+		Centered.__init__(self, x,y,r)
 		self.ang = ang
 		
 	def draw(self, dx=0, dy=0, da=1, dh=0):
@@ -117,8 +117,8 @@ class Cube(Centered):
 
 
 class Sphere(Centered):
-	def __init__(self, x=0, y=0, r=1, ang=0, h=0, a=1):
-		Centered.__init__(self, x,y,r, h,a)
+	def __init__(self, x=0, y=0, r=1, ang=0):
+		Centered.__init__(self, x,y,r)
 		self.ang = ang
 		self.slaces = 15
 		self.stacks = 15
@@ -130,17 +130,17 @@ class Sphere(Centered):
 		#scale(self.r)
 		
 		set_color(self.h+self.fh+dh, self.a*self.fa*da)
-		glutSolidSphere(self.r*2, self.slaces, self.stacks)
+		glutSolidSphere(self.r, self.slaces, self.stacks)
 		
 		set_color(self.h+self.sh+dh, self.a*self.sa*da)
-		glutWireSphere(self.r*2, self.slaces, self.stacks)
+		glutWireSphere(self.r, self.slaces, self.stacks)
 		
 		pop()
 
 
 class Tetrahedron(Centered):
-	def __init__(self, x=0, y=0, r=1, ang=0, h=0, a=1):
-		Centered.__init__(self, x,y,r, h,a)
+	def __init__(self, x=0, y=0, r=1, ang=0):
+		Centered.__init__(self, x,y,r)
 		self.ang = ang
 		
 	def draw(self, dx=0, dy=0, da=1, dh=0):
@@ -158,8 +158,8 @@ class Tetrahedron(Centered):
 		pop()
 
 class Dodecahedron(Centered):
-	def __init__(self, x=0, y=0, r=1, ang=0, h=0, a=1):
-		Centered.__init__(self, x,y,r, h,a)
+	def __init__(self, x=0, y=0, r=1, ang=0):
+		Centered.__init__(self, x,y,r)
 		self.ang = ang
 		
 	def draw(self, dx=0, dy=0, da=1, dh=0):
@@ -178,8 +178,8 @@ class Dodecahedron(Centered):
 
 
 class Octahedron(Centered):
-	def __init__(self, x=0, y=0, r=1, ang=0, h=0, a=1):
-		Centered.__init__(self, x,y,r, h,a)
+	def __init__(self, x=0, y=0, r=1, ang=0):
+		Centered.__init__(self, x,y,r)
 		self.ang = ang
 		
 	def draw(self, dx=0, dy=0, da=1, dh=0):
@@ -198,8 +198,8 @@ class Octahedron(Centered):
 
 
 class Icosahedron(Centered):
-	def __init__(self, x=0, y=0, r=1, ang=0, h=0, a=1):
-		Centered.__init__(self, x,y,r, h,a)
+	def __init__(self, x=0, y=0, r=1, ang=0):
+		Centered.__init__(self, x,y,r)
 		self.ang = ang
 		
 	def draw(self, dx=0, dy=0, da=1, dh=0):
@@ -218,8 +218,8 @@ class Icosahedron(Centered):
 
 
 class Teapot(Centered):
-	def __init__(self, x=0, y=0, r=1, ang=0, h=0, a=1):
-		Centered.__init__(self, x,y,r, h,a)
+	def __init__(self, x=0, y=0, r=1, ang=0):
+		Centered.__init__(self, x,y,r)
 		self.ang = ang
 		
 	def draw(self, dx=0, dy=0, da=1, dh=0):
@@ -229,16 +229,16 @@ class Teapot(Centered):
 		#scale(self.r)
 		
 		set_color(self.h+self.fh+dh, self.a*self.fa*da)
-		glutSolidTeapot(self.r*2)
+		glutSolidTeapot(self.r)
 		
 		set_color(self.h+self.sh+dh, self.a*self.sa*da)
-		glutWireTeapot(self.r*2)
+		glutWireTeapot(self.r)
 		
 		pop()
 
 class Polygon(Centered):
-	def __init__(self, n, x=0, y=0, r=1, ang=0, h=0, a=1):
-		Centered.__init__(self, x,y,r, h,a)
+	def __init__(self, n, x=0, y=0, r=1, ang=0):
+		Centered.__init__(self, x,y,r)
 		self.n = n
 		self.ang = ang
 		
@@ -274,15 +274,48 @@ class Polygon(Centered):
 		return self._vertex
 
 class Circle(Polygon):
-	def __init__(self, x=0, y=0, r=1, h=0, a=1):
-		Polygon.__init__(self, 50, x,y,r, h,a)
+	def __init__(self, x=0, y=0, r=1):
+		Polygon.__init__(self, 50, x,y,r)
 	
 	def vertex(self):
 		return [[self.x, self.y]]
 
+class Image(Centered):
+	def __init__(self, name, x=0, y=0, r=1, ang=0):
+		Centered.__init__(self, x,y,r)
+		self.name = name
+	
+	def draw(self, dx=0, dy=0, da=1, dh=0):
+		glBindTexture(GL_TEXTURE_2D, textures[self.name])
+		
+		glEnable(GL_TEXTURE_2D)
+	
+		glEnableClientState(GL_VERTEX_ARRAY)
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY)
+		
+		vertex = np.array([[0,0],[0,1],[1,1],[1,0]],np.float)
+		glVertexPointer(2,GL_FLOAT,0,vertex)
+		glTexCoordPointer(2,GL_FLOAT,0,vertex)
+		
+		push()
+		
+		scale(2*self.r)
+		translate(-0.5+self.x+dx,-0.5+self.y+dy)
+		glVertexPointerd( vertex )
+		
+		set_color(self.h+dh, self.a*da)
+		glDrawArrays( GL_POLYGON, 0, len(vertex) )
+		
+		pop()
+		
+		glDisable(GL_TEXTURE_2D)
+	
+		#glDisableClientState(GL_VERTEX_ARRAY)
+		#glDisableClientState(GL_TEXTURE_COORD_ARRAY)
+
 class Group(Shape, list):
-	def __init__(self, l=list(), x=0, y=0, h=0, a=1):
-		Shape.__init__(self, x,y, h,a)
+	def __init__(self, l=list(), x=0, y=0):
+		Shape.__init__(self, x,y)
 		list.__init__(self)
 		
 		for s in l:
@@ -320,6 +353,9 @@ def translate(x,y, z=0):
 def scale(ratio):
 	glScalef(ratio, ratio, ratio)
 
+def scalexyz(rx, ry, rz):
+	glScalef(rx, ry, rz)
+
 def push():
 	glPushMatrix()
 
@@ -336,7 +372,6 @@ def identity():
 		-float(min(w,h))/h,
 		1
 	)
-
 
 def random(a=0, b=1):
 	return uniform(a,b)

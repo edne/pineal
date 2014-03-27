@@ -16,3 +16,4 @@ Dependencies:
 * supercollider
 * python-numpy
 * python-opengl
+* python-pil

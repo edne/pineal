@@ -36,6 +36,14 @@ class Visual():
 		self.invalid = False
 		self.lock = False
 		
+		self.tex = dict()
+		path = os.path.join(os.path.dirname(__file__),IMAGES_PATH)
+		for filename in glob(os.path.join(path,'*.png')):
+			name = os.path.basename(os.path.splitext(filename)[0])
+			if not ' ' in name:
+				print name
+				self.tex[name] = self.load_tex(name)
+		
 		self.box = Box()
 		
 		self.parent.server.register(self)
@@ -104,8 +112,30 @@ class Visual():
 	
 	def loop(self):
 		self.box.time = time.time()
+		self.box.textures = self.tex
+		#glBindTexture(GL_TEXTURE_2D, self.tex['alquemix'])
 		self.box.loop()
+	
+	def load_tex(self, filename):
+		path = os.path.join(os.path.dirname(__file__),IMAGES_PATH)
+		filename = os.path.join(path,filename+'.png')
 		
+		img = Image.open(filename)
+		img_data = np.array(list(img.getdata()), np.uint8)
+
+		texture = glGenTextures(1)
+		glPixelStorei(GL_UNPACK_ALIGNMENT,1)
+		glBindTexture(GL_TEXTURE_2D, texture)
+
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP)
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP)
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+		# jpg
+		#glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img.size[0], img.size[1], 0, GL_RGB, GL_UNSIGNED_BYTE, img_data)
+		# png
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.size[0], img.size[1], 0, GL_RGBA, GL_UNSIGNED_BYTE, img_data)
+		return texture
 	
 class Box:
 	def loop(self):

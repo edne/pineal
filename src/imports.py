@@ -5,6 +5,7 @@ from glob import glob
 import math, array, time
 
 import numpy as np
+from PIL import Image
 
 import OpenGL
 OpenGL.ERROR_CHECKING = False
