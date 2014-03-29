@@ -1,5 +1,5 @@
 def loop():
-	memory_example()
+	#memory_example()
 	None
 
 def memory_example():
@@ -8,12 +8,12 @@ def memory_example():
 	
 	p = mem(p,"pol")
 	
-	p.r += dt
+	p.r += dt*0.5
 	if p.r > 1:
-		p.r = 0
+		p.r = -1
 	
 	p.draw()
-	#clear("pol")
+	
 
 def prove8():
 	identity()

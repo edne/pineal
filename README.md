@@ -16,4 +16,4 @@ Dependencies:
 * supercollider
 * python-numpy
 * python-opengl
-* python-pil
+* python-pil (python-imaging on ubuntu)
