@@ -1,5 +1,6 @@
 def loop():
 	identity()
+	set1()
 	None
 
 def set1():
@@ -58,9 +59,9 @@ def set1():
 	ciclo_1()
 	ciclo_2()
 	
-	#tetra(4)
+	tetra(40)
 	
-	immagine_meno_bassi()
+	#immagine_meno_bassi()
 	
 
 def tetra(rec=1):
@@ -72,7 +73,7 @@ def tetra(rec=1):
 	p.fa = 0.1
 	p.sa = amp+bass*4
 	
-	p.h = 0.5 + note*rec
+	p.h = 0.5 + note*rec/50
 	
 	p.r = bass*9+high
 	
@@ -93,7 +94,7 @@ def ciclo_3():
 	p.fa = 0.0 + 2*amp
 	p.sa = 0.2+amp
 	
-	linew(3)
+	linew(2)
 	palette(HSV)
 	
 	p.ang = time_rad(-2)
