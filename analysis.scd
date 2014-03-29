@@ -16,6 +16,7 @@ s.boot;
 
 		in = AudioIn.ar(~audioPort);
 
+
 		amp = Slew.kr(Amplitude.kr(in),5,5);
 		amp = Amplitude.kr(amp);
 
@@ -27,7 +28,7 @@ s.boot;
 
 		in = AudioIn.ar(~audioPort);
 
-		bass = Slew.kr(Amplitude.kr(LPF.ar(in,110)),2,4);
+		bass = Slew.kr(Amplitude.kr(LPF.ar(in,110)),1,2);
 
 		SendReply.kr(Impulse.kr(30), "/bass", bass*2, ~innerPort);
 	}).store;

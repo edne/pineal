@@ -1,4 +1,21 @@
 def loop():
+	memory_example()
+	None
+
+def memory_example():
+	p = Polygon(4)
+	
+	
+	p = mem(p,"pol")
+	
+	p.r += dt
+	if p.r > 1:
+		p.r = 0
+	
+	p.draw()
+	#clear("pol")
+
+def prove8():
 	identity()
 	#prove4_edited()
 	#prove6()

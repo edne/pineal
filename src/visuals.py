@@ -41,10 +41,11 @@ class Visual():
 		for filename in glob(os.path.join(path,'*.png')):
 			name = os.path.basename(os.path.splitext(filename)[0])
 			if not ' ' in name:
-				print name
+				#print name
 				self.tex[name] = self.load_tex(name)
 		
 		self.box = Box()
+		self.box._mem = dict()
 		
 		self.parent.server.register(self)
 	
@@ -111,7 +112,14 @@ class Visual():
 		return log
 	
 	def loop(self):
+		if type(self.box.time) == float:
+			self.box.dt = time.time() - self.box.time
+		else:
+			self.box.dt = 0
 		self.box.time = time.time()
+		#self.box.time_rad = self.box.time%(2*math.pi)
+
+		
 		self.box.textures = self.tex
 		#glBindTexture(GL_TEXTURE_2D, self.tex['alquemix'])
 		self.box.loop()

@@ -21,9 +21,23 @@ HSV = [cR, cY, cG, cC, cB, cM, cR]
 
 _palette = GREY
 
+def mem(var, name):
+	if name in _mem:
+		return _mem[name]
+	else:
+		_mem[name] = var
+		return var
+
+def clear(name):
+	if name in _mem:
+		_mem.pop(name)
+
 def palette(p):
 	global _palette
 	_palette = p
+
+def time_rad(scale=1):
+	return (time*scale)%(2*pi)
 
 def linew(w):
 	glLineWidth(w)
