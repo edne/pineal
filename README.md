@@ -13,7 +13,8 @@ Pineal Loop Project
 
 
 Dependencies:
-* supercollider
+* a working Jack Audio Connection Kit (i'm sorry)
+* python-pyo
 * python-numpy
 * python-opengl
 * python-pil (python-imaging on ubuntu)

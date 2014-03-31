@@ -46,8 +46,6 @@ class Visual():
 		
 		self.box = Box()
 		self.box._mem = dict()
-		
-		self.parent.server.register(self)
 	
 	def load(self, code):
 		if code == self.new_code:  # se modifico librerie non ricarica
@@ -112,9 +110,12 @@ class Visual():
 		return log
 	
 	def loop(self):
-		if type(self.box.time) == float:
-			self.box.dt = time.time() - self.box.time
-		else:
+		try:
+			if type(self.box.time) == float:
+				self.box.dt = time.time() - self.box.time
+			else:
+				self.box.dt = 0
+		except:
 			self.box.dt = 0
 		self.box.time = time.time()
 		#self.box.time_rad = self.box.time%(2*math.pi)

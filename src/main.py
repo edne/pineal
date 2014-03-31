@@ -1,7 +1,7 @@
 from imports import *
 from visuals import *
 from loader import *
-from server import *
+from analyzer import Analyzer
 
 class MainClass:
 	def __init__(self):
@@ -36,26 +36,22 @@ class MainClass:
 		self.lastTime = time.time()
 		
 		self.visuals = Visuals(self)
-		self.server = Server(self)
+		self.analyzer = Analyzer(self)
 		self.loader = Loader(self)
 		
 		self.loader.start()
-		self.server.start()
-		
+		self.analyzer.start()
 		
 		
 	def run(self):
 		try:
 			glutMainLoop()
-			#while True:
-			#	self.update()
-			#	# glut main iteration??
 		except KeyboardInterrupt:
 			None
 		
 		print
 		self.loader.stop()
-		self.server.stop()
+		self.analyzer.stop()
 	
 	def update(self):
 		newTime = time.time()

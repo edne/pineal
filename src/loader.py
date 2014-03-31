@@ -11,7 +11,7 @@ class Loader(threading.Thread):
 		self.path = os.path.join(os.path.dirname(__file__),VISUALS_PATH)
 		#print self.path
 		self._stop = False
-		self.load()
+		#self.load()
 		
 	
 	def run(self):

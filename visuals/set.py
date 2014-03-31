@@ -1,6 +1,6 @@
 def loop():
 	identity()
-	set1()
+	#set1()
 	None
 
 def set1():
