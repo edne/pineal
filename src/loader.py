@@ -18,7 +18,7 @@ class Loader(threading.Thread):
 		while not self._stop:
 			self.load()
 			
-			#time.sleep(0.01)
+			time.sleep(0.1)
 	
 	def load(self):
 		names = list()
