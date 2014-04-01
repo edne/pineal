@@ -46,6 +46,10 @@ class Visual():
 		
 		self.box = Box()
 		self.box._mem = dict()
+		self.box.amp = 0
+		self.box.bass = 0
+		self.box.high = 0
+		self.box.note = 0
 	
 	def load(self, code):
 		if code == self.new_code:  # se modifico librerie non ricarica

@@ -45,5 +45,3 @@ class Analyzer(threading.Thread):
 			v.box.high = self.high.get()
 			if self.pitch.get()>1:
 				v.box.note = math.log(self.pitch.get()/16.35,2)%1.0
-			#v.box.note = Log2(self.pitch/16.35).get()%1.0
-			
