@@ -71,7 +71,6 @@ class Visual():
 	
 	def update(self, size=None):
 		self.lock = True
-		
 		try:
 			self.loop()
 		except Exception as e:

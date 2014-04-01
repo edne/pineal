@@ -18,7 +18,7 @@ class Loader(threading.Thread):
 		while not self._stop:
 			self.load()
 			
-			time.sleep(0.1)
+			time.sleep(0.01)
 	
 	def load(self):
 		names = list()
@@ -65,8 +65,6 @@ class Loader(threading.Thread):
 			
 			if not v.lock:
 				v.load(code)
-			
-			#execfile(filename, v.__dict__)
 	
 	def stop(self):
 		self._stop = True
