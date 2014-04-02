@@ -17,10 +17,7 @@ class MainClass:
 		self.analyzer = Analyzer(self)
 		self.loader = Loader(self)
 		
-		
-		print "loader start"
 		self.loader.start()
-		print "analyzer start"
 		self.analyzer.start()
 		
 		self._running = False

@@ -28,6 +28,16 @@ class Analyzer(threading.Thread):
 		
 		self.pitch = Yin(src)
 		
+		self.band = list()
+		c = 4186.01*2
+		for i in xrange(9):
+			lowpassed = Follower(Biquad(src, c, type=0))
+			highpassed = Follower(Biquad(lowpassed, c/2, type=1))
+			band = Follower(highpassed)/(2**(i-1))
+			self.band.append(band)
+			c /= 2
+		self.band.reverse()
+		
 		p = Pattern(self.callback, 1.0/30)
 		p.play()
 		
@@ -43,5 +53,14 @@ class Analyzer(threading.Thread):
 			v.box.amp = self.amp.get()
 			v.box.bass = self.bass.get()
 			v.box.high = self.high.get()
+			
 			if self.pitch.get()>1:
 				v.box.note = math.log(self.pitch.get()/16.35,2)%1.0
+			
+			for i in xrange(9):
+				v.box.band[i] = self.band[i].get()
+			
+			m = max(v.box.band)
+			if m>0:
+				for i in xrange(9):
+					v.box.band[i] = v.box.amp*self.band[i].get()/m

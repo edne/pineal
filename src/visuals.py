@@ -50,6 +50,8 @@ class Visual():
 		self.box.bass = 0
 		self.box.high = 0
 		self.box.note = 0
+		self.box.band = list()
+		self.box.band += [0]*9
 	
 	def load(self, code):
 		if code == self.new_code:  # se modifico librerie non ricarica
