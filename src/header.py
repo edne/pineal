@@ -98,12 +98,6 @@ class Triangle(Shape):
 		set_color(self.h+self.sh+dh, self.a*self.sa*da)
 		glDrawArrays( GL_LINE_LOOP, 0, len(vertex) )
 	
-	def vertex(self):
-		return [
-				[self.x, self.y],
-				[self.x + self.l, self.y],
-				[self.x + self.m, self.y + self.h]
-			]
 
 class Centered(Shape):
 	def __init__(self, x=0, y=0, r=1):
@@ -115,16 +109,16 @@ class Cube(Centered):
 		Centered.__init__(self, x,y,r)
 		self.ang = ang
 		
-	def draw(self, dx=0, dy=0, da=1, dh=0):
+	def draw(self):
 		push()
-		translate(self.x+dx, self.y+dy)
+		translate(self.x, self.y)
 		rotate(self.ang)
 		#scale(self.r)
 		
-		set_color(self.h+self.fh+dh, self.a*self.fa*da)
+		set_color(self.h+self.fh, self.a*self.fa)
 		glutSolidCube(self.r*2)
 		
-		set_color(self.h+self.sh+dh, self.a*self.sa*da)
+		set_color(self.h+self.sh, self.a*self.sa)
 		glutWireCube(self.r*2)
 		
 		pop()
@@ -137,16 +131,16 @@ class Sphere(Centered):
 		self.slaces = 15
 		self.stacks = 15
 		
-	def draw(self, dx=0, dy=0, da=1, dh=0):
+	def draw(self):
 		push()
-		translate(self.x+dx, self.y+dy)
+		translate(self.x, self.y)
 		rotate(self.ang)
 		#scale(self.r)
 		
-		set_color(self.h+self.fh+dh, self.a*self.fa*da)
+		set_color(self.h+self.fh, self.a*self.fa)
 		glutSolidSphere(self.r, self.slaces, self.stacks)
 		
-		set_color(self.h+self.sh+dh, self.a*self.sa*da)
+		set_color(self.h+self.sh, self.a*self.sa)
 		glutWireSphere(self.r, self.slaces, self.stacks)
 		
 		pop()
@@ -157,16 +151,16 @@ class Tetrahedron(Centered):
 		Centered.__init__(self, x,y,r)
 		self.ang = ang
 		
-	def draw(self, dx=0, dy=0, da=1, dh=0):
+	def draw(self):
 		push()
-		translate(self.x+dx, self.y+dy)
+		translate(self.x, self.y)
 		rotate(self.ang)
 		scale(self.r)
 		
-		set_color(self.h+self.fh+dh, self.a*self.fa*da)
+		set_color(self.h+self.fh, self.a*self.fa)
 		glutSolidTetrahedron()
 		
-		set_color(self.h+self.sh+dh, self.a*self.sa*da)
+		set_color(self.h+self.sh, self.a*self.sa)
 		glutWireTetrahedron()
 		
 		pop()
@@ -176,16 +170,16 @@ class Dodecahedron(Centered):
 		Centered.__init__(self, x,y,r)
 		self.ang = ang
 		
-	def draw(self, dx=0, dy=0, da=1, dh=0):
+	def draw(self):
 		push()
-		translate(self.x+dx, self.y+dy)
+		translate(self.x, self.y)
 		rotate(self.ang)
 		scale(self.r)
 		
-		set_color(self.h+self.fh+dh, self.a*self.fa*da)
+		set_color(self.h+self.fh, self.a*self.fa)
 		glutSolidDodecahedron()
 		
-		set_color(self.h+self.sh+dh, self.a*self.sa*da)
+		set_color(self.h+self.sh, self.a*self.sa)
 		glutWireDodecahedron()
 		
 		pop()
@@ -196,16 +190,16 @@ class Octahedron(Centered):
 		Centered.__init__(self, x,y,r)
 		self.ang = ang
 		
-	def draw(self, dx=0, dy=0, da=1, dh=0):
+	def draw(self):
 		push()
-		translate(self.x+dx, self.y+dy)
+		translate(self.x, self.y)
 		rotate(self.ang)
 		scale(self.r)
 		
-		set_color(self.h+self.fh+dh, self.a*self.fa*da)
+		set_color(self.h+self.fh, self.a*self.fa)
 		glutSolidOctahedron()
 		
-		set_color(self.h+self.sh+dh, self.a*self.sa*da)
+		set_color(self.h+self.sh, self.a*self.sa)
 		glutWireOctahedron()
 		
 		pop()
@@ -216,16 +210,16 @@ class Icosahedron(Centered):
 		Centered.__init__(self, x,y,r)
 		self.ang = ang
 		
-	def draw(self, dx=0, dy=0, da=1, dh=0):
+	def draw(self):
 		push()
-		translate(self.x+dx, self.y+dy)
+		translate(self.x, self.y)
 		rotate(self.ang)
 		scale(self.r)
 		
-		set_color(self.h+self.fh+dh, self.a*self.fa*da)
+		set_color(self.h+self.fh, self.a*self.fa)
 		glutSolidIcosahedron()
 		
-		set_color(self.h+self.sh+dh, self.a*self.sa*da)
+		set_color(self.h+self.sh, self.a*self.sa)
 		glutWireIcosahedron()
 		
 		pop()
@@ -236,16 +230,16 @@ class Teapot(Centered):
 		Centered.__init__(self, x,y,r)
 		self.ang = ang
 		
-	def draw(self, dx=0, dy=0, da=1, dh=0):
+	def draw(self):
 		push()
-		translate(self.x+dx, self.y+dy)
+		translate(self.x, self.y)
 		rotate(self.ang)
 		#scale(self.r)
 		
-		set_color(self.h+self.fh+dh, self.a*self.fa*da)
+		set_color(self.h+self.fh, self.a*self.fa)
 		glutSolidTeapot(self.r)
 		
-		set_color(self.h+self.sh+dh, self.a*self.sa*da)
+		set_color(self.h+self.sh, self.a*self.sa)
 		glutWireTeapot(self.r)
 		
 		pop()
@@ -260,46 +254,33 @@ class Polygon(Centered):
 		vy = np.sin(np.linspace(0,2*pi, self.n+1))
 		self._vertex = np.column_stack((vx,vy))
 	
-	def draw(self, dx=0, dy=0, da=1, dh=0):
-		#vx = self.r*np.cos(self.ang+np.linspace(0,2*pi, self.n+1)) + self.x+dx
-		#vy = self.r*np.sin(self.ang+np.linspace(0,2*pi, self.n+1)) + self.y+dy
-		
+	def draw(self):
 		push()
-		translate(self.x+dx, self.y+dy)
+		translate(self.x, self.y)
 		rotate(self.ang)
 		scale(self.r)
 		
 		glVertexPointerd( self._vertex )
 		
-		set_color(self.h+self.fh+dh, self.a*self.fa*da)
+		set_color(self.h+self.fh, self.a*self.fa)
 		glDrawArrays( GL_POLYGON, 0, len(self._vertex) )
 		
-		set_color(self.h+self.sh+dh, self.a*self.sa*da)
+		set_color(self.h+self.sh, self.a*self.sa)
 		glDrawArrays( GL_LINE_LOOP, 0, len(self._vertex) )
 		
 		pop()
-		
 	
-	def vertex(self):
-		vx = self.r*np.cos(self.ang+np.linspace(0,2*pi, self.n+1)) + self.x
-		vy = self.r*np.sin(self.ang+np.linspace(0,2*pi, self.n+1)) + self.y
-		#return np.column_stack((vx,vy))[:-1]
-		#return np.column_stack((vx,vy))
-		return self._vertex
 
 class Circle(Polygon):
 	def __init__(self, x=0, y=0, r=1):
 		Polygon.__init__(self, 50, x,y,r)
-	
-	def vertex(self):
-		return [[self.x, self.y]]
 
 class Image(Centered):
 	def __init__(self, name, x=0, y=0, r=1, ang=0):
 		Centered.__init__(self, x,y,r)
 		self.name = name
 	
-	def draw(self, dx=0, dy=0, da=1, dh=0):
+	def draw(self):
 		glBindTexture(GL_TEXTURE_2D, textures[self.name])
 		
 		glEnable(GL_TEXTURE_2D)
@@ -314,10 +295,10 @@ class Image(Centered):
 		push()
 		
 		scale(2*self.r)
-		translate(-0.5+self.x+dx,-0.5+self.y+dy)
+		translate(-0.5+self.x,-0.5+self.y)
 		glVertexPointerd( vertex )
 		
-		set_color(self.h+dh, self.a*da)
+		set_color(self.h, self.a)
 		glDrawArrays( GL_POLYGON, 0, len(vertex) )
 		
 		pop()
@@ -338,19 +319,9 @@ class Group(Shape, list):
 	def add(self, s):
 		self.append(s)
 	
-	def draw(self, dx=0, dy=0):
+	def draw(self):
 		for s in self:
-			s.draw(self.x+dx, self.y+dy)
-	
-	def vertex(self):
-		l = Shape.vertex(self)
-		
-		for s in self:
-			vs = s.vertex()
-			for v in vs:
-				l.append(v)
-		
-		return l
+			s.draw(self.x, self.y)
 
 def rotate(angle):
 	glRotatef(180.0*angle/pi, 0,0, 1)
