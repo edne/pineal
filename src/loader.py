@@ -35,36 +35,42 @@ class Loader(threading.Thread):
 		
 		for name in names:
 			v = self.visuals.get(name)
-			if not v:
-				v = Visual(self.parent, name)
-				self.visuals.add(v)
-				#self.visuals.names.append(v)
+			
 			
 			path = os.path.join(os.path.dirname(__file__),VISUALS_PATH)
 			filename = os.path.join(path, name+'.py')
 			
+			if not v:
+				v = Visual(self.parent, name)
+				self.visuals.add(v)
+				v.mtime = 0
+				#self.visuals.names.append(v)
 			
-			try:
-				header_path = os.path.join(
-					os.path.dirname(__file__),'header.py'
-				)
-				f = open(header_path, "r")
-				code = f.read()
-				f.close()
-				
-				f = open(header_path)
-				v.header_lines = sum(1 for line in f)
-				f.close()
-				
-				f = open(filename, "r")
-				code += f.read()
-				f.close()
-			except IOError as e:
-				print e
-				return
 			
-			if not v.lock:
-				v.load(code)
+			if os.path.getmtime(filename) != v.mtime:
+				#print "loading "+name
+				v.mtime = os.path.getmtime(filename)
+				try:
+					header_path = os.path.join(
+						os.path.dirname(__file__),'header.py'
+					)
+					f = open(header_path, "r")
+					code = f.read()
+					f.close()
+					
+					f = open(header_path)
+					v.header_lines = sum(1 for line in f)
+					f.close()
+					
+					f = open(filename, "r")
+					code += f.read()
+					f.close()
+				except IOError as e:
+					print e
+					return
+				
+				if not v.lock:
+					v.load(code)
 	
 	def stop(self):
 		self._stop = True
