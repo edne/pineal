@@ -40,20 +40,23 @@ class Loader(threading.Thread):
 			path = os.path.join(os.path.dirname(__file__),VISUALS_PATH)
 			filename = os.path.join(path, name+'.py')
 			
+			header_path = os.path.join(
+				os.path.dirname(__file__),'header.py'
+			)
+			
 			if not v:
 				v = Visual(self.parent, name)
 				self.visuals.add(v)
 				v.mtime = 0
 				#self.visuals.names.append(v)
 			
+			mtime = os.path.getmtime(filename)
 			
-			if os.path.getmtime(filename) != v.mtime:
+			if mtime != v.mtime:
 				#print "loading "+name
-				v.mtime = os.path.getmtime(filename)
+				v.mtime = mtime
 				try:
-					header_path = os.path.join(
-						os.path.dirname(__file__),'header.py'
-					)
+					
 					f = open(header_path, "r")
 					code = f.read()
 					f.close()

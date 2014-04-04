@@ -75,82 +75,22 @@ class Shape:
 	def vertex(self):
 		return list()
 
-class Triangle(Shape):
-	def __init__(self, x=0, y=0, l=1, m=0.6):
-		Shape.__init__(self, x,y)
-		self.l = l
-		self.m = m
-		self.h = h
-	
-	def draw(self, dx=0, dy=0, da=1, dh=0):
-		vertex = np.matrix(
-			[
-				[self.x+dx, self.y+dy],
-				[self.x+dx + self.l, self.y+dy],
-				[self.x+dx + self.m, self.y+dy + self.h]
-			]
-		)
-		glVertexPointerd( vertex )
-		
-		set_color(self.h+self.fh+dh, self.a*self.fa*da)
-		glDrawArrays( GL_POLYGON, 0, len(vertex) )
-		
-		set_color(self.h+self.sh+dh, self.a*self.sa*da)
-		glDrawArrays( GL_LINE_LOOP, 0, len(vertex) )
-	
-
 class Centered(Shape):
 	def __init__(self, x=0, y=0, r=1):
 		Shape.__init__(self, x,y)
 		self.r = r
 
-class Cube(Centered):
+# usare questo approccio anche per gli altri oggetti
+class GlutPreset(Centered):
 	def __init__(self, x=0, y=0, r=1, ang=0):
 		Centered.__init__(self, x,y,r)
 		self.ang = ang
-		
-	def draw(self):
-		push()
-		translate(self.x, self.y)
-		rotate(self.ang)
-		#scale(self.r)
-		
-		set_color(self.h+self.fh, self.a*self.fa)
-		glutSolidCube(self.r*2)
-		
-		set_color(self.h+self.sh, self.a*self.sa)
-		glutWireCube(self.r*2)
-		
-		pop()
-
-
-class Sphere(Centered):
-	def __init__(self, x=0, y=0, r=1, ang=0):
-		Centered.__init__(self, x,y,r)
-		self.ang = ang
-		self.slaces = 15
-		self.stacks = 15
-		
-	def draw(self):
-		push()
-		translate(self.x, self.y)
-		rotate(self.ang)
-		#scale(self.r)
-		
-		set_color(self.h+self.fh, self.a*self.fa)
-		glutSolidSphere(self.r, self.slaces, self.stacks)
-		
-		set_color(self.h+self.sh, self.a*self.sa)
-		glutWireSphere(self.r, self.slaces, self.stacks)
-		
-		pop()
-
-
-class Tetrahedron(Centered):
-	def __init__(self, x=0, y=0, r=1, ang=0):
-		Centered.__init__(self, x,y,r)
-		self.ang = ang
-		
+	
+	def solid(self):
+		None
+	def wire(self):
+		None
+	
 	def draw(self):
 		push()
 		translate(self.x, self.y)
@@ -158,91 +98,41 @@ class Tetrahedron(Centered):
 		scale(self.r)
 		
 		set_color(self.h+self.fh, self.a*self.fa)
-		glutSolidTetrahedron()
+		self.solid()
 		
 		set_color(self.h+self.sh, self.a*self.sa)
-		glutWireTetrahedron()
+		self.wire()
 		
 		pop()
 
-class Dodecahedron(Centered):
-	def __init__(self, x=0, y=0, r=1, ang=0):
-		Centered.__init__(self, x,y,r)
-		self.ang = ang
-		
-	def draw(self):
-		push()
-		translate(self.x, self.y)
-		rotate(self.ang)
-		scale(self.r)
-		
-		set_color(self.h+self.fh, self.a*self.fa)
-		glutSolidDodecahedron()
-		
-		set_color(self.h+self.sh, self.a*self.sa)
-		glutWireDodecahedron()
-		
-		pop()
+class Cube(GlutPreset):
+	def solid(self): glutSolidCube(1)
+	def wire(self): glutWireCube(1)
 
+class Sphere(GlutPreset):
+	def solid(self): glutSolidSphere(1, 30, 30)
+	def wire(self): glutWireSphere(1, 30, 30)
 
-class Octahedron(Centered):
-	def __init__(self, x=0, y=0, r=1, ang=0):
-		Centered.__init__(self, x,y,r)
-		self.ang = ang
-		
-	def draw(self):
-		push()
-		translate(self.x, self.y)
-		rotate(self.ang)
-		scale(self.r)
-		
-		set_color(self.h+self.fh, self.a*self.fa)
-		glutSolidOctahedron()
-		
-		set_color(self.h+self.sh, self.a*self.sa)
-		glutWireOctahedron()
-		
-		pop()
+class Tetrahedron(GlutPreset):
+	def solid(self): glutSolidTetrahedron()
+	def wire(self): glutWireTetrahedron()
 
+class Dodecahedron(GlutPreset):
+	def solid(self): glutSolidDodecahedron()
+	def wire(self): glutWireDodecahedron()
 
-class Icosahedron(Centered):
-	def __init__(self, x=0, y=0, r=1, ang=0):
-		Centered.__init__(self, x,y,r)
-		self.ang = ang
-		
-	def draw(self):
-		push()
-		translate(self.x, self.y)
-		rotate(self.ang)
-		scale(self.r)
-		
-		set_color(self.h+self.fh, self.a*self.fa)
-		glutSolidIcosahedron()
-		
-		set_color(self.h+self.sh, self.a*self.sa)
-		glutWireIcosahedron()
-		
-		pop()
+class Octahedron(GlutPreset):
+	def solid(self): glutSolidOctahedron()
+	def wire(self): glutWireOctahedron()
 
+class Icosahedron(GlutPreset):
+	def solid(self): glutSolidIcosahedron()
+	def wire(self): glutWireIcosahedron()
 
-class Teapot(Centered):
-	def __init__(self, x=0, y=0, r=1, ang=0):
-		Centered.__init__(self, x,y,r)
-		self.ang = ang
-		
-	def draw(self):
-		push()
-		translate(self.x, self.y)
-		rotate(self.ang)
-		#scale(self.r)
-		
-		set_color(self.h+self.fh, self.a*self.fa)
-		glutSolidTeapot(self.r)
-		
-		set_color(self.h+self.sh, self.a*self.sa)
-		glutWireTeapot(self.r)
-		
-		pop()
+class Teapot(GlutPreset):
+	def solid(self): glutSolidTeapot(1)
+	def wire(self): glutWireTeapot(1)
+
 
 class Polygon(Centered):
 	def __init__(self, n, x=0, y=0, r=1, ang=0):
@@ -304,24 +194,6 @@ class Image(Centered):
 		pop()
 		
 		glDisable(GL_TEXTURE_2D)
-	
-		#glDisableClientState(GL_VERTEX_ARRAY)
-		#glDisableClientState(GL_TEXTURE_COORD_ARRAY)
-
-class Group(Shape, list):
-	def __init__(self, l=list(), x=0, y=0):
-		Shape.__init__(self, x,y)
-		list.__init__(self)
-		
-		for s in l:
-			self.append(s)
-	
-	def add(self, s):
-		self.append(s)
-	
-	def draw(self):
-		for s in self:
-			s.draw(self.x, self.y)
 
 def rotate(angle):
 	glRotatef(180.0*angle/pi, 0,0, 1)
@@ -341,11 +213,8 @@ def scale(ratio):
 def scalexyz(rx, ry, rz):
 	glScalef(rx, ry, rz)
 
-def push():
-	glPushMatrix()
-
-def pop():
-	glPopMatrix()
+def push(): glPushMatrix()
+def pop(): glPopMatrix()
 
 def identity():
 	glLoadIdentity()

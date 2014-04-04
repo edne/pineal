@@ -24,6 +24,9 @@ def loop():
 		pop()
 	p.x = 0
 	
+	solid = Cube()
+	solid.fa = 0.2
+	#solid.draw()
 	
 	
 
