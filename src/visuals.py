@@ -55,7 +55,7 @@ class Visual():
 	
 	def load(self, code):
 		if code == self.new_code:
-			print "something is wrong"
+			#print "something is wrong"
 			return
 		
 		if code != self.old_code:

@@ -12,6 +12,7 @@ class Loader(threading.Thread):
 		#print self.path
 		self._stop = False
 		#self.load()
+		self.headertime = 0
 		
 	
 	def run(self):
@@ -40,7 +41,7 @@ class Loader(threading.Thread):
 			path = os.path.join(os.path.dirname(__file__),VISUALS_PATH)
 			filename = os.path.join(path, name+'.py')
 			
-			header_path = os.path.join(
+			header = os.path.join(
 				os.path.dirname(__file__),'header.py'
 			)
 			
@@ -51,17 +52,20 @@ class Loader(threading.Thread):
 				#self.visuals.names.append(v)
 			
 			mtime = os.path.getmtime(filename)
+			headertime = os.path.getmtime(header)
 			
-			if mtime != v.mtime:
+			if mtime != v.mtime or headertime != self.headertime:
+			#if True:
 				#print "loading "+name
 				v.mtime = mtime
+				self.headertime = headertime
 				try:
 					
-					f = open(header_path, "r")
+					f = open(header, "r")
 					code = f.read()
 					f.close()
 					
-					f = open(header_path)
+					f = open(header)
 					v.header_lines = sum(1 for line in f)
 					f.close()
 					

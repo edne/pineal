@@ -1,6 +1,6 @@
 from src.imports import *
 from math import *
-from random import uniform
+from random import uniform, gauss
 
 cR = (1,0,0)
 cG = (0,1,0)

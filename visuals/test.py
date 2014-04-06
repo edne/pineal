@@ -1,7 +1,7 @@
 def loop():
-	palette(HSV)
+	palette(GREY)
 	
-	p = Polygon(6)
+	p = Polygon(4)
 	#p = Icosahedron()
 	#p=Cube()
 	
@@ -11,22 +11,22 @@ def loop():
 	
 	linew(2)
 	
+	p.y = 0.8
+	
 	p.h = note+0.3
 	p.fa = 0.2
 	p.h = note+0.3
 	for i in xrange(9):
 		push()
 		#p.x = -1 + 2*i*1.0/9
-		translate(-1 + 2*i*1.0/9, 0)
-		p.h += amp/9
-		p.r = band[i]
+		translate(-0.9 + 2*i*1.0/9, 0)
+		#p.h += amp/9
+		p.r = 0.1 + band[i]
 		p.draw()
 		pop()
 	p.x = 0
 	
-	solid = Cube()
-	solid.fa = 0.2
-	#solid.draw()
+	
 	
 	
 
