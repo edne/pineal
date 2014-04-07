@@ -26,8 +26,17 @@ def loop():
 		pop()
 	p.x = 0
 	
+	push()
+	rotatex(time_rad())
+	rotatey(time_rad())
 	
 	
+	t = Teapot()
+	t.r = 0.5
+	t.fa = 0.2
+	t.sa = 0.6
+	#t.draw()
+	pop()
 	
 
 class Ring(Centered):

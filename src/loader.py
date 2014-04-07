@@ -48,16 +48,19 @@ class Loader(threading.Thread):
 			if not v:
 				v = Visual(self.parent, name)
 				self.visuals.add(v)
-				v.mtime = 0
+				v.filetime = 0
 				#self.visuals.names.append(v)
 			
-			mtime = os.path.getmtime(filename)
-			headertime = os.path.getmtime(header)
+			filetime = getmtime(filename)
+			headertime = getmtime(header)
 			
-			if mtime != v.mtime or headertime != self.headertime:
+			if (
+				filetime != v.filetime or
+				headertime != self.headertime
+				):
 			#if True:
-				#print "loading "+name
-				v.mtime = mtime
+				print "loading            "+name+".py"
+				v.filetime = filetime
 				self.headertime = headertime
 				try:
 					
@@ -76,8 +79,10 @@ class Loader(threading.Thread):
 					print e
 					return
 				
-				if not v.lock:
-					v.load(code)
+				#if not v.lock:
+				while v.lock:
+					None
+				v.load(code)
 	
 	def stop(self):
 		self._stop = True

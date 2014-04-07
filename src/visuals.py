@@ -128,8 +128,9 @@ class Visual():
 
 		
 		self.box.textures = self.tex
-		#glBindTexture(GL_TEXTURE_2D, self.tex['alquemix'])
+		glPushMatrix()
 		self.box.loop()
+		glPopMatrix()
 	
 	def load_tex(self, filename):
 		path = os.path.join(os.path.dirname(__file__),IMAGES_PATH)

@@ -76,14 +76,9 @@ class Shape:
 		return list()
 
 class Centered(Shape):
-	def __init__(self, x=0, y=0, r=1):
+	def __init__(self, x=0, y=0, r=1, ang=0):
 		Shape.__init__(self, x,y)
 		self.r = r
-
-# usare questo approccio anche per gli altri oggetti
-class GlutPreset(Centered):
-	def __init__(self, x=0, y=0, r=1, ang=0):
-		Centered.__init__(self, x,y,r)
 		self.ang = ang
 	
 	def solid(self):
@@ -104,6 +99,9 @@ class GlutPreset(Centered):
 		self.wire()
 		
 		pop()
+
+class GlutPreset(Centered):
+	None
 
 class Cube(GlutPreset):
 	def solid(self): glutSolidCube(1)
@@ -136,29 +134,23 @@ class Teapot(GlutPreset):
 
 class Polygon(Centered):
 	def __init__(self, n, x=0, y=0, r=1, ang=0):
-		Centered.__init__(self, x,y,r)
+		Centered.__init__(self, x,y,r, ang)
 		self.n = n
-		self.ang = ang
 		
 		vx = np.cos(np.linspace(0,2*pi, self.n+1))
 		vy = np.sin(np.linspace(0,2*pi, self.n+1))
 		self._vertex = np.column_stack((vx,vy))
 	
 	def draw(self):
-		push()
-		translate(self.x, self.y)
-		rotate(self.ang)
-		scale(self.r)
-		
 		glVertexPointerd( self._vertex )
-		
-		set_color(self.h+self.fh, self.a*self.fa)
+		Centered.draw(self)
+	
+	def solid(self):
 		glDrawArrays( GL_POLYGON, 0, len(self._vertex) )
-		
-		set_color(self.h+self.sh, self.a*self.sa)
+	
+	def wire(self):
 		glDrawArrays( GL_LINE_LOOP, 0, len(self._vertex) )
-		
-		pop()
+	
 	
 
 class Circle(Polygon):
