@@ -53,26 +53,33 @@ class Visual():
 		self.box.band = list()
 		self.box.band += [0]*9
 	
-	def load(self, code):
-		if code == self.new_code:
-			#print "something is wrong"
-			return
+	def load(self, code):		
+		while self.lock:
+			None
+		self.lock = True
 		
-		if code != self.old_code:
-			self.new_code = code  # anche se e' sbagliato
+		if code != self.new_code:			
+			if code != self.old_code:
+				self.new_code = code  # anche se e' sbagliato
+			
+			self.valid = True
+			try:
+				exec(code, self.box.__dict__)
+			except Exception as e:
+				print "load:"
+				print self.error_log(e)
+				self.lock = False
+				self.load(self.old_code)
+				self.valid = False
+				self.invalid = True
 		
-		self.valid = True
-		try:
-			exec(code, self.box.__dict__)
-		except Exception as e:
-			print "load:"
-			print self.error_log(e)
-			self.load(self.old_code)
-			self.valid = False
-			self.invalid = True
+		self.lock = False
 			
 	
 	def update(self, size=None):
+		while self.lock:
+			None
+		
 		self.lock = True
 		try:
 			self.loop()
@@ -80,11 +87,12 @@ class Visual():
 			print "loop:"
 			print self.error_log(e)
 			
+			self.lock = False
 			self.load(self.old_code)
 			self.loop()
 			self.valid = False  # new_code e' ancora quello sbagliato
 			self.invalid = True
-		
+			
 		
 		if self.valid:
 			self.old_code = self.new_code
@@ -92,8 +100,6 @@ class Visual():
 				print "ok!                          "
 				self.invalid = False
 		
-		
-		#del surface
 		self.lock = False
 	
 	def error_log(self, e):
@@ -124,8 +130,6 @@ class Visual():
 		except:
 			self.box.dt = 0
 		self.box.time = time.time()
-		#self.box.time_rad = self.box.time%(2*math.pi)
-
 		
 		self.box.textures = self.tex
 		glPushMatrix()

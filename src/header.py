@@ -80,6 +80,14 @@ class Centered(Shape):
 		Shape.__init__(self, x,y)
 		self.r = r
 		self.ang = ang
+		
+		self.ni = 1  # number of iteration ;)
+	
+	def transform(self):
+		None
+	
+	def step(self, i=0):
+		scale(0.5)
 	
 	def solid(self):
 		None
@@ -88,17 +96,50 @@ class Centered(Shape):
 	
 	def draw(self):
 		push()
+		
 		translate(self.x, self.y)
 		rotate(self.ang)
+		
+		
+		self.transform()
+		
 		scale(self.r)
 		
-		set_color(self.h+self.fh, self.a*self.fa)
-		self.solid()
-		
-		set_color(self.h+self.sh, self.a*self.sa)
-		self.wire()
+		push()
+		for i in xrange(self.ni):
+			set_color(self.h+self.fh, self.a*self.fa)
+			self.solid()
+			
+			set_color(self.h+self.sh, self.a*self.sa)
+			self.wire()
+			
+			self.step(i)
+		pop()
 		
 		pop()
+
+
+class Ring(Centered):
+	def __init__(self, shape, n, x=0, y=0, r=1, ang=0):
+		Centered.__init__(self, x,y,r)
+		self.ang = ang
+		self.shape = shape
+		self.n = n
+	
+	def draw(self):
+		push()
+		
+		rotate(self.ang - pi/2)
+		
+		for i in xrange(self.n):
+			push()
+			translate(self.r, 0)
+			self.shape.draw()
+			pop()
+			rotate(2*pi/self.n)
+		
+		pop()
+
 
 class GlutPreset(Centered):
 	None
@@ -150,8 +191,6 @@ class Polygon(Centered):
 	
 	def wire(self):
 		glDrawArrays( GL_LINE_LOOP, 0, len(self._vertex) )
-	
-	
 
 class Circle(Polygon):
 	def __init__(self, x=0, y=0, r=1):

@@ -51,8 +51,11 @@ class Loader(threading.Thread):
 				v.filetime = 0
 				#self.visuals.names.append(v)
 			
-			filetime = getmtime(filename)
-			headertime = getmtime(header)
+			try:
+				filetime = getmtime(filename)
+				headertime = getmtime(header)
+			except OSError:
+				continue
 			
 			if (
 				filetime != v.filetime or
@@ -79,9 +82,6 @@ class Loader(threading.Thread):
 					print e
 					return
 				
-				#if not v.lock:
-				while v.lock:
-					None
 				v.load(code)
 	
 	def stop(self):

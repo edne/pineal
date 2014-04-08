@@ -10,6 +10,7 @@ def loop():
 	#p.h = 0.5 + note/2
 	
 	linew(2)
+	identity()
 	
 	p.y = 0.8
 	
@@ -22,71 +23,51 @@ def loop():
 		translate(-0.9 + 2*i*1.0/9, 0)
 		#p.h += amp/9
 		p.r = 0.1 + band[i]
-		p.draw()
+		#p.draw()
 		pop()
 	p.x = 0
 	
 	push()
-	rotatex(time_rad())
-	rotatey(time_rad())
 	
+	def rot():
+		rotatex(time_rad())
+		rotatey(time_rad())
 	
 	t = Teapot()
 	t.r = 0.5
 	t.fa = 0.2
 	t.sa = 0.6
+	
+	t.x = 0
+	
+	t.transform = rot
+	#t.transform = lambda: rotatex(time_rad())
+	
 	#t.draw()
 	pop()
 	
-
-class Ring(Centered):
-	def __init__(self, shape, n, x=0, y=0, r=1, ang=0):
-		Centered.__init__(self, x,y,r)
-		self.ang = ang
-		self.shape = shape
-		self.n = n
 	
-	def draw(self):
-		push()
-		
-		rotate(self.ang)
-		
-		for i in xrange(self.n):
-			push()
-			translate(self.r, 0)
-			self.shape.draw()
-			pop()
-			rotate(2*pi/self.n)
-		
-		pop()
-
-class Nestled(Centered):
-	def __init__(self, shape, n, ratio=0.5, x=0, y=0, r=1, ang=0):
-		Centered.__init__(self, x,y,r)
-		self.ang = ang
-		self.shape = shape
-		self.n = n
-		self.ratio = ratio
+	p = Polygon(4)
 	
-	def draw(self):
-		push()
-		
-		rotate(self.ang)
-		scale(self.r)
-		
-		h = self.shape.h
-		self.shape.h += self.h
-		
-		for i in xrange(self.n):
-			push()
-			#translate(self.r, 0)
-			self.shape.draw()
-			pop()
-			#rotate(2*pi/self.n)
-			rotate(0.1)
-			scale(self.ratio)
-		
-		self.shape.h = h
-		
-		pop()
-
+	
+	p.transform = lambda: rotatex(bass*8+0.5)
+	
+	p.r = 0.5 + bass*8
+	
+	p.fa = 0.2*amp+0.1
+	p.ni = 8
+	
+	def step(i):
+		scale(0.5)
+		#rotate(2*pi/p.ni)
+		translate(4*high*noise(), 0, amp*2)
+	p.step = step
+	
+	p.draw()
+	p.step = step
+	
+	ri = Ring(p, 3)
+	ri.r = bass+0.5
+	ri.draw()
+	
+	
