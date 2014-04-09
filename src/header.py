@@ -100,17 +100,17 @@ class Centered(Shape):
 		translate(self.x, self.y)
 		rotate(self.ang)
 		
-		
 		self.transform()
-		
 		scale(self.r)
 		
 		push()
 		for i in xrange(self.ni):
 			set_color(self.h+self.fh, self.a*self.fa)
+			#glEnable(GL_LIGHTING)
 			self.solid()
 			
 			set_color(self.h+self.sh, self.a*self.sa)
+			glDisable(GL_LIGHTING)
 			self.wire()
 			
 			self.step(i)
@@ -257,6 +257,7 @@ def identity():
 		-float(min(w,h))/h,
 		1
 	)
+	#gluPerspective (60, 4.0/3.0, 1.0, 1.0)
 
 def random(a=0, b=1):
 	return uniform(a,b)

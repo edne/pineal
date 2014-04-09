@@ -36,6 +36,7 @@ class Window:
 			GLUT_ACTION_ON_WINDOW_CLOSE,
 			GLUT_ACTION_CONTINUE_EXECUTION
 		)
+		
 	
 	def close(self):
 		None
@@ -43,7 +44,8 @@ class Window:
 	def update(self):
 		glClearColor(0, 0, 0, 1)
 		#glClearColor(0, 0, 0, 0)
-		glClear(GL_COLOR_BUFFER_BIT)
+		#glClear(GL_COLOR_BUFFER_BIT)
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 		
 		self.parent.visuals.update()
 		

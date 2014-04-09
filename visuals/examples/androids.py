@@ -1,4 +1,5 @@
 def loop():
+	identity()
 	
 	rotatex(time_rad())
 	rotatey(time_rad())
@@ -50,6 +51,7 @@ def loop():
 	
 	linew(1)
 	
+	
 	c.a = 0.5
 	c.fa = 0.5
 	c.r = 2*max(0, 0.2*amp - bass/2)
@@ -61,7 +63,7 @@ def loop():
 		c.h = noise(0.5)
 		translate(gauss(0, sigma), gauss(0, sigma), gauss(0, sigma))
 		
-		#c.draw()
+		c.draw()
 		pop()
 	
 	

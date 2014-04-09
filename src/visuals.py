@@ -54,8 +54,11 @@ class Visual():
 		self.box.band += [0]*9
 	
 	def load(self, code):		
-		while self.lock:
-			None
+		#while self.lock:
+		#	None
+		if self.lock:
+			self.filetime = 0  # ask a reload
+			return
 		self.lock = True
 		
 		if code != self.new_code:			
