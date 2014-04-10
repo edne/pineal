@@ -59,6 +59,7 @@ def set_color(h,a):
 	g = (1-pos)*c1[1] + pos*c2[1]
 	b = (1-pos)*c1[2] + pos*c2[2]
 	glColor4f(r,g,b, a)
+	
 
 class Shape:
 	def __init__(self, x=0, y=0, h=0.5, a=1):
@@ -105,12 +106,12 @@ class Centered(Shape):
 		
 		push()
 		for i in xrange(self.ni):
-			set_color(self.h+self.fh, self.a*self.fa)
 			#glEnable(GL_LIGHTING)
+			set_color(self.h+self.fh, self.a*self.fa)
 			self.solid()
 			
+			#glDisable(GL_LIGHTING)
 			set_color(self.h+self.sh, self.a*self.sa)
-			glDisable(GL_LIGHTING)
 			self.wire()
 			
 			self.step(i)
@@ -248,6 +249,7 @@ def push(): glPushMatrix()
 def pop(): glPopMatrix()
 
 def identity():
+	glMatrixMode (GL_PROJECTION)
 	glLoadIdentity()
 	glOrtho(-1, 1, -1, 1, -1, 1)
 	
@@ -257,10 +259,25 @@ def identity():
 		-float(min(w,h))/h,
 		1
 	)
-	#gluPerspective (60, 4.0/3.0, 1.0, 1.0)
+	gluPerspective (60, 4.0/3.0, 1.0, 1.0)
+	glMatrixMode(GL_MODELVIEW)
+	
 
 def random(a=0, b=1):
 	return uniform(a,b)
 
 def noise(a=1):
 	return uniform(-a,a)
+
+# light
+def ambient(amb):
+	glLightModelfv(
+			GL_LIGHT_MODEL_AMBIENT|GL_LIGHT_MODEL_TWO_SIDE,
+			[amb,amb,amb, 1.0]
+		)
+def light(val):
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, [val, val, val, 1.0])
+
+def light_pos(x,y,z):
+	glLightfv(GL_LIGHT0, GL_POSITION,[x,y,z, 3])
+#

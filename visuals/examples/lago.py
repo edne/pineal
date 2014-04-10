@@ -11,8 +11,8 @@ def loop():
 	rotatey(time_rad())
 	
 	for i in xrange(len(band)):
-		p.fa = band[i]/9
-		p.r = band[i]*i
+		p.fa = band[i]/9 + 0.1/(i+1)
+		p.r = band[i]*i*4
 		
 		palette(GREY)
 		p.h = 0.5

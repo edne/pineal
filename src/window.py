@@ -37,15 +37,26 @@ class Window:
 			GLUT_ACTION_CONTINUE_EXECUTION
 		)
 		
+		glEnable(GL_LIGHTING)
+		glEnable(GL_LIGHT0)
+		glEnable(GL_COLOR_MATERIAL)
+		glShadeModel(GL_SMOOTH)
+		
 	
 	def close(self):
 		None
 	
 	def update(self):
 		glClearColor(0, 0, 0, 1)
-		#glClearColor(0, 0, 0, 0)
-		#glClear(GL_COLOR_BUFFER_BIT)
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+		
+		#glLightfv(GL_LIGHT0, GL_POSITION,[4.0, 4.0, 4.0, 3])
+		glLightfv(GL_LIGHT0, GL_POSITION,[1,1,10, 3])
+		glLightModelfv(
+			GL_LIGHT_MODEL_AMBIENT|GL_LIGHT_MODEL_TWO_SIDE,
+			[1,1,1, 1.0]
+		)
+
 		
 		self.parent.visuals.update()
 		
@@ -53,9 +64,6 @@ class Window:
 		glutPostRedisplay()
 	
 	def reshape(self, w,h):
-		#glutReshapeWindow( w,h )
-		
-		#(w,h) = RESOLUTION
 		
 		glViewport(0, 0, w, h)
 		glMatrixMode(GL_PROJECTION)
@@ -67,6 +75,8 @@ class Window:
 			-float(min(w,h))/h,
 			1
 		)
+		
+		glMatrixMode(GL_MODELVIEW)
 
 class Master(Window):
 	def __init__(self, parent):
