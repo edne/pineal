@@ -109,18 +109,18 @@ class Visual():
 		#return str(e)
 		
 		log = self.name + '.py\n'
-		log += str(e)
+		log = str(log)+str(e)
 		
 		if hasattr(e, 'lineno'):
 			if e.lineno >= self.header_lines:
 				lineno = e.lineno-self.header_lines
 			else:
 				lineno = e.lineno
-				log += '\nheader.py'
-			log +='\nat line: '+str(lineno)
+				log = str(log)+'\nheader.py'
+			log = str(log)+'\nat line: '+str(lineno)
 		
 		if hasattr(e, 'text'):
-			log +='\n'+e.text
+			log = str(log)+'\n'+e.text
 		
 		return log
 	
