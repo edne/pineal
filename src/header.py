@@ -291,7 +291,7 @@ def translate(x,y, z=0):
 	glTranslatef(x, y, z)
 
 def scale(ratio):
-	glScalef(ratio, ratio, ratio)
+	scalexyz(ratio, ratio, ratio)
 
 def scalexyz(rx, ry, rz):
 	glScalef(rx, ry, rz)
@@ -305,19 +305,16 @@ def pop():
 
 def identity():
 	""" clear applied transformations """
-	glMatrixMode (GL_PROJECTION)
+	#glMatrixMode (GL_PROJECTION)
 	glLoadIdentity()
-	glOrtho(-1, 1, -1, 1, -1, 1)
+	#glOrtho(-1, 1, -1, 1, -1, 1)
 	
-	(w,h) = RESOLUTION	
-	glScalef(
-		float(min(w,h))/w,
-		-float(min(w,h))/h,
-		1
-	)
-	gluPerspective (60, 4.0/3.0, 1.0, 1.0)
-	glMatrixMode(GL_MODELVIEW)
-	
+	#(w,h) = RESOLUTION	
+	#glScalef(
+	#	float(min(w,h))/w,
+	#	-float(min(w,h))/h,
+	#	1
+	#)
 
 def random(a=0, b=1):
 	""" uniform distribution """

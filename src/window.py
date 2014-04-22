@@ -42,41 +42,48 @@ class Window:
 		glEnable(GL_COLOR_MATERIAL)
 		glShadeModel(GL_SMOOTH)
 		
+		#glMatrixMode(GL_MODELVIEW)
+		#gluLookAt(0,-1.5,0, 0,0,0, 0,0,1)
+		#gluPerspective(100,100,100,100.0)
+		#glMatrixMode (GL_PROJECTION)
+
+
+
 	
 	def close(self):
 		None
 	
 	def update(self):
 		glClearColor(0, 0, 0, 1)
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-		
+		#glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+		glClear(GL_COLOR_BUFFER_BIT)
+
 		#glLightfv(GL_LIGHT0, GL_POSITION,[4.0, 4.0, 4.0, 3])
 		glLightfv(GL_LIGHT0, GL_POSITION,[1,1,10, 3])
 		glLightModelfv(
 			GL_LIGHT_MODEL_AMBIENT|GL_LIGHT_MODEL_TWO_SIDE,
 			[1,1,1, 1.0]
 		)
-
 		
+				
 		self.parent.visuals.update()
 		
 		glutSwapBuffers()
 		glutPostRedisplay()
 	
 	def reshape(self, w,h):
-		
 		glViewport(0, 0, w, h)
-		glMatrixMode(GL_PROJECTION)
-		glLoadIdentity()
-		glOrtho(-1, 1, -1, 1, -1, 1)
+		#glMatrixMode(GL_PROJECTION)
+		#glLoadIdentity()
+		#glOrtho(-1, 1, -1, 1, -1, 1)
 		
-		glScalef(
-			float(min(w,h))/w,
-			-float(min(w,h))/h,
-			1
-		)
+		#glScalef(
+		#	float(min(w,h))/w,
+		#	-float(min(w,h))/h,
+		#	1
+		#)
 		
-		glMatrixMode(GL_MODELVIEW)
+		#glMatrixMode(GL_MODELVIEW)
 
 class Master(Window):
 	def __init__(self, parent):

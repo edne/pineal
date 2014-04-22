@@ -134,11 +134,30 @@ class Visual():
 			self.box.dt = 0
 		self.box.time = time.time()
 		
+		
+		glMatrixMode (GL_PROJECTION)
+		glLoadIdentity()
+		#glOrtho(-1, 1, -1, 1, -1, 1)
+		(w,h) = RESOLUTION	
+		glScalef(
+			float(min(w,h))/w,
+			-float(min(w,h))/h,
+			1
+		)
+		
+		ang = 45.0
+		gluPerspective(ang, 1, 0.1, 1000.0)
+		gluLookAt(0,0,(float(w)/h)/math.tan(ang/2), 0,0,0, 0,1,0)
+		
+		glMatrixMode(GL_MODELVIEW)
+		
 		self.box.textures = self.tex
 		glPushMatrix()
 		self.box.loop()
 		glPopMatrix()
-	
+		
+
+		
 	def load_tex(self, filename):
 		path = os.path.join(os.path.dirname(__file__),IMAGES_PATH)
 		filename = os.path.join(path,filename+'.png')

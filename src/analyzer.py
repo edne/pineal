@@ -64,3 +64,4 @@ class Analyzer(threading.Thread):
 			if m>0:
 				for i in xrange(9):
 					v.box.band[i] = v.box.amp*self.band[i].get()/m
+

@@ -5,4 +5,4 @@ IMAGES_PATH = "../images"
 
 TITLE = 'PinealLoopProject'
 
-AUDIO_PORTS = [2,3]
+AUDIO_PORTS = [3,4]

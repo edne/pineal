@@ -1,15 +1,32 @@
 def loop():
 	identity()
 	
+	
+	palette(GREY)
+	linew(2)
 	rotatex(1.2)
 	rotate(time_rad())
 	
-	ambient(0.1 + 5*noise()*high)
-	
+	ambient(1)
+
+		
 	c = Cube(x=high*8)
-	
-	c.r = 0.2 + bass*2
+
+	def step(i):
+		translate(0.5,0)
+		scale(0.5)
+		rotate(time_rad())
+
+	c.step = step
+		
+	c.r = 1.0 + bass*2
 	c.fa = 0.2
-	c.ni = 10
+	c.ni = 15
 	c.draw()
+	
+	palette(HSV)
+	identity()
+	p = Polygon(4)
+	p.fa = 0.5
+	#p.draw()
 	
