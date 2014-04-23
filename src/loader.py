@@ -6,7 +6,7 @@ class Loader(threading.Thread):
 		threading.Thread.__init__(self)
 		
 		self.parent = parent
-		self.visuals = parent.visuals
+		#self.visuals = parent.visuals
 		
 		self.path = os.path.join(os.path.dirname(__file__),VISUALS_PATH)
 		#print self.path
@@ -28,14 +28,13 @@ class Loader(threading.Thread):
 			if not ' ' in name:
 				names.append(name)
 		
-		for v in self.visuals:
+		for v in self.parent.visuals:
 			if not v.name in names:
-				self.visuals.remove(v)
+				self.parent.visuals.remove(v)
 		
-		# in visuals: se esiste v con v.name non in names: rimuovi v
 		
 		for name in names:
-			v = self.visuals.get(name)
+			v = self.parent.visuals.get(name)
 			
 			
 			path = os.path.join(os.path.dirname(__file__),VISUALS_PATH)
@@ -47,9 +46,8 @@ class Loader(threading.Thread):
 			
 			if not v:
 				v = Visual(self.parent, name)
-				self.visuals.add(v)
+				self.parent.visuals.add(v)
 				v.filetime = 0
-				#self.visuals.names.append(v)
 			
 			try:
 				filetime = getmtime(filename)

@@ -10,10 +10,10 @@ def loop():
 	ambient(1)
 
 		
-	c = Cube(x=high*8)
+	c = Cube()
 
 	def step(i):
-		translate(0.5,0)
+		translate(high*2,0)
 		scale(0.5)
 		rotate(time_rad())
 

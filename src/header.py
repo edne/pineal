@@ -234,40 +234,40 @@ class Teapot(Centered):
 	def _wire(self): glutWireTeapot(1)
 
 
-class Image(Centered):
-	"""
-	draw a png image, must be saved as images/name.png 
-	before the start of the program
-	@ivar name: the image name (without extension)
-	"""
-	def __init__(self, name, **opt):
-		self.name = name
-		Centered.__init__(self, x,y,r)
+#class Image(Centered):
+	#"""
+	#draw a png image, must be saved as images/name.png 
+	#before the start of the program
+	#@ivar name: the image name (without extension)
+	#"""
+	#def __init__(self, name, **opt):
+		#self.name = name
+		#Centered.__init__(self, **opt)
 	
-	def draw(self):
-		glBindTexture(GL_TEXTURE_2D, textures[self.name])
+	#def draw(self):
+		#glBindTexture(GL_TEXTURE_2D, textures[self.name])
 		
-		glEnable(GL_TEXTURE_2D)
+		#glEnable(GL_TEXTURE_2D)
 	
-		glEnableClientState(GL_VERTEX_ARRAY)
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY)
+		#glEnableClientState(GL_VERTEX_ARRAY)
+		#glEnableClientState(GL_TEXTURE_COORD_ARRAY)
 		
-		vertex = np.array([[0,0],[0,1],[1,1],[1,0]],np.float)
-		glVertexPointer(2,GL_FLOAT,0,vertex)
-		glTexCoordPointer(2,GL_FLOAT,0,vertex)
+		#vertex = np.array([[0,0],[0,1],[1,1],[1,0]],np.float)
+		#glVertexPointer(2,GL_FLOAT,0,vertex)
+		#glTexCoordPointer(2,GL_FLOAT,0,vertex)
 		
-		push()
+		#push()
 		
-		scale(2*self.r)
-		translate(-0.5+self.x,-0.5+self.y)
-		glVertexPointerd( vertex )
+		#scale(2*self.r)
+		#translate(-0.5+self.x,-0.5+self.y)
+		#glVertexPointerd( vertex )
 		
-		_set_color(self.h, self.a)
-		glDrawArrays( GL_POLYGON, 0, len(vertex) )
+		#_set_color(self.h, self.a)
+		#glDrawArrays( GL_POLYGON, 0, len(vertex) )
 		
-		pop()
+		#pop()
 		
-		glDisable(GL_TEXTURE_2D)
+		#glDisable(GL_TEXTURE_2D)
 
 def rotatex(angle):
 	""" rotation about x axis """
