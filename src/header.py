@@ -167,12 +167,17 @@ class Ring(Centered):
 		
 		rotate(self.ang - pi/2)
 		
-		for i in xrange(self.n):
-			push()
-			translate(self.r, 0)
-			self.shape.draw()
-			pop()
-			rotate(2*pi/self.n)
+		push()
+		for i in xrange(self.ni):
+			for j in xrange(self.n):
+				push()
+				translate(self.r, 0)
+				self.shape.draw()
+				pop()
+				rotate(2*pi/self.n)
+				
+			self.step(i)
+		pop()
 		
 		pop()
 
