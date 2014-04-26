@@ -1,5 +1,15 @@
 from imports import *
 
+class Graphic:
+	def __init__(self, parent):
+		self.parent = parent
+		
+		glutInit(sys.argv)
+		glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH)
+		
+		win_overview = Overview(parent)
+		win_master = Master(parent)
+
 class Window:
 	def __init__(
 		self, parent, title, resolution,
@@ -31,6 +41,8 @@ class Window:
 			#glHint( GL_POLYGON_SMOOTH_HINT, GL_NICEST )
 			glHint( GL_LINE_SMOOTH_HINT, GL_FASTEST )
 			glHint( GL_POLYGON_SMOOTH_HINT, GL_FASTEST )
+		
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 		
 		glutSetOption(
 			GLUT_ACTION_ON_WINDOW_CLOSE,

@@ -2,16 +2,12 @@ from imports import *
 from visuals import *
 from loader import *
 from analyzer import Analyzer
-import window
+from graphic import Graphic
 
 class MainClass:
 	def __init__(self):
 		
-		glutInit(sys.argv)
-		glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH)
-		
-		self.win_master = window.Master(self)
-		self.win_overview = window.Overview(self)
+		self.graphic = Graphic(self)
 		
 		self.visuals = Visuals(self)
 		self.analyzer = Analyzer(self)
