@@ -3,19 +3,10 @@ from imports import *
 class Visuals(list):
 	def __init__(self, parent):
 		list.__init__(self)
-		
-		# da mettere in loader con un check
-		self.tex = dict()
-		path = os.path.join(os.path.dirname(__file__),IMAGES_PATH)
-		for filename in glob(os.path.join(path,'*.png')):
-			name = os.path.basename(os.path.splitext(filename)[0])
-			if not ' ' in name:
-				#print name
-				self.tex[name] = self.load_tex(name)
 	
 	def add(self, v):
 		self.append(v)
-		v.tex = self.tex
+		#v.tex = self.tex
 	
 	def remove(self, v):
 		list.remove(self, v)
@@ -31,35 +22,12 @@ class Visuals(list):
 		for v in self:
 			v.update()
 	
-	def load_tex(self, filename):
-		path = os.path.join(os.path.dirname(__file__),IMAGES_PATH)
-		filename = os.path.join(path,filename+'.png')
-		
-		img = Image.open(filename)
-		img_data = np.array(list(img.getdata()), np.uint8)
-
-		texture = glGenTextures(1)
-		glPixelStorei(GL_UNPACK_ALIGNMENT,1)
-		glBindTexture(GL_TEXTURE_2D, texture)
-
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP) # GL_REPEAT ?
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP) #
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
-		# jpg
-		#glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img.size[0], img.size[1], 0, GL_RGB, GL_UNSIGNED_BYTE, img_data)
-		# png
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.size[0], img.size[1], 0, GL_RGBA, GL_UNSIGNED_BYTE, img_data)
-		return texture
 
 class Visual():
-	def __init__(self, parent, name, size=RESOLUTION):
+	def __init__(self, parent, name):
 		
 		self.parent = parent
 		self.name = name
-		
-		self.w = size[0]
-		self.h = size[1]
 		
 		self.old_code = ""
 		self.new_code = ""
@@ -160,7 +128,7 @@ class Visual():
 		glMatrixMode (GL_PROJECTION)
 		glLoadIdentity()
 		#glOrtho(-1, 1, -1, 1, -1, 1)
-		(w,h) = RESOLUTION	
+		(w,h) = self.parent.graphic.size
 		glScalef(
 			float(min(w,h))/w,
 			-float(min(w,h))/h,
@@ -173,7 +141,7 @@ class Visual():
 		
 		glMatrixMode(GL_MODELVIEW)
 		
-		self.box.textures = self.tex
+		#self.box.textures = self.tex
 		glPushMatrix()
 		self.box.loop()
 		glPopMatrix()

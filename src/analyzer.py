@@ -9,6 +9,8 @@ class Analyzer(threading.Thread):
 		threading.Thread.__init__(self)
 		self.parent = parent
 		
+		print "init analyzer"
+		
 		self.s = Server(
 			audio="jack",
 			jackname=TITLE,

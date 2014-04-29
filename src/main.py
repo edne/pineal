@@ -13,6 +13,7 @@ class MainClass:
 		self.analyzer = Analyzer(self)
 		self.loader = Loader(self)
 		
+		
 		self.loader.start()
 		self.analyzer.start()
 		
@@ -20,9 +21,9 @@ class MainClass:
 	
 	def run(self):
 		self._running = True
-		
+		print "run"
 		try:
-			glutMainLoop()
+			self.graphic.run()
 		except KeyboardInterrupt:
 			None
 		

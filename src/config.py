@@ -1,4 +1,4 @@
-RESOLUTION = (800,600)
+#RESOLUTION = (800,600)
 
 VISUALS_PATH = "../visuals"
 IMAGES_PATH = "../images"

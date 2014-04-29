@@ -5,6 +5,8 @@ class Loader(threading.Thread):
 	def __init__(self, parent):
 		threading.Thread.__init__(self)
 		
+		print "init loader"
+		
 		self.parent = parent
 		#self.visuals = parent.visuals
 		
@@ -19,7 +21,7 @@ class Loader(threading.Thread):
 		while not self._stop:
 			self.load()
 			
-			time.sleep(0.01)
+			#time.sleep(0.01)
 	
 	def load(self):
 		names = list()

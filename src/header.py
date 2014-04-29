@@ -118,7 +118,13 @@ class Centered(Shape):
 		"""called before drawing (shoud be overrided)"""
 		None
 	
-	def step(self, i=0):
+	
+	
+	def before(self, i=0):
+		"""called before each drawing iteration (shoud be overrided), 
+		by dafault call scale(0.5)"""
+		None
+	def after(self, i=0):
 		"""called after each drawing iteration (shoud be overrided), 
 		by dafault call scale(0.5)"""
 		scale(0.5)
@@ -140,13 +146,16 @@ class Centered(Shape):
 		
 		push()
 		for i in xrange(self.ni):
+			self.before(i)
+			
 			_set_color(self.h, self.a*self.fa)
 			self._solid()
 			
 			_set_color(self.h, self.a*self.sa)
 			self._wire()
 			
-			self.step(i)
+			self.after(i)
+			
 		pop()
 		
 		pop()
@@ -169,14 +178,15 @@ class Ring(Centered):
 		
 		push()
 		for i in xrange(self.ni):
+			self.before(i)
 			for j in xrange(self.n):
 				push()
 				translate(self.r, 0)
 				self.shape.draw()
 				pop()
 				rotate(2*pi/self.n)
-				
-			self.step(i)
+			
+			self.after(i)
 		pop()
 		
 		pop()
@@ -197,7 +207,8 @@ class Polygon(Centered):
 		Centered.__init__(self, **opt)
 	
 	def draw(self):
-		glVertexPointerd( self._vertex )
+		#glVertexPointerd( self._vertex )
+		glVertexPointer( 2, GL_DOUBLE, 0, self._vertex.ctypes.data)
 		Centered.draw(self)
 	
 	def _solid(self):
@@ -310,16 +321,7 @@ def pop():
 
 def identity():
 	""" clear applied transformations """
-	#glMatrixMode (GL_PROJECTION)
 	glLoadIdentity()
-	#glOrtho(-1, 1, -1, 1, -1, 1)
-	
-	#(w,h) = RESOLUTION	
-	#glScalef(
-	#	float(min(w,h))/w,
-	#	-float(min(w,h))/h,
-	#	1
-	#)
 
 def random(a=0, b=1):
 	""" uniform distribution """
@@ -334,13 +336,13 @@ def ambient(amb):
 	""" set ambiental light intensity """
 	glLightModelfv(
 			GL_LIGHT_MODEL_AMBIENT|GL_LIGHT_MODEL_TWO_SIDE,
-			[amb,amb,amb, 1.0]
+			vec(amb,amb,amb, 1.0)
 		)
 def light(val):
 	""" set light intensity """
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, [val, val, val, 1.0])
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, vec(val, val, val, 1.0))
 
 def light_pos(x,y,z):
 	""" set light position """
-	glLightfv(GL_LIGHT0, GL_POSITION,[x,y,z, 3])
+	glLightfv(GL_LIGHT0, GL_POSITION, vec(x,y,z, 3))
 #

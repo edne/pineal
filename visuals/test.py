@@ -3,38 +3,44 @@ def loop():
 	
 	
 	palette(GREY)
+	#palette(HSV)
+	
 	linew(1.2)
 	rotatex(1.2)
 	rotate(time_rad())
 	
-	ambient(0.6)
+	ambient(sum(band[6:])*noise())
 
 		
 	c = Cube()
-
-	def step(i):
-		translate(sin(time_rad()),0)
+	
+	c.h = note
+	
+	def after(i):
+		#translate(sin(time_rad()),0)
+		translate(-sum(band[5:]),0)
 		scale(0.5)
 		rotatex(time_rad())
+		c.h += 0.005
 
-	c.step = step
+	c.after = after
 		
 	c.r = 1.0 + bass*2
-	c.fa = 0.2
-	c.ni = 4
+	c.a = 0.6
+	c.fa = sum(band[:2]) + 0.1
+	c.ni = 3
 	#c.draw()
 	
 	r = Ring(c, 8)
-	r.r = 4
+	r.r = (3 - sum(band[:2]))
 	
-	def step(i):
-		#translate(high*2+0.25,0)
-		scale(0.5)
+	def before(i):
 		rotatex(time_rad(0.2))
 		rotatey(time_rad(0.1))
-	r.step = step
+	r.before = before
 	
-	r.ni = 6
+	
+	r.ni = 4
 	#c.r = 0.5
 	r.draw()
 	
