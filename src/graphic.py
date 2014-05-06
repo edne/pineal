@@ -94,7 +94,7 @@ class Overview(pyglet.window.Window):
 	def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
 		self.parent.graphic.camera.rotate(dx, dy)
 	
-	def on_key_press(symbol, modifiers):
+	def on_key_press(self, symbol, modifiers):
 		None
     
 class Master(pyglet.window.Window):
