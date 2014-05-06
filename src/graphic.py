@@ -36,15 +36,18 @@ class Graphic:
 	
 	def run(self):
 		while not self._stop:
-			
-			pyglet.clock.tick()
-			for window in pyglet.app.windows:
-				window.switch_to()
-				window.dispatch_events()
-				window.dispatch_event('on_draw')
-				window.flip()
-			
-		
+			self.update()
+	
+	def update(self):
+		pyglet.clock.tick()
+		for window in pyglet.app.windows:
+			window.switch_to()
+			window.dispatch_events()
+			window.dispatch_event('on_draw')
+			window.flip()
+	
+	def stop(self):
+		self._stop = True
 
 class Overview(pyglet.window.Window):
 	def __init__(self, parent, **args):

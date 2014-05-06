@@ -32,7 +32,7 @@ class Loader(threading.Thread):
 		
 		for v in self.parent.visuals:
 			if not v.name in names:
-				self.parent.visuals.remove(v)
+				v.remove()
 		
 		
 		for name in names:

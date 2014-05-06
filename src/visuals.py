@@ -21,6 +21,11 @@ class Visuals(list):
 	def update(self):
 		for v in self:
 			v.update()
+		
+	
+	def names(self):
+		for v in self:
+			yield v.name
 	
 
 class Visual():
@@ -37,13 +42,8 @@ class Visual():
 		self.lock = False
 		
 		self.box = Box()
-		self.box._mem = dict()
-		self.box.amp = 0
-		self.box.bass = 0
-		self.box.high = 0
-		self.box.note = 0
-		self.box.band = list()
-		self.box.band += [0]*9
+		self.var = dict()
+		
 	
 	def load(self, code):
 		if self.lock:
@@ -58,6 +58,7 @@ class Visual():
 			self.valid = True
 			try:
 				exec(code, self.box.__dict__)
+				
 			except Exception as e:
 				print "load:"
 				print self.error_log(e)
@@ -67,7 +68,9 @@ class Visual():
 				self.invalid = True
 		
 		self.lock = False
-			
+	
+	def remove(self):
+		self.parent.visuals.remove(self)
 	
 	def update(self, size=None):
 		while self.lock:
@@ -94,6 +97,7 @@ class Visual():
 				self.invalid = False
 		
 		self.lock = False
+		
 	
 	def error_log(self, e):
 		#return str(e)
@@ -123,7 +127,18 @@ class Visual():
 		except:
 			self.box.dt = 0
 		self.box.time = time.time()
+		self.parent.analyzer.update()
 		
+		if hasattr(self.box, 'var') and isinstance(self.box.var, dict):
+			for k in self.box.var.keys():
+				if not k in self.var.keys():
+					self.var[k] = self.box.var[k]
+			
+			for k in self.var.keys():
+				if not k in self.box.var.keys():
+					del self.var[k]
+			
+			self.box.__dict__.update(self.var)
 		
 		glMatrixMode (GL_PROJECTION)
 		glLoadIdentity()

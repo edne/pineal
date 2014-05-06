@@ -40,8 +40,8 @@ class Analyzer(threading.Thread):
 			c /= 2
 		self.band.reverse()
 		
-		p = Pattern(self.callback, 1.0/30)
-		p.play()
+		#p = Pattern(self.update, 1.0/30)
+		#p.play()
 		
 		while not self._stop:
 			time.sleep(0.1)
@@ -50,14 +50,22 @@ class Analyzer(threading.Thread):
 		self._stop = True
 		self.s.stop()
 	
-	def callback(self):
+	def update(self):
 		for v in self.parent.visuals:
+			v.box.amp = 0
+			v.box.bass = 0
+			v.box.high = 0
+			v.box.note = 0
+			v.box.band = list()
+			v.box.band += [0]*9
+			
 			v.box.amp = self.amp.get()
 			v.box.bass = self.bass.get()
 			v.box.high = self.high.get()
 			
 			if self.pitch.get()>1:
 				v.box.note = math.log(self.pitch.get()/16.35,2)%1.0
+			
 			
 			for i in xrange(9):
 				v.box.band[i] = self.band[i].get()
