@@ -6,8 +6,8 @@ def loop():
 	#palette(HSV)
 	
 	linew(1.2)
-	rotatex(1.2)
-	rotate(time_rad())
+	#rotatex(1.2)
+	#rotate(time_rad())
 	
 	ambient(sum(band[6:])*noise())
 
@@ -35,8 +35,9 @@ def loop():
 	r.r = (3 - sum(band[:2]))
 	
 	def before(i):
-		rotatex(time_rad(0.2))
-		rotatey(time_rad(0.1))
+		#rotatex(time_rad(0.2))
+		#rotatey(time_rad(0.1))
+		None
 	r.before = before
 	
 	
