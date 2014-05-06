@@ -140,20 +140,6 @@ class Visual():
 			
 			self.box.__dict__.update(self.var)
 		
-		glMatrixMode (GL_PROJECTION)
-		glLoadIdentity()
-		#glOrtho(-1, 1, -1, 1, -1, 1)
-		(w,h) = self.parent.graphic.size
-		glScalef(
-			float(min(w,h))/w,
-			-float(min(w,h))/h,
-			1
-		)
-		
-		ang = 45.0
-		gluPerspective(ang, 1, 0.1, 1000.0)
-		gluLookAt(0,0,(float(w)/h)/math.tan(ang/2), 0,0,0, 0,1,0)
-		
 		glMatrixMode(GL_MODELVIEW)
 		
 		#self.box.textures = self.tex

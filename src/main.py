@@ -13,7 +13,7 @@ class MainClass:
 		self.visuals = Visuals(self)
 		self.analyzer = Analyzer(self)
 		self.loader = Loader(self)
-		self.gui = Gui(self)
+		#self.gui = Gui(self)
 		
 		self.loader.start()
 		self.analyzer.start()
@@ -26,7 +26,7 @@ class MainClass:
 		try:
 			while not self._stop:
 				self.graphic.update()
-				self.gui.update()
+				#self.gui.update()
 		except KeyboardInterrupt:
 			None
 		
