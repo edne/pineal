@@ -1,8 +1,11 @@
 from imports import *
 
+
 class Visuals(list):
-	def __init__(self, parent):
+	def __init__(self):
 		list.__init__(self)
+		global visuals
+		visuals = self
 	
 	def add(self, v):
 		self.append(v)
@@ -26,12 +29,9 @@ class Visuals(list):
 	def names(self):
 		for v in self:
 			yield v.name
-	
 
 class Visual():
-	def __init__(self, parent, name):
-		
-		self.parent = parent
+	def __init__(self, name):
 		self.name = name
 		
 		self.old_code = ""
@@ -70,7 +70,7 @@ class Visual():
 		self.lock = False
 	
 	def remove(self):
-		self.parent.visuals.remove(self)
+		visuals.remove(self)
 	
 	def update(self, size=None):
 		while self.lock:
@@ -127,7 +127,7 @@ class Visual():
 		except:
 			self.box.dt = 0
 		self.box.time = time.time()
-		self.parent.analyzer.update()
+		
 		
 		if hasattr(self.box, 'var') and isinstance(self.box.var, dict):
 			for k in self.box.var.keys():
@@ -149,6 +149,13 @@ class Visual():
 		
 	
 class Box:
+	def __init__(self):
+		self.amp = 0
+		self.bass = 0
+		self.high = 0
+		self.note = 0
+		self.band = list()
+		self.band += [0]*9
 	def loop(self):
 		None
 	

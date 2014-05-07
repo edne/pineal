@@ -28,7 +28,7 @@ def loop():
 		translate(-sum(band[5:]),0)
 		scale(0.5)
 		rotatex(time_rad())
-		c.h += 0.04+c.h*0.001
+		c.h += 0.002
 		#
 
 	c.after = after

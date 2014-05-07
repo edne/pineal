@@ -4,9 +4,8 @@ from Tkinter import *
 from ttk import *
 
 class Gui(Tk):
-	def __init__(self, parent):
+	def __init__(self):
 		Tk.__init__(self)
-		self.parent = parent
 		
 		self.protocol("WM_DELETE_WINDOW", self._quit)
 		
@@ -31,7 +30,7 @@ class Gui(Tk):
 	def update(self):
 		Tk.update(self)
 		
-		names = self.parent.visuals.names()
+		names = visuals.names()
 		tabs = self.note.tabs()
 		
 		for tab in tabs:
@@ -45,14 +44,14 @@ class Gui(Tk):
 			# elimina gli slider di variabili tolte
 			# aggiorna i valori delle variabili (dizionario v.var)
 			# crea i nuovi slider
-			v = self.parent.visuals.get(name)
+			v = visuals.get(name)
 			
 			
 		
 		# add new ones
 		for name in names:
 			if not name in [self.note.tab(t, "text") for t in tabs]:
-					self.add(self.parent.visuals.get(name))
+					self.add(visuals.get(name))
 		
 	
 	def _quit(self):

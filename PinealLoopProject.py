@@ -1,10 +1,6 @@
 #!/usr/bin/python
-from src.main import MainClass
-
-def main():
-	MainClass().run()
+import src
 
 if __name__=='__main__':
-	main()
-
+	src.Main().run()
 

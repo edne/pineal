@@ -1,21 +1,18 @@
 from imports import *
 from pyo import *
 
-def pat():
-	print "pat"
-
 class Analyzer(threading.Thread):
-	def __init__(self, parent):
-		threading.Thread.__init__(self)
-		self.parent = parent
-		
+	def __init__(self):
 		print "init analyzer"
+		threading.Thread.__init__(self)
 		
 		self.s = Server(
 			audio="jack",
 			jackname=TITLE,
 			nchnls = 4
 		).boot()
+		
+		self.update()
 		
 		self._stop = False
 	
@@ -51,14 +48,7 @@ class Analyzer(threading.Thread):
 		self.s.stop()
 	
 	def update(self):
-		for v in self.parent.visuals:
-			v.box.amp = 0
-			v.box.bass = 0
-			v.box.high = 0
-			v.box.note = 0
-			v.box.band = list()
-			v.box.band += [0]*9
-			
+		for v in visuals:
 			v.box.amp = self.amp.get()
 			v.box.bass = self.bass.get()
 			v.box.high = self.high.get()

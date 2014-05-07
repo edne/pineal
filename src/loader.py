@@ -2,13 +2,9 @@ from imports import *
 from visuals import *
 
 class Loader(threading.Thread):
-	def __init__(self, parent):
-		threading.Thread.__init__(self)
-		
+	def __init__(self):
 		print "init loader"
-		
-		self.parent = parent
-		#self.visuals = parent.visuals
+		threading.Thread.__init__(self)
 		
 		self.path = os.path.join(os.path.dirname(__file__),VISUALS_PATH)
 		#print self.path
@@ -30,13 +26,13 @@ class Loader(threading.Thread):
 			if not ' ' in name:
 				names.append(name)
 		
-		for v in self.parent.visuals:
+		for v in visuals:
 			if not v.name in names:
 				v.remove()
 		
 		
 		for name in names:
-			v = self.parent.visuals.get(name)
+			v = visuals.get(name)
 			
 			
 			path = os.path.join(os.path.dirname(__file__),VISUALS_PATH)
@@ -47,8 +43,8 @@ class Loader(threading.Thread):
 			)
 			
 			if not v:
-				v = Visual(self.parent, name)
-				self.parent.visuals.add(v)
+				v = Visual(name)
+				visuals.add(v)
 				v.filetime = 0
 			
 			try:
