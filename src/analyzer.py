@@ -3,7 +3,6 @@ from pyo import *
 
 class Analyzer(threading.Thread):
 	def __init__(self):
-		print "init analyzer"
 		threading.Thread.__init__(self)
 		
 		self.s = Server(
@@ -48,7 +47,7 @@ class Analyzer(threading.Thread):
 		self.s.stop()
 	
 	def update(self):
-		for v in visuals:
+		for v in visuals.get():
 			v.box.amp = self.amp.get()
 			v.box.bass = self.bass.get()
 			v.box.high = self.high.get()
@@ -65,3 +64,16 @@ class Analyzer(threading.Thread):
 				for i in xrange(9):
 					v.box.band[i] = v.box.amp*self.band[i].get()/m
 
+
+thread = Analyzer()  # better use the server outside?
+
+# can be done better...
+def start():
+	thread.start()
+
+def stop():
+	thread.stop()
+
+def update():
+	thread.update()
+#

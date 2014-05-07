@@ -1,34 +1,30 @@
 from imports import *
 
+l = list()
 
-class Visuals(list):
-	def __init__(self):
-		list.__init__(self)
-		global visuals
-		visuals = self
+def add(v):
+	l.append(v)
 	
-	def add(self, v):
-		self.append(v)
-		#v.tex = self.tex
+def remove(v):
+	l.remove(v)
+	del v
 	
-	def remove(self, v):
-		list.remove(self, v)
-		del v
-	
-	def get(self, name):
-		for v in self:
+def get(name=''):
+	if name:
+		for v in l:
 			if name == v.name:
 				return v
 		return None
-	
-	def update(self):
-		for v in self:
-			v.update()
-		
-	
-	def names(self):
-		for v in self:
-			yield v.name
+	else:
+		return l
+
+def update():
+	for v in l:
+		v.update()
+
+def names():
+	for v in l:
+		yield v.name
 
 class Visual():
 	def __init__(self, name):
@@ -70,7 +66,7 @@ class Visual():
 		self.lock = False
 	
 	def remove(self):
-		visuals.remove(self)
+		remove(self)
 	
 	def update(self, size=None):
 		while self.lock:

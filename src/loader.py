@@ -1,9 +1,7 @@
 from imports import *
-from visuals import *
 
 class Loader(threading.Thread):
 	def __init__(self):
-		print "init loader"
 		threading.Thread.__init__(self)
 		
 		self.path = os.path.join(os.path.dirname(__file__),VISUALS_PATH)
@@ -26,7 +24,7 @@ class Loader(threading.Thread):
 			if not ' ' in name:
 				names.append(name)
 		
-		for v in visuals:
+		for v in visuals.get():
 			if not v.name in names:
 				v.remove()
 		
@@ -43,7 +41,7 @@ class Loader(threading.Thread):
 			)
 			
 			if not v:
-				v = Visual(name)
+				v = visuals.Visual(name)
 				visuals.add(v)
 				v.filetime = 0
 			
@@ -82,3 +80,11 @@ class Loader(threading.Thread):
 	
 	def stop(self):
 		self._stop = True
+
+thread = Loader()
+
+def start():
+	thread.start()
+
+def stop():
+	thread.stop()

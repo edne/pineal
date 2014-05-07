@@ -6,6 +6,7 @@ from ttk import *
 class Gui(Tk):
 	def __init__(self):
 		Tk.__init__(self)
+		self.title(TITLE)
 		
 		self.protocol("WM_DELETE_WINDOW", self._quit)
 		
@@ -52,8 +53,11 @@ class Gui(Tk):
 		for name in names:
 			if not name in [self.note.tab(t, "text") for t in tabs]:
 					self.add(visuals.get(name))
-		
 	
 	def _quit(self):
 		None
 	
+tk = Gui()
+
+def update():
+	tk.update()

@@ -2,48 +2,43 @@ from imports import *
 from pyglet.window import mouse
 from pyglet.window import key
 
-class Graphic:
-	def __init__(self):
-		
-		global graphic
-		graphic = self
-		
-		print "init graphic"
-		glutInit(sys.argv)  # for the 3d presets
-		
-		platform = pyglet.window.get_platform()
-		display = platform.get_default_display()
-		screens = display.get_screens()
-		
-		self.fps_display = pyglet.clock.ClockDisplay()
-		
-		self.overview = Overview(
-			caption = "Overview",
-			width = 600, height = 450,
-			vsync=0
-		)
-		
-		self.master = Master(
-			caption = "Master",
-			screen=screens[-1],
-			fullscreen = len(screens)>1,
-			vsync=1,
-			visible = len(screens)>1
-		)
-		self.master.set_mouse_visible(False)
-		
-		self.size = self.master.get_size() if len(screens)>1 else (800,600)
-		
-		self.camera = Camera()
-		
+def vec(*args):
+	return (GLfloat * len(args))(*args)
+
+def _init():
+	glutInit(sys.argv)  # for the 3d presets
+
+	platform = pyglet.window.get_platform()
+	display = platform.get_default_display()
+	screens = display.get_screens()
+
+	global overview, master, size, camera
+	overview = Overview(
+		caption = "Overview",
+		width = 600, height = 450,
+		vsync=0
+	)
+
+	master = Master(
+		caption = "Master",
+		screen=screens[-1],
+		fullscreen = len(screens)>1,
+		vsync=1,
+		visible = len(screens)>1
+	)
+	master.set_mouse_visible(False)
+
+	size = self.master.get_size() if len(screens)>1 else (800,600)
+	camera = Camera()
+
 	
-	def update(self):
-		pyglet.clock.tick()
-		for window in pyglet.app.windows:
-			window.switch_to()
-			window.dispatch_events()
-			window.dispatch_event('on_draw')
-			window.flip()
+def update():
+	pyglet.clock.tick()
+	for window in pyglet.app.windows:
+		window.switch_to()
+		window.dispatch_events()
+		window.dispatch_event('on_draw')
+		window.flip()
 	
 		
 
@@ -80,7 +75,7 @@ class Overview(pyglet.window.Window):
 	def on_draw(self):
 		self.clear()
 		
-		graphic.master.switch_to()
+		master.switch_to()
 		buf = pyglet.image.get_buffer_manager().get_color_buffer()
 		tex = buf.get_texture()
 		self.switch_to()
@@ -90,7 +85,7 @@ class Overview(pyglet.window.Window):
 		self.fps_display.draw()
 	
 	def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
-		graphic.camera.rotate(dx, dy)
+		camera.rotate(dx, dy)
 	
 	def on_key_press(self, symbol, modifiers):
 		None
@@ -129,14 +124,12 @@ class Master(pyglet.window.Window):
 		glMatrixMode (GL_PROJECTION)
 		glLoadIdentity()
 		#glOrtho(-1, 1, -1, 1, -1, 1)
-		(w,h) = graphic.size
+		(w,h) = size
 		glScalef(
 			float(min(w,h))/w,
 			-float(min(w,h))/h,
 			1
 		)
-		
-		camera = graphic.camera
 		
 		gluPerspective(45.0, 1, 0.1, 1000.0)
 		gluLookAt(
@@ -149,3 +142,4 @@ class Master(pyglet.window.Window):
 			camera.up[2]
 		)
 		
+_init()

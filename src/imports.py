@@ -20,6 +20,4 @@ from pyglet.gl import *
 import ctypes
 
 from config import *
-
-def vec(*args):
-	return (GLfloat * len(args))(*args)
+import visuals, graphic, loader, analyzer, gui
