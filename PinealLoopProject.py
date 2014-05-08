@@ -1,6 +1,6 @@
 #!/usr/bin/python
-import src
+import pineal
 
 if __name__=='__main__':
-	src.main()
+	pineal.main()
 

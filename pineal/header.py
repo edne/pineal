@@ -1,5 +1,4 @@
-#from src.imports import *
-from src.graphic import *
+from pineal.graphic import *
 from math import *
 from random import uniform, gauss
 import numpy as np
