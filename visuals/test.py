@@ -18,7 +18,7 @@ def loop():
 	#ambient(sum(band[6:])*noise())
 
 		
-	c = Cube()
+	#c = Cube()
 	c = Polygon(4)
 	
 	c.h = note
@@ -47,11 +47,12 @@ def loop():
 		rotatey(-bass)
 		#c.h += 0.1
 		#rotatey(time_rad(0.1))
+		#translate(0,0, 0.5*bass)
 		None
 	r.before = before
 	
 	
-	r.ni = 1
+	r.ni = 5
 	#c.r = 0.5
 	
 	

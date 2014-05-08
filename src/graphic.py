@@ -50,25 +50,31 @@ class Graphic:
 
 class Camera:
 	def __init__(self):
+		self.clear()
+	
+	def update(self):
+		self.x = self.r * math.sin(self.ang_x)
+		self.y = self.r * math.sin(self.ang_y)
+		self.z = self.r * math.cos(self.ang_x)*math.cos(self.ang_y)
+		
+		# self.up[0]
+		self.up[1] = math.cos(self.ang_y)
+		# self.up[2]
+	
+	def clear(self):
 		self.r = (float(size[0])/size[1])/math.tan(45.0/2)
 		self.up = [0,1,0]
 		
 		self.ang_x = 0
 		self.ang_y = 0
-		self.rotate(0,0)
+		self.update()
 	
 	def rotate(self, dx, dy):
-		#ang_x = math.atan2(self.x, self.z)  # 0 on z axis
-		#ang_y = math.atan2(self.y, self.z)
-		
 		self.ang_x -= float(dx)/100
 		self.ang_y += float(dy)/100
 		
-		self.x = self.r * math.sin(self.ang_x)
-		self.y = self.r * math.sin(self.ang_y)
-		self.z = self.r * math.cos(self.ang_x)*math.cos(self.ang_y)
-		
-		self.up[1] = math.cos(self.ang_y)
+		self.update()
+	
 
 class Overview(pyglet.window.Window):
 	def __init__(self, **args):
@@ -93,7 +99,8 @@ class Overview(pyglet.window.Window):
 		camera.rotate(dx, dy)
 	
 	def on_key_press(self, symbol, modifiers):
-		None
+		if symbol == key.DELETE:
+			camera.clear()
     
 class Master(pyglet.window.Window):
 	def __init__(self, **args):
