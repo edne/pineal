@@ -1,15 +1,4 @@
 from imports import *
-import visuals
-
-from OpenGL.GLUT import *
-import pyglet
-from pyglet.gl import *
-
-from pyglet.window import mouse
-from pyglet.window import key
-
-def _vec(*args):
-	return (GLfloat * len(args))(*args)
 
 class Graphic:
 	def __init__(self):
@@ -127,10 +116,10 @@ class Master(pyglet.window.Window):
 	def on_draw(self):
 		self.clear()
 		
-		glLightfv(GL_LIGHT0, GL_POSITION,_vec(1,1,10, 3))
+		glLightfv(GL_LIGHT0, GL_POSITION,vec(1,1,10, 3))
 		glLightModelfv(
 			GL_LIGHT_MODEL_AMBIENT|GL_LIGHT_MODEL_TWO_SIDE,
-			_vec(1,1,1, 1.0)
+			vec(1,1,1, 1.0)
 		)
 		
 		glMatrixMode (GL_PROJECTION)
