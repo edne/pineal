@@ -2,6 +2,7 @@
 from src.graphic import *
 from math import *
 from random import uniform, gauss
+import numpy as np
 
 # epydoc --no-private --no-frames --parse-only src/header.py --output=doc
 

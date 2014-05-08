@@ -68,7 +68,7 @@ class Analyzer(threading.Thread):
 
 thread = Analyzer()  # better use the server outside?
 
-# can be done better...
+
 def start():
 	thread.start()
 
@@ -77,4 +77,3 @@ def stop():
 
 def update():
 	thread.update()
-# ...but not now

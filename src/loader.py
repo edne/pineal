@@ -47,8 +47,7 @@ class Loader(threading.Thread):
 				visuals.add(v)
 				v.filetime = 0
 			
-			if v.lock:
-				continue
+			if v.lock: continue
 			
 			try:
 				filetime = getmtime(filename)

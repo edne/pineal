@@ -19,10 +19,6 @@ def get(name=''):
 	else:
 		return l
 
-def update():
-	for v in l:
-		v.update()
-
 def names():
 	for v in l:
 		yield v.name
@@ -45,7 +41,7 @@ class Visual():
 	def load(self, code):
 		if code != self.new_code:			
 			if code != self.old_code:
-				self.new_code = code  # anche se e' sbagliato
+				self.new_code = code
 			
 			self.valid = True
 			try:
@@ -71,7 +67,7 @@ class Visual():
 			
 			self.load(self.old_code)
 			self.loop()
-			self.valid = False  # new_code e' ancora quello sbagliato
+			self.valid = False
 			self.invalid = True
 			
 		
@@ -123,7 +119,7 @@ class Visual():
 			
 			self.box.__dict__.update(self.var)
 		
-		graphic.draw(self.box.loop)
+		self.box.loop()
 		
 	
 class Box:

@@ -8,7 +8,7 @@ from pyglet.gl import *
 from pyglet.window import mouse
 from pyglet.window import key
 
-def vec(*args):
+def _vec(*args):
 	return (GLfloat * len(args))(*args)
 
 class Graphic:
@@ -31,11 +31,13 @@ class Graphic:
 			screen=screens[-1],
 			fullscreen = len(screens)>1,
 			vsync=1,
-			visible = len(screens)>1
+			visible = len(screens)>1,
 		)
 		master.set_mouse_visible(False)
 
-		size = self.master.get_size() if len(screens)>1 else (800,600)
+		size = master.get_size() if len(screens)>1 else (800,600)
+		#size = (800,600)
+		
 		camera = Camera()
 	
 	def update(self):
@@ -48,7 +50,7 @@ class Graphic:
 
 class Camera:
 	def __init__(self):
-		self.r = (4.0/3)/math.tan(45.0/2)
+		self.r = (float(size[0])/size[1])/math.tan(45.0/2)
 		self.up = [0,1,0]
 		
 		self.ang_x = 0
@@ -118,10 +120,10 @@ class Master(pyglet.window.Window):
 	def on_draw(self):
 		self.clear()
 		
-		glLightfv(GL_LIGHT0, GL_POSITION,vec(1,1,10, 3))
+		glLightfv(GL_LIGHT0, GL_POSITION,_vec(1,1,10, 3))
 		glLightModelfv(
 			GL_LIGHT_MODEL_AMBIENT|GL_LIGHT_MODEL_TWO_SIDE,
-			vec(1,1,1, 1.0)
+			_vec(1,1,1, 1.0)
 		)
 		
 		glMatrixMode (GL_PROJECTION)
@@ -144,12 +146,12 @@ class Master(pyglet.window.Window):
 			camera.up[1],
 			camera.up[2]
 		)
-
-def draw(function):
-	glMatrixMode(GL_MODELVIEW)
-	glPushMatrix()
-	function()
-	glPopMatrix()
+		
+		for v in visuals.get():
+			glMatrixMode(GL_MODELVIEW)
+			glPushMatrix()
+			v.update()
+			glPopMatrix()
 
 graphic = Graphic()
 def update():

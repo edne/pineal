@@ -11,7 +11,6 @@ def main():
 	try:
 		while True:
 			gui.update()
-			visuals.update()
 			graphic.update()
 	except KeyboardInterrupt:
 		None
