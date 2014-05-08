@@ -1,4 +1,5 @@
 from imports import *
+import graphic
 
 l = list()
 
@@ -42,11 +43,6 @@ class Visual():
 		
 	
 	def load(self, code):
-		if self.lock:
-			self.filetime = 0  # ask a reload
-			return
-		self.lock = True
-		
 		if code != self.new_code:			
 			if code != self.old_code:
 				self.new_code = code  # anche se e' sbagliato
@@ -58,20 +54,14 @@ class Visual():
 			except Exception as e:
 				print "load:"
 				print self.error_log(e)
-				self.lock = False
 				self.load(self.old_code)
 				self.valid = False
 				self.invalid = True
-		
-		self.lock = False
 	
 	def remove(self):
 		remove(self)
 	
 	def update(self, size=None):
-		while self.lock:
-			None
-		
 		self.lock = True
 		try:
 			self.loop()
@@ -79,7 +69,6 @@ class Visual():
 			print "loop:"
 			print self.error_log(e)
 			
-			self.lock = False
 			self.load(self.old_code)
 			self.loop()
 			self.valid = False  # new_code e' ancora quello sbagliato
@@ -91,9 +80,7 @@ class Visual():
 			if self.invalid:
 				print "ok!                          "
 				self.invalid = False
-		
 		self.lock = False
-		
 	
 	def error_log(self, e):
 		#return str(e)
@@ -136,12 +123,7 @@ class Visual():
 			
 			self.box.__dict__.update(self.var)
 		
-		glMatrixMode(GL_MODELVIEW)
-		
-		#self.box.textures = self.tex
-		glPushMatrix()
-		self.box.loop()
-		glPopMatrix()
+		graphic.draw(self.box.loop)
 		
 	
 class Box:

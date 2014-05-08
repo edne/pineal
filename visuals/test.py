@@ -27,7 +27,7 @@ def loop():
 		#translate(sin(time_rad()),0)
 		translate(-sum(band[5:]),0)
 		scale(0.5)
-		rotatex(time_rad())
+		#rotatex(time_rad())
 		c.h += 0.002
 		#
 
@@ -43,7 +43,7 @@ def loop():
 	r.r = (3 - sum(band[:2]))
 	
 	def before(i):
-		rotatex(time_rad(0.2))
+		#rotatex(time_rad(0.2))
 		rotatey(time_rad(0.1) - bass)
 		#c.h += 0.1
 		#rotatey(time_rad(0.1))

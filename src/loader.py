@@ -1,5 +1,8 @@
 from imports import *
 
+from glob import glob
+from os.path import getmtime
+
 class Loader(threading.Thread):
 	def __init__(self):
 		threading.Thread.__init__(self)
@@ -32,7 +35,6 @@ class Loader(threading.Thread):
 		for name in names:
 			v = visuals.get(name)
 			
-			
 			path = os.path.join(os.path.dirname(__file__),VISUALS_PATH)
 			filename = os.path.join(path, name+'.py')
 			
@@ -44,6 +46,9 @@ class Loader(threading.Thread):
 				v = visuals.Visual(name)
 				visuals.add(v)
 				v.filetime = 0
+			
+			if v.lock:
+				continue
 			
 			try:
 				filetime = getmtime(filename)

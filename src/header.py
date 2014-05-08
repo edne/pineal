@@ -1,4 +1,5 @@
-from src.imports import *
+#from src.imports import *
+from src.graphic import *
 from math import *
 from random import uniform, gauss
 

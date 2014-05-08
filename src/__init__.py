@@ -1,15 +1,18 @@
 from imports import *
 
 def main():
+	#
+	# exaustive dependencies check
+	#
+	
 	loader.start()
 	analyzer.start()
 	
 	try:
 		while True:
-			analyzer.update()
-			graphic.update()
-			visuals.update()
 			gui.update()
+			visuals.update()
+			graphic.update()
 	except KeyboardInterrupt:
 		None
 	
