@@ -10,3 +10,5 @@ from pyglet.window import key
 
 def vec(*args):
 	return (GLfloat * len(args))(*args)
+
+import camera, windows
