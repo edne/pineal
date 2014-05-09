@@ -20,11 +20,23 @@ class Overview(pyglet.window.Window):
 		self.fps_display.draw()
 	
 	def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
-		camera.rotate(dx, dy)
+		camera.rotate(float(dx)/100, float(dy)/100)
 	
 	def on_key_press(self, symbol, modifiers):
 		if symbol == key.DELETE:
 			camera.reset()
+		
+		if symbol == key.W: camera.start_rotate(0,-1)
+		if symbol == key.S: camera.start_rotate(0,1)
+		if symbol == key.A: camera.start_rotate(1,0)
+		if symbol == key.D: camera.start_rotate(-1,0)
+	
+	
+	def on_key_release(self, symbol, modifiers):
+		if symbol == key.W: camera.stop_rotate(0,-1)
+		if symbol == key.S: camera.stop_rotate(0,1)
+		if symbol == key.A: camera.stop_rotate(1,0)
+		if symbol == key.D: camera.stop_rotate(-1,0)
     
 class Master(pyglet.window.Window):
 	def __init__(self, **args):
@@ -86,6 +98,7 @@ class Master(pyglet.window.Window):
 
 def create():
 	global overview, master
+	
 	
 	platform = pyglet.window.get_platform()
 	display = platform.get_default_display()

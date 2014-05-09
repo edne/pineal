@@ -34,13 +34,12 @@ def loop():
 	c.after = after
 		
 	c.r = 1.0 + bass*2
-	c.a = 0.5
-	c.fa = sum(band[:2]) + 0.1
+	c.fa = 0.5*(sum(band[:2]) + 0.1)
 	c.ni = 3
 	#c.draw()
 	
 	r = Ring(c, 8)
-	r.r = (1 - sum(band[:2]))
+	r.r = (1.5 - sum(band[:2]))
 	
 	def before(i):
 		#rotatex(time_rad(0.2))
@@ -52,7 +51,7 @@ def loop():
 	r.before = before
 	
 	
-	r.ni = 5
+	r.ni = 3
 	#c.r = 0.5
 	
 	
