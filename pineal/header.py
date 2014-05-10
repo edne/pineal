@@ -215,7 +215,7 @@ class Polygon(Centered):
 	def _solid(self):
 		glDrawArrays( GL_POLYGON, 0, len(self._vertex) )
 
-	def wire(self):
+	def _wire(self):
 		glDrawArrays( GL_LINE_LOOP, 0, len(self._vertex) )
 
 class Circle(Polygon):

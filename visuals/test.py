@@ -9,7 +9,7 @@ def loop():
 	#palette(GREY)
 	palette(HSV)
 
-	linew(1.2)
+	linew(2)
 	rotatex(sum(band[:6]))
 	#rotatex(1.2)
 
