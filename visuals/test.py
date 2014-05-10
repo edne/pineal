@@ -13,14 +13,12 @@ def loop():
 	rotatex(sum(band[:6]))
 	#rotatex(1.2)
 
-	#rotate(time_rad())
+	rotate(time_rad())
 
 	#ambient(sum(band[6:])*noise())
 
-
 	#c = Cube()
 	c = Polygon(4)
-
 	c.h = note
 
 	def after(i):

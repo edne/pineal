@@ -35,19 +35,16 @@ class Visual():
 		self.box = Box()
 		self.var = dict()
 
-
 	def load(self, code):
 		self.stack.append(code)
 
 		if not self.code:
 			self.code = code
 
-
-
 	def remove(self):
 		remove(self)
 
-	def update(self, size=None):
+	def update(self):
 		if not self.code: return
 		if len(self.stack)==0: return
 
@@ -69,21 +66,12 @@ class Visual():
 
 
 	def error_log(self, e):
-		#return str(e)
-
-		log = self.name + '.py\n'
-		log = str(log)+str(e)
-
-		if hasattr(e, 'lineno'):
-			if e.lineno >= self.header_lines:
-				lineno = e.lineno-self.header_lines
-			else:
-				lineno = e.lineno
-				log = str(log)+'\nheader.py'
-			log = str(log)+'\nat line: '+str(lineno)
+		log = self.name + '.py'
+		#log += ' at line: '+str(lineno)+"\n"
+		log += str(e)
 
 		if hasattr(e, 'text'):
-			log = str(log)+'\n'+e.text
+			log += "\n"+e.text
 
 		return log
 

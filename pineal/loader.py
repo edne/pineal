@@ -47,8 +47,6 @@ class Loader(threading.Thread):
 				visuals.add(v)
 				v.filetime = 0
 
-			#if v.lock: continue
-
 			try:
 				filetime = getmtime(filename)
 				headertime = getmtime(header)
@@ -60,7 +58,7 @@ class Loader(threading.Thread):
 				headertime != self.headertime
 				):
 			#if True:
-				print "loading            "+name+".py"
+				print "loading "+name+".py"
 				v.filetime = filetime
 				self.headertime = headertime
 				try:
