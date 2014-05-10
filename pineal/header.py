@@ -38,11 +38,11 @@ _palette = GREY
 def palette(p):
 	"""
 	set the palette to be used
-	
-	@param p: a list of colors, 
+
+	@param p: a list of colors,
 	where a color is a tuple of float (r, g, b)
-	
-	presets palettes are GREY (black,white,black) 
+
+	presets palettes are GREY (black,white,black)
 	and HSV (r,y,g,c,b,m,r)
 	"""
 	global _palette
@@ -50,7 +50,7 @@ def palette(p):
 
 def time_rad(scale=1):
 	""" scale time (in seconds) and mod by 2pi """
-	return (time*scale)%(2*pi)
+	return (time.time()*scale)%(2*pi)
 
 def linew(w):
 	""" line width """
@@ -59,20 +59,20 @@ def linew(w):
 def _set_color(h,a):
 	h = fmod(h,1)
 	pos = h*(len(_palette)-1)
-	
+
 	index = int(floor(pos))
-	
+
 	pos = pos - floor(pos)
 	#pos /= (len(_palette)-1)dh
-	
+
 	c1 = _palette[index]
 	c2 = _palette[index+1]
-	
+
 	r = (1-pos)*c1[0] + pos*c2[0]
 	g = (1-pos)*c1[1] + pos*c2[1]
 	b = (1-pos)*c1[2] + pos*c2[2]
 	glColor4f(r,g,b, a)
-	
+
 
 class Shape:
 	"""
@@ -92,7 +92,7 @@ class Shape:
 		self.sa = 1
 		self.fa = 1
 		self.h = 0.5
-		
+
 		for key in opt:
 			if key in self.__dict__:
 				self.__dict__[key] = opt[key]
@@ -104,61 +104,61 @@ class Centered(Shape):
 	@ivar ang: rotation on xy plane
 	@ivar ni: number of drawing iterations
 	"""
-	
+
 	def __init__(self, **opt):
-		
+
 		self.r = 1
 		self.ang = 0
 		self.ni = 1  # number of iteration ;)
-		
+
 		# must ba called AFTER attributes declaration
 		Shape.__init__(self, **opt)
-		
-	
+
+
 	def transform(self):
 		"""called before drawing (shoud be overrided)"""
 		None
-	
-	
-	
+
+
+
 	def before(self, i=0):
-		"""called before each drawing iteration (shoud be overrided), 
+		"""called before each drawing iteration (shoud be overrided),
 		by dafault call scale(0.5)"""
 		None
 	def after(self, i=0):
-		"""called after each drawing iteration (shoud be overrided), 
+		"""called after each drawing iteration (shoud be overrided),
 		by dafault call scale(0.5)"""
 		scale(0.5)
-	
+
 	def _solid(self):
 		None
 	def _wire(self):
 		None
-	
+
 	def draw(self):
 		"""translate, rotate, scale and draw"""
 		push()
-		
+
 		translate(self.x, self.y, self.z)
 		rotate(self.ang)
-		
+
 		self.transform()
 		scale(self.r)
-		
+
 		push()
 		for i in xrange(self.ni):
 			self.before(i)
-			
+
 			_set_color(self.h, self.a*self.fa)
 			self._solid()
-			
+
 			_set_color(self.h, self.a*self.sa)
 			self._wire()
-			
+
 			self.after(i)
-			
+
 		pop()
-		
+
 		pop()
 
 class Ring(Centered):
@@ -171,12 +171,12 @@ class Ring(Centered):
 		self.shape = shape
 		self.n = n
 		Centered.__init__(self, **opt)
-	
+
 	def draw(self):
 		push()
-		
+
 		rotate(self.ang - pi/2)
-		
+
 		push()
 		for i in xrange(self.ni):
 			self.before(i)
@@ -186,10 +186,10 @@ class Ring(Centered):
 				self.shape.draw()
 				pop()
 				rotate(2*pi/self.n)
-			
+
 			self.after(i)
 		pop()
-		
+
 		pop()
 
 
@@ -200,21 +200,21 @@ class Polygon(Centered):
 	"""
 	def __init__(self, n, **opt):
 		self.n = n
-		
+
 		vx = np.cos(np.linspace(0,2*pi, self.n+1))
 		vy = np.sin(np.linspace(0,2*pi, self.n+1))
 		self._vertex = np.column_stack((vx,vy))
-		
+
 		Centered.__init__(self, **opt)
-	
+
 	def draw(self):
 		#glVertexPointerd( self._vertex )
 		glVertexPointer( 2, GL_DOUBLE, 0, self._vertex.ctypes.data)
 		Centered.draw(self)
-	
+
 	def _solid(self):
 		glDrawArrays( GL_POLYGON, 0, len(self._vertex) )
-	
+
 	def wire(self):
 		glDrawArrays( GL_LINE_LOOP, 0, len(self._vertex) )
 
@@ -253,37 +253,37 @@ class Teapot(Centered):
 
 #class Image(Centered):
 	#"""
-	#draw a png image, must be saved as images/name.png 
+	#draw a png image, must be saved as images/name.png
 	#before the start of the program
 	#@ivar name: the image name (without extension)
 	#"""
 	#def __init__(self, name, **opt):
 		#self.name = name
 		#Centered.__init__(self, **opt)
-	
+
 	#def draw(self):
 		#glBindTexture(GL_TEXTURE_2D, textures[self.name])
-		
+
 		#glEnable(GL_TEXTURE_2D)
-	
+
 		#glEnableClientState(GL_VERTEX_ARRAY)
 		#glEnableClientState(GL_TEXTURE_COORD_ARRAY)
-		
+
 		#vertex = np.array([[0,0],[0,1],[1,1],[1,0]],np.float)
 		#glVertexPointer(2,GL_FLOAT,0,vertex)
 		#glTexCoordPointer(2,GL_FLOAT,0,vertex)
-		
+
 		#push()
-		
+
 		#scale(2*self.r)
 		#translate(-0.5+self.x,-0.5+self.y)
 		#glVertexPointerd( vertex )
-		
+
 		#_set_color(self.h, self.a)
 		#glDrawArrays( GL_POLYGON, 0, len(vertex) )
-		
+
 		#pop()
-		
+
 		#glDisable(GL_TEXTURE_2D)
 
 def rotatex(angle):

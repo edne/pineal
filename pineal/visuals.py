@@ -27,7 +27,6 @@ class Visual():
 	def __init__(self, name):
 		self.name = name
 
-		self.header_lines = 0
 		self.lock = False  # to be removed
 		self.stack = list()
 		self.code = None
@@ -52,6 +51,7 @@ class Visual():
 			self.code = self.stack[-1]
 
 		try:
+			exec("from pineal.header import *", self.box.__dict__)
 			exec(self.code, self.box.__dict__)
 			self.loop()
 		except Exception as e:
