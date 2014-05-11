@@ -32,7 +32,6 @@ class Visual():
 		self.code = None
 
 		self.box = Box()
-		self.var = dict()
 
 	def load(self, code):
 		self.stack.append(code)
@@ -78,16 +77,9 @@ class Visual():
 	def loop(self):
 		self.box.time = time.time()
 
-		if hasattr(self.box, 'var') and isinstance(self.box.var, dict):
-			for k in self.box.var.keys():
-				if not k in self.var.keys():
-					self.var[k] = self.box.var[k]
-
-			for k in self.var.keys():
-				if not k in self.box.var.keys():
-					del self.var[k]
-
-			self.box.__dict__.update(self.var)
+		for k in self.box.var.keys():
+			if not k in self.box.__dict__.keys():
+				self.box.__dict__[k] = self.box.var[k]
 
 		self.box.loop()
 
@@ -100,5 +92,6 @@ class Box:
 		self.note = 0
 		self.band = list()
 		self.band += [0]*9
+		self.var = dict()
 	def loop(self):
 		None

@@ -30,8 +30,8 @@ def loop():
 		#
 
 	c.after = after
-
-	c.r = 1.0 + bass*2
+	
+	c.r = variabile + 1.0 + bass*2
 	c.fa = 0.5*(sum(band[:2]) + 0.1)
 	c.ni = 3
 	#c.draw()
