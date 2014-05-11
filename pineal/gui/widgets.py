@@ -55,10 +55,19 @@ class Slider:
         label = Label(parent, text=key)
         label.grid(row=index)
 
-        var = DoubleVar()
-        var.set(min(1.0, max(0.0, value)))
+        self.var = DoubleVar()
+        self.var.set(min(1.0, max(0.0, value)))
+        self.var.trace("w", self.callback)
 
-        scale = Scale(parent, variable=var)
+        scale = Scale(parent, variable=self.var)
         scale.grid(row=index, column=1)
 
+        self.parent = parent
         self.key = key
+
+    def callback(self, *args):
+        visuals.reciver(
+            self.parent.v.name,
+            self.key,
+            self.var.get()
+        )

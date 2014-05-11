@@ -20,7 +20,7 @@ def get(name=''):
 		return l
 
 def names():
-	for v in l:
+	for v in get():
 		yield v.name
 
 class Visual():
@@ -95,3 +95,8 @@ class Box:
 		self.var = dict()
 	def loop(self):
 		None
+
+def reciver(name, key, value):
+	for v in get():
+		if name=="*" or name==v.name:
+			v.box.__dict__[key] = value  # this is NOT safe (if used with OSC)
