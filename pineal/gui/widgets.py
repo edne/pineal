@@ -30,7 +30,7 @@ class Tab(Frame):
     def __init__(self, parent, v):
         Frame.__init__(self, parent)
         Notebook.add(parent, self, text=v.name)
-        parent.pack()
+        parent.pack(fill=BOTH, expand=1)
 
         self.parent = parent
         self.v = v
@@ -59,8 +59,9 @@ class Slider:
         self.var.set(min(1.0, max(0.0, value)))
         self.var.trace("w", self.callback)
 
+        parent.grid_columnconfigure(1, weight=1)
         scale = Scale(parent, variable=self.var)
-        scale.grid(row=index, column=1)
+        scale.grid(row=index, column=1, sticky=E+W)
 
         self.parent = parent
         self.key = key
