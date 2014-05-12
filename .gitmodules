@@ -1,0 +1,3 @@
+[submodule "thirdparty/mattrobenolt/colors.py"]
+	path = thirdparty/mattrobenolt/colors.py
+	url = https://github.com/mattrobenolt/colors.py

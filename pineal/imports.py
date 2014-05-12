@@ -3,4 +3,7 @@ import time, math
 
 from config import *
 import graphic, visuals, loader, analyzer, gui
-# re-import in module if needed (graphig doesn't see visuals, etc...)
+
+# third pary:
+sys.path.insert(0, 'thirdparty/mattrobenolt/colors.py')
+import colors
