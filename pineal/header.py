@@ -22,19 +22,6 @@ HSV = [cR, cY, cG, cC, cB, cM, cR]
 
 _palette = GREY
 
-# memory
-#def mem(var, name):
-#	if name in _mem:
-#		return _mem[name]
-#	else:
-#		_mem[name] = var
-#		return var
-#
-#def clear(name):
-#	if name in _mem:
-#		_mem.pop(name)
-#
-
 def palette(p):
 	"""
 	set the palette to be used
@@ -88,38 +75,23 @@ class Shape:
 		self.x = 0
 		self.y = 0
 		self.z = 0
+
 		self.a = 1
 		self.sa = 1
 		self.fa = 1
 		self.h = 0.5
 
-		for key in opt:
-			if key in self.__dict__:
-				self.__dict__[key] = opt[key]
-
-class Centered(Shape):
-	"""
-	shape with center and radius, can be rendered multiple time
-	@ivar r: radius
-	@ivar ang: rotation on xy plane
-	@ivar ni: number of drawing iterations
-	"""
-
-	def __init__(self, **opt):
-
 		self.r = 1
 		self.ang = 0
 		self.ni = 1  # number of iteration ;)
 
-		# must ba called AFTER attributes declaration
-		Shape.__init__(self, **opt)
-
+		for key in opt:
+			if key in self.__dict__:
+				self.__dict__[key] = opt[key]
 
 	def transform(self):
 		"""called before drawing (shoud be overrided)"""
 		None
-
-
 
 	def before(self, i=0):
 		"""called before each drawing iteration (shoud be overrided),
@@ -161,7 +133,7 @@ class Centered(Shape):
 
 		pop()
 
-class Ring(Centered):
+class Ring(Shape):
 	"""
 	draw a shape on the vertexes of a regular polygon
 	@ivar shape: the shape to draw
@@ -170,7 +142,7 @@ class Ring(Centered):
 	def __init__(self, shape, n, **opt):
 		self.shape = shape
 		self.n = n
-		Centered.__init__(self, **opt)
+		Shape.__init__(self, **opt)
 
 	def draw(self):
 		push()
@@ -193,7 +165,7 @@ class Ring(Centered):
 		pop()
 
 
-class Polygon(Centered):
+class Polygon(Shape):
 	"""
 	draw a regular polygon
 	@ivar n: number of vertexes
@@ -205,12 +177,12 @@ class Polygon(Centered):
 		vy = np.sin(np.linspace(0,2*pi, self.n+1))
 		self._vertex = np.column_stack((vx,vy))
 
-		Centered.__init__(self, **opt)
+		Shape.__init__(self, **opt)
 
 	def draw(self):
 		#glVertexPointerd( self._vertex )
 		glVertexPointer( 2, GL_DOUBLE, 0, self._vertex.ctypes.data)
-		Centered.draw(self)
+		Shape.draw(self)
 
 	def _solid(self):
 		glDrawArrays( GL_POLYGON, 0, len(self._vertex) )
@@ -222,36 +194,36 @@ class Circle(Polygon):
 	def __init__(self, **opt):
 		Polygon.__init__(self, 30, **opt)
 
-class Cube(Centered):
+class Cube(Shape):
 	def _solid(self): glutSolidCube(1)
 	def _wire(self): glutWireCube(1)
 
-class Sphere(Centered):
+class Sphere(Shape):
 	def _solid(self): glutSolidSphere(1, 30, 30)
 	def _wire(self): glutWireSphere(1, 30, 30)
 
-class Tetrahedron(Centered):
+class Tetrahedron(Shape):
 	def _solid(self): glutSolidTetrahedron()
 	def _wire(self): glutWireTetrahedron()
 
-class Dodecahedron(Centered):
+class Dodecahedron(Shape):
 	def _solid(self): glutSolidDodecahedron()
 	def _wire(self): glutWireDodecahedron()
 
-class Octahedron(Centered):
+class Octahedron(Shape):
 	def _solid(self): glutSolidOctahedron()
 	def _wire(self): glutWireOctahedron()
 
-class Icosahedron(Centered):
+class Icosahedron(Shape):
 	def _solid(self): glutSolidIcosahedron()
 	def _wire(self): glutWireIcosahedron()
 
-class Teapot(Centered):
+class Teapot(Shape):
 	def _solid(self): glutSolidTeapot(1)
 	def _wire(self): glutWireTeapot(1)
 
 
-#class Image(Centered):
+#class Image(Shape):
 	#"""
 	#draw a png image, must be saved as images/name.png
 	#before the start of the program
@@ -259,7 +231,7 @@ class Teapot(Centered):
 	#"""
 	#def __init__(self, name, **opt):
 		#self.name = name
-		#Centered.__init__(self, **opt)
+		#Shape.__init__(self, **opt)
 
 	#def draw(self):
 		#glBindTexture(GL_TEXTURE_2D, textures[self.name])
