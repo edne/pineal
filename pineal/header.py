@@ -1,39 +1,10 @@
 from pineal.graphic import *
+from pineal.color import Color
 from math import *
 from random import uniform, gauss
 import numpy as np
 
 # epydoc --no-private --no-frames --parse-only src/header.py --output=doc
-
-
-cR = (1,0,0)  # red
-cG = (0,1,0)  # green
-cB = (0,0,1)  # blue
-
-cY = (1,1,0)  # yellow
-cC = (0,1,1)  # cyan
-cM = (1,0,1)  # magenta
-
-cBL = (0,0,0) # black
-cWH = (1,1,1) # white
-
-GREY = [cBL, cWH, cBL]
-HSV = [cR, cY, cG, cC, cB, cM, cR]
-
-_palette = GREY
-
-def palette(p):
-	"""
-	set the palette to be used
-
-	@param p: a list of colors,
-	where a color is a tuple of float (r, g, b)
-
-	presets palettes are GREY (black,white,black)
-	and HSV (r,y,g,c,b,m,r)
-	"""
-	global _palette
-	_palette = p
 
 def time_rad(scale=1):
 	""" scale time (in seconds) and mod by 2pi """
@@ -43,24 +14,6 @@ def linew(w):
 	""" line width """
 	glLineWidth(w)
 
-def _set_color(h,a):
-	h = fmod(h,1)
-	pos = h*(len(_palette)-1)
-
-	index = int(floor(pos))
-
-	pos = pos - floor(pos)
-	#pos /= (len(_palette)-1)dh
-
-	c1 = _palette[index]
-	c2 = _palette[index+1]
-
-	r = (1-pos)*c1[0] + pos*c2[0]
-	g = (1-pos)*c1[1] + pos*c2[1]
-	b = (1-pos)*c1[2] + pos*c2[2]
-	glColor4f(r,g,b, a)
-
-
 class Shape:
 	"""
 	generic shape
@@ -68,7 +21,6 @@ class Shape:
 	@ivar a: alpha
 	@ivar fa: fill alpha
 	@ivar sa: stroke alpha
-	@ivar h: hue
 	"""
 	#def __init__(self, x=0, y=0, h=0.5, a=1):
 	def __init__(self, **opt):
@@ -79,11 +31,12 @@ class Shape:
 		self.a = 1
 		self.sa = 1
 		self.fa = 1
-		self.h = 0.5
 
 		self.r = 1
 		self.ang = 0
 		self.ni = 1  # number of iteration ;)
+
+		self.h = 0
 
 		for key in opt:
 			if key in self.__dict__:
@@ -121,10 +74,11 @@ class Shape:
 		for i in xrange(self.ni):
 			self.before(i)
 
-			_set_color(self.h, self.a*self.fa)
+			c = Color(1,1,1, self.a*self.fa)
+			set_color(c)
 			self._solid()
 
-			_set_color(self.h, self.a*self.sa)
+			c = Color(1,1,1, self.a*self.sa)
 			self._wire()
 
 			self.after(i)
