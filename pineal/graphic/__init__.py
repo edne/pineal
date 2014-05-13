@@ -21,5 +21,5 @@ graphic = Graphic()
 def update():
 	graphic.update()
 
-def set_color(c):
-	glColor4f(c.r,c.g,c.b, c.a)
+def set_color(c, a=1.0):
+	glColor4f(c.r,c.g,c.b, a)
