@@ -28,6 +28,9 @@ class Shape:
 		self.y = 0
 		self.z = 0
 
+		self.f = Color()
+		self.s = Color()
+
 		self.a = 1
 		self.sa = 1
 		self.fa = 1
@@ -74,12 +77,10 @@ class Shape:
 		for i in xrange(self.ni):
 			self.before(i)
 
-			c = Color(1)
-
-			set_color(c, self.a*self.fa)
+			set_color(self.f, self.a*self.fa)
 			self._solid()
 
-			set_color(c, self.a*self.sa)
+			set_color(self.s, self.a*self.sa)
 			self._wire()
 
 			self.after(i)
