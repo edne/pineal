@@ -45,3 +45,10 @@ class Color:
 
     def __iter__(self):
         return (self.r, self.g, self.b)
+
+    def __call__(self, h=None):
+        if not h:
+            return self._h
+        else
+            self._h = self._h = float(h) if 0.0<=float(h)<=1.0 else float(h)%1.0
+            self.map()
