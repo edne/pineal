@@ -1,7 +1,8 @@
 from imports import *
+import colorsys
 
-sys.path.insert(0, 'thirdparty/mattrobenolt/colors.py')
-import colors
+#sys.path.insert(0, 'thirdparty/mattrobenolt/colors.py')
+#import colors
 
 class Color:
     def __init__(self, h=0, map=None):
@@ -16,6 +17,9 @@ class Color:
     def grey(self):
         self.map = self.grey
         self.r = self.g = self.b = self._h
+    def hsv(self):
+        self.map = self.hsv
+        (self.r, self.g, self.b) = colorsys.hsv_to_rgb(self._h,1,1)
     #
 
     def __float__(self):
@@ -38,3 +42,6 @@ class Color:
     def __mul__(self, f):
         return Color(self._h * f, self.map)
     __rmul__ = __mul__
+
+    def __iter__(self):
+        return (self.r, self.g, self.b)
