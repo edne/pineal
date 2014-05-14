@@ -8,6 +8,7 @@ class Color:
     def __init__(self, h=0, map=None):
         self._h = float(h) if 0.0<=float(h)<=1.0 else float(h)%1.0
         self.r, self.g, self.b = 0,0,0
+        self._hsv_start, self._hsv_end = 0.0, 1.0
         if map:
             self.map = map
         self.map()
@@ -18,9 +19,14 @@ class Color:
         self.map = self.grey
         self.r, self.g, self.b = [self._h]*3
         return self
-    def hsv(self):
+    def hsv(self, *args):
         self.map = self.hsv
-        self.r, self.g, self.b = colorsys.hsv_to_rgb(self._h,1,1)
+
+        if len(args)==2:
+            self._hsv_start, self._hsv_end = args
+
+        h = self._hsv_start + (self._hsv_end-self._hsv_start)*self._h
+        self.r, self.g, self.b = colorsys.hsv_to_rgb(h,1,1)
         return self
     def black(self):
         self.map = self.black
