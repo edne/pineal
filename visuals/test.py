@@ -13,7 +13,7 @@ def loop():
 	p.fa = 0.5
 	p.ni = 10
 
-	p.fill.hsv(0.5,1)
+	p.fill.hsv(0,1)
 	p.h = hue
 
 	p.draw()
