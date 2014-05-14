@@ -7,7 +7,7 @@ import colorsys
 class Color:
     def __init__(self, h=0, map=None):
         self._h = float(h) if 0.0<=float(h)<=1.0 else float(h)%1.0
-        #self.r, self.g, self.b = 0,0,0
+        self.r, self.g, self.b = 0,0,0
         if map:
             self.map = map
         self.map()
@@ -30,6 +30,10 @@ class Color:
         self.map = self.white
         self.r, self.g, self.b = [1.0]*3
         return self
+    def mono(self, *args):
+        self.map = self.mono
+        if len(args)==3:
+            self.r, self.g, self.b = args
     map = grey
     #
 

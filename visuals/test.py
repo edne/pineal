@@ -1,5 +1,6 @@
 var = {
-	"hue" : 0.0
+	"hue" : 0.0,
+	"green" : 0.0,
 }
 
 def loop():
@@ -12,8 +13,7 @@ def loop():
 	p.fa = 0.5
 	p.ni = 10
 
-	p.fill.hsv()
-	p.stroke.black()
+	p.fill.mono(0,green,1)
 	p.h = hue
 
 	p.draw()
