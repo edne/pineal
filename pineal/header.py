@@ -14,7 +14,7 @@ def linew(w):
 	""" line width """
 	glLineWidth(w)
 
-class Shape:
+class Shape(object):
 	"""
 	generic shape
 	@ivar x,y: position
@@ -22,14 +22,14 @@ class Shape:
 	@ivar fa: fill alpha
 	@ivar sa: stroke alpha
 	"""
-	#def __init__(self, x=0, y=0, h=0.5, a=1):
 	def __init__(self, **opt):
 		self.x = 0
 		self.y = 0
 		self.z = 0
 
-		self.f = Color()
-		self.s = Color()
+		self.fill = Color()
+		self.stroke = Color()
+		self._h = 0
 
 		self.a = 1
 		self.sa = 1
@@ -38,8 +38,6 @@ class Shape:
 		self.r = 1
 		self.ang = 0
 		self.ni = 1  # number of iteration ;)
-
-		self.h = 0
 
 		for key in opt:
 			if key in self.__dict__:
@@ -77,10 +75,10 @@ class Shape:
 		for i in xrange(self.ni):
 			self.before(i)
 
-			set_color(self.f, self.a*self.fa)
+			set_color(self.fill, self.a*self.fa)
 			self._solid()
 
-			set_color(self.s, self.a*self.sa)
+			set_color(self.stroke, self.a*self.sa)
 			self._wire()
 
 			self.after(i)
@@ -88,6 +86,15 @@ class Shape:
 		pop()
 
 		pop()
+
+	@property
+	def h(self):
+		return self._h
+	@h.setter
+	def h(self, value):
+		self._h = value
+		self.fill(value)
+		self.stroke(value)
 
 class Ring(Shape):
 	"""

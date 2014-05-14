@@ -12,10 +12,8 @@ def loop():
 	p.fa = 0.5
 	p.ni = 10
 
-	p.f.hsv()
-	#p.f(0.5)
-	p.f(sin(time_rad(0.5))*0.1)
-	p.f = p.f - 0.1
-
+	p.fill.hsv()
+	p.stroke.black()
+	p.h = hue
 
 	p.draw()

@@ -22,6 +22,14 @@ class Color:
         self.map = self.hsv
         self.r, self.g, self.b = colorsys.hsv_to_rgb(self._h,1,1)
         return self
+    def black(self):
+        self.map = self.black
+        self.r, self.g, self.b = [0.0]*3
+        return self
+    def white(self):
+        self.map = self.white
+        self.r, self.g, self.b = [1.0]*3
+        return self
     map = grey
     #
 
