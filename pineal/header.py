@@ -123,19 +123,11 @@ class Ring(Shape):
 
 		pop()
 
-
 class Polygon(Shape):
-	"""
-	draw a regular polygon
-	@ivar n: number of vertexes
-	"""
-	def __init__(self, n):
-		self.n = n
-
-		vx = np.cos(np.linspace(0,2*pi, self.n+1))
-		vy = np.sin(np.linspace(0,2*pi, self.n+1))
-		self._vertex = np.column_stack((vx,vy))
-
+	def __init__(self, *vertex):
+		vertex = list(vertex)
+		vertex.append(vertex[0])
+		self._vertex = np.array(vertex)
 		Shape.__init__(self)
 
 	def draw(self):
@@ -149,9 +141,23 @@ class Polygon(Shape):
 	def _wire(self):
 		glDrawArrays( GL_LINE_LOOP, 0, len(self._vertex) )
 
-class Circle(Polygon):
+class Regular(Polygon):
+	"""
+	draw a regular polygon
+	@ivar n: number of vertexes
+	"""
+	def __init__(self, n):
+		self.n = n
+
+		vx = np.cos(np.linspace(0,2*pi, self.n+1))[:-1]
+		vy = np.sin(np.linspace(0,2*pi, self.n+1))[:-1]
+		vertex = np.column_stack((vx,vy))
+
+		Polygon.__init__(self, *vertex)
+
+class Circle(Regular):
 	def __init__(self):
-		Polygon.__init__(self, 30)
+		Regular.__init__(self, 30)
 
 class Cube(Shape):
 	def _solid(self): glutSolidCube(1)
