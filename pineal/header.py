@@ -22,7 +22,7 @@ class Shape(object):
 	@ivar fa: fill alpha
 	@ivar sa: stroke alpha
 	"""
-	def __init__(self, **opt):
+	def __init__(self, **kwargs):
 		self.x = 0
 		self.y = 0
 		self.z = 0
@@ -39,9 +39,9 @@ class Shape(object):
 		self.ang = 0
 		self.ni = 1  # number of iteration ;)
 
-		for key in opt:
+		for key in kwargs:
 			if key in self.__dict__:
-				self.__dict__[key] = opt[key]
+				self.__dict__[key] = kwars[key]
 
 	def transform(self):
 		"""called before drawing (shoud be overrided)"""
@@ -102,10 +102,10 @@ class Ring(Shape):
 	@ivar shape: the shape to draw
 	@ivar n: number of vertexes
 	"""
-	def __init__(self, shape, n, **opt):
+	def __init__(self, shape, n, **kwargs):
 		self.shape = shape
 		self.n = n
-		Shape.__init__(self, **opt)
+		Shape.__init__(self, **kwargs)
 
 	def draw(self):
 		push()
@@ -133,14 +133,14 @@ class Polygon(Shape):
 	draw a regular polygon
 	@ivar n: number of vertexes
 	"""
-	def __init__(self, n, **opt):
+	def __init__(self, n, **kwargs):
 		self.n = n
 
 		vx = np.cos(np.linspace(0,2*pi, self.n+1))
 		vy = np.sin(np.linspace(0,2*pi, self.n+1))
 		self._vertex = np.column_stack((vx,vy))
 
-		Shape.__init__(self, **opt)
+		Shape.__init__(self, **kwargs)
 
 	def draw(self):
 		#glVertexPointerd( self._vertex )
@@ -154,8 +154,8 @@ class Polygon(Shape):
 		glDrawArrays( GL_LINE_LOOP, 0, len(self._vertex) )
 
 class Circle(Polygon):
-	def __init__(self, **opt):
-		Polygon.__init__(self, 30, **opt)
+	def __init__(self, **kwargs):
+		Polygon.__init__(self, 30, **kwargs)
 
 class Cube(Shape):
 	def _solid(self): glutSolidCube(1)
@@ -192,9 +192,9 @@ class Teapot(Shape):
 	#before the start of the program
 	#@ivar name: the image name (without extension)
 	#"""
-	#def __init__(self, name, **opt):
+	#def __init__(self, name, **kwargs):
 		#self.name = name
-		#Shape.__init__(self, **opt)
+		#Shape.__init__(self, **kwargs)
 
 	#def draw(self):
 		#glBindTexture(GL_TEXTURE_2D, textures[self.name])
