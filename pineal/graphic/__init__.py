@@ -6,7 +6,7 @@ class Graphic:
 	def __init__(self):
 		glutInit(sys.argv)  # for the 3d presets
 		windows.create()
-	
+
 	def update(self):
 		dt = clock.tick()  # TODO get dt
 		camera.update(dt)
@@ -20,3 +20,6 @@ class Graphic:
 graphic = Graphic()
 def update():
 	graphic.update()
+
+def set_color(c, a=1.0):
+	glColor4f(c.r,c.g,c.b, a)
