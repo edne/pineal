@@ -15,4 +15,3 @@ Dependencies:
 * python-pyo
 * python-numpy
 * python-opengl
-* python-pil (python-imaging on ubuntu)

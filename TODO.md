@@ -1,7 +1,8 @@
 TODO
 ====
 
-* Camera movement with WASD and IJKL
+* fix camera movement bugs
 * TEXTURES!
 * GLSL
 * kaleidoscope effect (maybe depends from GLSL)
+* better spectrum access
