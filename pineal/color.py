@@ -1,9 +1,6 @@
 from imports import *
 import colorsys
 
-#sys.path.insert(0, 'thirdparty/mattrobenolt/colors.py')
-#import colors
-
 class Color:
     def __init__(self, h=0, map=None):
         self._h = float(h) if 0.0<=float(h)<=1.0 else float(h)%1.0
