@@ -92,6 +92,9 @@ class Box:
 		self.note = 0
 		self.band = list()
 		self.band += [0]*9
+
+		self.PRE = False
+
 		self.var = dict()
 	def loop(self):
 		None

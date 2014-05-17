@@ -44,6 +44,35 @@ class Overview(pyglet.window.Window):
 		if symbol == key.UP: camera.stop_move(-1)
 		if symbol == key.DOWN: camera.stop_move(1)
 
+class Preview(pyglet.window.Window):
+	def __init__(self, **args):
+		pyglet.window.Window.__init__(self, **args)
+
+		glEnable(GL_BLEND)
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+
+		glEnable( GL_VERTEX_ARRAY )
+
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+
+		glEnable(GL_LIGHTING)
+		glEnable(GL_LIGHT0)
+		glEnable(GL_COLOR_MATERIAL)
+		glShadeModel(GL_SMOOTH)
+
+
+	def on_draw(self):
+		self.clear()
+		predraw(*self.get_size())
+
+		for v in visuals.get():
+			if v.box.PRE:
+				glMatrixMode(GL_MODELVIEW)
+				glPushMatrix()
+				v.update()
+				glPopMatrix()
+
+
 class Master(pyglet.window.Window):
 	def __init__(self, **args):
 		pyglet.window.Window.__init__(self, **args)
@@ -65,46 +94,47 @@ class Master(pyglet.window.Window):
 		glEnable(GL_COLOR_MATERIAL)
 		glShadeModel(GL_SMOOTH)
 
-
 	def on_draw(self):
 		self.clear()
-
-		glLightfv(GL_LIGHT0, GL_POSITION,vec(1,1,10, 3))
-		glLightModelfv(
-			GL_LIGHT_MODEL_AMBIENT|GL_LIGHT_MODEL_TWO_SIDE,
-			vec(1,1,1, 1.0)
-		)
-
-		glMatrixMode (GL_PROJECTION)
-		glLoadIdentity()
-		#glOrtho(-1, 1, -1, 1, -1, 1)
-		(w,h) = self.get_size()
-		glScalef(
-			float(min(w,h))/w,
-			-float(min(w,h))/h,
-			1
-		)
-
-		gluPerspective(45.0, 1, 0.1, 1000.0)
-		gluLookAt(
-			camera.x,
-			camera.y,
-			camera.z,
-			0,0,0,
-			camera.up[0],
-			camera.up[1],
-			camera.up[2]
-		)
+		predraw(*self.get_size())
 
 		for v in visuals.get():
-			glMatrixMode(GL_MODELVIEW)
-			glPushMatrix()
-			v.update()
-			glPopMatrix()
+			if not v.box.PRE:
+				glMatrixMode(GL_MODELVIEW)
+				glPushMatrix()
+				v.update()
+				glPopMatrix()
+
+def predraw(w,h):
+	glLightfv(GL_LIGHT0, GL_POSITION,vec(1,1,10, 3))
+	glLightModelfv(
+		GL_LIGHT_MODEL_AMBIENT|GL_LIGHT_MODEL_TWO_SIDE,
+		vec(1,1,1, 1.0)
+	)
+
+	glMatrixMode (GL_PROJECTION)
+	glLoadIdentity()
+	#glOrtho(-1, 1, -1, 1, -1, 1)
+	#(w,h) = self.get_size()
+	glScalef(
+		float(min(w,h))/w,
+		-float(min(w,h))/h,
+		1
+	)
+
+	gluPerspective(45.0, 1, 0.1, 1000.0)
+	gluLookAt(
+		camera.x,
+		camera.y,
+		camera.z,
+		0,0,0,
+		camera.up[0],
+		camera.up[1],
+		camera.up[2]
+	)
 
 def create():
 	global overview, master
-
 
 	platform = pyglet.window.get_platform()
 	display = platform.get_default_display()
@@ -113,6 +143,12 @@ def create():
 	overview = Overview(
 		caption = "Overview",
 		width = 600, height = 450,
+		vsync=0
+	)
+
+	preview = Preview(
+		caption = "Preview",
+		width = 400, height = 300,
 		vsync=0
 	)
 
