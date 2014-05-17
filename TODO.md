@@ -6,3 +6,5 @@ TODO
 * GLSL
 * kaleidoscope effect (maybe depends from GLSL)
 * better spectrum access
+* OSC input
+* Grid drawing object
