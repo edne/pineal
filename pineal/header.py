@@ -123,6 +123,35 @@ class Ring(Shape):
 
 		pop()
 
+class Grid(Shape):
+	def __init__(self, shape, l=1,m=1,n=1):
+		self.shape = shape
+		self.l,self.m,self.n = l,m,n
+		Shape.__init__(self)
+
+	def draw(self):
+		push()
+
+		for iteration in xrange(self.ni):
+			self.before(iteration)
+
+			for i in xrange(self.l):
+				for j in xrange(self.m):
+					for k in xrange(self.n):
+						push()
+						translate(
+							(i-float(self.l-1)/2)*float(self.r)/self.l,
+							(j-float(self.m-1)/2)*float(self.r)/self.m,
+							(k-float(self.n-1)/2)*float(self.r)/self.n,
+						)
+						self.shape.draw()
+						pop()
+
+			self.after(iteration)
+
+		pop()
+
+
 class Polygon(Shape):
 	def __init__(self, *vertex):
 		vertex = list(vertex)
@@ -241,7 +270,7 @@ def rotate(angz, angy=0, angx=0):
 	rotatey(angy)
 	rotatez(angz)
 
-def translate(x,y, z=0):
+def translate(x,y=0, z=0):
 	glTranslatef(x, y, z)
 
 def scale(ratio):
