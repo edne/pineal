@@ -6,22 +6,22 @@ PRE = 0
 
 def loop():
 	identity()
-	linew(1)
+	linew(2)
 
 	c = Color(0.5).hsv()
 	c.set()
 
-	p = Regular(8)
-	p.r = 0.5 + high
-	p.ni = 7
+	cube = Cube()
 
-	p.stroke()
-	p.draw()
+	#for i in xrange(int(1e3)):
+	#	cube.draw()
+	#	cube.r *= 0.9
 
-	g = Grid(p, 3,3,1)
-	g.r = bass*20 + 0.1
-	g.draw()
-
-	g = Grid(p, 3,3,1)
-	g.r = bass*20 + 0.5
-	g.draw()
+	#return
+	#cube = Cube()
+	cube.r = 2
+	for i in xrange(50):
+		for j in xrange(10):
+			cube.draw()
+			rotate(0.1)
+		cube.r *= 0.8 + 0.1*bass

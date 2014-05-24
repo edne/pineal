@@ -4,6 +4,9 @@ from math import *
 from random import uniform, gauss
 import numpy as np
 
+from scipy import weave
+import pineal.utils as utils
+
 # epydoc --no-private --no-frames --parse-only src/header.py --output=doc
 
 def time_rad(scale=1):
@@ -13,6 +16,70 @@ def time_rad(scale=1):
 def linew(w):
 	""" line width """
 	glLineWidth(w)
+
+class Cube(object):
+	def __init__(self):
+		self.x = 0
+		self.y = 0
+		self.z = 0
+
+		self.r = 1
+
+		self._vertex = np.array( [
+			[-1.0,-1.0,-1.0],
+			[-1.0, 1.0,-1.0],
+			[ 1.0, 1.0,-1.0],
+			[ 1.0,-1.0,-1.0]
+		] )
+		glVertexPointer( 3, GL_DOUBLE, 0, self._vertex.ctypes.data)
+
+
+	def draw(self):
+		#glutWireCube(self.r)
+
+		#vertex = utils.rotate(self._vertex, math.pi/2, np.array([0,1,0]))
+		#a = 4
+		#glDrawArrays( GL_POLYGON, 0, len(self._vertex) )
+		#glDrawArrays( GL_LINE_LOOP, 0, 4 )
+
+		r = self.r
+		support = "#include <GL/freeglut.h>"
+		code = """
+			glutWireCube(r);
+
+/*GLfloat		faces[] =
+  {
+    -1, -1, -1,   -1, -1,  1,   -1,  1,  1,   -1,  1, -1,
+     1, -1, -1,    1, -1,  1,    1,  1,  1,    1,  1, -1,
+    -1, -1, -1,   -1, -1,  1,    1, -1,  1,    1, -1, -1,
+    -1,  1, -1,   -1,  1,  1,    1,  1,  1,    1,  1, -1,
+    -1, -1, -1,   -1,  1, -1,    1,  1, -1,    1, -1, -1,
+    -1, -1,  1,   -1,  1,  1,    1,  1,  1,    1, -1,  1
+  };
+
+glVertexPointer(3, GL_FLOAT, 0, faces);
+
+int i;
+
+for(i=0; i<24; i++)
+	faces[i] *= r;
+
+for(i=0; i<6; i++)
+{
+GLint indices[] = {0+(i*4),1+(i*4),2+(i*4),3+(i*4)};
+glDrawElements( GL_LINE_LOOP, //mode
+                4,  //count, ie. how many indices
+                GL_UNSIGNED_INT, //type of the index array
+                indices);
+}
+//glDrawArrays(GL_LINE_LOOP, 0, 4);
+*/
+		"""
+
+		weave.inline(code, ['r'], support_code = support, libraries = ['GL','glut','GLU'])
+
+
+
 
 class Shape(object):
 	"""
@@ -174,9 +241,9 @@ class Circle(Regular):
 	def __init__(self):
 		Regular.__init__(self, 30)
 
-class Cube(Shape):
-	def _solid(self): glutSolidCube(1)
-	def _wire(self): glutWireCube(1)
+#class Cube(Shape):
+#	def _solid(self): glutSolidCube(1)
+#	def _wire(self): glutWireCube(1)
 
 class Sphere(Shape):
 	def _solid(self): glutSolidSphere(1, 30, 30)
