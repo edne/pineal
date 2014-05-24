@@ -78,9 +78,6 @@ glDrawElements( GL_LINE_LOOP, //mode
 
 		weave.inline(code, ['r'], support_code = support, libraries = ['GL','glut','GLU'])
 
-
-
-
 class Shape(object):
 	"""
 	generic shape
@@ -306,22 +303,24 @@ class Teapot(Shape):
 		#glDisable(GL_TEXTURE_2D)
 
 def rotatex(angle):
-	""" rotation about x axis """
-	glRotatef(180.0*angle/pi, 1,0, 0)
-
+	rotate(angx = angle)
 def rotatey(angle):
-	""" rotation about y axis """
-	glRotatef(180.0*angle/pi, 0,1, 0)
-
+		rotate(angy = angle)
 def rotatez(angle):
-	""" rotation about z axis """
-	glRotatef(180.0*angle/pi, 0,0, 1)
+		rotate(angz = angle)
 
 def rotate(angz, angy=0, angx=0):
-	""" rotation """
-	rotatex(angx)
-	rotatey(angy)
-	rotatez(angz)
+	support = """
+	#include <GL/freeglut.h>
+	#include <math.h>
+	"""
+	code = """
+		glRotatef(180.0*angx/M_PI, 1,0,0);
+		glRotatef(180.0*angy/M_PI, 0,1,0);
+		glRotatef(180.0*angz/M_PI, 0,0,1);
+	"""
+	weave.inline(code, ['angx','angy','angz'], support_code = support, libraries = ['GL','glut','GLU'])
+
 
 def translate(x,y=0, z=0):
 	glTranslatef(x, y, z)

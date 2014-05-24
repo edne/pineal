@@ -9,7 +9,7 @@ def loop():
 	linew(2)
 
 	c = Color(0.5).hsv()
-	c.set()
+	c.set(0.05)
 
 	cube = Cube()
 
@@ -20,8 +20,8 @@ def loop():
 	#return
 	#cube = Cube()
 	cube.r = 2
-	for i in xrange(50):
-		for j in xrange(10):
+	for i in xrange(15):
+		for j in xrange(20):
 			cube.draw()
-			rotate(0.1)
+			rotate(0.1, 0.2)
 		cube.r *= 0.8 + 0.1*bass
