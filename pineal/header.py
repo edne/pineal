@@ -18,22 +18,11 @@ class Shape(object):
 	"""
 	generic shape
 	@ivar x,y: position
-	@ivar a: alpha
-	@ivar fa: fill alpha
-	@ivar sa: stroke alpha
 	"""
 	def __init__(self):
 		self.x = 0
 		self.y = 0
 		self.z = 0
-
-		self.fill = Color()
-		self.stroke = Color()
-		self._h = 0
-
-		self.a = 1
-		self.sa = 1
-		self.fa = 1
 
 		self.r = 1
 		self.ang = 0
@@ -71,10 +60,7 @@ class Shape(object):
 		for i in xrange(self.ni):
 			self.before(i)
 
-			set_color(self.fill, self.a*self.fa)
 			self._solid()
-
-			set_color(self.stroke, self.a*self.sa)
 			self._wire()
 
 			self.after(i)
@@ -82,15 +68,6 @@ class Shape(object):
 		pop()
 
 		pop()
-
-	@property
-	def h(self):
-		return self._h
-	@h.setter
-	def h(self, value):
-		self._h = value
-		self.fill(value)
-		self.stroke(value)
 
 class Ring(Shape):
 	"""
