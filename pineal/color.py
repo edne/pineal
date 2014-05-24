@@ -1,5 +1,6 @@
 from imports import *
 import colorsys
+import graphic
 
 class Color:
     def __init__(self, h=0, map=None):
@@ -9,6 +10,9 @@ class Color:
         if map:
             self.map = map
         self.map()
+
+    def set(self, alpha=1):
+        graphic.set_color(self, alpha)
 
     # methods to map h to (r,g,b)
     # map() is the default

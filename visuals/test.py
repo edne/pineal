@@ -8,16 +8,20 @@ def loop():
 	identity()
 	linew(1)
 
-	c = Regular(8)
-	c.r = 0.5 + high
+	c = Color(0.5).hsv()
+	c.set()
 
-	c.stroke()
-	c.draw()
+	p = Regular(8)
+	p.r = 0.5 + high
+	p.ni = 7
 
-	g = Grid(c, 3,3,1)
+	p.stroke()
+	p.draw()
+
+	g = Grid(p, 3,3,1)
 	g.r = bass*20 + 0.1
 	g.draw()
 
-	g = Grid(c, 3,3,1)
+	g = Grid(p, 3,3,1)
 	g.r = bass*20 + 0.5
 	g.draw()
