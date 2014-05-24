@@ -28,10 +28,19 @@ class Shape(object):
 		self.ang = 0
 		self.ni = 1  # number of iteration ;)
 
+		self._fill = False
+		self._stroke = True
+
+	def fill(self):
+		self._fill = True
+		self._stroke = False
+	def stroke(self):
+		self._fill = False
+		self._stroke = True
+
 	def transform(self):
 		"""called before drawing (shoud be overrided)"""
 		None
-
 	def before(self, i=0):
 		"""called before each drawing iteration (shoud be overrided),
 		by dafault call scale(0.5)"""
@@ -60,8 +69,8 @@ class Shape(object):
 		for i in xrange(self.ni):
 			self.before(i)
 
-			self._solid()
-			self._wire()
+			if self._fill: self._solid()
+			if self._stroke: self._wire()
 
 			self.after(i)
 
