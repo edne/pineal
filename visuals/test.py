@@ -1,5 +1,6 @@
 var = {
 	"hue" : 0.0,
+	"x" : 0.0,
 }
 
 PRE = 0
@@ -12,6 +13,7 @@ def loop():
 	c.set(0.05)
 
 	cube = Cube()
+	cube.x = x
 
 	#for i in xrange(int(1e3)):
 	#	cube.draw()
