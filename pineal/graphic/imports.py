@@ -5,6 +5,8 @@ from OpenGL.GLUT import *
 import pyglet
 from pyglet.gl import *
 
+import thirdparty.ezpyinline as ezpyinline
+
 from pyglet.window import mouse
 from pyglet.window import key
 

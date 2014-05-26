@@ -4,41 +4,6 @@ import numpy as np
 import math
 from scipy import weave
 
-
-def _rotation_matrix(axis, theta, mat=None):
-    if not mat:
-        mat = np.eye(3, 3)
-
-    support = "#include <math.h>"
-    code = """
-        double x = sqrt(axis[0] * axis[0] + axis[1] * axis[1] + axis[2] * axis[2]);
-        double a = cos(theta / 2.0);
-        double b = -(axis[0] / x) * sin(theta / 2.0);
-        double c = -(axis[1] / x) * sin(theta / 2.0);
-        double d = -(axis[2] / x) * sin(theta / 2.0);
-
-        mat[0] = a*a + b*b - c*c - d*d;
-        mat[1] = 2 * (b*c - a*d);
-        mat[2] = 2 * (b*d + a*c);
-
-        mat[3*1 + 0] = 2*(b*c+a*d);
-        mat[3*1 + 1] = a*a+c*c-b*b-d*d;
-        mat[3*1 + 2] = 2*(c*d-a*b);
-
-        mat[3*2 + 0] = 2*(b*d-a*c);
-        mat[3*2 + 1] = 2*(c*d+a*b);
-        mat[3*2 + 2] = a*a+d*d-b*b-c*c;
-    """
-
-    weave.inline(code, ['axis', 'theta', 'mat'], support_code=support, libraries=['m'])
-
-    return mat
-
-def rotate(v, theta, axis=np.array([0, 0, 1])):
-    matrix = _rotation_matrix(axis, theta)
-    return np.dot(v, matrix.T)
-
-
 def time_rad(scale=1):
     """ scale time (in seconds) and mod by 2pi """
     return (time.time()*scale)%(2*pi)
@@ -55,17 +20,20 @@ def rotatey(angle):
 def rotatez(angle):
     rotate(angz = angle)
 
-def rotate(angz, angy=0, angx=0):
-    support = """
+ezc_rotate = ezpyinline.C(
+r"""
     #include <GL/freeglut.h>
     #include <math.h>
-    """
-    code = """
+
+    void rotate(double angx, double angy, double angz)
+    {
         glRotatef(180.0*angx/M_PI, 1,0,0);
         glRotatef(180.0*angy/M_PI, 0,1,0);
         glRotatef(180.0*angz/M_PI, 0,0,1);
-    """
-    weave.inline(code, ['angx','angy','angz'], support_code = support, libraries = ['GL','glut','GLU'])
+    }
+""")
+def rotate(angz=0, angy=0, angx=0):
+    ezc_rotate.rotate(angx,angy,angz)
 
 def translate(x,y=0, z=0):
     glTranslatef(x, y, z)

@@ -1,9 +1,38 @@
 from imports import *
 
+def gen_inline(out="", before="", solid="", wire=""):
+    code = r"""
+        #include <GL/freeglut.h>
+        %s
+        void draw(
+            double x, double y, double z,
+            double r,
+            int fill, int stroke,
+            double fr, double fg, double fb, double fa,
+            double sr, double sg, double sb, double sa
+        )
+        {
+            glPushMatrix();
+            glTranslatef(x, y, z);
+            %s // before
+            if(fill)
+            {
+                glColor4f(fr,fg,fb, fa);
+                %s  // solid
+            }
+            if(stroke)
+            {
+                glColor4f(sr,sg,sb, sa);
+                %s  // wire
+            }
+            glPopMatrix();
+        }
+    """ % (out, before, solid, wire)
+
+    ezc = ezpyinline.C(code)
+    return ezc
+
 class Shape(object):
-    _before = ""
-    _solid = ""
-    _wire  = ""
     def __init__(self):
         self.x = 0
         self.y = 0
@@ -22,58 +51,40 @@ class Shape(object):
         self._fill = None
     def noStroke(self):
         self._stroke = None
-
+    
     def draw(self):
-        x, y, z = self.x, self.y, self.z
-        r = self.r
-
-        fill = int(bool(self._fill))
-        stroke = int(bool(self._stroke))
-
-        fr,fg,fb,fa = self._fill
-        sr,sg,sb,sa = self._stroke
-
-        if hasattr(self, "_vertex"):
-            vertex = self._vertex.ctypes.data
-            nv = len(self._vertex)
-
-        support = "#include <GL/freeglut.h>"
-        code = """
-            glPushMatrix();
-            glTranslatef(x, y, z);
-            %s // before
-            if(fill)
-            {
-                glColor4f(fr,fg,fb, fa);
-                %s  // solid
-            }
-            if(stroke)
-            {
-                glColor4f(sr,sg,sb, sa);
-                %s  // wire
-            }
-            glPopMatrix();
-        """ % (self._before, self._solid, self._wire)
-
-        weave.inline(
-            code,
-            locals().keys(),
-            support_code = support,
-            libraries = ['GL','glut','GLU']
+        self.inline.draw(
+            self.x, self.y, self.z,
+            self.r,
+            int(bool(self._fill)), int(bool(self._stroke)),
+            self._fill[0], self._fill[1], self._fill[2], self._fill[3],
+            self._stroke[0], self._stroke[1], self._stroke[2], self._stroke[3]
         )
 
 class Polygon(Shape):
-    _before = """
-        glVertexPointer( 2, GL_DOUBLE, 0, (GLvoid*)vertex);
-        glScalef(r, r, r);
-    """
-    _wire = "glDrawArrays( GL_LINE_LOOP, 0, nv );"
+    inline = gen_inline(
+        out ="""
+            int nv;
+            void init(int n, int vertex)
+            {
+                nv = n;
+                glVertexPointer( 2, GL_DOUBLE, 0, (GLvoid*)vertex);
+            }
+        """,
+        before="glScalef(r, r, r);",
+        solid="glDrawArrays( GL_POLYGON, 0, nv );",
+        wire ="glDrawArrays( GL_LINE_LOOP, 0, nv );"
+    )
 
     def __init__(self, *vertex):
         vertex = list(vertex)
         vertex.append(vertex[0])
         self._vertex = np.array(vertex)
         Shape.__init__(self)
+
+    def draw(self):
+        self.inline.init(len(self._vertex), self._vertex.ctypes.data)
+        Shape.draw(self)
 
 class Regular(Polygon):
     def __init__(self, n):
@@ -94,33 +105,41 @@ class GlutPreset(Shape):
     None
 
 class Cube(GlutPreset):
-    _solid = "glutSolidCube(r);"
-    _wire  = "glutWireCube(r);"
+    inline = gen_inline(
+        solid="glutSolidCube(r);",
+        wire ="glutWireCube(r);"
+    )
 
 class Sphere(GlutPreset):
-    _solid = "glutSolidSphere(r, 10, 10);"
-    _wire  = "glutWireSphere(r, 10, 10);"
+    inline = gen_inline(
+        solid="glutSolidSphere(r, 10, 10);",
+        wire ="glutWireSphere(r, 10, 10);"
+    )
 
 class Tetrahedron(GlutPreset):
-    _before ="glScalef(r,r,r);"
-    _solid = "glutSolidTetrahedron();"
-    _wire  = "glutWireTetrahedron();"
+    inline = gen_inline(
+        before="glScalef(r,r,r);",
+        solid ="glutSolidTetrahedron();",
+        wire  ="glutWireTetrahedron();"
+    )
 
 class Dodecahedron(GlutPreset):
-    _before ="glScalef(r,r,r);"
-    _solid = "glutSolidDodecahedron();"
-    _wire  = "glutWireDodecahedron();"
+        inline = gen_inline(
+            before="glScalef(r,r,r);",
+            solid ="glutSolidDodecahedron();",
+            wire  ="glutWireDodecahedron();"
+        )
 
 class Octahedron(GlutPreset):
-    _before ="glScalef(r,r,r);"
-    _solid = "glutSolidOctahedron();"
-    _wire  = "glutWireOctahedron();"
+        inline = gen_inline(
+            before="glScalef(r,r,r);",
+            solid ="glutSolidOctahedron();",
+            wire  ="glutWireOctahedron();"
+        )
 
 class Icosahedron(GlutPreset):
-    _before ="glScalef(r,r,r);"
-    _solid = "glutSolidIcosahedron();"
-    _wire  = "glutWireIcosahedron();"
-
-#class Teapot(GlutPreset):
-#    _solid = "glutSolidTeapot(r);"
-#    _wire  = "glutWireTeapot(r);"
+        inline = gen_inline(
+            before="glScalef(r,r,r);",
+            solid ="glutSolidIcosahedron();",
+            wire  ="glutWireIcosahedron();"
+        )
