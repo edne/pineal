@@ -11,9 +11,6 @@ class Color:
             self.map = map
         self.map()
 
-    def set(self, alpha=1):
-        graphic.set_color(self, alpha)
-
     # methods to map h to (r,g,b)
     # map() is the default
     def grey(self):

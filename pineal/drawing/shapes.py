@@ -8,12 +8,30 @@ class Shape(object):
         self.x = 0
         self.y = 0
         self.z = 0
-
         self.r = 1
-    
+
+        self._fill = None
+        self._stroke = (1,1,1,1)
+
+    def fill(self, c, a=1):
+        self._fill = (c.r, c.g, c.b, a)
+    def stroke(self, c, a=1):
+        self._stroke = (c.r, c.g, c.b, a)
+
+    def noFill(self):
+        self._fill = None
+    def noStroke(self):
+        self._stroke = None
+
     def draw(self):
         x, y, z = self.x, self.y, self.z
         r = self.r
+
+        fill = int(bool(self._fill))
+        stroke = int(bool(self._stroke))
+
+        fr,fg,fb,fa = self._fill
+        sr,sg,sb,sa = self._stroke
 
         if hasattr(self, "_vertex"):
             vertex = self._vertex.ctypes.data
@@ -24,9 +42,18 @@ class Shape(object):
             glPushMatrix();
             glTranslatef(x, y, z);
             %s // before
-            %s
+            if(fill)
+            {
+                glColor4f(fr,fg,fb, fa);
+                %s  // solid
+            }
+            if(stroke)
+            {
+                glColor4f(sr,sg,sb, sa);
+                %s  // wire
+            }
             glPopMatrix();
-        """ % (self._before, self._wire)
+        """ % (self._before, self._solid, self._wire)
 
         weave.inline(
             code,

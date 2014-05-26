@@ -10,10 +10,12 @@ def loop():
 	linew(2)
 
 	c = Color(0.5).hsv()
-	c.set(0.05)
+	#c.set(0.05)
 
 	cube = Cube()
 	cube.x = x
+
+	cube.fill(c, 0.05)
 
 	#for i in xrange(int(1e3)):
 	#	cube.draw()
@@ -27,3 +29,4 @@ def loop():
 			cube.draw()
 			rotate(0.1, 0.2)
 		cube.r *= 0.8 + 0.1*bass
+	
