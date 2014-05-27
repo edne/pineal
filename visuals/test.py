@@ -7,10 +7,11 @@ var = {
 PRE = 0
 
 def loop():
-	identity()
+	#identity()
 	linew(2)
 
-	#rotate(time_rad(vel))
+	rotatex(dt*vel*2)
+
 	#rotatey(time_rad(0.2))
 
 	c = Color(0.5).hsv()
@@ -37,6 +38,7 @@ def loop():
 
 	#return
 
+	push()
 
 	#cube = Cube()
 	cube.r = 2
@@ -45,3 +47,5 @@ def loop():
 			cube.draw()
 			rotate(0.1, 0.2)
 		cube.r *= ratio + bass
+
+	pop()

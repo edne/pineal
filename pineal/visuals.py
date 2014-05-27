@@ -76,6 +76,9 @@ class Visual():
 
 	def loop(self):
 		self.box.time = time.time()
+		if self.box.last_time:
+			self.box.dt = self.box.last_time - self.box.time
+		self.box.last_time = self.box.time
 
 		for k in self.box.var.keys():
 			if not k in self.box.__dict__.keys():
@@ -92,6 +95,10 @@ class Box:
 		self.note = 0
 		self.band = list()
 		self.band += [0]*9
+
+		self.time = 0
+		self.last_time = 0
+		self.dt = 0
 
 		self.PRE = False
 

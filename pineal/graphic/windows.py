@@ -101,9 +101,9 @@ class Master(pyglet.window.Window):
 		for v in visuals.get():
 			if not v.box.PRE:
 				glMatrixMode(GL_MODELVIEW)
-				glPushMatrix()
+				#glPushMatrix()
 				v.update()
-				glPopMatrix()
+				#glPopMatrix()
 
 def predraw(w,h):
 	glLightfv(GL_LIGHT0, GL_POSITION,vec(1,1,10, 3))

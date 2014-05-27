@@ -4,10 +4,6 @@ import numpy as np
 import math
 from scipy import weave
 
-def time_rad(scale=1):
-    """ scale time (in seconds) and mod by 2pi """
-    return (time.time()*scale)%(2*pi)
-
 ezc_utils = ezpyinline.C(
 r"""
     #include <GL/freeglut.h>
