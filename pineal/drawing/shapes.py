@@ -39,8 +39,16 @@ class Shape(object):
         self.z = 0
         self.r = 1
 
-        self._fill = None
+        self._fill = (0,0,0,0)
         self._stroke = (1,1,1,1)
+
+    @property
+    def center(self):
+        return (self.x, self.y, self.z)
+
+    @center.setter
+    def center(self, (x,y,z)):
+        (self.x, self.y, self.z) = (x,y,z)
 
     def fill(self, c, a=1):
         self._fill = (c.r, c.g, c.b, a)
@@ -48,15 +56,15 @@ class Shape(object):
         self._stroke = (c.r, c.g, c.b, a)
 
     def noFill(self):
-        self._fill = None
+        self._fill = (0,0,0,0)
     def noStroke(self):
-        self._stroke = None
-    
+        self._stroke = (0,0,0,0)
+
     def draw(self):
         self.inline.draw(
             self.x, self.y, self.z,
             self.r,
-            int(bool(self._fill)), int(bool(self._stroke)),
+            int(self._fill!=(0,0,0,0)), int(self._stroke!=(0,0,0,0)),
             self._fill[0], self._fill[1], self._fill[2], self._fill[3],
             self._stroke[0], self._stroke[1], self._stroke[2], self._stroke[3]
         )

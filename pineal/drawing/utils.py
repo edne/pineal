@@ -8,19 +8,7 @@ def time_rad(scale=1):
     """ scale time (in seconds) and mod by 2pi """
     return (time.time()*scale)%(2*pi)
 
-def linew(w):
-    """ line width """
-    glLineWidth(w)
-
-
-def rotatex(angle):
-    rotate(angx = angle)
-def rotatey(angle):
-    rotate(angy = angle)
-def rotatez(angle):
-    rotate(angz = angle)
-
-ezc_rotate = ezpyinline.C(
+ezc_utils = ezpyinline.C(
 r"""
     #include <GL/freeglut.h>
     #include <math.h>
@@ -31,28 +19,56 @@ r"""
         glRotatef(180.0*angy/M_PI, 0,1,0);
         glRotatef(180.0*angz/M_PI, 0,0,1);
     }
-""")
-def rotate(angz=0, angy=0, angx=0):
-    ezc_rotate.rotate(angx,angy,angz)
 
-def translate(x,y=0, z=0):
-    glTranslatef(x, y, z)
+    void translate(double x, double y, double z)
+    {
+        glTranslatef(x, y, z);
+    }
+
+    void scale(double x, double y, double z)
+    {
+        glScalef(x, y, z);
+    }
+
+    void push(void)
+    {
+        glPushMatrix();
+    }
+
+    void pop(void)
+    {
+        glPopMatrix();
+    }
+""")
+
+def linew(w):
+    glLineWidth(w)
+
+def rotatex(angle):
+    rotate(angx = angle)
+def rotatey(angle):
+    rotate(angy = angle)
+def rotatez(angle):
+    rotate(angz = angle)
+
+def rotate(angz=0, angy=0, angx=0):
+    ezc_utils.rotate(angx,angy,angz)
+
+def translate(x=0, y=0, z=0):
+    ezc_utils.translate(x, y, z)
 
 def scale(ratio):
     scalexyz(ratio, ratio, ratio)
 
 def scalexyz(rx, ry, rz):
-    glScalef(rx, ry, rz)
+    ezc_utils.scale(rx, ry, rz)
 
 def push():
-    """ push the actual state in the openGL matrix stack """
-    glPushMatrix()
+    ezc_utils.push()
 def pop():
-    """ pop the actual state in the openGL matrix stack """
-    glPopMatrix()
+    ezc_utils.pop()
 
 def identity():
-    """ clear applied transformations """
     glLoadIdentity()
 
 def random(a=0, b=1):
@@ -63,6 +79,7 @@ def noise(a=1):
     """ white noise (uniform distribution in [-a,+a]) """
     return uniform(-a,a)
 
+# TODO: in C?
 # light
 def ambient(amb):
     """ set ambiental light intensity """
