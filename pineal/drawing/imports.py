@@ -4,4 +4,4 @@ from math import *
 from random import uniform, gauss
 import numpy as np
 
-from utils import *
+from pineal.graphic.utils import *

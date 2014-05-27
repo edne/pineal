@@ -59,10 +59,21 @@ def scale(ratio):
 def scalexyz(rx, ry, rz):
     ezc_utils.scale(rx, ry, rz)
 
+matrix_stack = 0
 def push():
-    ezc_utils.push()
+    global matrix_stack
+    if matrix_stack<30:
+        ezc_utils.push()
+        matrix_stack += 1
+    else:
+        print "TOO many push()"
 def pop():
-    ezc_utils.pop()
+    global matrix_stack
+    if matrix_stack>0:
+        ezc_utils.pop()
+    else:
+        print "TOO many pop()"
+    matrix_stack -= 1 # if goes to -1 i can handle it
 
 def identity():
     glLoadIdentity()

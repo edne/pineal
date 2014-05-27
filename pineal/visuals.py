@@ -86,6 +86,18 @@ class Visual():
 
 		self.box.loop()
 
+		if graphic.utils.matrix_stack != 0:
+			print "too many pop()"
+			if graphic.utils.matrix_stack < 0:
+				graphic.utils.matrix_stack = 0
+
+			if graphic.utils.matrix_stack > 0:
+				print "too many push()"
+				while graphic.utils.matrix_stack > 0:
+					graphic.utils.pop()
+
+			raise Exception()  # the code laded is WRONG
+
 
 class Box:
 	def __init__(self):
