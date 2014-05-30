@@ -4,6 +4,7 @@ from pineal import visuals
 from OpenGL.GLUT import *
 import pyglet
 from pyglet.gl import *
+from thirdparty.shader import Shader
 
 import thirdparty.ezpyinline as ezpyinline
 
