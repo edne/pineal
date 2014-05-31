@@ -6,6 +6,11 @@ class Overview(pyglet.window.Window):
 
 		self.fps_display = pyglet.clock.ClockDisplay()
 
+		#self.shader = Shader(
+		#	' '.join(open('glsl/vertex.glsl')),
+		#	' '.join(open('glsl/fragment.glsl'))
+		#)
+
 
 	def on_draw(self):
 		self.clear()
@@ -15,7 +20,9 @@ class Overview(pyglet.window.Window):
 		tex = buf.get_texture()
 		self.switch_to()
 
+		#self.shader.bind()
 		tex.blit(0,0,0, self.width,self.height)
+		#self.shader.unbind()
 
 		self.fps_display.draw()
 

@@ -1,6 +1,5 @@
 from imports import *
 
-import numpy as np
 import math
 from scipy import weave
 
