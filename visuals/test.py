@@ -22,6 +22,13 @@ def loop():
 	#cube = Sphere()
 	#cube = Octahedron()
 
+	#cube.r = band(1)
+	cube.r = band(0)*10
+
+	cube.draw()
+
+	return
+
 	cube.fill(Color(note*0.1).grey(), 2*high+0.0)
 	cube.stroke(Color(hue+note*0.4).hsv(), high+0.1)
 

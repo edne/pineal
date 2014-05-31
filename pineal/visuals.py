@@ -105,8 +105,6 @@ class Box:
 		self.bass = 0
 		self.high = 0
 		self.note = 0
-		self.band = list()
-		self.band += [0]*9
 
 		self.time = 0
 		self.last_time = 0

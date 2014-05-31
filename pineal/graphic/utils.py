@@ -1,4 +1,5 @@
 from imports import *
+from pineal import analyzer
 
 import math
 from scipy import weave
@@ -84,6 +85,9 @@ def random(a=0, b=1):
 def noise(a=1):
     """ white noise (uniform distribution in [-a,+a]) """
     return uniform(-a,a)
+
+def band(a, b=None):
+    return analyzer.band(a,b)
 
 # TODO: in C?
 # light
