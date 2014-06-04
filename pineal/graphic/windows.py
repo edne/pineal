@@ -17,7 +17,14 @@ class Overview(pyglet.window.Window):
 
 		master.switch_to()
 		buf = pyglet.image.get_buffer_manager().get_color_buffer()
-		tex = buf.get_texture()
+
+		rawimage = buf.get_image_data()
+		pitch = rawimage.width * len('RGBA')
+		pixels = rawimage.get_data('RGBA', pitch)
+		postprocessing = ctypes.CDLL("pineal/postprocessing")
+		postprocessing.test(pixels, rawimage.width, rawimage.height)
+
+		tex = rawimage.get_texture()
 		self.switch_to()
 
 		#self.shader.bind()

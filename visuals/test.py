@@ -10,7 +10,7 @@ def loop():
 	#identity()
 	linew(2)
 
-	rotatex(dt*vel*2)
+	#rotatex(dt*vel*2)
 
 	#rotatey(time_rad(0.2))
 
@@ -22,12 +22,7 @@ def loop():
 	#cube = Sphere()
 	#cube = Octahedron()
 
-	#cube.r = band(1)
-	cube.r = band(0)*10
 
-	cube.draw()
-
-	return
 
 	cube.fill(Color(note*0.1).grey(), 2*high+0.0)
 	cube.stroke(Color(hue+note*0.4).hsv(), high+0.1)
@@ -53,6 +48,7 @@ def loop():
 		for j in xrange(10):
 			cube.draw()
 			rotate(0.1, 0.2)
-		cube.r *= ratio + bass
+			rotatex(0.1)
+		cube.r *= ratio
 
 	pop()
