@@ -1,35 +1,19 @@
 from imports import *
 
+postprocessing = ctypes.CDLL("pineal/postprocessing")
+
 class Overview(pyglet.window.Window):
 	def __init__(self, **args):
 		pyglet.window.Window.__init__(self, **args)
 
 		self.fps_display = pyglet.clock.ClockDisplay()
 
-		#self.shader = Shader(
-		#	' '.join(open('glsl/vertex.glsl')),
-		#	' '.join(open('glsl/fragment.glsl'))
-		#)
-
 
 	def on_draw(self):
 		self.clear()
 
-		master.switch_to()
-		buf = pyglet.image.get_buffer_manager().get_color_buffer()
-
-		rawimage = buf.get_image_data()
-		pitch = rawimage.width * len('RGBA')
-		pixels = rawimage.get_data('RGBA', pitch)
-		postprocessing = ctypes.CDLL("pineal/postprocessing")
-		postprocessing.test(pixels, rawimage.width, rawimage.height)
-
-		tex = rawimage.get_texture()
-		self.switch_to()
-
-		#self.shader.bind()
-		tex.blit(0,0,0, self.width,self.height)
-		#self.shader.unbind()
+		if rendering.texture:
+			rendering.texture.blit(0,0,0, self.width,self.height)
 
 		self.fps_display.draw()
 
@@ -86,8 +70,7 @@ class Preview(pyglet.window.Window):
 				v.update()
 				glPopMatrix()
 
-
-class Master(pyglet.window.Window):
+class Rendering(pyglet.window.Window):
 	def __init__(self, **args):
 		pyglet.window.Window.__init__(self, **args)
 
@@ -108,6 +91,8 @@ class Master(pyglet.window.Window):
 		glEnable(GL_COLOR_MATERIAL)
 		glShadeModel(GL_SMOOTH)
 
+		self.texture = None
+
 	def on_draw(self):
 		self.clear()
 		predraw(*self.get_size())
@@ -118,6 +103,25 @@ class Master(pyglet.window.Window):
 				#glPushMatrix()
 				v.update()
 				#glPopMatrix()
+
+		buf = pyglet.image.get_buffer_manager().get_color_buffer()
+
+		rawimage = buf.get_image_data()
+		pitch = rawimage.width * len('RGBA')
+		pixels = rawimage.get_data('RGBA', pitch)
+		postprocessing.test(pixels, rawimage.width, rawimage.height)
+
+		self.texture = rawimage.get_texture()
+
+
+class Master(pyglet.window.Window):
+	def __init__(self, **args):
+		pyglet.window.Window.__init__(self, **args)
+
+	def on_draw(self):
+		self.clear()
+		if rendering.texture:
+			rendering.texture.blit(0,0,0, self.width,self.height)
 
 def predraw(w,h):
 	glLightfv(GL_LIGHT0, GL_POSITION,vec(1,1,10, 3))
@@ -148,7 +152,7 @@ def predraw(w,h):
 	)
 
 def create():
-	global overview, master
+	global rendering, overview, master
 
 	platform = pyglet.window.get_platform()
 	display = platform.get_default_display()
@@ -157,20 +161,27 @@ def create():
 	overview = Overview(
 		caption = "Overview",
 		width = 600, height = 450,
-		vsync=0
+		vsync = 0
 	)
 
 	preview = Preview(
 		caption = "Preview",
 		width = 400, height = 300,
-		vsync=0
+		vsync = 0
+	)
+
+	rendering = Rendering(
+		caption = "Rendering",
+		width = 800, height = 600,
+		vsync = 0,
+		visible = 0
 	)
 
 	master = Master(
 		caption = "Master",
 		screen=screens[-1],
 		fullscreen = len(screens)>1,
-		vsync=1,
+		vsync = 1,
 		visible = len(screens)>1,
 	)
 	master.set_mouse_visible(False)
