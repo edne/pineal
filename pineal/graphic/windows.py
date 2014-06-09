@@ -109,9 +109,10 @@ class Rendering(pyglet.window.Window):
 		rawimage = buf.get_image_data()
 		pitch = rawimage.width * len('RGBA')
 		pixels = rawimage.get_data('RGBA', pitch)
-		postprocessing.test(pixels, rawimage.width, rawimage.height)
+		postprocessing.mirror(pixels, rawimage.width, rawimage.height)
 
 		self.texture = rawimage.get_texture()
+		#self.texture = buf.get_texture()
 
 
 class Master(pyglet.window.Window):
@@ -172,7 +173,7 @@ def create():
 
 	rendering = Rendering(
 		caption = "Rendering",
-		width = 800, height = 600,
+		width = 640, height = 480,
 		vsync = 0,
 		visible = 0
 	)
@@ -181,7 +182,7 @@ def create():
 		caption = "Master",
 		screen=screens[-1],
 		fullscreen = len(screens)>1,
-		vsync = 1,
+		vsync = len(screens)>1,
 		visible = len(screens)>1,
 	)
 	master.set_mouse_visible(False)
