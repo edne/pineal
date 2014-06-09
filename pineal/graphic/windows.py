@@ -42,34 +42,6 @@ class Overview(pyglet.window.Window):
 		if symbol == key.UP: camera.stop_move(-1)
 		if symbol == key.DOWN: camera.stop_move(1)
 
-class Preview(pyglet.window.Window):
-	def __init__(self, **args):
-		pyglet.window.Window.__init__(self, **args)
-
-		glEnable(GL_BLEND)
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
-
-		glEnable( GL_VERTEX_ARRAY )
-
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
-
-		glEnable(GL_LIGHTING)
-		glEnable(GL_LIGHT0)
-		glEnable(GL_COLOR_MATERIAL)
-		glShadeModel(GL_SMOOTH)
-
-
-	def on_draw(self):
-		self.clear()
-		predraw(*self.get_size())
-
-		for v in visuals.get():
-			if v.box.PRE:
-				glMatrixMode(GL_MODELVIEW)
-				glPushMatrix()
-				v.update()
-				glPopMatrix()
-
 class Rendering(pyglet.window.Window):
 	def __init__(self, **args):
 		pyglet.window.Window.__init__(self, **args)
@@ -98,11 +70,10 @@ class Rendering(pyglet.window.Window):
 		predraw(*self.get_size())
 
 		for v in visuals.get():
-			if not v.box.PRE:
-				glMatrixMode(GL_MODELVIEW)
-				#glPushMatrix()
-				v.update()
-				#glPopMatrix()
+			glMatrixMode(GL_MODELVIEW)
+			#glPushMatrix()
+			v.update()
+			#glPopMatrix()
 
 		buf = pyglet.image.get_buffer_manager().get_color_buffer()
 
@@ -162,12 +133,6 @@ def create():
 	overview = Overview(
 		caption = "Overview",
 		width = 600, height = 450,
-		vsync = 0
-	)
-
-	preview = Preview(
-		caption = "Preview",
-		width = 400, height = 300,
 		vsync = 0
 	)
 
