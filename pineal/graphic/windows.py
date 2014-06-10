@@ -71,19 +71,18 @@ class Rendering(pyglet.window.Window):
 
 		for v in visuals.get():
 			glMatrixMode(GL_MODELVIEW)
-			#glPushMatrix()
 			v.update()
-			#glPopMatrix()
 
 		buf = pyglet.image.get_buffer_manager().get_color_buffer()
 
 		rawimage = buf.get_image_data()
 		pitch = rawimage.width * len('RGBA')
 		pixels = rawimage.get_data('RGBA', pitch)
+
+		# li controllo da gui e F.O.
 		postprocessing.mirror(pixels, rawimage.width, rawimage.height)
 
 		self.texture = rawimage.get_texture()
-		#self.texture = buf.get_texture()
 
 
 class Master(pyglet.window.Window):
