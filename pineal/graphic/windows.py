@@ -80,7 +80,7 @@ class Rendering(pyglet.window.Window):
 		pixels = rawimage.get_data('RGBA', pitch)
 
 		# li controllo da gui e F.O.
-		postprocessing.mirror(pixels, rawimage.width, rawimage.height)
+		#postprocessing.mirror(pixels, rawimage.width, rawimage.height)
 
 		self.texture = rawimage.get_texture()
 

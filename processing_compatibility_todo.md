@@ -10,19 +10,18 @@
 * triangle()
 
 ## Attributes
-* strokeWeight()
+* **strokeWeight()**
 
 ## Transform
 * applyMatrix()
-* popMatrix()
-* printMatrix()
-* pushMatrix()
-* resetMatrix()
-* **rotate()** ~
-* rotateX()
-* rotateY()
-* rotateZ()
-* **scale()** ~
+* **popMatrix()**
+* **pushMatrix()**
+* **resetMatrix()**
+* **rotate()**
+* **rotateX()**
+* **rotateY()**
+* **rotateZ()**
+* **scale()**
 * shearX()
 * shearY()
 * **translate()**
@@ -46,7 +45,6 @@
 
 ## Color
 * background()
-* clear()
 * colorMode()
 * fill()
 * noFill()

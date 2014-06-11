@@ -37,14 +37,14 @@ r"""
     }
 """)
 
-def linew(w):
+def strokeWeight(w):
     glLineWidth(w)
 
-def rotatex(angle):
+def rotateX(angle):
     rotate(angx = angle)
-def rotatey(angle):
+def rotateY(angle):
     rotate(angy = angle)
-def rotatez(angle):
+def rotateZ(angle):
     rotate(angz = angle)
 
 def rotate(angz=0, angy=0, angx=0):
@@ -53,21 +53,19 @@ def rotate(angz=0, angy=0, angx=0):
 def translate(x=0, y=0, z=0):
     ezc_utils.translate(x, y, z)
 
-def scale(ratio):
-    scalexyz(ratio, ratio, ratio)
-
-def scalexyz(rx, ry, rz):
-    ezc_utils.scale(rx, ry, rz)
+def scale(x, y=None, z=1):
+    if not y: y = x
+    scalexyz(x, y, z)
 
 matrix_stack = 0
-def push():
+def pushMatrix():
     global matrix_stack
     if matrix_stack<30:
         ezc_utils.push()
         matrix_stack += 1
     else:
         print "TOO many push()"
-def pop():
+def popMatrix():
     global matrix_stack
     if matrix_stack>0:
         ezc_utils.pop()
@@ -75,7 +73,8 @@ def pop():
         print "TOO many pop()"
     matrix_stack -= 1 # if goes to -1 i can handle it
 
-def identity():
+def resetMatrix():
+    matrix_stack = 0
     glLoadIdentity()
 
 def random(a=0, b=1):

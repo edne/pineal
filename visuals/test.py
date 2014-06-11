@@ -4,14 +4,12 @@ var = {
 	"vel" : 0.5,
 }
 
-PRE = 0
-
 def loop():
 	#identity()
-	linew(2)
+	strokeWeight(2)
 
-	rotatex(dt*vel*2)
-	rotatey(dt*vel*4)
+	rotateX(dt*vel*2)
+	rotateY(dt*vel*4)
 
 	#rotatey(time_rad(0.2))
 
