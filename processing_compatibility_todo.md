@@ -45,22 +45,13 @@
 
 ## Color
 * background()
-* colorMode()
-* fill()
-* noFill()
-* noStroke()
-* stroke()
+* **colorMode()**
+* **fill()**
+* **noFill()**
+* **noStroke()**
+* **stroke()**
 
-
-* alpha()
-* blue()
-* brightness()
-* color()
-* green()
-* hue()
-* lerpColor()
-* red()
-* saturation()
+* **lerpColor()**
 
 ## Shaders
 * loadShader()

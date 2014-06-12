@@ -2,72 +2,83 @@ from imports import *
 import colorsys
 import graphic
 
-class Color:
-    def __init__(self, h=0, map=None):
-        self._h = float(h) if 0.0<=float(h)<=1.0 else float(h)%1.0
-        self.r, self.g, self.b = 0,0,0
-        self._hsv_start, self._hsv_end = 0.0, 1.0
-        if map:
-            self.map = map
-        self.map()
+_color_mode = "rgb"
 
-    # methods to map h to (r,g,b)
-    # map() is the default
-    def grey(self):
-        self.map = self.grey
-        self.r, self.g, self.b = [self._h]*3
-        return self
-    def hsv(self, *args):
-        self.map = self.hsv
+def colorMode(mode):
+    global _color_mode
+    _color_mode = mode
 
-        if len(args)==2:
-            self._hsv_start, self._hsv_end = args
+class Color(object):
+    def __init__(self, *argv):
+        if len(argv) in [1,2]:  # single or single+alpha
+            if _color_mode=="rgb":
+                self.r, self.g, self.b = [argv[0]]*3
+            if _color_mode=="hsv":
+                self.r, self.g, self.b = colorsys.hsv_to_rgb(argv[0],1,1)
+            self.a = argv[1] if len(argv)==2 else 1
 
-        h = self._hsv_start + (self._hsv_end-self._hsv_start)*self._h
-        self.r, self.g, self.b = colorsys.hsv_to_rgb(h,1,1)
-        return self
-    def black(self):
-        self.map = self.black
-        self.r, self.g, self.b = [0.0]*3
-        return self
-    def white(self):
-        self.map = self.white
-        self.r, self.g, self.b = [1.0]*3
-        return self
-    def mono(self, *args):
-        self.map = self.mono
-        if len(args)==3:
-            self.r, self.g, self.b = args
-    map = grey
-    #
+        elif len(argv) in [3,4]:  # 3 or 3+alpha
+            if _color_mode=="rgb":
+                self.r, self.g, self.b = argv[:3]
+            if _color_mode=="hsv":
+                self.r, self.g, self.b = colorsys.hsv_to_rgb(
+                    argv[0],argv[1],argv[2]
+                )
+            self.a = argv[3] if len(argv)==4 else 1
 
-    def __float__(self):
-        return self._h
+    @property
+    def h(self):
+        return colorsys.rgb_to_hsv(self.r,self.g,self.b)[0]
+    @h.setter
+    def h(self, _h):
+        self.r, self.g, self.b = colorsys.hsv_to_rgb(_h,self.s,self.v)
 
-    def __add__(self, f):
-        return Color(self._h + f, self.map).map()
-    __radd__ = __add__
+    @property
+    def s(self):
+        return colorsys.rgb_to_hsv(self.r,self.g,self.b)[1]
+    @s.setter
+    def s(self, _s):
+        self.r, self.g, self.b = colorsys.hsv_to_rgb(self.h,_s,self.v)
 
-    def __sub__(self, f):
-        return Color(self._h - f, self.map).map()
-    def __rsub__(self, f):
-        return Color(f - self._h, self.map).map()
+    @property
+    def v(self):
+        return colorsys.rgb_to_hsv(self.r,self.g,self.b)[2]
+    @v.setter
+    def v(self, _v):
+        self.r, self.g, self.b = colorsys.hsv_to_rgb(self.h,self.s,_v)
 
-    def __div__(self, f):
-        return Color(self._h / f, self.map).map()
-    def __rdiv__(self, f):
-        return Color(f / self._h, self.map).map()
+_fill = Color(0)
+_stroke = Color(1)
 
-    def __mul__(self, f):
-        return Color(self._h * f, self.map).map()
-    __rmul__ = __mul__
+def fill(*argv):
+    global _fill
+    if len(argv)==0:
+        return _fill
 
-    def __iter__(self):
-        return (self.r, self.g, self.b)
+    if len(argv)==1 and isinstance(argv[0], Color):
+        _fill = argv[0]
+    else:
+        _fill = Color(*argv)
 
-    def __call__(self, h=None):
-        if not h:
-            return self._h
-        else:
-            self._h = self._h = float(h) if 0.0<=float(h)<=1.0 else float(h)%1.0
-            self.map()
+def stroke(*argv):
+    global _stroke
+    if len(argv)==0:
+        return _stroke
+
+    if len(argv)==1 and isinstance(argv[0], Color):
+        _stroke = argv[0]
+    else:
+        _stroke = Color(*argv)
+
+def noFill():
+    _fill.a = 0.0
+
+def noStroke():
+    _fill.a = 0.0
+
+def lerpColor(c1, c2, amt):
+    r = c1.r*amt + c2.r*(1-amt)
+    g = c1.g*amt + c2.g*(1-amt)
+    b = c1.b*amt + c2.b*(1-amt)
+    a = c1.a*amt + c2.a*(1-amt)
+    return Color(r,g,b,a)

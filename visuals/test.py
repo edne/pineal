@@ -1,29 +1,23 @@
 var = {
-	"hue" : 0.0,
 	"alpha" : 1.0,
-	"vel" : 0.5,
+	"rad" : 1.0,
 }
 
 def loop():
 	#identity()
 	strokeWeight(2)
 
-	rotateX(dt*vel*2)
-	rotateY(dt*vel*4)
+	rotateX(dt*2)
+	rotateY(dt*4)
 
-	#rotatey(time_rad(0.2))
+	colorMode("hsv")
+	c = Color(sin(time)*0.5+0.5, 0.1*alpha)
+	fill(c)
 
-	c = Color(0.5).hsv()
+	colorMode("rgb")
+	stroke(c.h, alpha)
 
 	cube = Cube()
-	#cube = Tetrahedron()
-	#cube = Sphere()
-	#cube = Octahedron()
-
-	cube.r += bass*4
-
-	cube.fill(Color(note*0.1).grey(), alpha/6)
-	cube.stroke(Color(hue+note*0.4 + 0.5).hsv(), alpha)
 
 	for i in xrange(12):
 		cube.draw()

@@ -39,9 +39,6 @@ class Shape(object):
         self.z = 0
         self.r = 1
 
-        self._fill = (0,0,0,0)
-        self._stroke = (1,1,1,1)
-
     @property
     def center(self):
         return (self.x, self.y, self.z)
@@ -50,23 +47,15 @@ class Shape(object):
     def center(self, (x,y,z)):
         (self.x, self.y, self.z) = (x,y,z)
 
-    def fill(self, c, a=1):
-        self._fill = (c.r, c.g, c.b, a)
-    def stroke(self, c, a=1):
-        self._stroke = (c.r, c.g, c.b, a)
-
-    def noFill(self):
-        self._fill = (0,0,0,0)
-    def noStroke(self):
-        self._stroke = (0,0,0,0)
-
     def draw(self):
+        f = fill()
+        s = stroke()
         self.inline.draw(
             self.x, self.y, self.z,
             self.r,
-            int(self._fill!=(0,0,0,0)), int(self._stroke!=(0,0,0,0)),
-            self._fill[0], self._fill[1], self._fill[2], self._fill[3],
-            self._stroke[0], self._stroke[1], self._stroke[2], self._stroke[3]
+            int(f.a!=0.0), int(s.a!=0.0),
+            f.r, f.g, f.b, f.a,
+            s.r, s.g, s.b, s.a
         )
 
 class Polygon(Shape):
