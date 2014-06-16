@@ -2,7 +2,6 @@ from imports import *
 from pineal import analyzer
 
 import math
-from scipy import weave
 
 ezc_utils = ezpyinline.C(
 r"""

@@ -1,24 +1,19 @@
+
 var = {
 	"alpha" : 1.0,
 	"rad" : 1.0,
 }
 
 def loop():
-	#identity()
+
+	fill(0,0)
+	stroke(1)
 	strokeWeight(2)
 
-	rotateX(dt*2)
-	rotateY(dt*4)
+	s = createShape()
 
-	colorMode("hsv")
-	c = Color(sin(time)*0.5+0.5, 0.1*alpha)
-	fill(c)
+	s.vertex(0,0)
+	s.vertex(0,1)
+	s.vertex(1,1)
 
-	colorMode("rgb")
-	stroke(c.h, alpha)
-
-	cube = Cube()
-
-	for i in xrange(12):
-		cube.draw()
-		cube.r *= 0.8
+	shape(s)
