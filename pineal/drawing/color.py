@@ -1,6 +1,6 @@
 from imports import *
 import colorsys
-import graphic
+import pineal.graphic
 
 _color_mode = "rgb"
 

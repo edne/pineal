@@ -66,8 +66,9 @@ class Analyzer(threading.Thread):
 			for i in xrange(9):
 				self.norm_band[i] = self.amp.get()*self.band[i].get()/m
 
-
-analyzer = Analyzer()  # better use the server outside?
+def init():
+	global analyzer
+	analyzer = Analyzer()  # better use the server outside?
 
 def band(a, b=None):
 	if b:

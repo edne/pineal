@@ -16,8 +16,10 @@ class Graphic:
 			window.dispatch_event('on_draw')
 			window.flip()
 
+def init():
+	global graphic
+	graphic = Graphic()
 
-graphic = Graphic()
 def update():
 	graphic.update()
 

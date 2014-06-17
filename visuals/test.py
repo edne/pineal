@@ -1,3 +1,4 @@
+from pineal.drawing import *
 
 var = {
 	"alpha" : 1.0,
@@ -6,14 +7,12 @@ var = {
 
 def loop():
 
-	fill(0,0)
-	stroke(1)
+	colorMode("hsv")
+	fill(0,0,0,0.1)
+	stroke(0.5)
 	strokeWeight(2)
 
-	s = createShape()
-
-	s.vertex(0,0)
-	s.vertex(0,1)
-	s.vertex(1,1)
-
-	shape(s)
+	r = 1.0
+	for i in xrange(100):
+		cube(r)
+		r *= 0.9

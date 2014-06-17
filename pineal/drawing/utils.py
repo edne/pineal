@@ -1,4 +1,18 @@
-from imports import *
+## imports.py
+from pineal.imports import *
+from pineal import visuals
+
+from OpenGL.GLUT import *
+import pyglet
+from pyglet.gl import *
+
+import thirdparty.ezpyinline as ezpyinline
+
+def vec(*args):
+    return (GLfloat * len(args))(*args)
+
+##
+#from imports import *
 from pineal import analyzer
 
 import math
@@ -56,24 +70,26 @@ def scale(x, y=None, z=1):
     if not y: y = x
     scalexyz(x, y, z)
 
-matrix_stack = 0
+_matrix_stack = 0
 def pushMatrix():
-    global matrix_stack
-    if matrix_stack<30:
+    global _matrix_stack
+    if _matrix_stack<30:
         ezc_utils.push()
-        matrix_stack += 1
+        _matrix_stack += 1
     else:
         print "TOO many push()"
+        raise Exception()
 def popMatrix():
-    global matrix_stack
-    if matrix_stack>0:
+    global _matrix_stack
+    if _matrix_stack>0:
         ezc_utils.pop()
     else:
         print "TOO many pop()"
-    matrix_stack -= 1 # if goes to -1 i can handle it
+        raise Exception()
+    _matrix_stack -= 1 # if goes to -1 i can handle it
 
 def resetMatrix():
-    matrix_stack = 0
+    _matrix_stack = 0
     glLoadIdentity()
 
 def random(a=0, b=1):

@@ -1,7 +1,9 @@
 from imports import *
 import graphic
 
-l = list()
+def init():
+	global l
+	l = list()
 
 def add(v):
 	l.append(v)
@@ -50,7 +52,7 @@ class Visual():
 			self.code = self.stack[-1]
 
 		try:
-			exec("from pineal.drawing import *", self.box.__dict__)
+			#exec("from pineal.drawing import *", self.box.__dict__)
 			exec(self.code, self.box.__dict__)
 			self.loop()
 		except Exception as e:
@@ -85,18 +87,6 @@ class Visual():
 				self.box.__dict__[k] = self.box.var[k]
 
 		self.box.loop()
-
-		if graphic.utils.matrix_stack != 0:
-			print "too many pop()"
-			if graphic.utils.matrix_stack < 0:
-				graphic.utils.matrix_stack = 0
-
-			if graphic.utils.matrix_stack > 0:
-				print "too many push()"
-				while graphic.utils.matrix_stack > 0:
-					graphic.utils.pop()
-
-			raise Exception()  # the code laded is WRONG
 
 
 class Box:

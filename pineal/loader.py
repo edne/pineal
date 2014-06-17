@@ -60,7 +60,9 @@ class Loader(threading.Thread):
 	def stop(self):
 		self._stop = True
 
-thread = Loader()
+def init():
+	global thread
+	thread = Loader()
 
 def start():
 	thread.start()
