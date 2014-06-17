@@ -1,5 +1,3 @@
-from pineal.drawing import *
-
 var = {
 	"alpha" : 1.0,
 	"rad" : 1.0,

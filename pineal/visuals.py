@@ -52,7 +52,7 @@ class Visual():
 			self.code = self.stack[-1]
 
 		try:
-			#exec("from pineal.drawing import *", self.box.__dict__)
+			exec("from pineal.livecoding import *", self.box.__dict__)
 			exec(self.code, self.box.__dict__)
 			self.loop()
 		except Exception as e:
