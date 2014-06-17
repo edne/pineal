@@ -72,7 +72,7 @@ class Visual():
 		log += str(e)
 
 		if hasattr(e, 'text'):
-			log += "\n"+e.text
+			log += "\n"+str(e.text)
 
 		return log
 
