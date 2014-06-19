@@ -11,8 +11,6 @@ class Analyzer(threading.Thread):
 			nchnls = 4
 		).boot()
 
-		#self.update()
-
 		self._stop = False
 
 	def run(self):
@@ -25,6 +23,7 @@ class Analyzer(threading.Thread):
 		self.high = Follower(Biquad(src, 1000, type=1))
 
 		self.pitch = Yin(src)
+		self.note = 0
 
 		self.band = list()
 		self.norm_band = [0]*9
@@ -50,12 +49,8 @@ class Analyzer(threading.Thread):
 
 	def update(self):
 		for v in visuals.get():
-			v.box.amp = self.amp.get()
-			v.box.bass = self.bass.get()
-			v.box.high = self.high.get()
-
 			if self.pitch.get()>1:
-				v.box.note = math.log(self.pitch.get()/16.35,2)%1.0
+				self.note = math.log(self.pitch.get()/16.35,2)%1.0
 
 
 		for i in xrange(9):
@@ -68,7 +63,7 @@ class Analyzer(threading.Thread):
 
 def init():
 	global analyzer
-	analyzer = Analyzer()  # better use the server outside?
+	analyzer = Analyzer()
 
 def band(a, b=None):
 	if b:
@@ -84,3 +79,9 @@ def stop():
 
 def update():
 	analyzer.update()
+
+def amp():
+	return analyzer.amp.get()
+
+def note():
+	return analyzer.note

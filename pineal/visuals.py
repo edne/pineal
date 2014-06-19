@@ -91,16 +91,9 @@ class Visual():
 
 class Box:
 	def __init__(self):
-		self.amp = 0
-		self.bass = 0
-		self.high = 0
-		self.note = 0
-
 		self.time = 0
 		self.last_time = 0
 		self.dt = 0
-
-		self.PRE = False
 
 		self.var = dict()
 	def loop(self):

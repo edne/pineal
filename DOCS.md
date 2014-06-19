@@ -52,3 +52,10 @@
 * noStroke()
 * lerpColor(c1, c2, amt)
 ***
+
+### Audio
+* amp()
+* bass()
+* high()
+* note()
+***
