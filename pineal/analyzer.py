@@ -82,6 +82,11 @@ def update():
 
 def amp():
 	return analyzer.amp.get()
+def bass():
+	return analyzer.bass.get()
+def high():
+	return analyzer.high.get()
+
 
 def note():
 	return analyzer.note

@@ -5,7 +5,7 @@
 * ellipse()
 * line()
 * point()
-* quad()
+* **quad()** ~
 * rect()
 * triangle()
 

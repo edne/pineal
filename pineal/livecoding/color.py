@@ -74,7 +74,7 @@ def noFill():
     _fill.a = 0.0
 
 def noStroke():
-    _fill.a = 0.0
+    _stroke.a = 0.0
 
 def lerpColor(c1, c2, amt):
     r = c1.r*amt + c2.r*(1-amt)
