@@ -4,14 +4,13 @@ var = {
     "rad" : 1.0,
 }
 
-
 def loop():
 
     rotate(dt/2)
 
     colorMode("hsv")
 
-    h = note()
+    h = note()+0.4
     fill(h,1,1,0.05)
     #noStroke()
 
@@ -19,19 +18,19 @@ def loop():
     stroke(0.8)
     strokeWeight(2)
 
-    f = fill()
+    f = fill();
     #s = stroke()
     glColor4f(f.r,f.g,f.b, f.a)
 
     colorMode("hsv")
 
     pushMatrix()
-    l = 1.0
-    for i in xrange(10):
-        #rotate((time/10)%(2*pi))
+    l = 2.0
+    for i in xrange(50):
+        rotate((time/10)%(2*pi))
 
         fill(h,1,1,0.05)
-        tetrahedron(l+sin(time+i))
+        quad(l)
 
         l *= 0.9
         strokeWeight(l+0.7)

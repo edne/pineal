@@ -4,7 +4,6 @@ var = {
     "rad" : 1.0,
 }
 
-
 def loop():
 
     rotate(dt/2)
@@ -19,7 +18,7 @@ def loop():
     stroke(0.8)
     strokeWeight(2)
 
-    f = fill()
+    f = fill();
     #s = stroke()
     glColor4f(f.r,f.g,f.b, f.a)
 

@@ -1,10 +1,9 @@
 TODO
 ====
 
+* low level waveform access
+* fft in a C module
+* beter spectrum access
+---
 * fix camera movement bugs
-* TEXTURES!
-* GLSL
-* kaleidoscope effect (maybe depends from GLSL)
-* better spectrum access
 * OSC input
-* Grid drawing object
