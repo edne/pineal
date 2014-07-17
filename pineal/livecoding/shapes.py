@@ -1,7 +1,7 @@
-from imports import *
+import thirdparty.ezpyinline as ezpyinline
+from color import fill,stroke
 
-ezc_shapes = ezpyinline.C(
-r"""
+ezc_shapes = ezpyinline.C(r"""
     #include <GL/freeglut.h>
     #include <math.h>
 
@@ -92,20 +92,28 @@ r"""
 
 
 def cube(r=1):
-    f = fill(); s = stroke()
+    f = fill()
+    s = stroke()
     ezc_shapes.cube(r, f.r,f.g,f.b,f.a, s.r,s.g,s.b,s.a)
 
+
 def tetrahedron(r=1):
-    f = fill(); s = stroke()
+    f = fill()
+    s = stroke()
     ezc_shapes.tetrahedron(r, f.r,f.g,f.b,f.a, s.r,s.g,s.b,s.a)
 
+
 def dodecahedron(r=1):
-    f = fill(); s = stroke()
+    f = fill()
+    s = stroke()
     ezc_shapes.dodecahedron(r, f.r,f.g,f.b,f.a, s.r,s.g,s.b,s.a)
 
+
 def octahedron(r=1):
-    f = fill(); s = stroke()
+    f = fill()
+    s = stroke()
     ezc_shapes.octahedron(r, f.r,f.g,f.b,f.a, s.r,s.g,s.b,s.a)
+
 
 class Shape(object):
     def __init__(self):
@@ -114,48 +122,16 @@ class Shape(object):
     def vertex(self, x,y, z=0):
         self._v.append( (x,y,z) )
 
-    def _draw(self):
-        f = fill(); s = stroke()
-
-        glColor4f(f.r,f.g,f.b, f.a)
-        glBegin(GL_POLYGON)
-        for v in self._v:
-            glVertex3f(v[0],v[1],v[2])
-        glEnd()
-
-        glColor4f(s.r,s.g,s.b, s.a)
-        glBegin(GL_LINE_LOOP)
-        for v in self._v:
-            glVertex3f(v[0],v[1],v[2])
-        glEnd()
 
 def createShape():
     return Shape()
 
+
 def shape(s):
     s._draw()
 
+
 def quad(l=1.0, x=0, y=0, z=0):
-    f = fill(); s = stroke()
+    f = fill()
+    s = stroke()
     ezc_shapes.quad(l,x,y,z, f.r,f.g,f.b,f.a, s.r,s.g,s.b,s.a)
-
-
-def _quad(l=1.0, x=0, y=0, z=0):
-    f = fill(); s = stroke()
-    l = float(l)
-
-    glColor4f(f.r,f.g,f.b, f.a)
-    glBegin(GL_POLYGON)
-    glVertex3f(x-l/2, y-l/2, z)
-    glVertex3f(x-l/2, y+l/2, z)
-    glVertex3f(x+l/2, y+l/2, z)
-    glVertex3f(x+l/2, y-l/2, z)
-    glEnd()
-
-    glColor4f(s.r,s.g,s.b, s.a)
-    glBegin(GL_LINE_LOOP)
-    glVertex3f(x-l/2, y-l/2, z)
-    glVertex3f(x-l/2, y+l/2, z)
-    glVertex3f(x+l/2, y+l/2, z)
-    glVertex3f(x+l/2, y-l/2, z)
-    glEnd()

@@ -1,24 +1,15 @@
-## imports.py
-from pineal.imports import *
-from pineal import visuals
-
 from OpenGL.GLUT import *
-import pyglet
 from pyglet.gl import *
 
 import thirdparty.ezpyinline as ezpyinline
 
+
 def vec(*args):
     return (GLfloat * len(args))(*args)
 
-##
-#from imports import *
 from pineal import analyzer
 
-import math
-
-ezc_utils = ezpyinline.C(
-r"""
+ezc_utils = ezpyinline.C(r"""
     #include <GL/freeglut.h>
     #include <math.h>
 
@@ -50,27 +41,39 @@ r"""
     }
 """)
 
+
 def strokeWeight(w):
     glLineWidth(w)
 
+
 def rotateX(angle):
     rotate(angx = angle)
+
+
 def rotateY(angle):
     rotate(angy = angle)
+
+
 def rotateZ(angle):
     rotate(angz = angle)
+
 
 def rotate(angz=0, angy=0, angx=0):
     ezc_utils.rotate(angx,angy,angz)
 
+
 def translate(x=0, y=0, z=0):
     ezc_utils.translate(x, y, z)
 
+
 def scale(x, y=None, z=1):
-    if not y: y = x
+    if not y:
+        y = x
     scalexyz(x, y, z)
 
 _matrix_stack = 0
+
+
 def pushMatrix():
     global _matrix_stack
     if _matrix_stack<30:
@@ -79,6 +82,8 @@ def pushMatrix():
     else:
         print "TOO many push()"
         raise Exception()
+
+
 def popMatrix():
     global _matrix_stack
     if _matrix_stack>0:
@@ -88,13 +93,17 @@ def popMatrix():
         raise Exception()
     _matrix_stack -= 1 # if goes to -1 i can handle it
 
+
 def resetMatrix():
+    global _matrix_stack
     _matrix_stack = 0
     glLoadIdentity()
+
 
 def random(a=0, b=1):
     """ uniform distribution """
     return uniform(a,b)
+
 
 def noise(a=1):
     """ white noise (uniform distribution in [-a,+a]) """
@@ -104,17 +113,21 @@ def noise(a=1):
 def band(a, b=None):
     return analyzer.band(a,b)
 
+
 # TODO: in C?
 # light
 def ambient(amb):
     """ set ambiental light intensity """
     glLightModelfv(
-            GL_LIGHT_MODEL_AMBIENT|GL_LIGHT_MODEL_TWO_SIDE,
-            vec(amb,amb,amb, 1.0)
-        )
+        GL_LIGHT_MODEL_AMBIENT|GL_LIGHT_MODEL_TWO_SIDE,
+        vec(amb,amb,amb, 1.0)
+    )
+
+
 def light(val):
     """ set light intensity """
     glLightfv(GL_LIGHT0, GL_DIFFUSE, vec(val, val, val, 1.0))
+
 
 def light_pos(x,y,z):
     """ set light position """

@@ -1,6 +1,7 @@
 images/*
 cxfreeze*
 .fuse_hidden*
+*.swp
 
 *.py[cod]
 

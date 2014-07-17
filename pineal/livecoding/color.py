@@ -1,12 +1,12 @@
-from imports import *
 import colorsys
-import pineal.graphic
 
 _color_mode = "rgb"
+
 
 def colorMode(mode):
     global _color_mode
     _color_mode = mode
+
 
 class Color(object):
     def __init__(self, *argv):
@@ -29,6 +29,7 @@ class Color(object):
     @property
     def h(self):
         return colorsys.rgb_to_hsv(self.r,self.g,self.b)[0]
+
     @h.setter
     def h(self, _h):
         self.r, self.g, self.b = colorsys.hsv_to_rgb(_h,self.s,self.v)
@@ -36,6 +37,7 @@ class Color(object):
     @property
     def s(self):
         return colorsys.rgb_to_hsv(self.r,self.g,self.b)[1]
+
     @s.setter
     def s(self, _s):
         self.r, self.g, self.b = colorsys.hsv_to_rgb(self.h,_s,self.v)
@@ -43,12 +45,14 @@ class Color(object):
     @property
     def v(self):
         return colorsys.rgb_to_hsv(self.r,self.g,self.b)[2]
+
     @v.setter
     def v(self, _v):
         self.r, self.g, self.b = colorsys.hsv_to_rgb(self.h,self.s,_v)
 
 _fill = Color(0)
 _stroke = Color(1)
+
 
 def fill(*argv):
     global _fill
@@ -60,6 +64,7 @@ def fill(*argv):
     else:
         _fill = Color(*argv)
 
+
 def stroke(*argv):
     global _stroke
     if len(argv)==0:
@@ -70,11 +75,14 @@ def stroke(*argv):
     else:
         _stroke = Color(*argv)
 
+
 def noFill():
     _fill.a = 0.0
 
+
 def noStroke():
     _stroke.a = 0.0
+
 
 def lerpColor(c1, c2, amt):
     r = c1.r*amt + c2.r*(1-amt)

@@ -1,8 +1,11 @@
-from imports import *
+import Tkinter
+import ttk
+import pineal.visuals as visuals
 
-class VisualTabs(Notebook):
+
+class VisualTabs(ttk.Notebook):
     def __init__(self, parent):
-        Notebook.__init__(self, parent)
+        ttk.Notebook.__init__(self, parent)
         self.tabs = list()
 
     def add(self, v):
@@ -16,21 +19,21 @@ class VisualTabs(Notebook):
 
     def update(self):
         for v in visuals.get():
-            if not v in [tab.v for tab in self.tabs]:
+            if v not in [tab.v for tab in self.tabs]:
                 self.add(v)
 
         for tab in self.tabs:
-            if not tab.v in visuals.get():
+            if tab.v not in visuals.get():
                 self.remove(tab)
 
             tab.update()
 
 
-class Tab(Frame):
+class Tab(ttk.Frame):
     def __init__(self, parent, v):
-        Frame.__init__(self, parent)
-        Notebook.add(parent, self, text=v.name)
-        parent.pack(fill=BOTH, expand=1)
+        ttk.Frame.__init__(self, parent)
+        ttk.Notebook.add(parent, self, text=v.name)
+        parent.pack(fill=Tkinter.BOTH, expand=1)
 
         self.parent = parent
         self.v = v
@@ -39,7 +42,7 @@ class Tab(Frame):
 
     def update(self):
         for key in self.v.box.var.keys():
-            if not key in self.sliders.keys():
+            if key not in self.sliders.keys():
                 slider = Slider(
                     self,
                     key,
@@ -52,16 +55,16 @@ class Tab(Frame):
 class Slider:
     def __init__(self, parent, key, index, value=0.0):
 
-        label = Label(parent, text=key)
+        label = ttk.Label(parent, text=key)
         label.grid(row=index)
 
-        self.var = DoubleVar()
+        self.var = Tkinter.DoubleVar()
         self.var.set(min(1.0, max(0.0, value)))
         self.var.trace("w", self.callback)
 
         parent.grid_columnconfigure(1, weight=1)
-        scale = Scale(parent, variable=self.var)
-        scale.grid(row=index, column=1, sticky=E+W)
+        scale = ttk.Scale(parent, variable=self.var)
+        scale.grid(row=index, column=1, sticky=Tkinter.E+Tkinter.W)
 
         self.parent = parent
         self.key = key

@@ -1,24 +1,22 @@
-from imports import *
+import graphic, visuals, loader, analyzer, gui
+
 
 def main():
-	#
-	# exaustive dependencies check
-	#
-	graphic.init()
-	visuals.init()
-	loader.init()
-	analyzer.init()
-	gui.init()
+    graphic.init()
+    visuals.init()
+    loader.init()
+    analyzer.init()
+    gui.init()
 
-	loader.start()
-	analyzer.start()
+    loader.start()
+    analyzer.start()
 
-	try:
-		while True:
-			gui.update()
-			graphic.update()
-	except KeyboardInterrupt:
-		None
+    try:
+        while True:
+            gui.update()
+            graphic.update()
+    except KeyboardInterrupt:
+        None
 
-	loader.stop()
-	analyzer.stop()
+    loader.stop()
+    analyzer.stop()

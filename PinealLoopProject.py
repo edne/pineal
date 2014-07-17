@@ -2,5 +2,4 @@
 import pineal
 
 if __name__=='__main__':
-	pineal.main()
-
+    pineal.main()
