@@ -6,27 +6,23 @@ var = {
 
 
 def loop():
-
-    rotate(dt/2)
+    rotate(0,dt/8)
+    rotate(high()/8)
 
     colorMode("hsv")
 
-    h = note()
+    h = note()+0.3
     fill(h,1,1,0.05)
     #noStroke()
 
     colorMode("rgb")
-    stroke(0.8)
+    stroke(noise()*bass()*4)
     strokeWeight(2)
-
-    f = fill()
-    #s = stroke()
-    glColor4f(f.r,f.g,f.b, f.a)
 
     colorMode("hsv")
 
     pushMatrix()
-    l = 1.0
+    l = (1.0 + bass()*4)*rad
     for i in xrange(10):
         #rotate((time/10)%(2*pi))
 
@@ -35,6 +31,6 @@ def loop():
 
         l *= 0.9
         strokeWeight(l+0.7)
-        rotate(bass()+pi/4)
+        rotate(pi/4)
         h += 0.01
     popMatrix()

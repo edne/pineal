@@ -1,6 +1,6 @@
 from config import VISUALS_PATH
 
-import threading, os
+import threading, os, time
 from glob import glob
 from os.path import getmtime
 
@@ -18,16 +18,17 @@ class Loader(threading.Thread):
         while not self._stop:
             self.load()
 
-            #time.sleep(0.01)
+            time.sleep(0.01)
 
     def load(self):
-        names = list()
-        for filename in glob(os.path.join(self.path,'*.py')):
-            name = os.path.basename(os.path.splitext(filename)[0])
-            names.append(name)
+        names = [
+            os.path.basename(os.path.splitext(filename)[0])
+            for filename in glob(os.path.join(self.path,'*.py'))
+        ]
 
         for v in visuals.get():
             if v.name not in names:
+                print 'removing'
                 v.remove()
 
         for name in names:
@@ -37,8 +38,7 @@ class Loader(threading.Thread):
             filename = os.path.join(path, name+'.py')
 
             if not v:
-                v = visuals.Visual(name)
-                visuals.add(v)
+                v = visuals.new(name)
                 v.filetime = 0
 
             try:

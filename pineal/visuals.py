@@ -8,8 +8,14 @@ def init():
     l = []
 
 
-def add(v):
+#def add(v):
+#    l.append(v)
+
+
+def new(name):
+    v = Visual(name)
     l.append(v)
+    return v
 
 
 def remove(v):
@@ -34,49 +40,35 @@ def names():
 
 class Visual():
     def __init__(self, name):
+        print 'creating visual'
         self.name = name
-
-        self.lock = False  # to be removed
-        self.stack = list()
-        self.code = None
-
+        self._stack = list()
         self.box = Box()
 
     def load(self, code):
-        self.stack.append(code)
-
-        if not self.code:
-            self.code = code
+        self._stack.append(code)
 
     def remove(self):
         remove(self)
 
     def update(self):
-        if not self.code:
+        if not self._stack:
             return
-        if len(self.stack)==0:
-            return
-
-        if self.code != self.stack[-1]:
-            self.code = self.stack[-1]
 
         try:
-            #exec("from pineal.livecoding import *",self.box.__dict__)
-            exec(self.code, self.box.__dict__)
+            exec(self._stack[-1], self.box.__dict__)
             self.loop()
         except Exception as e:
             print self.error_log(e)
 
-            self.stack.remove(self.code)
-            if len(self.stack)==0:
+            self._stack = self._stack[:-1]
+            if not self._stack:
                 print "%s.py is BROKEN" % self.name
             else:
-                self.code = self.stack[-1]
                 self.update() # WARNING recursion!
 
     def error_log(self, e):
         log = self.name + '.py'
-        #log += ' at line: '+str(lineno)+"\n"
         log += str(e)
 
         if hasattr(e, 'text'):
