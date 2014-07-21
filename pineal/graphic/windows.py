@@ -8,6 +8,15 @@ import camera
 # TODO: that's HORRIBLE
 rendering = None
 
+MAPPING = {
+    key.W: (0,-1),
+    key.S: (0,1),
+    key.A: (1,0),
+    key.D: (-1,0),
+    key.UP: (-1,),
+    key.DOWN: (1,)
+}
+
 
 def vec(*args):
     return (gl.GLfloat * len(args))(*args)
@@ -33,35 +42,16 @@ class Overview(pyglet.window.Window):
     def on_key_press(self, symbol, modifiers):
         if symbol == key.DELETE:
             camera.reset()
-
-        if symbol == key.W:
-            camera.start_rotate(0,-1)
-        if symbol == key.S:
-            camera.start_rotate(0,1)
-        if symbol == key.A:
-            camera.start_rotate(1,0)
-        if symbol == key.D:
-            camera.start_rotate(-1,0)
-
-        if symbol == key.UP:
-            camera.start_move(-1)
-        if symbol == key.DOWN:
-            camera.start_move(1)
+        if symbol in (key.W, key.S, key.A, key.D):
+            camera.start_rotate(*MAPPING[symbol])
+        if symbol in (key.UP, key.DOWN):
+            camera.start_move(*MAPPING[symbol])
 
     def on_key_release(self, symbol, modifiers):
-        if symbol == key.W:
-            camera.stop_rotate(0,-1)
-        if symbol == key.S:
-            camera.stop_rotate(0,1)
-        if symbol == key.A:
-            camera.stop_rotate(1,0)
-        if symbol == key.D:
-            camera.stop_rotate(-1,0)
-
-        if symbol == key.UP:
-            camera.stop_move(-1)
-        if symbol == key.DOWN:
-            camera.stop_move(1)
+        if symbol in (key.W, key.S, key.A, key.D):
+            camera.stop_rotate(*MAPPING[symbol])
+        if symbol in (key.UP, key.DOWN):
+            camera.stop_move(*MAPPING[symbol])
 
 
 class Rendering(pyglet.window.Window):

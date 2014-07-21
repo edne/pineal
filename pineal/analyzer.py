@@ -12,7 +12,8 @@ class Analyzer(threading.Thread):
             audio="jack",
             jackname=TITLE,
             nchnls = 4
-        ).boot()
+        )
+        self.s.boot()
 
         self._stop = False
 
