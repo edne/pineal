@@ -2,7 +2,6 @@ from random import uniform
 import pyglet.gl as gl
 
 import thirdparty.ezpyinline as ezpyinline
-from pineal import analyzer
 
 
 def _vec(*args):
@@ -108,10 +107,6 @@ def random(a=0, b=1):
 def noise(a=1):
     """ white noise (uniform distribution in [-a,+a]) """
     return uniform(-a,a)
-
-
-def band(a, b=None):
-    return analyzer.band(a,b)
 
 
 # light

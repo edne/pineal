@@ -1,10 +1,11 @@
 import Tkinter
 import ttk
-import pineal.visuals as visuals
 
 
 class VisualTabs(ttk.Notebook):
     def __init__(self, parent):
+        self.parent = parent
+
         ttk.Notebook.__init__(self, parent)
         self.tabs = list()
 
@@ -18,12 +19,12 @@ class VisualTabs(ttk.Notebook):
         del tab
 
     def update(self):
-        for v in visuals.get():
+        for v in self.parent.visuals.values():
             if v not in [tab.v for tab in self.tabs]:
                 self.add(v)
 
         for tab in self.tabs:
-            if tab.v not in visuals.get():
+            if tab.v not in self.parent.visuals.values():
                 self.remove(tab)
 
             tab.update()
@@ -31,6 +32,8 @@ class VisualTabs(ttk.Notebook):
 
 class Tab(ttk.Frame):
     def __init__(self, parent, v):
+        self.parent = parent
+
         ttk.Frame.__init__(self, parent)
         ttk.Notebook.add(parent, self, text=v.name)
         parent.pack(fill=Tkinter.BOTH, expand=1)
@@ -54,6 +57,7 @@ class Tab(ttk.Frame):
 
 class Slider:
     def __init__(self, parent, key, index, value=0.0):
+        self.parent = parent
 
         label = ttk.Label(parent, text=key)
         label.grid(row=index)
@@ -70,7 +74,7 @@ class Slider:
         self.key = key
 
     def callback(self, *args):
-        visuals.reciver(
+        self.parent.visuals.reciver(
             self.parent.v.name,
             self.key,
             self.var.get()

@@ -4,7 +4,8 @@ import widgets
 
 
 class Gui(Tk):
-    def __init__(self):
+    def __init__(self, visuals):
+        self.visuals = visuals
         Tk.__init__(self)
         self.title(TITLE)
 
@@ -18,14 +19,3 @@ class Gui(Tk):
 
     def _quit(self):
         None
-
-tk = None  # TODO: that's HORRIBLE
-
-
-def init():
-    global tk
-    tk = Gui()
-
-
-def update():
-    tk.update()

@@ -2,10 +2,8 @@ import pyglet
 from pyglet.window import key
 import pyglet.gl as gl
 
-from pineal import visuals
 import camera
 
-# TODO: that's HORRIBLE
 rendering = None
 
 MAPPING = {
@@ -23,7 +21,7 @@ def vec(*args):
 
 
 class Overview(pyglet.window.Window):
-    def __init__(self, **args):
+    def __init__(self, visuals, **args):
         pyglet.window.Window.__init__(self, **args)
 
         self.fps_display = pyglet.clock.ClockDisplay()
@@ -55,7 +53,8 @@ class Overview(pyglet.window.Window):
 
 
 class Rendering(pyglet.window.Window):
-    def __init__(self, **args):
+    def __init__(self, visuals, **args):
+        self.visuals = visuals
         pyglet.window.Window.__init__(self, **args)
 
         gl.glEnable(gl.GL_BLEND)
@@ -81,7 +80,7 @@ class Rendering(pyglet.window.Window):
         self.clear()
         predraw(*self.get_size())
 
-        for v in visuals.get():
+        for v in self.visuals.values():
             gl.glMatrixMode(gl.GL_MODELVIEW)
             v.update()
 
@@ -98,7 +97,7 @@ class Rendering(pyglet.window.Window):
 
 
 class Master(pyglet.window.Window):
-    def __init__(self, **args):
+    def __init__(self, visuals, **args):
         pyglet.window.Window.__init__(self, **args)
 
     def on_draw(self):
@@ -136,7 +135,7 @@ def predraw(w,h):
     )
 
 
-def create():
+def create(visuals):
     global rendering, overview, master
 
     platform = pyglet.window.get_platform()
@@ -144,12 +143,14 @@ def create():
     screens = display.get_screens()
 
     overview = Overview(
+        visuals,
         caption = "Overview",
         width = 600, height = 450,
         vsync = 0
     )
 
     rendering = Rendering(
+        visuals,
         caption = "Rendering",
         width = 640, height = 480,
         vsync = 0,
@@ -157,6 +158,7 @@ def create():
     )
 
     master = Master(
+        visuals,
         caption = "Master",
         screen=screens[-1],
         fullscreen = len(screens)>1,

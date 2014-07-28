@@ -4,11 +4,10 @@ import threading, os, time
 from glob import glob
 from os.path import getmtime
 
-import visuals
-
 
 class Loader(threading.Thread):
-    def __init__(self):
+    def __init__(self, visuals):
+        self.visuals = visuals
         threading.Thread.__init__(self)
 
         self.path = os.path.join(os.path.dirname(__file__),VISUALS_PATH)
@@ -26,20 +25,20 @@ class Loader(threading.Thread):
             for filename in glob(os.path.join(self.path,'*.py'))
         ]
 
-        for v in visuals.get():
-            if v.name not in names:
+        for name in self.visuals:
+            if name not in names:
                 print 'removing'
-                v.remove()
+                del self.visuals[name]
 
         for name in names:
-            v = visuals.get(name)
+            if name in self.visuals:
+                v = self.visuals[name]
+            else:
+                v = self.visuals.new(name)
+                v.filetime = 0
 
             path = os.path.join(os.path.dirname(__file__),VISUALS_PATH)
             filename = os.path.join(path, name+'.py')
-
-            if not v:
-                v = visuals.new(name)
-                v.filetime = 0
 
             try:
                 filetime = getmtime(filename)
@@ -61,19 +60,3 @@ class Loader(threading.Thread):
 
     def stop(self):
         self._stop = True
-
-# TODO: that's HORRIBLE
-thread = None
-
-
-def init():
-    global thread
-    thread = Loader()
-
-
-def start():
-    thread.start()
-
-
-def stop():
-    thread.stop()

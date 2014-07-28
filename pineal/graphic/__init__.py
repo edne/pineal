@@ -4,13 +4,14 @@ import OpenGL.GLUT as glut
 import pyglet.gl as gl
 import pyglet
 
-import camera,windows
+import camera
+import windows
 
 
 class Graphic:
-    def __init__(self):
+    def __init__(self, visuals):
         glut.glutInit(sys.argv)  # for the 3d presets
-        windows.create()
+        windows.create(visuals)
 
     def update(self):
         dt = pyglet.clock.tick()
@@ -21,18 +22,5 @@ class Graphic:
             window.dispatch_event('on_draw')
             window.flip()
 
-
-graphic = None # TODO: that's HORRIBLE
-
-
-def init():
-    global graphic
-    graphic = Graphic()
-
-
-def update():
-    graphic.update()
-
-
-def set_color(c, a=1.0):
-    gl.glColor4f(c.r,c.g,c.b, a)
+    def set_color(c, a=1.0):
+        gl.glColor4f(c.r,c.g,c.b, a)

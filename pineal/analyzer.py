@@ -1,11 +1,11 @@
 from config import TITLE, AUDIO_PORTS
-import visuals
 import math, time, threading
 import pyo
 
 
 class Analyzer(threading.Thread):
-    def __init__(self):
+    def __init__(self, visuals):
+        self.visuals = visuals
         threading.Thread.__init__(self)
 
         self.s = pyo.Server(
@@ -22,23 +22,23 @@ class Analyzer(threading.Thread):
 
         src = pyo.Input(chnl=AUDIO_PORTS)
 
-        self.amp = pyo.Follower(src)
-        self.bass = pyo.Follower(pyo.Biquad(src, 110, type=0))
-        self.high = pyo.Follower(pyo.Biquad(src, 1000, type=1))
+        self._amp = pyo.Follower(src)
+        self._bass = pyo.Follower(pyo.Biquad(src, 110, type=0))
+        self._high = pyo.Follower(pyo.Biquad(src, 1000, type=1))
 
-        self.pitch = pyo.Yin(src)
-        self.note = 0
+        self._pitch = pyo.Yin(src)
+        self._note = 0
 
-        self.band = list()
-        self.norm_band = [0]*9
+        self._band = list()
+        self._norm_band = [0]*9
         c = 4186.01*2
         for i in xrange(9):
             lowpassed = pyo.Follower(pyo.Biquad(src, c, type=0))
             highpassed = pyo.Follower(pyo.Biquad(lowpassed, c/2, type=1))
             band = pyo.Follower(highpassed)/(2**(i-1))
-            self.band.append(band)
+            self._band.append(band)
             c /= 2
-        self.band.reverse()
+        self._band.reverse()
 
         while not self._stop:
             self.update()
@@ -49,57 +49,32 @@ class Analyzer(threading.Thread):
         self.s.stop()
 
     def update(self):
-        for v in visuals.get():
-            if self.pitch.get()>1:
-                self.note = math.log(self.pitch.get()/16.35,2)%1.0
+        for v in self.visuals.values():
+            if self._pitch.get()>1:
+                self._note = math.log(self._pitch.get()/16.35,2)%1.0
 
         for i in xrange(9):
-            self.norm_band[i] = self.band[i].get()
+            self._norm_band[i] = self._band[i].get()
 
-        m = max(self.norm_band)
+        m = max(self._norm_band)
         if m>0:
             for i in xrange(9):
-                self.norm_band[i] = self.amp.get()*self.band[i].get()/m
+                self._norm_band[i] = self._amp.get()*self._band[i].get()/m
 
-# TODO: that's HORRIBLE
-analyzer = None
+    def band(self, a, b=None):
+        if b:
+            return sum(self._norm_band[a:b])
+        else:
+            return self._norm_band[a]
 
+    def amp(self):
+        return self._amp.get()
 
-def init():
-    global analyzer
-    analyzer = Analyzer()
+    def bass(self):
+        return self._bass.get()
 
+    def high(self):
+        return self._high.get()
 
-def band(a, b=None):
-    if b:
-        return sum(analyzer.norm_band[a:b])
-    else:
-        return analyzer.norm_band[a]
-
-
-def start():
-    analyzer.start()
-
-
-def stop():
-    analyzer.stop()
-
-
-def update():
-    analyzer.update()
-
-
-def amp():
-    return analyzer.amp.get()
-
-
-def bass():
-    return analyzer.bass.get()
-
-
-def high():
-    return analyzer.high.get()
-
-
-def note():
-    return analyzer.note
+    def note(self):
+        return self._note

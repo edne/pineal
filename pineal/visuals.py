@@ -1,45 +1,21 @@
 import time
 
-l = []
 
+class Visuals(dict):
+    def new(self, name):
+        v = Visual(self, name)
+        self[name] = v
+        return v
 
-def init():
-    global l
-    l = []
-
-
-#def add(v):
-#    l.append(v)
-
-
-def new(name):
-    v = Visual(name)
-    l.append(v)
-    return v
-
-
-def remove(v):
-    l.remove(v)
-    del v
-
-
-def get(name=''):
-    if name:
-        for v in l:
-            if name == v.name:
-                return v
-        return None
-    else:
-        return l
-
-
-def names():
-    for v in get():
-        yield v.name
+    def reciver(self, name, key, value):
+        for v in self.get():
+            if name=="*" or name==v.name:
+                v.box.__dict__[key] = value  # this is NOT safe
 
 
 class Visual():
-    def __init__(self, name):
+    def __init__(self, visuals, name):
+        self.visuals = visuals
         print 'creating visual'
         self.name = name
         self._stack = list()
@@ -49,7 +25,7 @@ class Visual():
         self._stack.append(code)
 
     def remove(self):
-        remove(self)
+        del self.visuals[self.name]
 
     def update(self):
         if not self._stack:
@@ -99,9 +75,3 @@ class Box:
 
     def loop(self):
         None
-
-
-def reciver(name, key, value):
-    for v in get():
-        if name=="*" or name==v.name:
-            v.box.__dict__[key] = value  # this is NOT safe (if used with OSC)

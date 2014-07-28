@@ -1,4 +1,8 @@
-import pineal
+import pineal.analyzer
+
+
+def band(a, b=None):
+    return pineal.analyzer.band(a,b)
 
 
 def amp():

@@ -6,8 +6,8 @@ var = {
 
 
 def loop():
-    rotate(0,dt/8)
-    rotate(high()/8)
+    #rotate(0,dt/8)
+    #rotate(high()/8)
 
     colorMode("hsv")
 
@@ -27,7 +27,7 @@ def loop():
         #rotate((time/10)%(2*pi))
 
         fill(h,1,1,0.05)
-        tetrahedron(l+sin(time+i))
+        tetrahedron(rad*(l+sin(time+i)))
 
         l *= 0.9
         strokeWeight(l+0.7)
