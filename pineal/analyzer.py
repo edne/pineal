@@ -43,10 +43,10 @@ class Analyzer(threading.Thread):
         while not self._stop:
             self.update()
             time.sleep(0.1)
+        self.s.stop()
 
     def stop(self):
         self._stop = True
-        self.s.stop()
 
     def update(self):
         for v in self.visuals.values():

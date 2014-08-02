@@ -8,7 +8,7 @@ class Visuals(dict):
         return v
 
     def reciver(self, name, key, value):
-        for v in self.get():
+        for v in self.keys():
             if name=="*" or name==v.name:
                 v.box.__dict__[key] = value  # this is NOT safe
 
@@ -20,6 +20,7 @@ class Visual():
         self.name = name
         self._stack = list()
         self.box = Box()
+        self.var = dict()
 
     def load(self, code):
         self._stack.append(code)
@@ -58,6 +59,7 @@ class Visual():
             self.box.dt = self.box.last_time - self.box.time
         self.box.last_time = self.box.time
 
+        self.var = self.box.var
         for k in self.box.var.keys():
             if k not in self.box.__dict__.keys():
                 self.box.__dict__[k] = self.box.var[k]

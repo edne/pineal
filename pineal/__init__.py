@@ -1,29 +1,23 @@
-from visuals import Visuals
-from graphic import Graphic
-from loader import Loader
-from analyzer import Analyzer
-from gui import Gui
-
-analyzer = None  # used only by pineal.livecoding.audio
+from core import Core
+from web import Web
+from browser import Browser
 
 
 def main():
-    visuals = Visuals()
-    graphic = Graphic(visuals)
-    loader = Loader(visuals)
-    global analyzer
-    analyzer = Analyzer(visuals)
-    gui = Gui(visuals)
+    procs = [
+        Core(),
+        Web(),
+        Browser()
+    ]
 
-    loader.start()
-    analyzer.start()
+    for p in procs:
+        p.start()
 
     try:
-        while True:
-            gui.update()
-            graphic.update()
+        for p in procs:
+            p.join()
     except KeyboardInterrupt:
-        None
-
-    loader.stop()
-    analyzer.stop()
+        print
+        for p in procs:
+            p.stop()
+            p.join()

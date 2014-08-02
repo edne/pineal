@@ -11,7 +11,7 @@ def loop():
 
     colorMode("hsv")
 
-    h = note()+0.3
+    h = note()
     fill(h,1,1,0.05)
     #noStroke()
 
@@ -22,12 +22,12 @@ def loop():
     colorMode("hsv")
 
     pushMatrix()
-    l = (1.0 + bass()*4)*rad
+    l = (0.5 + amp()+bass())*rad
     for i in xrange(10):
-        #rotate((time/10)%(2*pi))
+        rotate((time/10)%(2*pi))
 
-        fill(h,1,1,0.05)
-        tetrahedron(rad*(l+sin(time+i)))
+        fill(h,1,1,0.05*amp() + 0.5)
+        cube(rad*(l+sin(time+i)))
 
         l *= 0.9
         strokeWeight(l+0.7)
