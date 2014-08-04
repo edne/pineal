@@ -3,7 +3,6 @@ from multiprocessing import Process
 from visuals import Visuals
 from graphic import Graphic
 from loader import Loader
-from analyzer import Analyzer
 from osc import Osc
 
 
@@ -16,7 +15,6 @@ class Core(Process):
 
         self.threads = [
             Loader(visuals),
-            Analyzer(visuals),
             Osc(visuals)
         ]
         self._stop = False

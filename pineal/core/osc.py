@@ -1,5 +1,6 @@
 import threading
 from thirdparty.OSC import OSCServer, OSCClient, OSCClientError, OSCMessage
+import pineal.livecoding.audio
 
 
 class Osc(threading.Thread):
@@ -9,6 +10,10 @@ class Osc(threading.Thread):
         self.server = OSCServer( ("localhost", 1420) )
         self.client = OSCClient()
         self.client.connect( ("localhost", 1421) )
+
+        for param in pineal.livecoding.audio.__dict__.keys():
+            if param[0]!='_':
+                self.server.addMsgHandler('/'+param, self.callback)
 
         self.visuals = visuals
         self.paths = []
@@ -21,16 +26,19 @@ class Osc(threading.Thread):
         self.server.close()
 
     def callback(self, path, tags, args, source):
-        print path, tags, args, source
+        #print path, tags, args, source
         path = [s for s in path.split('/') if s]
+        value = args[0]
 
         #/visual/var
         if len(path)==2:
-            print 'setting visual variable'
+            (visual,var) = path
+            self.visuals[visual].set_var(var, value)
 
         #/audioParamter
         if len(path)==1:
-            print 'setting audio value'
+            (param,) = path
+            pineal.livecoding.audio.__dict__[param] = value
 
     def stop(self):
         self._stop = True
@@ -38,7 +46,7 @@ class Osc(threading.Thread):
     def updatePaths(self):
         paths = []
         for visual_k in self.visuals.keys():
-            for var_k in self.visuals[visual_k].var.keys():
+            for var_k in self.visuals[visual_k].get_var():
                 paths.append(visual_k + '/' + var_k)
 
         for path in paths:

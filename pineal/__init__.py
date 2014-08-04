@@ -1,4 +1,5 @@
 from core import Core
+from audio import Audio
 from web import Web
 from browser import Browser
 
@@ -6,6 +7,7 @@ from browser import Browser
 def main():
     procs = [
         Core(),
+        Audio(),
         Web(),
         Browser()
     ]
@@ -18,6 +20,7 @@ def main():
             p.join()
     except KeyboardInterrupt:
         print
+        procs.reverse()
         for p in procs:
             p.stop()
             p.join()

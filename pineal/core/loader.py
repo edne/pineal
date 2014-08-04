@@ -1,4 +1,4 @@
-from config import VISUALS_PATH
+from pineal.config import VISUALS_PATH
 
 import threading, os, time
 from glob import glob
@@ -25,7 +25,7 @@ class Loader(threading.Thread):
             for filename in glob(os.path.join(self.path,'*.py'))
         ]
 
-        for name in self.visuals:
+        for name in self.visuals.keys():
             if name not in names:
                 print 'removing'
                 del self.visuals[name]

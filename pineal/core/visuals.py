@@ -1,16 +1,9 @@
-import time
-
 
 class Visuals(dict):
     def new(self, name):
         v = Visual(self, name)
         self[name] = v
         return v
-
-    def reciver(self, name, key, value):
-        for v in self.keys():
-            if name=="*" or name==v.name:
-                v.box.__dict__[key] = value  # this is NOT safe
 
 
 class Visual():
@@ -20,7 +13,7 @@ class Visual():
         self.name = name
         self._stack = list()
         self.box = Box()
-        self.var = dict()
+        self.osc = {}
 
     def load(self, code):
         self._stack.append(code)
@@ -44,6 +37,12 @@ class Visual():
             else:
                 self.update() # WARNING recursion!
 
+    def get_var(self):
+        return [k for k in self.box.osc.__dict__.keys() if k[0]!='_']
+
+    def set_var(self, var, value):
+        self.osc[var] = value
+
     def error_log(self, e):
         log = self.name + '.py'
         log += str(e)
@@ -54,26 +53,25 @@ class Visual():
         return log
 
     def loop(self):
-        self.box.time = time.time()
-        if self.box.last_time:
-            self.box.dt = self.box.last_time - self.box.time
-        self.box.last_time = self.box.time
+        for k in self.get_var():
+            if k not in self.osc.keys():
+                self.osc[k] = self.box.osc.__dict__[k]
 
-        self.var = self.box.var
-        for k in self.box.var.keys():
-            if k not in self.box.__dict__.keys():
-                self.box.__dict__[k] = self.box.var[k]
+        for k in self.osc.keys():
+            if k in self.get_var():
+                self.box.osc.__dict__[k] = self.osc[k]
+            else:
+                del self.osc[k]
 
         self.box.loop()
 
 
 class Box:
     def __init__(self):
-        self.time = 0
-        self.last_time = 0
-        self.dt = 0
-
-        self.var = dict()
+        class Empty():
+            None
+        self.osc = Empty()
+        self.osc.__dict__ = {}
 
     def loop(self):
         None

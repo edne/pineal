@@ -1,5 +1,4 @@
-VISUALS_PATH = "../visuals"
-IMAGES_PATH = "../images"
+VISUALS_PATH = "../../visuals"
 
 TITLE = 'PinealLoopProject'
 

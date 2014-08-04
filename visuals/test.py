@@ -1,36 +1,36 @@
-from pineal.livecoding import *
-var = {
-    "alpha" : 1.0,
-    "rad" : 1.0,
-}
+import math
+from time import time
+import pineal.livecoding.graphic as g
+import pineal.livecoding.audio as audio
+import pineal.livecoding.osc as osc
+
+osc.alpha = 1.0
+osc.rad = 1.0
 
 
 def loop():
-    #rotate(0,dt/8)
-    #rotate(high()/8)
+    g.colorMode("hsv")
 
-    colorMode("hsv")
+    h = audio.note * 0.2
+    #g.noStroke()
 
-    h = note()
-    fill(h,1,1,0.05)
-    #noStroke()
+    g.colorMode("rgb")
+    g.stroke(g.noise()*audio.bass*4)
+    g.strokeWeight(2)
 
-    colorMode("rgb")
-    stroke(noise()*bass()*4)
-    strokeWeight(2)
+    g.colorMode("hsv")
 
-    colorMode("hsv")
-
-    pushMatrix()
-    l = (0.5 + amp()+bass())*rad
+    g.pushMatrix()
+    l = 0.5 + audio.amp + audio.bass
     for i in xrange(10):
-        rotate((time/10)%(2*pi))
+        g.rotate((time()/10)%(2 * math.pi))
 
-        fill(h,1,1,0.05*amp() + 0.5)
-        cube(rad*(l+sin(time+i)))
+        g.fill(h, 1, 1, 0.2 + 0.01*audio.amp + audio.high)
+        r = l + audio.bass*math.sin(i + 10*time())
+        g.tetrahedron(r * osc.rad)
 
         l *= 0.9
-        strokeWeight(l+0.7)
-        rotate(pi/4)
+        g.strokeWeight(l+0.7)
+        g.rotate(math.pi/4)
         h += 0.01
-    popMatrix()
+    g.popMatrix()

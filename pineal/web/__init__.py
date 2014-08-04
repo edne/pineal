@@ -1,7 +1,13 @@
 from multiprocessing import Process
 from threading import Thread
-import thirdparty.bottle as bottle
+#from time import sleep
+
 from thirdparty.OSC import OSCClient, OSCMessage, OSCServer
+
+import thirdparty.bottle as bottle
+#from thirdparty.bottle_websocket import websocket, GeventWebSocketServer
+#from gevent import monkey
+#monkey.patch_all()
 
 
 class Web(Process):
@@ -18,14 +24,23 @@ class Web(Process):
         bottle.route('/')(self.root)
         bottle.route('/<filepath:path>')(self.server_static)
         bottle.route('/<visual>/<var>', method='POST')(self.post)
+        bottle.route('/polling', method='POST')(self.polling)
+        #bottle.get('/websocket', apply=[websocket])(self.websocket)
 
+        self.msg = []
         self._stop = False
 
     def run(self):
         print 'starting pineal.web'
         bottleThread = Thread(
             target = bottle.run,
-            kwargs = { 'host': 'localhost', 'port': 42080 }
+            kwargs = {
+                'quiet': True,
+                'host': 'localhost',
+                'port': 42080,
+                #'server': GeventWebSocketServer
+                #'server': 'gevent'
+            }
         )
         bottleThread.setDaemon(True)
         bottleThread.start()
@@ -41,10 +56,10 @@ class Web(Process):
         self._stop = True
 
     def add(self, path, tags, args, source):
-        print 'add'
+        self.msg.append(' '.join(['add']+args))
 
     def remove(self, path, tags, args, source):
-        print 'remove'
+        self.msg.append(' '.join(['remove']+args))
 
     ## HTTP routing
     def root(self):
@@ -55,7 +70,14 @@ class Web(Process):
 
     def post(self, visual, var):
         value = bottle.request.forms.get('value')
-        print 'posted'
-        print value
         self.client.send( OSCMessage('/'+visual+'/'+var, float(value)) )
+
+    def polling(self):
+        if self.msg:
+            return self.msg.pop(0)
     ##
+
+    def websocket(self, ws):
+        while True:
+            if self.msg:
+                ws.send(self.msg.pop(0))
