@@ -5,41 +5,12 @@ from color import Color, colorMode, fill, stroke, noFill, noStroke
 import thirdparty.ezpyinline as ezpyinline
 
 
+with open('pineal/livecoding/inline.c') as f:
+    _ezc = ezpyinline.C(f.read())
+
+
 def _vec(*args):
     return (gl.GLfloat * len(args))(*args)
-
-
-_ezc_utils = ezpyinline.C(r"""
-    #include <GL/freeglut.h>
-    #include <math.h>
-
-    void rotate(double angx, double angy, double angz)
-    {
-        glRotatef(180.0*angx/M_PI, 1,0,0);
-        glRotatef(180.0*angy/M_PI, 0,1,0);
-        glRotatef(180.0*angz/M_PI, 0,0,1);
-    }
-
-    void translate(double x, double y, double z)
-    {
-        glTranslatef(x, y, z);
-    }
-
-    void scale(double x, double y, double z)
-    {
-        glScalef(x, y, z);
-    }
-
-    void push(void)
-    {
-        glPushMatrix();
-    }
-
-    void pop(void)
-    {
-        glPopMatrix();
-    }
-""")
 
 
 def strokeWeight(w):
@@ -59,17 +30,17 @@ def rotateZ(angle):
 
 
 def rotate(angz=0, angy=0, angx=0):
-    _ezc_utils.rotate(angx,angy,angz)
+    _ezc.rotate(angx,angy,angz)
 
 
 def translate(x=0, y=0, z=0):
-    _ezc_utils.translate(x, y, z)
+    _ezc.translate(x, y, z)
 
 
 def scale(x, y=None, z=1):
     if not y:
         y = x
-    _ezc_utils.scale(x, y, z)
+    _ezc.scale(x, y, z)
 
 _matrix_stack = 0
 
@@ -77,7 +48,7 @@ _matrix_stack = 0
 def pushMatrix():
     global _matrix_stack
     if _matrix_stack<30:
-        _ezc_utils.push()
+        _ezc.push()
         _matrix_stack += 1
     else:
         print "TOO many push()"
@@ -87,7 +58,7 @@ def pushMatrix():
 def popMatrix():
     global _matrix_stack
     if _matrix_stack>0:
-        _ezc_utils.pop()
+        _ezc.pop()
     else:
         print "TOO many pop()"
         raise Exception()
@@ -129,118 +100,29 @@ def light_pos(x,y,z):
     gl.glLightfv(gl.GL_LIGHT0, gl.GL_POSITION, _vec(x,y,z, 3))
 #
 
-ezc_shapes = ezpyinline.C(r"""
-    #include <GL/freeglut.h>
-    #include <math.h>
-
-    void cube(
-        double r,
-        double fr, double fg, double fb, double fa,
-        double sr, double sg, double sb, double sa
-    )
-    {
-        glColor4f(fr, fg, fb, fa);
-        glutSolidCube(r);
-        glColor4f(sr, sg, sb, sa);
-        glutWireCube(r);
-    }
-
-    void tetrahedron(
-        double r,
-        double fr, double fg, double fb, double fa,
-        double sr, double sg, double sb, double sa
-    )
-    {
-        glPushMatrix();
-        glScalef(r,r,r);
-
-        glColor4f(fr, fg, fb, fa);
-        glutSolidTetrahedron();
-        glColor4f(sr, sg, sb, sa);
-        glutWireTetrahedron();
-        glPopMatrix();
-    }
-
-    void dodecahedron(
-        double r,
-        double fr, double fg, double fb, double fa,
-        double sr, double sg, double sb, double sa
-    )
-    {
-        glPushMatrix();
-        glScalef(r,r,r);
-
-        glColor4f(fr, fg, fb, fa);
-        glutSolidDodecahedron();
-        glColor4f(sr, sg, sb, sa);
-        glutWireDodecahedron();
-        glPopMatrix();
-    }
-
-    void octahedron(
-        double r,
-        double fr, double fg, double fb, double fa,
-        double sr, double sg, double sb, double sa
-    )
-    {
-        glPushMatrix();
-        glScalef(r,r,r);
-
-        glColor4f(fr, fg, fb, fa);
-        glutSolidOctahedron();
-        glColor4f(sr, sg, sb, sa);
-        glutWireOctahedron();
-        glPopMatrix();
-    }
-
-    void quad(
-        double l,
-        double x, double y, double z,
-        double fr, double fg, double fb, double fa,
-        double sr, double sg, double sb, double sa
-    )
-    {
-        glColor4f(fr,fg,fb, fa);
-        glBegin(GL_POLYGON);
-        glVertex3f(x-l/2, y-l/2, z);
-        glVertex3f(x-l/2, y+l/2, z);
-        glVertex3f(x+l/2, y+l/2, z);
-        glVertex3f(x+l/2, y-l/2, z);
-        glEnd();
-
-        glColor4f(sr,sg,sb, sa);
-        glBegin(GL_LINE_LOOP);
-        glVertex3f(x-l/2, y-l/2, z);
-        glVertex3f(x-l/2, y+l/2, z);
-        glVertex3f(x+l/2, y+l/2, z);
-        glVertex3f(x+l/2, y-l/2, z);
-        glEnd();
-    }
-""")
-
 
 def cube(r=1):
     f = fill()
     s = stroke()
-    ezc_shapes.cube(r, f.r,f.g,f.b,f.a, s.r,s.g,s.b,s.a)
+    _ezc.cube(r, f.r,f.g,f.b,f.a, s.r,s.g,s.b,s.a)
 
 
 def tetrahedron(r=1):
     f = fill()
     s = stroke()
-    ezc_shapes.tetrahedron(r, f.r,f.g,f.b,f.a, s.r,s.g,s.b,s.a)
+    _ezc.tetrahedron(r, f.r,f.g,f.b,f.a, s.r,s.g,s.b,s.a)
 
 
 def dodecahedron(r=1):
     f = fill()
     s = stroke()
-    ezc_shapes.dodecahedron(r, f.r,f.g,f.b,f.a, s.r,s.g,s.b,s.a)
+    _ezc.dodecahedron(r, f.r,f.g,f.b,f.a, s.r,s.g,s.b,s.a)
 
 
 def octahedron(r=1):
     f = fill()
     s = stroke()
-    ezc_shapes.octahedron(r, f.r,f.g,f.b,f.a, s.r,s.g,s.b,s.a)
+    _ezc.octahedron(r, f.r,f.g,f.b,f.a, s.r,s.g,s.b,s.a)
 
 
 class Shape(object):
@@ -262,4 +144,4 @@ def shape(s):
 def quad(l=1.0, x=0, y=0, z=0):
     f = fill()
     s = stroke()
-    ezc_shapes.quad(l,x,y,z, f.r,f.g,f.b,f.a, s.r,s.g,s.b,s.a)
+    _ezc.quad(l,x,y,z, f.r,f.g,f.b,f.a, s.r,s.g,s.b,s.a)
