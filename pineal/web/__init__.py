@@ -14,12 +14,12 @@ class Web(Process):
     def __init__(self):
         Process.__init__(self)
 
-        self.server = OSCServer( ('localhost', 1421) )
-        self.server.addMsgHandler('/add', self.add)
-        self.server.addMsgHandler('/remove', self.remove)
+        self.oscServer = OSCServer( ('localhost', 1421) )
+        self.oscServer.addMsgHandler('/add', self.add)
+        self.oscServer.addMsgHandler('/remove', self.remove)
 
-        self.client = OSCClient()
-        self.client.connect( ('localhost', 1420) )
+        self.oscClient = OSCClient()
+        self.oscClient.connect( ('localhost', 1420) )
 
         bottle.route('/')(self.root)
         bottle.route('/<filepath:path>')(self.server_static)
@@ -47,7 +47,7 @@ class Web(Process):
 
         try:
             while not self._stop:
-                self.server.handle_request()
+                self.oscServer.handle_request()
         except KeyboardInterrupt:
             None
 
@@ -70,7 +70,7 @@ class Web(Process):
 
     def post(self, visual, var):
         value = bottle.request.forms.get('value')
-        self.client.send( OSCMessage('/'+visual+'/'+var, float(value)) )
+        self.oscClient.send( OSCMessage('/'+visual+'/'+var, float(value)) )
 
     def polling(self):
         if self.msg:

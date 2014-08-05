@@ -12,8 +12,8 @@ class Audio(Process):
     def __init__(self):
         Process.__init__(self)
 
-        self.client = OSCClient()
-        self.client.connect( ('localhost', 1420) )
+        self.oscClient = OSCClient()
+        self.oscClient.connect( ('localhost', 1420) )
 
         self.s = pyo.Server(
             audio = "jack",
@@ -54,7 +54,7 @@ class Audio(Process):
         if self._pitch.get()>1:
             self._note = math.log(self._pitch.get()/16.35,2)%1.0
 
-        self.client.send( OSCMessage('/amp', float(self._amp.get())) )
-        self.client.send( OSCMessage('/bass', float(self._bass.get())) )
-        self.client.send( OSCMessage('/high', float(self._high.get())) )
-        self.client.send( OSCMessage('/note', float(self._note)) )
+        self.oscClient.send( OSCMessage('/amp', float(self._amp.get())) )
+        self.oscClient.send( OSCMessage('/bass', float(self._bass.get())) )
+        self.oscClient.send( OSCMessage('/high', float(self._high.get())) )
+        self.oscClient.send( OSCMessage('/note', float(self._note)) )
