@@ -1,4 +1,4 @@
-import math
+import math as m
 from time import time
 import pineal.livecoding.graphic as g
 import pineal.livecoding.audio as audio
@@ -9,6 +9,11 @@ osc.rad = 1.0
 
 
 def loop():
+    g.strokeWeight(2)
+    g.fill(0.2)
+    #g.polygon(0,0, 0.4, 10)
+    g.ellipse(0,0, 0.4, 0.8)
+    """
     g.colorMode("hsv")
 
     h = audio.note * 0.2
@@ -34,3 +39,4 @@ def loop():
         g.rotate(math.pi/4)
         h += 0.01
     g.popMatrix()
+    """

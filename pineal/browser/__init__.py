@@ -8,7 +8,7 @@ class Browser(Process):
         Process.__init__(self)
 
         self.win = gtk.Window()
-        self.win.resize(400,300)
+        self.win.resize(300,150)
         #self.win.connect('destroy', gtk.main_quit)
 
         scroller = gtk.ScrolledWindow()
