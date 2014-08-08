@@ -12,7 +12,7 @@ def loop():
     g.strokeWeight(2)
     g.fill(0.2)
     #g.polygon(0,0, 0.4, 10)
-    g.ellipse(0,0, 0.4, 0.8)
+    g.circle(0,0, 0.4)
     """
     g.colorMode("hsv")
 

@@ -1,7 +1,7 @@
 from core import Core
 from audio import Audio
 from web import Web
-from browser import Browser
+from gui import Gui
 
 
 def main():
@@ -9,7 +9,7 @@ def main():
         Core(),
         Audio(),
         Web(),
-        Browser()
+        Gui(),
     ]
 
     for p in procs:

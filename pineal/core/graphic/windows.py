@@ -1,3 +1,4 @@
+from pineal.config import TITLE_OVERVIEW
 import pyglet
 from pyglet.window import key
 import pyglet.gl as gl
@@ -144,14 +145,14 @@ def create(visuals):
 
     overview = Overview(
         visuals,
-        caption = "Overview",
+        caption = TITLE_OVERVIEW,
         width = 600, height = 450,
         vsync = 0
     )
 
     rendering = Rendering(
         visuals,
-        caption = "Rendering",
+        caption = 'rendering',
         width = 640, height = 480,
         vsync = 0,
         visible = 0
