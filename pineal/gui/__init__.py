@@ -30,19 +30,28 @@ class Browser(gtk.ScrolledWindow):
         self.web.open('http://127.0.0.1:42080')
 
 
-class Overview(gtk.VBox):
+class Overview(gtk.Socket):
     def __init__(self):
-        gtk.VBox.__init__(self)
+        gtk.Socket.__init__(self)
         self.show()
 
     def run(self):
-        socket = gtk.Socket()
-        self.add(socket)
         wid = win_id(TITLE_OVERVIEW)
         if wid:
-            socket.add_id(win_id(TITLE_OVERVIEW))
-            socket.set_usize(600,450)
-            socket.show()
+            self.add_id(win_id(TITLE_OVERVIEW))
+            self.set_usize(600,450)
+            self.show()
+
+
+class Editor(gtk.Socket):
+    def __init__(self):
+        gtk.Socket.__init__(self)
+        #self.show()
+
+    def run(self):
+        xid = self.get_id()
+        sp.Popen(['gvim', '--socketid', str(xid)])
+        #sp.Popen(['emacs', '--parent-id', str(xid)])
 
 
 class Gui(Process):
@@ -54,20 +63,30 @@ class Gui(Process):
         self.win.resize(300,150)
         self.win.connect("destroy", lambda w: gtk.main_quit())
 
-        self.vbox = gtk.VBox()
-
-        self.browser = Browser()
-        self.vbox.add(self.browser)
+        vbox = gtk.VBox()
+        hbox = gtk.HBox()
 
         self.overview = Overview()
-        self.vbox.add(self.overview)
+        hbox.pack_end(self.overview, False, False)
+        vbox.pack_start(hbox, False, False)
 
-        self.win.add(self.vbox)
+        self.browser = Browser()
+        vbox.add(self.browser)
+
+        hpaned = gtk.HPaned()
+        self.editor = Editor()
+        hpaned.add(self.editor)
+
+        hpaned.add(vbox)
+
+        self.win.add(hpaned)
+
         self.win.show_all()
 
     def run(self):
         self.browser.run()
         self.overview.run()
+        self.editor.run()
 
         try:
             gtk.main()
