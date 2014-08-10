@@ -55,13 +55,15 @@ class Editor(gtk.Socket):
 
 
 class Gui(Process):
+    """Display in a window the overview, a text editor and the browser"""
     def __init__(self):
         Process.__init__(self)
 
         self.win = gtk.Window()
         self.win.set_title(TITLE_BROWSER)
         self.win.resize(300,150)
-        self.win.connect("destroy", lambda w: gtk.main_quit())
+        #self.win.connect("destroy", lambda w: gtk.main_quit())
+        self.win.connect('delete-event', self.quit, None)
 
         vbox = gtk.VBox()
         hbox = gtk.HBox()
@@ -75,9 +77,9 @@ class Gui(Process):
 
         hpaned = gtk.HPaned()
         self.editor = Editor()
-        hpaned.add(self.editor)
+        hpaned.pack1(self.editor, True,True)
 
-        hpaned.add(vbox)
+        hpaned.pack2(vbox, False,False)
 
         self.win.add(hpaned)
 
@@ -88,6 +90,8 @@ class Gui(Process):
         self.overview.run()
         self.editor.run()
 
+        self.win.set_focus_child(self.browser)
+
         try:
             gtk.main()
         except KeyboardInterrupt:
@@ -95,3 +99,20 @@ class Gui(Process):
 
     def stop(self):
         print 'stopping pineal.browser'
+
+    def quit(self, widget, event, data):
+        dialog = gtk.MessageDialog(
+            self.win, gtk.DIALOG_MODAL,
+            gtk.MESSAGE_WARNING, gtk.BUTTONS_YES_NO,
+            "Are you sure?"
+        )
+        dialog.set_title("Quitting")
+
+        response = dialog.run()
+        dialog.destroy()
+
+        if response == gtk.RESPONSE_YES:
+            gtk.main_quit()
+            return False
+        else:
+            return True

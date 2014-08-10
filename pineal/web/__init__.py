@@ -11,6 +11,7 @@ import thirdparty.bottle as bottle
 
 
 class Web(Process):
+    """Run the webserver for the browser interface"""
     def __init__(self):
         Process.__init__(self)
 

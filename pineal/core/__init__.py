@@ -7,6 +7,7 @@ from osc import Osc
 
 
 class Core(Process):
+    """Run visuals and show them in Overview and Master windows"""
     def __init__(self):
         Process.__init__(self)
 

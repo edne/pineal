@@ -154,6 +154,7 @@ def create(visuals):
         visuals,
         caption = 'rendering',
         width = 640, height = 480,
+        #width = 800, height = 600,
         vsync = 0,
         visible = 0
     )

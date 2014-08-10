@@ -1,7 +1,7 @@
 import math as m
 from time import time
 import pineal.livecoding.graphic as g
-import pineal.livecoding.audio as audio
+import pineal.livecoding.audio as a
 import pineal.livecoding.osc as osc
 
 osc.alpha = 1.0
@@ -10,9 +10,18 @@ osc.rad = 1.0
 
 def loop():
     g.strokeWeight(2)
-    g.fill(0.2)
+    g.noFill()
+
+    g.rotateY(m.sin(time()/100))
     #g.polygon(0,0, 0.4, 10)
-    g.circle(0,0, 0.4)
+    for i in range(1,int(10 + 30*a.amp)):
+        g.colorMode("rgb")
+        g.noFill()
+        g.stroke(a.note*0.4 + g.noise()*a.high*4)
+        r = (a.bass + 0*m.sin(time()))*40.0/i
+        g.circle(0,0, r)
+        g.rotateX(a.high)
+
     """
     g.colorMode("hsv")
 

@@ -9,6 +9,7 @@ import pyo
 
 
 class Audio(Process):
+    """Do the audio analysis"""
     def __init__(self):
         Process.__init__(self)
 
