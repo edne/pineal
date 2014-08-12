@@ -11,4 +11,4 @@ Pineal Loop Project
 Dependencies:
 * Jack Audio Connection Kit
 * Some python modules, on a Debian-based system:
-    # atp-get install python-pyo python-opengl python-pyglet python-webkit python-gtk2
+      # atp-get install python-pyo python-opengl python-pyglet python-webkit python-gtk2
