@@ -1,17 +1,14 @@
 Pineal Loop Project
 ===================
 
-![alt tag](https://raw.githubusercontent.com/edne/PinealLoopProject/master/icon.png)
-
 * Play your music
 * Run PinealLoopProject.py
-* edit a .py file in the `visuals` folder or create a new one
-(the drawing functions and contants are defined in `scr/header.py`)
+* Edit a .py file in the `visuals` folder or create a new one
+* Every time you save output is updated
 * Have fun!
 
 
 Dependencies:
-* a working Jack Audio Connection Kit (i'm so sorry)
-* python-pyo
-* python-numpy
-* python-opengl
+* Jack Audio Connection Kit
+* Some python modules, on a Debian-based system:
+    # atp-get install python-pyo python-opengl python-pyglet python-webkit python-gtk2

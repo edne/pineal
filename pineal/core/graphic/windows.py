@@ -163,7 +163,8 @@ def create(visuals):
         visuals,
         caption = "Master",
         screen=screens[-1],
-        fullscreen = len(screens)>1,
+        #fullscreen = len(screens)>1,
+        width = 640, height = 480,
         vsync = len(screens)>1,
         visible = len(screens)>1,
     )
