@@ -10,7 +10,7 @@ n = 9
 def star():
     for i in range(n):
         g.pushMatrix()
-        g.triangle(0,0, 0.6+a.amp,0, a.note, )
+        g.triangle(0,0, 0.6+a.amp,0, a.note, a.amp*2)
         g.popMatrix()
         g.rotateZ( 2*m.pi/n )
 

@@ -2,9 +2,9 @@ from sys import argv, exit
 from core import Core
 from audio import Audio
 from web import Web
-from gui import Gui
+#from gui import Gui
 
-CLASSES = [Core, Audio, Web, Gui]
+CLASSES = [Core, Audio, Web]
 
 
 def parser():
@@ -17,7 +17,6 @@ def parser():
         exit(0)
 
     params = [Cl.__name__.lower() for Cl in CLASSES]
-
     # exclude paramemeters with --no-classname
     excluded = [p for p in params if '--no-'+p in argv]
     if excluded:
