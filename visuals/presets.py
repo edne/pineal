@@ -2,7 +2,6 @@ import math as m
 from time import time
 import pineal.livecoding.graphic as g
 import pineal.livecoding.audio as a
-import pineal.livecoding.osc as osc
 
 
 def _loop():

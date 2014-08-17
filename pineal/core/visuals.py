@@ -38,7 +38,8 @@ class Visual():
                 self.update() # WARNING recursion!
 
     def get_var(self):
-        return [k for k in self.box.osc.__dict__.keys() if k[0]!='_']
+        d = self.box.__dict__
+        return [k for k in d.keys() if isinstance(d[k], float)]
 
     def set_var(self, var, value):
         self.osc[var] = value
@@ -55,23 +56,17 @@ class Visual():
     def loop(self):
         for k in self.get_var():
             if k not in self.osc.keys():
-                self.osc[k] = self.box.osc.__dict__[k]
+                self.osc[k] = self.box.__dict__[k]
 
         for k in self.osc.keys():
             if k in self.get_var():
-                self.box.osc.__dict__[k] = self.osc[k]
+                self.box.__dict__[k] = self.osc[k]
             else:
                 del self.osc[k]
 
         self.box.loop()
 
 
-class Box:
-    def __init__(self):
-        class Empty():
-            None
-        self.osc = Empty()
-        self.osc.__dict__ = {}
-
+class Box(object):
     def loop(self):
         None
