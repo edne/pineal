@@ -1,7 +1,7 @@
-from pineal.config import TITLE_OVERVIEW, TITLE_BROWSER
+from pineal.config import TITLE_OVERVIEW, TITLE
+from pineal.browser import BrowserWidget
 from multiprocessing import Process
 import subprocess as sp
-from webkit import WebView
 import gtk
 
 
@@ -15,19 +15,6 @@ def win_id(title):
     row = [r for r in out if 'id:' in r][0].split()
     wid = long([row[i+1] for i,w in enumerate(row) if w=='id:'][0])
     return wid
-
-
-class Browser(gtk.ScrolledWindow):
-    def __init__(self):
-        gtk.ScrolledWindow.__init__(self)
-
-        self.web = WebView()
-        self.add(self.web)
-        self.show_all()
-
-    def run(self):
-        print 'starting pineal.browser'
-        self.web.open('http://127.0.0.1:42080')
 
 
 class Overview(gtk.Socket):
@@ -60,7 +47,7 @@ class Gui(Process):
         Process.__init__(self)
 
         self.win = gtk.Window()
-        self.win.set_title(TITLE_BROWSER)
+        self.win.set_title(TITLE)
         self.win.resize(300,150)
         #self.win.connect("destroy", lambda w: gtk.main_quit())
         self.win.connect('delete-event', self.quit, None)
@@ -72,7 +59,7 @@ class Gui(Process):
         hbox.pack_end(self.overview, False, False)
         vbox.pack_start(hbox, False, False)
 
-        self.browser = Browser()
+        self.browser = BrowserWidget()
         vbox.add(self.browser)
 
         hpaned = gtk.HPaned()

@@ -24,7 +24,7 @@ def pol():
         g.rotateZ( 2*m.pi/n )
 
 
-def loop():
+def _loop():
     g.colorMode('hsv')
     g.strokeWeight(1.4)
 

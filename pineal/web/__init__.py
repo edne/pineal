@@ -1,10 +1,10 @@
 from multiprocessing import Process
 from threading import Thread
-#from time import sleep
 
+from pineal.config import OSC_CORE, OSC_WEB, HTTP
 from thirdparty.OSC import OSCClient, OSCMessage, OSCServer
-
 import thirdparty.bottle as bottle
+
 #from thirdparty.bottle_websocket import websocket, GeventWebSocketServer
 #from gevent import monkey
 #monkey.patch_all()
@@ -15,12 +15,12 @@ class Web(Process):
     def __init__(self):
         Process.__init__(self)
 
-        self.oscServer = OSCServer( ('localhost', 1421) )
+        self.oscServer = OSCServer(OSC_WEB)
         self.oscServer.addMsgHandler('/add', self.add)
         self.oscServer.addMsgHandler('/remove', self.remove)
 
         self.oscClient = OSCClient()
-        self.oscClient.connect( ('localhost', 1420) )
+        self.oscClient.connect(OSC_CORE)
 
         bottle.route('/')(self.root)
         bottle.route('/<filepath:path>')(self.server_static)
@@ -37,8 +37,8 @@ class Web(Process):
             target = bottle.run,
             kwargs = {
                 'quiet': True,
-                'host': 'localhost',
-                'port': 42080,
+                'host': HTTP[0],
+                'port': HTTP[1],
                 #'server': GeventWebSocketServer
                 #'server': 'gevent'
             }

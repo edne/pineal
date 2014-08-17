@@ -1,4 +1,4 @@
-from pineal.config import TITLE_OVERVIEW
+from pineal.config import TITLE_OVERVIEW, FULLSCREEN, OUTPUT_SIZE
 import pyglet
 from pyglet.window import key
 import pyglet.gl as gl
@@ -154,18 +154,28 @@ def create(visuals):
         visuals,
         caption = 'rendering',
         width = 640, height = 480,
-        #width = 800, height = 600,
         vsync = 0,
         visible = 0
     )
 
-    master = Master(
-        visuals,
-        caption = "Master",
-        screen=screens[-1],
-        #fullscreen = len(screens)>1,
-        width = 640, height = 480,
-        vsync = len(screens)>1,
-        visible = len(screens)>1,
-    )
-    master.set_mouse_visible(False)
+    if len(screens)>1:
+        if FULLSCREEN:
+            master = Master(
+                visuals,
+                caption = "Master",
+                screen = screens[-1],
+                fullscreen = 1,
+                vsync = 1,
+                visible = 1,
+            )
+        else:
+            master = Master(
+                visuals,
+                caption = "Master",
+                screen = screens[-1],
+                width = OUTPUT_SIZE[0],
+                height = OUTPUT_SIZE[1],
+                vsync = 1,
+                visible = 1,
+            )
+        master.set_mouse_visible(False)

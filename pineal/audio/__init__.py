@@ -1,34 +1,35 @@
-from pineal.config import TITLE
+from pineal.config import TITLE, BACKEND
 
 from multiprocessing import Process
 from time import sleep
 import math
 
+from pineal.config import OSC_CORE
 from thirdparty.OSC import OSCClient, OSCMessage
 import pyo
 
 
 class Audio(Process):
     """Do the audio analysis"""
-    def __init__(self, backend='portaudio'):
+    def __init__(self):
         Process.__init__(self)
 
         self.oscClient = OSCClient()
-        self.oscClient.connect( ('localhost', 1420) )
+        self.oscClient.connect(OSC_CORE)
 
-        #backend = 'jack'
         self.s = pyo.Server(
-            audio = backend,
+            audio = BACKEND,
             jackname = TITLE,
             nchnls = 2
         )
-        if backend=='jack':
+        if BACKEND=='jack':
             self.s.setInputOffset(2)
 
         self._stop = False
 
     def run(self):
         print 'starting pineal.audio'
+        #self.s.gui()
         self.s.boot()
         self.s.start()
 
@@ -47,7 +48,6 @@ class Audio(Process):
                 sleep(0.03)
         except KeyboardInterrupt:
             None
-
         self.s.stop()
         del self.s
 
