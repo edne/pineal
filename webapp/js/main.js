@@ -4,15 +4,17 @@ post = function(e) {
         var visual_name = $(this).children('.visual_name').html();
 
         $(this).children('.var').each(function() {
-            var var_name = $(this).children('.var_name').html();
-            var var_value = $(this).children('.var_value').val();
+            if( $(this).children('.var_value')[0] == e.currentTarget ) {
+                var var_name = $(this).children('.var_name').html();
+                var var_value = $(this).children('.var_value').val();
 
-            $.post(
-                '/' + visual_name + '/' + var_name,
-                {
-                    'value': var_value
-                }
-            );
+                $.post(
+                    '/' + visual_name + '/' + var_name,
+                    {
+                        'value': var_value
+                    }
+                );
+            }
 
         });
 
@@ -30,11 +32,11 @@ add = function(visual_name, var_name) {
     $('#'+visual_name).append(
         '<div class="var" id="'+visual_name+'_'+var_name+'">\n'+
         '    <span class="var_name">'+var_name+'</span>\n'+
-        '    <input type="range" min="0" max="1" step="0.05" class="var_value">\n'+
+        '    <input type="range" min="0" max="1" step="0.02" class="var_value">\n'+
         '</div>'
     );
 
-    $('.var_value').bind('change', post);
+    $('#'+visual_name+'_'+var_name+' '+' .var_value').bind('change', post);
 };
 
 remove = function(visual_name, var_name) {
