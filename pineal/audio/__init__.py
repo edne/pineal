@@ -3,6 +3,7 @@ from pineal.config import TITLE, BACKEND
 from multiprocessing import Process
 from time import sleep
 import math
+from sys import exit
 
 from pineal.config import OSC_CORE
 from thirdparty.OSC import OSCClient, OSCMessage
@@ -33,7 +34,15 @@ class Audio(Process):
         self.s.boot()
         self.s.start()
 
-        src = pyo.Input(chnl=[0,1])
+        try:
+            src = pyo.Input(chnl=[0,1])
+            print 'Pyo is working properly!\n'
+        except pyo.PyoServerStateException:
+            print(
+                'Pyo is not working, '
+                'stop antying is using Pulseaudio, or simply use Jack'
+            )
+            exit(1)
 
         self._amp = pyo.Follower(src)
         self._bass = pyo.Follower(pyo.Biquad(src, 110, type=0))

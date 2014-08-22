@@ -20,5 +20,5 @@ def loop():
     g.pushMatrix()
     g.rotate(0.2, 0.5)
     g.rotateX((time()/10)%(2 * m.pi))
-    g.cube(rad + a.bass)
+    g.cube(rad + a.bass*8)
     g.popMatrix()
