@@ -7,26 +7,23 @@ import pineal.livecoding.audio as a
 def loop():
     g.colorMode("hsv")
 
-    h = a.note+0.4
-    g.fill(h,1,1,0.05)
+    h = a.note
+    g.fill(h,1,1,a.amp*0.05)
     #noStroke()
 
     g.colorMode("rgb")
-    g.stroke(0.8)
+    g.stroke(a.high*5,a.amp*10)
     g.strokeWeight(2)
 
     g.colorMode("hsv")
 
     g.pushMatrix()
-    l = 2.0
+    #g.rotateX(pi/2)
+    l = a.bass*100 + 2
     for i in xrange(50):
-        g.rotate((time()/10)%(2*m.pi))
-
-        g.fill(h,1,1,0.05)
+        g.fill(h,1,1,a.amp*0.01)
         g.square(l)
-
         l *= 0.9
-        g.strokeWeight(l+0.7)
-        g.rotate(a.bass+m.pi/4)
+        g.rotate(a.bass*0.2+m.pi/4)
         h += 0.01
     g.popMatrix()

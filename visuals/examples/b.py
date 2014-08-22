@@ -4,7 +4,7 @@ import pineal.livecoding.graphic as g
 import pineal.livecoding.audio as a
 
 
-def _loop():
+def loop():
     g.colorMode('hsv')
     g.strokeWeight(2)
 

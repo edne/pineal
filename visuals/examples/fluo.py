@@ -1,23 +1,24 @@
-var = {
-	"alpha" : 1.0,
-	"rad" : 1.0,
-}
+import math as m
+from time import time
+import pineal.livecoding.graphic as g
+import pineal.livecoding.audio as a
+
+rad = 1.0
+
 
 def loop():
-	#identity()
-	strokeWeight(2)
+    g.strokeWeight(2)
 
-	rotateX(dt*2*(0.2+amp))
-	rotateY(dt*4*(0.2+amp))
+    #g.rotateX(dt*2*(0.2+a.amp))
+    #g.rotateY(dt*4*(0.2+a.amp))
 
-	colorMode("hsv")
-	c = Color(note, 1)
-	fill(c)
+    g.colorMode("hsv")
+    g.fill(a.note*0.3, 0.004)
 
-	colorMode("rgb")
-	stroke(high*16, 1)
+    g.colorMode("rgb")
+    g.stroke(a.high*16, 1)
 
-	r = (1+bass*4)*rad
-	for i in xrange(100):
-		r -= (0.001*high*16)*rad
-		#cube(r)
+    r = (a.bass*4)*rad*10
+    for i in xrange(100):
+        r -= 16*a.high*rad
+        g.cube(r)

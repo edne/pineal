@@ -1,39 +1,28 @@
-from pineal.livecoding import *
-var = {
-    "alpha" : 1.0,
-    "rad" : 1.0,
-}
+import math as m
+from time import time
+import pineal.livecoding.graphic as g
+import pineal.livecoding.audio as a
+
+alpha = 1.0
+
 
 def loop():
+    g.pushMatrix()
+    g.rotate((time())%(2 * m.pi))
+    g.colorMode("hsv")
 
-    rotate(dt/2)
+    h = a.note
+    g.fill(h,1,1,a.amp*4 * alpha + 0.1)
+    g.noStroke()
 
-    colorMode("hsv")
-
-    h = note()
-    fill(h,1,1,0.05)
-    #noStroke()
-
-    colorMode("rgb")
-    stroke(0.8)
-    strokeWeight(2)
-
-    f = fill();
-    #s = stroke()
-    glColor4f(f.r,f.g,f.b, f.a)
-
-    colorMode("hsv")
-
-    pushMatrix()
-    l = 1.0
-    for i in xrange(10):
-        #rotate((time/10)%(2*pi))
-
-        fill(h,1,1,0.05)
-        tetrahedron(l+sin(time+i))
-
+    g.pushMatrix()
+    g.rotateX(m.pi/2)
+    l = a.bass*10 + 2
+    for i in xrange(100):
+        g.square(l)
         l *= 0.9
-        strokeWeight(l+0.7)
-        rotate(bass()+pi/4)
-        h += 0.01
-    popMatrix()
+        g.rotateY(a.bass+m.pi/4)
+        g.rotateX(a.bass+m.pi/4)
+    g.popMatrix()
+
+    g.popMatrix()

@@ -3,32 +3,22 @@ from time import time
 import pineal.livecoding.graphic as g
 import pineal.livecoding.audio as a
 
-alpha = 1.0
 rad = 1.0
+hue = 0.5
 
 
 def loop():
     g.colorMode("hsv")
 
-    h = a.note * 0.2
-
     g.colorMode("rgb")
-    g.stroke(g.noise()*a.bass*4)
+    g.stroke(g.noise()*a.high*20)
     g.strokeWeight(2)
 
     g.colorMode("hsv")
+    g.fill(hue + a.note * 0.2, 0.2 + 0.01*a.amp)
 
     g.pushMatrix()
-    l = 0.5 + a.amp + a.bass
-    for i in xrange(10):
-        g.rotate((time()/10)%(2 * m.pi))
-
-        g.fill(h, 1, 1, 0.2 + 0.01*a.amp + a.high)
-        r = l + a.bass*m.sin(i + 10*time())
-        g.tetrahedron(r * rad)
-
-        l *= 0.9
-        g.strokeWeight(l+0.7)
-        g.rotate(m.pi/4)
-        h += 0.01
+    g.rotate(0.2, 0.5)
+    g.rotateX((time()/10)%(2 * m.pi))
+    g.cube(rad + a.bass)
     g.popMatrix()
