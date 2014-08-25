@@ -20,7 +20,7 @@ Dependencies
 ### Mac (not tested)
 * Manually download and install __Pyo__ from:  
 http://ajaxsoundstudio.com/software/pyo/
-* Manually downlad and compile __pywebkitgtk__ from:
+* Manually downlad and compile __pywebkitgtk__ from:  
 https://code.google.com/p/pywebkitgtk/  
 (It is optional if you run with `--no-browser` parameter)
 * Run:  
