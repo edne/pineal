@@ -12,7 +12,7 @@ Dependencies
 ------------
 * Jack Audio Connection Kit, optional but reccomended
 * Some python modules, on a Debian-based system:  
-`sudo apt-get install python-pyo python-opengl python-pyglet python-webkit python-dev freeglut3-dev`
+`sudo apt-get install python-pyo python-opengl python-pyglet python-webkit`
 
 
 Settings
