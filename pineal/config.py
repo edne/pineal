@@ -12,20 +12,26 @@ TITLE_BROWSER  = 'pineal-browser'
 
 ## Graphic
 FULLSCREEN = True
+RENDER_SIZE = (640,480)
 OUTPUT_SIZE = (640,480)
 
-if '--output-size' in argv:
-    i = argv.index('--output-size')
-    if i+1 < len(argv):
-        splitted = argv[i+1].split('x')
-        if len(splitted) == 2:
-            FULLSCREEN = False
-            OUTPUT_SIZE = (int(splitted[0]), int(splitted[1]))
+for kw in ('render','output'):
+    if '--'+kw+'-size' in argv:
+        i = argv.index('--'+kw+'-size')
+        if i+1 < len(argv):
+            splitted = argv[i+1].split('x')
+            if len(splitted) == 2:
+                if kw == 'render':
+                    RENDER_SIZE = (int(splitted[0]), int(splitted[1]))
+                if kw == 'output':
+                    FULLSCREEN = False
+                    OUTPUT_SIZE = (int(splitted[0]), int(splitted[1]))
 
 _HELP += 'Graphic settings\n'
 _HELP += '----------------\n'
-_HELP += 'With `--output-size WIDTHxHEIGHT` you can set the size of output \
-window (visible only with a secondary monitor), default is fullscreen\n\n'
+_HELP += '* With `--output-size WIDTHxHEIGHT` you can set the size of output \
+window (visible only with a secondary monitor), default is fullscreen\n'
+_HELP += '* `--render-size` sets the size of the hidden rendering window\n\n'
 ##
 
 ## Audio backend

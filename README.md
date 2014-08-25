@@ -33,7 +33,8 @@ Settings
 --------
 
 ### Graphical settings
-With `--output-size WIDTHxHEIGHT` you can set the size of output window (visible only with a secondary monitor), default is fullscreen
+* With `--output-size WIDTHxHEIGHT` you can set the size of output window (visible only with a secondary monitor), default is fullscreen
+* `--render-size` sets the size of the hidden rendering window
 
 ### Audio backend
 Select the audio backend with `--portaudio`, `--jack`, `--coreaudio`,

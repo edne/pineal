@@ -1,4 +1,4 @@
-from pineal.config import TITLE_OVERVIEW, FULLSCREEN, OUTPUT_SIZE
+from pineal.config import TITLE_OVERVIEW, FULLSCREEN, OUTPUT_SIZE, RENDER_SIZE
 import pyglet
 from pyglet.window import key
 import pyglet.gl as gl
@@ -153,7 +153,8 @@ def create(visuals):
     rendering = Rendering(
         visuals,
         caption = 'rendering',
-        width = 640, height = 480,
+        width = RENDER_SIZE[0],
+        height = RENDER_SIZE[1],
         vsync = 0,
         visible = 0
     )
