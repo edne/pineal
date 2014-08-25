@@ -1,7 +1,13 @@
-from pineal.config import TITLE_BROWSER
-from webkit import WebView
+from pineal.config import TITLE_BROWSER, HTTP
 from multiprocessing import Process
-import gtk
+
+try:
+    from webkit import WebView
+    import gtk
+except ImportError:
+    print 'missing webkit OR gtk: try to run with `--no-browser`'
+    print 'You can open: `http://' + HTTP[0] + ':' + str(HTTP[1]) + '` in your \
+browser'
 
 
 class BrowserWidget(gtk.ScrolledWindow):
@@ -14,7 +20,7 @@ class BrowserWidget(gtk.ScrolledWindow):
 
     def run(self):
         print 'starting pineal.browser'
-        self.web.open('http://127.0.0.1:42080')
+        self.web.open( 'http://' + HTTP[0] + ':' + str(HTTP[1]) )
 
 
 class Browser(Process):

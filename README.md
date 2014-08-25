@@ -10,9 +10,23 @@ Pineal Loop Project
 
 Dependencies
 ------------
-* Jack Audio Connection Kit, optional but reccomended
-* Some python modules, on a Debian-based system:  
+
+### Linux
+* Jack Audio Connection Kit is reccomended
+* On a Debian-based system run:  
 `sudo apt-get install python-pyo python-opengl python-pyglet python-webkit`
+
+
+### Mac (not tested)
+* Manually download and install __Pyo__ from:  
+http://ajaxsoundstudio.com/software/pyo/
+* Manually downlad and compile __pywebkitgtk__ from:
+https://code.google.com/p/pywebkitgtk/  
+(It is optional if you run with `--no-browser` parameter)
+* Run:  
+`brew install freeglut pygtk`
+* And:  
+`pip install pyopengl pyglet`
 
 
 Settings
