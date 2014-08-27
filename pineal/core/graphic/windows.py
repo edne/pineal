@@ -159,8 +159,8 @@ def create(visuals):
         visible = 0
     )
 
-    if len(screens)>1:
-        if FULLSCREEN:
+    if FULLSCREEN:
+        if len(screens)>1:
             master = Master(
                 visuals,
                 caption = "Master",
@@ -169,14 +169,14 @@ def create(visuals):
                 vsync = 1,
                 visible = 1,
             )
-        else:
-            master = Master(
-                visuals,
-                caption = "Master",
-                screen = screens[-1],
-                width = OUTPUT_SIZE[0],
-                height = OUTPUT_SIZE[1],
-                vsync = 1,
-                visible = 1,
-            )
+            master.set_mouse_visible(False)
+    else:
+        master = Master(
+            visuals,
+            caption = "Master",
+            width = OUTPUT_SIZE[0],
+            height = OUTPUT_SIZE[1],
+            vsync = 1,
+            visible = 1,
+        )
         master.set_mouse_visible(False)
