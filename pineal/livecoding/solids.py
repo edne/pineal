@@ -2,7 +2,7 @@ from color import fill, stroke
 import thirdparty.ezpyinline as ezpyinline
 
 
-with open('pineal/livecoding/inline.c') as f:
+with open('pineal/livecoding/c/solids.c') as f:
     _ezc = ezpyinline.C(f.read())
 
 
