@@ -14,7 +14,7 @@ Dependencies
 ### Linux
 * Jack Audio Connection Kit is reccomended
 * On a Debian-based system run:  
-`sudo apt-get install python-pyo python-opengl python-pyglet python-webkit`
+`sudo apt-get install python-pyo python-opengl python-pyglet python-webkit libpython-dev freeglut3-dev`
 
 
 ### Mac (not tested)
