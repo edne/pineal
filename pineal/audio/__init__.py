@@ -48,6 +48,14 @@ class Audio(Process):
         self._bass = pyo.Follower(pyo.Biquad(src, 110, type=0))
         self._high = pyo.Follower(pyo.Biquad(src, 1000, type=1))
 
+        self._band = []
+        do = 16.3516
+        for i in xrange(12):
+            f1 = pyo.Follower(pyo.Biquad(src, do*2**i, type=0))
+            f2 = pyo.Follower(pyo.Biquad(f1, do*2**(i+1), type=1))
+            band = f2 * (do*2**(i+3))
+            self._band.append(band)
+
         self._pitch = pyo.Yin(src)
         self._note = 0.0
 
@@ -71,4 +79,7 @@ class Audio(Process):
         self.oscClient.send( OSCMessage('/amp', float(self._amp.get())) )
         self.oscClient.send( OSCMessage('/bass', float(self._bass.get())) )
         self.oscClient.send( OSCMessage('/high', float(self._high.get())) )
+        self.oscClient.send( OSCMessage(
+            '/band', [float(b.get()) for b in self._band]
+        ))
         self.oscClient.send( OSCMessage('/note', float(self._note)) )

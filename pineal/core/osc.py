@@ -29,7 +29,7 @@ class Osc(threading.Thread):
     def callback(self, path, tags, args, source):
         #print path, tags, args, source
         path = [s for s in path.split('/') if s]
-        value = args[0]
+        value = args if len(tags)>1 else args[0]
 
         #/visual/var
         if len(path)==2:
