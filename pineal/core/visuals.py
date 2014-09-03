@@ -26,7 +26,11 @@ class Visual():
             return
 
         try:
+            variables = self.box.__dict__.copy()
             exec(self._stack[-1], self.box.__dict__)
+            for k in variables.keys():
+                if k!='loop' and k in self.box.__dict__.keys():
+                    self.box.__dict__[k] = variables[k]
             self.loop()
         except Exception as e:
             print self.error_log(e)
@@ -60,7 +64,10 @@ class Visual():
 
         for k in self.osc.keys():
             if k in self.get_var():
+                # if osc[] is changed:
                 self.box.__dict__[k] = self.osc[k]
+                # elif values are changed:
+                #   update osc[] with new values
             else:
                 del self.osc[k]
 
