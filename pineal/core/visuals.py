@@ -1,3 +1,6 @@
+from time import time
+import pineal.livecoding
+
 
 class Visuals(dict):
     def new(self, name):
@@ -14,6 +17,7 @@ class Visual():
         self._stack = list()
         self.box = Box()
         self.osc = {}
+        self.lastTime = time()
 
     def load(self, code):
         self._stack.append(code)
@@ -70,6 +74,9 @@ class Visual():
                 #   update osc[] with new values
             else:
                 del self.osc[k]
+
+        pineal.livecoding.__dict__['dt'] = time() - self.lastTime
+        self.lastTime = time()
 
         self.box.loop()
 

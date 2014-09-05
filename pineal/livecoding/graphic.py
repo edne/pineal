@@ -4,7 +4,6 @@ from solids import cube, tetrahedron, dodecahedron, octahedron
 from shapes import square, line, point, quad, rect, triangle, polygon, circle, ellipse
 #from lights import ambient, light, light_pos
 
-
 #
 import pyglet.gl as gl
 
