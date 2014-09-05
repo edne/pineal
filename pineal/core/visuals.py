@@ -1,4 +1,5 @@
 from time import time
+from inspect import isclass
 import pineal.livecoding
 
 
@@ -33,7 +34,9 @@ class Visual():
             variables = self.box.__dict__.copy()
             exec(self._stack[-1], self.box.__dict__)
             for k,v in variables.items():
-                if not callable(v) and k in self.box.__dict__.keys():
+                if (
+                    not callable(v) and not isclass(v)
+                ) and k in self.box.__dict__.keys():
                     self.box.__dict__[k] = v
             self.loop()
         except Exception as e:
