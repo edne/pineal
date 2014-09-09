@@ -50,7 +50,7 @@ class Visual():
 
     def get_var(self):
         d = self.box.__dict__
-        return [k for k in d.keys() if isinstance(d[k], float)]
+        return [k for k in d.keys() if isinstance(d[k], float) and k!='dt']
 
     def set_var(self, var, value):
         self.osc[var] = value
