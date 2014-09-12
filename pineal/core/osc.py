@@ -55,7 +55,6 @@ class Osc(threading.Thread):
         for path,v in var.items():
             if path in self.var.keys():
                 if v != self.var[path]:
-                    print 'sending change',path
                     self.var[path] = v
                     self.change(path, v)
             else:
@@ -66,6 +65,7 @@ class Osc(threading.Thread):
         for path,v in self.var.items():
             if path not in var.keys():
                 del self.var[path]
+                self.remove(path)
 
     def add(self, path):
         self.server.addMsgHandler(path, self.callback)
