@@ -17,7 +17,6 @@ class Visual():
         self.name = name
         self._stack = list()
         self.box = Box()
-        self.osc = {}
         self.lastTime = time()
 
     def load(self, code):
@@ -50,10 +49,10 @@ class Visual():
 
     def get_var(self):
         d = self.box.__dict__
-        return [k for k in d.keys() if isinstance(d[k], float) and k!='dt']
+        return [(k,v) for k,v in d.items() if isinstance(v, float) and k!='dt']
 
     def set_var(self, var, value):
-        self.osc[var] = value
+        self.box.__dict__[var] = value
 
     def error_log(self, e):
         log = self.name + '.py'
@@ -65,19 +64,6 @@ class Visual():
         return log
 
     def loop(self):
-        for k in self.get_var():
-            if k not in self.osc.keys():
-                self.osc[k] = self.box.__dict__[k]
-
-        for k in self.osc.keys():
-            if k in self.get_var():
-                # if osc[] is changed:
-                self.box.__dict__[k] = self.osc[k]
-                # elif values are changed:
-                #   update osc[] with new values
-            else:
-                del self.osc[k]
-
         pineal.livecoding.__dict__['dt'] = time() - self.lastTime
         self.lastTime = time()
 

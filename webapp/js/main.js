@@ -47,6 +47,12 @@ remove = function(visual_name, var_name) {
     }
 };
 
+change = function(visual_name, var_name, val) {
+    $('#'+visual_name+'_'+var_name+' '+' .var_value')[0].value = val;
+};
+
+
+/*
 // websocket callback
 callback = function(e) {
     [action, visual_name, var_name] = e.data.split(' ');
@@ -58,6 +64,7 @@ callback = function(e) {
         remove(visual_name, var_name);
     }
 }
+*/
 
 polling = function() {
     $.post(
@@ -65,12 +72,15 @@ polling = function() {
         function(data) {
             if(data) {
                 //console.log(data);
-                [action, visual_name, var_name] = data.split(' ');
+                [action, visual_name, var_name, val] = data.split(' ');
                 if(action=='add') {
                     add(visual_name, var_name);
                 }
                 if(action=='remove') {
                     remove(visual_name, var_name);
+                }
+                if(action=='change') {
+                    change(visual_name, var_name, val);
                 }
             }
         }

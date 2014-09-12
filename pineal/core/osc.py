@@ -18,11 +18,12 @@ class Osc(threading.Thread):
 
         self.visuals = visuals
         self.paths = []
+        self.var = {}
         self._stop = False
 
     def run(self):
         while not self._stop:
-            self.updatePaths()
+            self.update()
             self.server.handle_request()
         self.server.close()
 
@@ -35,6 +36,7 @@ class Osc(threading.Thread):
         if len(path)==2:
             (visual,var) = path
             self.visuals[visual].set_var(var, value)
+            self.var['/'.join(path)] = value
 
         #/audioParamter
         if len(path)==1:
@@ -44,22 +46,28 @@ class Osc(threading.Thread):
     def stop(self):
         self._stop = True
 
-    def updatePaths(self):
-        paths = []
+    def update(self):
+        var = {}
         for visual_k in self.visuals.keys():
-            for var_k in self.visuals[visual_k].get_var():
-                paths.append(visual_k + '/' + var_k)
+            for k,v in self.visuals[visual_k].get_var():
+                var[visual_k + '/' + k] = v
 
-        for path in paths:
-            if path not in self.paths:
+        for path,v in var.items():
+            if path in self.var.keys():
+                if v != self.var[path]:
+                    print 'sending change',path
+                    self.var[path] = v
+                    self.change(path, v)
+            else:
+                self.var[path] = v
                 self.add(path)
+                self.change(path, v)
 
-        for path in self.paths:
-            if path not in paths:
-                self.remove(path)
+        for path,v in self.var.items():
+            if path not in var.keys():
+                del self.var[path]
 
     def add(self, path):
-        self.paths.append(path)
         self.server.addMsgHandler(path, self.callback)
         try:
             self.client.send( OSCMessage('/add', path.split('/')) )
@@ -67,9 +75,14 @@ class Osc(threading.Thread):
             None
 
     def remove(self, path):
-        self.paths.remove(path)
         #self.server.delMsgHandler(path)
         try:
             self.client.send( OSCMessage('/remove', path.split('/')) )
+        except OSCClientError:
+            None
+
+    def change(self, path, val):
+        try:
+            self.client.send( OSCMessage('/change', path.split('/')+[val]) )
         except OSCClientError:
             None

@@ -18,6 +18,7 @@ class Web(Process):
         self.oscServer = OSCServer(OSC_WEB)
         self.oscServer.addMsgHandler('/add', self.add)
         self.oscServer.addMsgHandler('/remove', self.remove)
+        self.oscServer.addMsgHandler('/change', self.change)
 
         self.oscClient = OSCClient()
         self.oscClient.connect(OSC_CORE)
@@ -56,11 +57,16 @@ class Web(Process):
         print 'stopping pineal.web'
         self._stop = True
 
+    ## OSC handling
     def add(self, path, tags, args, source):
         self.msg.append(' '.join(['add']+args))
 
     def remove(self, path, tags, args, source):
         self.msg.append(' '.join(['remove']+args))
+
+    def change(self, path, tags, args, source):
+        self.msg.append(' '.join(['change']+[str(arg) for arg in args]) )
+    ##
 
     ## HTTP routing
     def root(self):
