@@ -27,8 +27,12 @@ class Loader(threading.Thread):
 
         for name in self.visuals.keys():
             if name not in names:
-                print 'removing'
-                del self.visuals[name]
+                # wait and check if file is still there
+                time.sleep(0.1)
+                files = glob(os.path.join(self.path,'*.py'))
+                if os.path.join(self.path, name+'.py') not in files:
+                    print 'removed',name
+                    del self.visuals[name]
 
         for name in names:
             if name in self.visuals:
