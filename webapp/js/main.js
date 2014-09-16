@@ -32,7 +32,7 @@ add = function(visual_name, var_name) {
     $('#'+visual_name).append(
         '<div class="var" id="'+visual_name+'_'+var_name+'">\n'+
         '    <span class="var_name">'+var_name+'</span>\n'+
-        '    <input type="range" min="0" max="1" step="0.02" class="var_value">\n'+
+        '    <input type="range" min="0" max="1" step="any" class="var_value">\n'+
         '</div>'
     );
 
