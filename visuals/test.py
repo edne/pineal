@@ -4,7 +4,7 @@ from pineal.livecoding import dt
 import pineal.livecoding.graphic as g
 import pineal.livecoding.audio as a
 
-rad = 1.0
+rad = 0.0
 hue = [0.0]
 
 
