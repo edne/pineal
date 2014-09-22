@@ -9,15 +9,14 @@ hue = [0.0]
 
 
 def loop():
-    g.colorMode("hsv")
-
-    g.colorMode("rgb")
-    g.stroke(g.noise()*a.high*20)
     g.strokeWeight(2)
 
     hue[0] = hue[0] + dt
     g.colorMode("hsv")
-    g.fill(hue[0] + a.note*0.2, 0.2 + 0.01*a.amp)
+    g.stroke(hue[0] + a.note*0.2, 0.2 + 0.01*a.amp)
+
+    g.colorMode("rgb")
+    g.fill(g.noise()*a.high*20)
 
     g.pushMatrix()
     g.rotate(0.2, 0.5)
