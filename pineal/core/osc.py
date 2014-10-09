@@ -1,6 +1,6 @@
 import threading
 from thirdparty.OSC import OSCServer, OSCClient, OSCClientError, OSCMessage
-from pineal.config import OSC_CORE, OSC_WEB
+from pineal.config import OSC_CORE, OSC_GUI
 import pineal.livecoding.audio
 
 
@@ -10,7 +10,7 @@ class Osc(threading.Thread):
 
         self.server = OSCServer(OSC_CORE)
         self.client = OSCClient()
-        self.client.connect(OSC_WEB)
+        self.client.connect(OSC_GUI)
 
         for param in pineal.livecoding.audio.__dict__.keys():
             if param[0]!='_':

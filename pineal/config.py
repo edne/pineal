@@ -54,7 +54,7 @@ _HELP += 'Select the audio backend with %s.  \nDefault is %s\n\n' % (
 ## Network
 addrs = {
     'osc-core': ('localhost', 1420),
-    'osc-web':  ('localhost', 1421),
+    'osc-gui':  ('localhost', 1421),
     'http':  ('localhost', 42080)
 }
 for k in addrs.keys():
@@ -65,13 +65,13 @@ for k in addrs.keys():
             if len(splitted) == 2:
                 addrs[k] = (splitted[0], int(splitted[1]))
 OSC_CORE = addrs['osc-core']
-OSC_WEB  = addrs['osc-web']
+OSC_GUI  = addrs['osc-gui']
 HTTP  = addrs['http']
 
 _HELP += 'Network\n'
 _HELP += '-------\n'
 _HELP += 'Set the OSC address of core application or the webserver\n\
-with `--osc-core` or `--osc-web` followed by `ip:port`.  \n\
+with `--osc-core` or `--osc-gui` followed by `ip:port`.  \n\
 With `--http` you set the address of webserver\n\n'
 ##
 
@@ -79,11 +79,11 @@ With `--http` you set the address of webserver\n\n'
 ## Modules
 from core import Core
 from audio import Audio
-from web import Web
-#from gui import Gui
-from browser import Browser
+#from web import Web
+from gui import Gui
+#from browser import Browser
 
-CLASSES = [Core, Audio, Web, Browser]
+CLASSES = [Core, Audio, Gui]
 MODULES = [Cl.__name__.lower() for Cl in CLASSES]
 
 # exclude paramemeters with --no-classname

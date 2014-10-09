@@ -1,7 +1,7 @@
 from multiprocessing import Process
 from threading import Thread
 
-from pineal.config import OSC_CORE, OSC_WEB, HTTP
+from pineal.config import OSC_CORE, OSC_GUI, HTTP
 from thirdparty.OSC import OSCClient, OSCMessage, OSCServer
 import thirdparty.bottle as bottle
 
@@ -15,7 +15,7 @@ class Web(Process):
     def __init__(self):
         Process.__init__(self)
 
-        self.oscServer = OSCServer(OSC_WEB)
+        self.oscServer = OSCServer(OSC_GUI)
         self.oscServer.addMsgHandler('/add', self.add)
         self.oscServer.addMsgHandler('/remove', self.remove)
         self.oscServer.addMsgHandler('/change', self.change)
