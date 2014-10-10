@@ -15,18 +15,17 @@ class VarSlider(gtk.Frame):
         self.visual = visual
         self.var = var
 
-        adjustment = gtk.Adjustment(
+        self.adjustment = gtk.Adjustment(
             lower = 0.0,
             upper = 100.0,
             step_incr = 1.0,
             page_incr = 5.0
         )
-        adjustment.connect('value-changed', self.changed)
+        self.adjustment.connect('value-changed', self.changed)
 
-        scale = gtk.VScale(adjustment)
+        scale = gtk.VScale(self.adjustment)
         scale.set_inverted(True)
         scale.set_draw_value(False)
-        #scale.set_increments(0.01, 0.2)
         scale.set_update_policy(gtk.UPDATE_CONTINUOUS)
         self.add(scale)
         self.show_all()
@@ -36,6 +35,9 @@ class VarSlider(gtk.Frame):
         self.gui.guiOsc.client.send(
             OSCMessage('/'+self.visual+'/'+self.var, float(value))
         )
+
+    def change(self, value):
+        self.adjustment.set_value(value*100)
 
 
 class VisualFrame(gtk.Frame):
@@ -81,17 +83,17 @@ class GuiOsc(Thread):
         self.gui.add(*args)
 
     def remove(self, path, tags, args, source):
-        None
+        self.gui.remove(*args)
 
     def change(self, path, tags, args, source):
-        None
+        self.gui.change(*args)
 
     def send(self, visual, var, value):
         self.client.send( OSCMessage('/'+visual+'/'+var, float(value)) )
 
 
 class Gui(Process):
-    """Display a gui for the sliders"""
+    """Display a gui"""
     def __init__(self):
         Process.__init__(self)
 
@@ -116,7 +118,7 @@ class Gui(Process):
         try:
             while True:
                 gtk.main_iteration()
-                sleep(0.01)
+                sleep(0.01)  # don't ask me why
         except KeyboardInterrupt:
             None
 
@@ -138,3 +140,9 @@ class Gui(Process):
                 self.visuals[visual].add_var(var)
 
             self.box.show_all()
+
+    def remove(self, visual, var):
+        None
+
+    def change(self, visual, var, value):
+        self.visuals[visual].variables[var].change(value)

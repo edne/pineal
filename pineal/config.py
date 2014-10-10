@@ -70,17 +70,16 @@ HTTP  = addrs['http']
 
 _HELP += 'Network\n'
 _HELP += '-------\n'
-_HELP += 'Set the OSC address of core application or the webserver\n\
-with `--osc-core` or `--osc-gui` followed by `ip:port`.  \n\
-With `--http` you set the address of webserver\n\n'
+_HELP += 'Set the OSC addresses\n\
+with `--osc-core` or `--osc-gui` followed by `ip:port`.  \n\n'
 ##
 
 
 ## Modules
 from core import Core
 from audio import Audio
-#from web import Web
 from gui import Gui
+#from web import Web
 #from browser import Browser
 
 CLASSES = [Core, Audio, Gui]
