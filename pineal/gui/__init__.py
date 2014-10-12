@@ -1,11 +1,9 @@
 from multiprocessing import Process
 from threading import Thread
 from time import sleep
-import gobject
 import gtk
-from thirdparty.OSC import OSCClient, OSCServer, OSCMessage
 
-from pineal.config import OSC_CORE, OSC_GUI
+from pineal.gui.guiOsc import GuiOsc
 
 
 class VarSlider(gtk.Frame):
@@ -23,18 +21,16 @@ class VarSlider(gtk.Frame):
         )
         self.adjustment.connect('value-changed', self.changed)
 
-        scale = gtk.VScale(self.adjustment)
-        scale.set_inverted(True)
+        scale = gtk.HScale(self.adjustment)
         scale.set_draw_value(False)
+        scale.set_size_request(200,20)
         scale.set_update_policy(gtk.UPDATE_CONTINUOUS)
         self.add(scale)
         self.show_all()
 
     def changed(self, adjustment):
         value = adjustment.get_value()/100
-        self.gui.guiOsc.client.send(
-            OSCMessage('/'+self.visual+'/'+self.var, float(value))
-        )
+        self.gui.guiOsc.send(self.visual, self.var, value)
 
     def change(self, value):
         self.adjustment.set_value(value*100)
@@ -46,50 +42,54 @@ class VisualFrame(gtk.Frame):
         self.gui = gui
         self.visual = visual
 
-        self.hbox = gtk.HBox()
-        self.add(self.hbox)
+        self.box = gtk.VBox()
+        self.add(self.box)
         self.show_all()
         self.variables = {}
 
     def add_var(self, var):
         varSlider = VarSlider(self.gui, self.visual, var)
         self.variables[var] = varSlider
-        self.hbox.add(varSlider)
-        self.hbox.show_all()
+        self.box.add(varSlider)
+        self.box.show_all()
 
 
-class GuiOsc(Thread):
+def menu_item(k, v):
+    item = gtk.MenuItem(k)
+
+    if type(v) == dict:
+        d = v
+        menu = gtk.Menu()
+        item.set_submenu(menu)
+        for k,v in d.items():
+            menu.append(menu_item(k,v))
+    else:
+        item.connect('activate', v)  # v is a callback
+
+    return item
+
+
+class Menu(gtk.MenuBar):
     def __init__(self, gui):
-        Thread.__init__(self)
+        gtk.MenuBar.__init__(self)
         self.gui = gui
 
-        self.server = OSCServer(OSC_GUI)
-        self.server.addMsgHandler('/add', self.add)
-        self.server.addMsgHandler('/remove', self.remove)
-        self.server.addMsgHandler('/change', self.change)
+        mdict = {
+            'File': {
+                'Visuals': {
+                    'Folder': self.cb_visuals_folder,
+                },
+                'Exit': self.cb_exit,
+            },
+        }
+        for k,v in mdict.items():
+            self.append(menu_item(k,v))
 
-        self.client = OSCClient()
-        self.client.connect(OSC_CORE)
+    def cb_exit(self, item):
+        print 'cb exit'
 
-        self._stop = False
-
-    def run(self):
-        self.server.serve_forever()
-
-    def stop(self):
-        self._stop = True
-
-    def add(self, path, tags, args, source):
-        self.gui.add(*args)
-
-    def remove(self, path, tags, args, source):
-        self.gui.remove(*args)
-
-    def change(self, path, tags, args, source):
-        self.gui.change(*args)
-
-    def send(self, visual, var, value):
-        self.client.send( OSCMessage('/'+visual+'/'+var, float(value)) )
+    def cb_visuals_folder(self, item):
+        print 'cb visuals folder'
 
 
 class Gui(Process):
@@ -98,15 +98,20 @@ class Gui(Process):
         Process.__init__(self)
 
         self.win = gtk.Window()
-        self.win.set_title('')
-        self.win.resize(1,200)
+        self.win.set_title('Pineal Loop Project')
+        self.win.resize(200,1)
 
-        self.win.connect('delete-event', self.quit, None)
-        self.win.show_all()
+        self.win.connect('delete-event', self.quit)
+
+        vbox = gtk.VBox()
+        self.win.add(vbox)
+
+        vbox.add(Menu(self))
 
         self.box = gtk.HBox()
-        self.win.add(self.box)
-        self.box.show()
+        vbox.add(self.box)
+
+        self.win.show_all()
 
         self.visuals = {}
 
@@ -127,8 +132,9 @@ class Gui(Process):
     def stop(self):
         print 'stopping pineal.gui'
 
-    def quit(self, widget, event, data):
+    def quit(self, widget, event):
         return True  # if True gui wan't close on user signal
+        #return False
 
     def add(self, visual, var):
         with gtk.gdk.lock:
