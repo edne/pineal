@@ -1,21 +1,18 @@
-from sys import argv, exit
-
-VISUALS_PATH = '../../visuals'
-
-TITLE = 'Pineal Loop Project'
-TITLE_OVERVIEW = 'pineal-overview'
-TITLE_BROWSER  = 'pineal-browser'
-
-## Graphic
-FULLSCREEN = True
-RENDER_SIZE = (640,480)
-OUTPUT_SIZE = (640,480)
-##
-
-BACKEND = 'portaudio'
-
 OSC_CORE = ('localhost', 1420)
-OSC_GUI  = ('localhost', 1421)
-
-from pineal.parser import parse
-globals().update(parse())
+OSC_GUI = ('localhost', 1421)
+b = 'coreaudio'
+TITLE_BROWSER = 'pineal-browser'
+OUTPUT_SIZE = (640, 480)
+FULLSCREEN = True
+setted = ['Gui']
+k = 'osc-gui'
+TITLE = 'Pineal Loop Project'
+MODULES = ['Gui']
+TITLE_OVERVIEW = 'pineal-overview'
+VISUALS_PATH = '../../visuals'
+p = 'Gui'
+backends = ('portaudio', 'jack', 'coreaudio')
+kw = 'output'
+RENDER_SIZE = (640, 480)
+arg = '--gui'
+BACKEND = 'portaudio'

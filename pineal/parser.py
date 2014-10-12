@@ -1,9 +1,4 @@
 from sys import argv, exit
-
-from core import Core
-from audio import Audio
-from gui import Gui
-
 from pineal.help import help_string
 
 
@@ -11,6 +6,23 @@ def parse():
     if [arg for arg in argv if arg in ('-h','--help')]:
         print help_string()
         exit(0)
+
+    VISUALS_PATH = '../../visuals'
+
+    TITLE = 'Pineal Loop Project'
+    TITLE_OVERVIEW = 'pineal-overview'
+    TITLE_BROWSER  = 'pineal-browser'
+
+    ## Graphic
+    FULLSCREEN = True
+    RENDER_SIZE = (640,480)
+    OUTPUT_SIZE = (640,480)
+    ##
+
+    BACKEND = 'portaudio'
+
+    OSC_CORE = ('localhost', 1420)
+    OSC_GUI  = ('localhost', 1421)
 
     for kw in ('render','output'):
         if '--'+kw+'-size' in argv:
@@ -37,10 +49,9 @@ def parse():
                 if len(splitted) == 2:
                     addrs[k] = (splitted[0], int(splitted[1]))
 
-    CLASSES = [Core, Audio, Gui]
-    MODULES = [Cl.__name__.lower() for Cl in CLASSES]
+    MODULES = ['Core', 'Audio', 'Gui']
 
-    setted = [p for p in MODULES if '--'+p in argv]
+    setted = [p for p in MODULES if '--'+p.lower() in argv]
     MODULES = setted or MODULES
 
     return locals()

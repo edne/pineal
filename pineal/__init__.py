@@ -1,8 +1,21 @@
-from pineal.config import CLASSES, MODULES
+from pineal.parser import parse
 
+def generate_config():
+    config = parse()
+    with open('pineal/config.py','w') as f:
+        for k,v in config.items():
+            printable = '\''+v+'\'' if isinstance(v,basestring) else str(v)
+            f.write(k + ' = ' + printable + '\n')
 
 def main():
-    procs = [Cl() for Cl in CLASSES if Cl.__name__.lower() in MODULES]
+    generate_config()
+
+    from pineal.config import MODULES
+    classes = [
+        __import__(m.lower(), globals(), locals(), [m], -1).__dict__[m]
+        for m in MODULES
+    ]
+    procs = [Cl() for Cl in classes]
 
     for p in procs:
         p.start()
