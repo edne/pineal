@@ -76,10 +76,10 @@ class Audio(Process):
         if self._pitch.get()>1:
             self._note = math.log(self._pitch.get()/16.35,2)%1.0
 
-        self.oscClient.send( OSCMessage('/amp', float(self._amp.get())) )
-        self.oscClient.send( OSCMessage('/bass', float(self._bass.get())) )
-        self.oscClient.send( OSCMessage('/high', float(self._high.get())) )
+        self.oscClient.send( OSCMessage('/audio/amp', float(self._amp.get())) )
+        self.oscClient.send( OSCMessage('/audio/bass', float(self._bass.get())) )
+        self.oscClient.send( OSCMessage('/audio/high', float(self._high.get())) )
         self.oscClient.send( OSCMessage(
-            '/band', [float(b.get()) for b in self._band]
+            '/audio/band', [float(b.get()) for b in self._band]
         ))
-        self.oscClient.send( OSCMessage('/note', float(self._note)) )
+        self.oscClient.send( OSCMessage('/audio/note', float(self._note)) )

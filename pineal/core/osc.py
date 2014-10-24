@@ -14,7 +14,7 @@ class Osc(threading.Thread):
 
         for param in pineal.livecoding.audio.__dict__.keys():
             if param[0]!='_':
-                self.server.addMsgHandler('/'+param, self.callback)
+                self.server.addMsgHandler('/audio/'+param, self.callback)
 
         self.visuals = visuals
         self.paths = []
@@ -32,15 +32,18 @@ class Osc(threading.Thread):
         path = [s for s in path.split('/') if s]
         value = args if len(tags)>1 else args[0]
 
-        #/visual/var
-        if len(path)==2:
+        if not path:
+            return
+
+        #/visual_name/var_name
+        if len(path)==3 and path[0]=='visual':
+            path = path[1:]
             (visual,var) = path
             self.visuals[visual].set_var(var, value)
             self.var['/'.join(path)] = value
-
         #/audioParamter
-        if len(path)==1:
-            (param,) = path
+        elif len(path)==2 and path[0]=='audio':
+            (param,) = path[1:]
             pineal.livecoding.audio.__dict__[param] = value
 
     def stop(self):
@@ -68,7 +71,7 @@ class Osc(threading.Thread):
                 self.remove(path)
 
     def add(self, path):
-        self.server.addMsgHandler(path, self.callback)
+        self.server.addMsgHandler('/visual/'+path, self.callback)
         try:
             self.client.send( OSCMessage('/add', path.split('/')) )
         except OSCClientError:

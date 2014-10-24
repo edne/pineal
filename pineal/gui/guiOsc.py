@@ -34,4 +34,4 @@ class GuiOsc(Thread):
         self.gui.change(*args)
 
     def send(self, visual, var, value):
-        self.client.send( OSCMessage('/'+visual+'/'+var, float(value)) )
+        self.client.send( OSCMessage('/visual/'+visual+'/'+var, float(value)) )
