@@ -5,8 +5,14 @@ import pineal.livecoding.audio
 
 
 class Osc(threading.Thread):
-    def __init__(self, visuals):
+    def __init__(self, core, visuals):
         threading.Thread.__init__(self)
+
+        self.core = core
+        self.visuals = visuals
+        self.paths = []
+        self.var = {}
+        self._stop = False
 
         self.server = OSCServer(OSC_CORE)
         self.client = OSCClient()
@@ -16,10 +22,7 @@ class Osc(threading.Thread):
             if param[0]!='_':
                 self.server.addMsgHandler('/audio/'+param, self.callback)
 
-        self.visuals = visuals
-        self.paths = []
-        self.var = {}
-        self._stop = False
+        self.server.addMsgHandler('/cmd/exit', self.callback)
 
     def run(self):
         while not self._stop:
@@ -28,23 +31,29 @@ class Osc(threading.Thread):
         self.server.close()
 
     def callback(self, path, tags, args, source):
-        #print path, tags, args, source
         path = [s for s in path.split('/') if s]
-        value = args if len(tags)>1 else args[0]
+        value = (args if tags[1:] else args[0]) if args else None
 
-        if not path:
-            return
+        cbs = {
+            'visual': self.cb_visual,
+            'audio': self.cb_audio,
+            'cmd': self.cb_cmd,
+        }
 
-        #/visual_name/var_name
-        if len(path)==3 and path[0]=='visual':
-            path = path[1:]
-            (visual,var) = path
-            self.visuals[visual].set_var(var, value)
-            self.var['/'.join(path)] = value
-        #/audioParamter
-        elif len(path)==2 and path[0]=='audio':
-            (param,) = path[1:]
-            pineal.livecoding.audio.__dict__[param] = value
+        if path[1:] and path[0] in cbs.keys():
+            cbs[path[0]](path[1:], value)
+
+    def cb_visual(self, path, value):
+        (visual,var) = path
+        self.visuals[visual].set_var(var, value)
+        self.var['/'.join(path)] = value
+
+    def cb_audio(self, path, value):
+        pineal.livecoding.audio.__dict__[path[0]] = value
+
+    def cb_cmd(self, path, value):
+        if path[0]=='exit':
+            self.core.stop()
 
     def stop(self):
         self._stop = True

@@ -16,7 +16,7 @@ class Core(Process):
 
         self.threads = [
             Loader(visuals),
-            Osc(visuals)
+            Osc(self, visuals)
         ]
         self._stop = False
 

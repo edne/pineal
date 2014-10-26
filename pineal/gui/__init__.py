@@ -30,7 +30,7 @@ class VarSlider(gtk.Frame):
 
     def changed(self, adjustment):
         value = adjustment.get_value()/100
-        self.gui.guiOsc.send(self.visual, self.var, value)
+        self.gui.guiOsc.send_change(self.visual, self.var, value)
 
     def change(self, value):
         self.adjustment.set_value(value*100)
@@ -57,14 +57,14 @@ class VisualFrame(gtk.Frame):
 def menu_item(k, v):
     item = gtk.MenuItem(k)
 
-    if type(v) == dict:
+    if callable(v):
+        item.connect('activate', v)  # v is a callback
+    else:
         d = v
         menu = gtk.Menu()
         item.set_submenu(menu)
         for k,v in d.items():
             menu.append(menu_item(k,v))
-    else:
-        item.connect('activate', v)  # v is a callback
 
     return item
 
@@ -76,9 +76,9 @@ class Menu(gtk.MenuBar):
 
         mdict = {
             'File': {
-                'Visuals': {
-                    'Folder': self.cb_visuals_folder,
-                },
+                #'Visuals': {
+                #    'Folder': self.cb_visuals_folder,
+                #},
                 'Exit': self.cb_exit,
             },
         }
@@ -86,10 +86,8 @@ class Menu(gtk.MenuBar):
             self.append(menu_item(k,v))
 
     def cb_exit(self, item):
-        print 'cb exit'
-
-    def cb_visuals_folder(self, item):
-        print 'cb visuals folder'
+        self.gui.guiOsc.send_cmd('exit')
+        #self.gui.stop()
 
 
 class Gui(Process):
@@ -114,6 +112,7 @@ class Gui(Process):
         self.win.show_all()
 
         self.visuals = {}
+        self._stop = False
 
     def run(self):
         print 'starting pineal.gui'
@@ -121,7 +120,7 @@ class Gui(Process):
         self.guiOsc.start()
 
         try:
-            while True:
+            while not self._stop:
                 gtk.main_iteration()
                 sleep(0.01)  # don't ask me why
         except KeyboardInterrupt:
@@ -131,10 +130,10 @@ class Gui(Process):
 
     def stop(self):
         print 'stopping pineal.gui'
+        self._stop = True
 
     def quit(self, widget, event):
-        return True  # if True gui wan't close on user signal
-        #return False
+        return not self._stop
 
     def add(self, visual, var):
         with gtk.gdk.lock:
