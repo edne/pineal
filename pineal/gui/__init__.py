@@ -1,5 +1,4 @@
 from multiprocessing import Process
-from threading import Thread
 from time import sleep
 import gtk
 
@@ -15,15 +14,14 @@ class Gui(Process):
         self.win = gtk.Window()
         self.win.set_title('Pineal Loop Project')
         self.win.resize(200,1)
-
         self.win.connect('delete-event', self.quit)
 
         vbox = gtk.VBox()
-        self.win.add(vbox)
-
-        vbox.add(Menu(self))
-
+        menu = Menu(self)
         self.box = gtk.HBox()
+
+        self.win.add(vbox)
+        vbox.add(menu)
         vbox.add(self.box)
 
         self.win.show_all()
@@ -43,8 +41,6 @@ class Gui(Process):
         except KeyboardInterrupt:
             None
 
-        self.guiOsc.stop()
-
     def stop(self):
         print 'stopping pineal.gui'
         self._stop = True
@@ -62,9 +58,6 @@ class Gui(Process):
                 self.visuals[visual].add_var(var)
 
             self.box.show_all()
-
-    def remove(self, visual, var):
-        None
 
     def change(self, visual, var, value):
         self.visuals[visual].variables[var].change(value)

@@ -1,6 +1,7 @@
 import gtk
 
 class VarSlider(gtk.Frame):
+    SCALE = 100.0
     def __init__(self, gui, visual, var):
         gtk.Frame.__init__(self, var)
         self.gui = gui
@@ -9,7 +10,7 @@ class VarSlider(gtk.Frame):
 
         self.adjustment = gtk.Adjustment(
             lower = 0.0,
-            upper = 100.0,
+            upper = self.SCALE,
             step_incr = 1.0,
             page_incr = 5.0
         )
@@ -19,15 +20,16 @@ class VarSlider(gtk.Frame):
         scale.set_draw_value(False)
         scale.set_size_request(200,20)
         scale.set_update_policy(gtk.UPDATE_CONTINUOUS)
+
         self.add(scale)
         self.show_all()
 
     def changed(self, adjustment):
-        value = adjustment.get_value()/100
+        value = adjustment.get_value()/self.SCALE
         self.gui.guiOsc.send_change(self.visual, self.var, value)
 
     def change(self, value):
-        self.adjustment.set_value(value*100)
+        self.adjustment.set_value(value*self.SCALE)
 
 
 class VisualFrame(gtk.Frame):
@@ -38,6 +40,7 @@ class VisualFrame(gtk.Frame):
 
         self.box = gtk.VBox()
         self.add(self.box)
+
         self.show_all()
         self.variables = {}
 
@@ -69,18 +72,12 @@ class Menu(gtk.MenuBar):
         self.gui = gui
 
         mdict = {
-            'File': {
-                #'Visuals': {
-                #    'Folder': self.cb_visuals_folder,
-                #},
-                'Exit': self.cb_exit,
+            'Help': {
+                'About': self.cb_about,
             },
         }
         for k,v in mdict.items():
             self.append(menu_item(k,v))
 
-    def cb_exit(self, item):
-        self.gui.guiOsc.send_cmd('exit')
-        #self.gui.stop()
-
-
+    def cb_about(self, item):
+        pass  # add about dialog
