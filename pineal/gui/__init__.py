@@ -3,7 +3,7 @@ from time import sleep
 import gtk
 
 from pineal.gui.guiOsc import GuiOsc
-from pineal.gui.widgets import VarSlider, VisualFrame, Menu
+from pineal.gui.widgets import VisualFrame, Menu
 
 
 class Gui(Process):
@@ -48,7 +48,7 @@ class Gui(Process):
     def quit(self, widget, event):
         return not self._stop
 
-    def add(self, visual, var):
+    def add(self, visual, var, value):
         with gtk.gdk.lock:
             if visual not in self.visuals.keys():
                 self.visuals[visual] = VisualFrame(self, visual)
@@ -56,8 +56,6 @@ class Gui(Process):
 
             if var not in self.visuals[visual].variables.keys():
                 self.visuals[visual].add_var(var)
+                self.visuals[visual].variables[var].change(value)
 
             self.box.show_all()
-
-    def change(self, visual, var, value):
-        self.visuals[visual].variables[var].change(value)

@@ -22,8 +22,6 @@ class Osc(threading.Thread):
             if param[0]!='_':
                 self.server.addMsgHandler('/audio/'+param, self.callback)
 
-        self.server.addMsgHandler('/cmd/exit', self.callback)
-
     def run(self):
         while not self._stop:
             self.update()
@@ -37,7 +35,6 @@ class Osc(threading.Thread):
         cbs = {
             'visual': self.cb_visual,
             'audio': self.cb_audio,
-            'cmd': self.cb_cmd,
         }
 
         if path[1:] and path[0] in cbs.keys():
@@ -51,10 +48,6 @@ class Osc(threading.Thread):
     def cb_audio(self, path, value):
         pineal.livecoding.audio.__dict__[path[0]] = value
 
-    def cb_cmd(self, path, value):
-        if path[0]=='exit':
-            self.core.stop()
-
     def stop(self):
         self._stop = True
 
@@ -65,36 +58,18 @@ class Osc(threading.Thread):
                 var[visual_k + '/' + k] = v
 
         for path,v in var.items():
-            if path in self.var.keys():
-                if v != self.var[path]:
-                    self.var[path] = v
-                    self.change(path, v)
-            else:
+            if not path in self.var.keys():
                 self.var[path] = v
-                self.add(path)
-                self.change(path, v)
+                self.add(path, v)
 
         for path,v in self.var.items():
             if path not in var.keys():
                 del self.var[path]
                 self.remove(path)
 
-    def add(self, path):
+    def add(self, path, val):
         self.server.addMsgHandler('/visual/'+path, self.callback)
         try:
-            self.client.send( OSCMessage('/add', path.split('/')) )
-        except OSCClientError:
-            None
-
-    def remove(self, path):
-        #self.server.delMsgHandler(path)
-        try:
-            self.client.send( OSCMessage('/remove', path.split('/')) )
-        except OSCClientError:
-            None
-
-    def change(self, path, val):
-        try:
-            self.client.send( OSCMessage('/change', path.split('/')+[val]) )
+            self.client.send( OSCMessage('/add', path.split('/')+[val]) )
         except OSCClientError:
             None
