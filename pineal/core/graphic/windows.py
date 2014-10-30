@@ -83,7 +83,7 @@ class Rendering(pyglet.window.Window):
 
         for v in self.visuals.values():
             gl.glMatrixMode(gl.GL_MODELVIEW)
-            v.update()
+            v.iteration()
 
         buf = pyglet.image.get_buffer_manager().get_color_buffer()
 

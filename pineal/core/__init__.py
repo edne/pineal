@@ -11,12 +11,14 @@ class Core(Process):
     def __init__(self):
         Process.__init__(self)
 
-        visuals = Visuals()
+        visuals = Visuals(self)
         self.graphic = Graphic(visuals)
+        self.loader = Loader(visuals)
+        self.osc = Osc(visuals)
 
         self.threads = [
-            Loader(visuals),
-            Osc(visuals)
+            self.loader,
+            self.osc
         ]
         self._stop = False
 

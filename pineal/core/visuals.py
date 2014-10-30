@@ -4,17 +4,23 @@ import pineal.livecoding
 
 
 class Visuals(dict):
+    def __init__(self, core):
+        dict.__init__(self)
+        self.core = core
+
     def new(self, name):
-        v = Visual(self, name)
+        v = Visual(self.core, name)
         self[name] = v
         return v
 
 
-class Visual():
-    def __init__(self, visuals, name):
-        self.visuals = visuals
-        print 'creating visual'
+class Visual(dict):
+    def __init__(self, core, name):
+        dict.__init__(self)
+        self.core = core
         self.name = name
+
+        print 'creating visual'
         self._stack = list()
         self.box = Box()
         self.lastTime = time()
@@ -22,22 +28,19 @@ class Visual():
     def load(self, code):
         self._stack.append(code)
 
-    def remove(self):
-        del self.visuals[self.name]
-
-    def update(self):
+    def iteration(self):
         if not self._stack:
             return
 
         try:
-            variables = self.box.__dict__.copy()
-            exec(self._stack[-1], self.box.__dict__)
-            for k,v in variables.items():
-                if (
-                    not callable(v) and not isclass(v)
-                ) and k in self.box.__dict__.keys():
-                    self.box.__dict__[k] = v
-            self.loop()
+            stored = self.box.__dict__.copy()         # make a copy
+            exec(self._stack[-1], self.box.__dict__)  # update code changes
+            self.box.__dict__.update({                # restore old values
+                k: v
+                for k,v in stored.items()
+                if not callable(v) and not isclass(v) # but only for variables
+            })
+            self.loop()  # finally try to run main iteration
         except Exception as e:
             print self.error_log(e)
 
@@ -45,14 +48,21 @@ class Visual():
             if not self._stack:
                 print "%s.py is BROKEN" % self.name
             else:
-                self.update() # WARNING recursion!
+                self.iteration() # WARNING recursion!
 
-    def get_var(self):
         d = self.box.__dict__
-        return [(k,v) for k,v in d.items() if isinstance(v, float) and k!='dt']
+        added = {
+            k: v
+            for k,v in d.items()
+            if isinstance(v, float) and k!='dt' and k not in stored.keys()
+        }
+        for (var, value) in added.items():
+            self.core.osc.add(self.name, var, value)
+        self.update(added)
 
-    def set_var(self, var, value):
-        self.box.__dict__[var] = value
+    def __setitem__(self, key, value):
+        dict.__setitem__(self, key, value)
+        self.box.__dict__[key] = value
 
     def error_log(self, e):
         log = self.name + '.py'

@@ -15,12 +15,10 @@ class Osc(threading.Thread):
         self.client.connect(OSC_GUI)
         self.server.addMsgHandler('default', self.callback)
 
-        self.var = {}
         self._stop = False
 
     def run(self):
         while not self._stop:
-            self.update()
             self.server.handle_request()
         self.server.close()
 
@@ -37,8 +35,7 @@ class Osc(threading.Thread):
             cbs[path[0]](value, *path[1:])
 
     def cb_visual(self, value, visual, var):
-        self.visuals[visual].set_var(var, value)
-        self.var['%s/%s' % (visual,var)] = value
+        self.visuals[visual][var] = value
 
     def cb_audio(self, value, key):
         pineal.livecoding.audio.__dict__[key] = value
@@ -46,16 +43,5 @@ class Osc(threading.Thread):
     def stop(self):
         self._stop = True
 
-    def update(self):
-        var = {}
-        for visual_k in self.visuals.keys():
-            for k,v in self.visuals[visual_k].get_var():
-                var[visual_k + '/' + k] = v
-
-        for path,v in var.items():
-            if not path in self.var.keys():
-                self.var[path] = v
-                self.add(path, v)
-
-    def add(self, path, val):
-        self.client.send( OSCMessage('/add', path.split('/')+[val]) )
+    def add(self, *args):
+        self.client.send( OSCMessage('/add', args) )
