@@ -2,6 +2,12 @@
 Pineal Loop Project
 ===================
 
+* Play your music
+* Run PinealLoopProject.py
+* Edit a `.py` file in the `visuals` folder or create a new one
+* Every time you save output is updated
+* Have fun!
+
 Graphic settings
 ----------------
 * With `--output-size WIDTHxHEIGHT` you can set the size of output window
