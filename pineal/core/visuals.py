@@ -32,6 +32,7 @@ class Visual(dict):
         if not self._stack:
             return
 
+        #self.core.osc.send('error', self.name, '')
         try:
             stored = self.box.__dict__.copy()         # make a copy
             exec(self._stack[-1], self.box.__dict__)  # update code changes
@@ -43,21 +44,22 @@ class Visual(dict):
             self.loop()  # finally try to run main iteration
         except Exception as e:
             print self.error_log(e)
+            self.core.osc.send('error', self.name, str(e))
 
             self._stack = self._stack[:-1]
             if not self._stack:
                 print "%s.py is BROKEN" % self.name
             else:
-                self.iteration() # WARNING recursion!
+                self.iteration()
 
         d = self.box.__dict__
-        added = {
+        added = {  # float vairiables not stored
             k: v
             for k,v in d.items()
             if isinstance(v, float) and k!='dt' and k not in stored.keys()
         }
         for (var, value) in added.items():
-            self.core.osc.add(self.name, var, value)
+            self.core.osc.send('add', self.name, var, value)
         self.update(added)
 
     def __setitem__(self, key, value):

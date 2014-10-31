@@ -10,6 +10,7 @@ class GuiOsc(Thread):
 
         self.server = OSCServer(OSC_GUI)
         self.server.addMsgHandler('/add', self.add)
+        self.server.addMsgHandler('/error', self.error)
 
         self.client = OSCClient()
         self.client.connect(OSC_CORE)
@@ -19,6 +20,11 @@ class GuiOsc(Thread):
 
     def add(self, path, tags, args, source):
         self.gui.add(*args)
+
+    def error(self, path, tags, args, source):
+        name, log = args
+        if log:
+            print name, log
 
     def send_change(self, visual, var, value):
         self.client.send( OSCMessage('/visual/'+visual+'/'+var, float(value)) )
