@@ -49,9 +49,4 @@ def parse():
                 if len(splitted) == 2:
                     addrs[k] = (splitted[0], int(splitted[1]))
 
-    MODULES = ['Core', 'Audio', 'Gui']
-
-    setted = [p for p in MODULES if '--'+p.lower() in argv]
-    MODULES = setted or MODULES
-
     return locals()

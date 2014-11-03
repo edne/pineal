@@ -1,3 +1,4 @@
+from sys import argv
 from pineal.parser import parse
 
 def generate_config():
@@ -11,7 +12,10 @@ def generate_config():
 def main():
     generate_config()
 
-    from pineal.config import MODULES
+    MODULES = ['Core', 'Audio', 'Gui']
+    setted = [p for p in MODULES if '--'+p.lower() in argv]
+    MODULES = setted or MODULES
+
     classes = [
         __import__(m.lower(), globals(), locals(), [m], -1).__dict__[m]
         for m in MODULES
