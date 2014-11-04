@@ -39,7 +39,7 @@ class Gui(Process):
                 gtk.main_iteration()
                 sleep(0.01)  # don't ask me why
         except KeyboardInterrupt:
-            None
+            self.guiOsc.stop()
 
     def stop(self):
         print 'stopping pineal.gui'

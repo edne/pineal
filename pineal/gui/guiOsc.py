@@ -1,6 +1,7 @@
 from threading import Thread
 import gtk
-from thirdparty.OSC import OSCClient, OSCServer, OSCMessage
+from thirdparty.OSC import OSCClient, OSCServer, OSCMessage, OSCClientError
+import socket
 from pineal.config import OSC_CORE, OSC_GUI
 
 class GuiOsc(Thread):
@@ -16,7 +17,13 @@ class GuiOsc(Thread):
         self.client.connect(OSC_CORE)
 
     def run(self):
-        self.server.serve_forever()
+        try:
+            self.server.serve_forever()
+        except socket.error:
+            pass
+
+    def stop(self):
+        self.server.server_close()
 
     def add(self, path, tags, args, source):
         self.gui.add(*args)
@@ -27,4 +34,9 @@ class GuiOsc(Thread):
             print name, log
 
     def send_change(self, visual, var, value):
-        self.client.send( OSCMessage('/visual/'+visual+'/'+var, float(value)) )
+        try:
+            self.client.send(
+                OSCMessage('/visual/'+visual+'/'+var, float(value))
+            )
+        except OSCClientError:  # sometime rises a 'connection refused'
+            pass

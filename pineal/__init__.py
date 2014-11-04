@@ -13,24 +13,9 @@ def main():
     generate_config()
 
     MODULES = ['Core', 'Audio', 'Gui']
-    setted = [p for p in MODULES if '--'+p.lower() in argv]
-    MODULES = setted or MODULES
-
-    classes = [
-        __import__(m.lower(), globals(), locals(), [m], -1).__dict__[m]
-        for m in MODULES
-    ]
-    procs = [Cl() for Cl in classes]
-
-    for p in procs:
-        p.start()
+    m = [p for p in MODULES if '--'+p.lower() in argv][0]
 
     try:
-        for p in procs:
-            p.join()
+        __import__(m.lower(), globals(), locals(), [m], -1).__dict__[m]().run()
     except KeyboardInterrupt:
-        print
-        procs.reverse()
-        for p in procs:
-            p.stop()
-            p.join()
+        pass
