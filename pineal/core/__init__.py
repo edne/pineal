@@ -1,16 +1,12 @@
-from multiprocessing import Process
-
 from visuals import Visuals
 from graphic import Graphic
 from loader import Loader
 from osc import Osc
 
 
-class Core(Process):
+class Core(object):
     """Run visuals and show them in Overview and Master windows"""
     def __init__(self):
-        Process.__init__(self)
-
         visuals = Visuals(self)
         self.graphic = Graphic(visuals)
         self.loader = Loader(visuals)

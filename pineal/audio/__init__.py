@@ -1,6 +1,5 @@
 from pineal.config import TITLE, BACKEND
 
-from multiprocessing import Process
 from time import sleep
 import math
 from sys import exit
@@ -10,11 +9,9 @@ from thirdparty.OSC import OSCClient, OSCMessage, OSCClientError
 import pyo
 
 
-class Audio(Process):
+class Audio(object):
     """Do the audio analysis"""
     def __init__(self):
-        Process.__init__(self)
-
         self.oscClient = OSCClient()
         self.oscClient.connect(OSC_CORE)
 

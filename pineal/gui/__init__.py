@@ -1,4 +1,3 @@
-from multiprocessing import Process
 from time import sleep
 import gtk
 
@@ -6,11 +5,9 @@ from pineal.gui.guiOsc import GuiOsc
 from pineal.gui.widgets import VisualFrame, Menu
 
 
-class Gui(Process):
+class Gui(object):
     """Display a gui"""
     def __init__(self):
-        Process.__init__(self)
-
         self.win = gtk.Window()
         self.win.set_title('Pineal Loop Project')
         self.win.resize(200,1)
