@@ -5,6 +5,10 @@ from subprocess import Popen
 import pineal
 
 if __name__=='__main__':
+    if [arg for arg in argv if arg in ('-h','--help')]:
+        with open('README.md', 'r') as f:
+            print f.read()
+        exit(0)
 
     MODULES = ['core', 'audio', 'gui']
     setted = [p for p in MODULES if '--'+p in argv]

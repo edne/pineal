@@ -1,12 +1,6 @@
 from sys import argv, exit
-from pineal.help import help_string
-
 
 def parse():
-    if [arg for arg in argv if arg in ('-h','--help')]:
-        print help_string()
-        exit(0)
-
     VISUALS_PATH = '../../visuals'
 
     TITLE = 'Pineal Loop Project'
