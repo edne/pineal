@@ -5,15 +5,15 @@ import math
 from sys import exit
 
 from pineal.config import OSC_CORE
-from thirdparty.OSC import OSCClient, OSCMessage, OSCClientError
+from pineal.osc import Osc
+
 import pyo
 
 
 class Audio(object):
     """Do the audio analysis"""
     def __init__(self):
-        self.oscClient = OSCClient()
-        self.oscClient.connect(OSC_CORE)
+        self.osc = Osc(port_out=OSC_CORE)
 
         self.s = pyo.Server(
             audio = BACKEND,
@@ -64,18 +64,7 @@ class Audio(object):
         if self._pitch.get()>1:
             self._note = math.log(self._pitch.get()/16.35,2)%1.0
 
-        try:
-            self.oscClient.send(
-                OSCMessage('/audio/amp', float(self._amp.get()))
-            )
-            self.oscClient.send(
-                OSCMessage('/audio/bass', float(self._bass.get()))
-            )
-            self.oscClient.send(
-                OSCMessage('/audio/high', float(self._high.get()))
-            )
-            self.oscClient.send(
-                OSCMessage('/audio/note', float(self._note))
-            )
-        except OSCClientError:  # sometime rises a 'connection refused'
-            pass
+        self.osc.send('/audio/amp', float(self._amp.get()))
+        self.osc.send('/audio/bass', float(self._bass.get()))
+        self.osc.send('/audio/high', float(self._high.get()))
+        self.osc.send('/audio/note', float(self._note))

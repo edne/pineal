@@ -26,7 +26,7 @@ class VarSlider(gtk.Frame):
 
     def changed(self, adjustment):
         value = adjustment.get_value()/self.SCALE
-        self.gui.guiOsc.send_change(self.visual, self.var, value)
+        self.gui.osc.send('/visual/'+self.visual+'/'+self.var, float(value))
 
     def change(self, value):
         self.adjustment.set_value(value*self.SCALE)
