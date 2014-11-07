@@ -1,9 +1,9 @@
 
-Pineal Loop Project
-===================
+Pineal Loop
+===========
 
 * Play your music
-* Run PinealLoopProject.py
+* Run pineal_loop.py
 * Edit a `.py` file in the `visuals` folder or create a new one
 * Every time you save output is updated
 * Have fun!
