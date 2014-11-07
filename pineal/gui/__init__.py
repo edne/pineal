@@ -1,10 +1,8 @@
-from time import sleep
-
 from pineal.osc import Osc
 from pineal.config import OSC_GUI, OSC_CORE
 
 import sys
-sys.argv = sys.argv[:1] + ['-ckivy:log_level:error']
+sys.argv = sys.argv[:1] + ['-ckivy:log_level:error', '--size=640x480']
 from kivy.app import App
 from kivy.uix.tabbedpanel import TabbedPanel, TabbedPanelHeader
 from kivy.uix.label import Label
@@ -28,11 +26,7 @@ class Tab(TabbedPanelHeader):
 
 class Gui(App):
     def build(self):
-        self.tb= TabbedPanel()
-
-        while self.tb.tab_list:
-            self.tb.tab_list.pop(0)
-
+        self.tb = TabbedPanel()
         return self.tb
 
     def run(self):
@@ -59,6 +53,7 @@ class Gui(App):
             tab = Tab(text=visual)
             tab.content = BoxLayout(orientation='horizontal')
             self.tb.add_widget(tab)
+            self.tb.default_tab = tab
 
             self.visuals[visual] = tab
 
