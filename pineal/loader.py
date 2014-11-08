@@ -1,17 +1,15 @@
-from pineal.config import VISUALS_PATH
-
-import threading, os, time
+import os
+from time import sleep
 from glob import glob
 from os.path import getmtime
 
 from pineal.osc import Osc
-from pineal.config import OSC_CORE
+from pineal.config import VISUALS_PATH, OSC_CORE
 
 
-class Loader(threading.Thread):
+class Loader(object):
     def __init__(self):
         self.times = {}
-        threading.Thread.__init__(self)
 
         self.path = os.path.join(os.path.dirname(__file__),VISUALS_PATH)
 
@@ -19,9 +17,11 @@ class Loader(threading.Thread):
         self._stop = False
 
     def run(self):
+        print 'starting pineal.loader'
+        sleep(1)  # TODO add intelligent 'wait for other modules' system
         while not self._stop:
             self.load()
-            time.sleep(0.01)
+            sleep(0.01)
 
     def load(self):
         names = (
@@ -30,7 +30,7 @@ class Loader(threading.Thread):
         )
 
         for name in names:
-            if name not in self.times:
+            if name not in self.times.keys():
                 self.times[name] = 0
 
             path = os.path.join(os.path.dirname(__file__),VISUALS_PATH)
@@ -39,7 +39,7 @@ class Loader(threading.Thread):
             try:
                 filetime = getmtime(filename)
             except OSError:
-                continue
+                pass
 
             if filetime != self.times[name]:
                 print "loading "+name+".py"

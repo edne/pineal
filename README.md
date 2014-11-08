@@ -27,6 +27,6 @@ Set the OSC addresses with `--osc-core` or `--osc-gui` followed by `ip:port`.
 
 Modules
 -------
-Use only specific modules with `--core`, `--audio` and `--gui`
+Use only specific modules with `--core`, `--audio`, `--gui` and `--loader`
 
 

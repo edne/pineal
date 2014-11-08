@@ -15,6 +15,6 @@ FULLSCREEN = True
 TITLE = 'Pineal Loop Project'
 TITLE_OVERVIEW = 'pineal-overview'
 
-VISUALS_PATH = '../../visuals'
+VISUALS_PATH = '../visuals'
 
-MODULES = ['Core', 'Audio', 'Gui']
+MODULES = ['Core', 'Audio', 'Gui', 'Loader']

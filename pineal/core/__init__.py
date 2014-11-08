@@ -1,6 +1,5 @@
 from visuals import Visuals
 from graphic import Graphic
-from loader import Loader
 
 from pineal.osc import Osc
 from pineal.config import OSC_CORE, OSC_GUI
@@ -13,32 +12,23 @@ class Core(object):
     def __init__(self):
         self.visuals = Visuals(self)
         self.graphic = Graphic(self.visuals)
-        self.loader = Loader()
         self.osc = Osc(OSC_CORE, OSC_GUI)
 
         self.osc.listen('visual', self.cb_visual)
         self.osc.listen('audio', self.cb_audio)
         self.osc.listen('code', self.cb_code)
 
-        self.threads = [
-            self.loader,
-            self.osc
-        ]
         self._stop = False
 
     def run(self):
         print 'starting pineal.core'
-        for th in self.threads:
-            th.start()
+        self.osc.start()
         try:
             while not self._stop:
                 self.graphic.update()
         except KeyboardInterrupt:
-            None
-
-        self.threads.reverse()
-        for th in self.threads:
-            th.stop()
+            pass
+        self.osc.stop()
 
     def stop(self):
         print 'stopping pineal.core'
