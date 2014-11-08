@@ -27,6 +27,7 @@ class Tab(TabbedPanelHeader):
 class Gui(App):
     def build(self):
         self.tb = TabbedPanel()
+        self._defaul_tab = self.tb.default_tab
         return self.tb
 
     def run(self):
@@ -53,7 +54,8 @@ class Gui(App):
             tab = Tab(text=visual)
             tab.content = BoxLayout(orientation='horizontal')
             self.tb.add_widget(tab)
-            self.tb.default_tab = tab
+            if self.tb.default_tab == self._defaul_tab:
+                self.tb.default_tab = tab
 
             self.visuals[visual] = tab
 
