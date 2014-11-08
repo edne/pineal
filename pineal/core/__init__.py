@@ -13,11 +13,12 @@ class Core(object):
     def __init__(self):
         self.visuals = Visuals(self)
         self.graphic = Graphic(self.visuals)
-        self.loader = Loader(self.visuals)
+        self.loader = Loader()
         self.osc = Osc(OSC_CORE, OSC_GUI)
 
         self.osc.listen('visual', self.cb_visual)
         self.osc.listen('audio', self.cb_audio)
+        self.osc.listen('code', self.cb_code)
 
         self.threads = [
             self.loader,
@@ -56,3 +57,13 @@ class Core(object):
         key, = path[1:]
 
         pineal.livecoding.audio.__dict__[key] = value
+
+    def cb_code(self, path, tags, args, source):
+        visual = [s for s in path.split('/') if s][1]
+        code = args[0]
+
+        # TODO replace that
+        if visual not in self.visuals.keys():
+            self.visuals.new(visual)
+        #
+        self.visuals[visual].load(code)
