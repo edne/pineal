@@ -3,6 +3,7 @@ from sys import argv
 import threading
 from subprocess import Popen
 import pineal
+from pineal.config import MODULES
 
 if __name__=='__main__':
     if [arg for arg in argv if arg in ('-h','--help')]:
@@ -10,9 +11,9 @@ if __name__=='__main__':
             print f.read()
         exit(0)
 
-    MODULES = ['core', 'audio', 'gui']
-    setted = [p for p in MODULES if '--'+p in argv]
-    modules = setted or MODULES
+    modules = [M.lower() for M in MODULES]
+    setted = [p for p in modules if '--'+p in argv]
+    modules = setted or modules
 
     if modules[1:]:
         ths = [
@@ -22,7 +23,7 @@ if __name__=='__main__':
                     [
                         arg     # same parameters
                         for arg in argv[1:]
-                        if arg not in ('--'+M for M in MODULES)
+                        if arg not in ('--'+M.lower() for M in MODULES)
                     ]
                 ).communicate
             )

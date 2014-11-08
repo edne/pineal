@@ -1,12 +1,12 @@
 from sys import argv
 from pineal.parser import parse
 import pineal.config
+from pineal.config import MODULES
 
 
 def main():
     pineal.config.__dict__.update(parse())
 
-    MODULES = ['Core', 'Audio', 'Gui']
     m = [p for p in MODULES if '--'+p.lower() in argv][0]
 
     try:

@@ -16,3 +16,5 @@ TITLE = 'Pineal Loop Project'
 TITLE_OVERVIEW = 'pineal-overview'
 
 VISUALS_PATH = '../../visuals'
+
+MODULES = ['Core', 'Audio', 'Gui']
