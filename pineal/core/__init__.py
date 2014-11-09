@@ -1,4 +1,4 @@
-from visuals import Visuals
+from visuals import Visual
 from graphic import Graphic
 
 from pineal.osc import Osc
@@ -10,7 +10,7 @@ import pineal.livecoding.audio
 class Core(object):
     """Run visuals and show them in Overview and Master windows"""
     def __init__(self):
-        self.visuals = Visuals(self)
+        self.visuals = {}
         self.graphic = Graphic(self.visuals)
         self.osc = Osc(OSC_CORE, OSC_GUI)
 
@@ -49,11 +49,12 @@ class Core(object):
         pineal.livecoding.audio.__dict__[key] = value
 
     def cb_code(self, path, tags, args, source):
-        visual = [s for s in path.split('/') if s][1]
+        name = [s for s in path.split('/') if s][1]
         code = args[0]
 
         # TODO replace that
-        if visual not in self.visuals.keys():
-            self.visuals.new(visual)
+        if name not in self.visuals.keys():
+            #self.visuals.new(visual)
+            self.visuals[name] = Visual(self, name)
         #
-        self.visuals[visual].load(code)
+        self.visuals[name].load(code)

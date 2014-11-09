@@ -3,17 +3,6 @@ from inspect import isclass
 import pineal.livecoding
 
 
-class Visuals(dict):
-    def __init__(self, core):
-        dict.__init__(self)
-        self.core = core
-
-    def new(self, name):
-        v = Visual(self.core, name)
-        self[name] = v
-        return v
-
-
 class Visual(dict):
     def __init__(self, core, name):
         dict.__init__(self)
