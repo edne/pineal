@@ -1,7 +1,12 @@
-from pineal.config import TITLE_OVERVIEW, FULLSCREEN, OUTPUT_SIZE, RENDER_SIZE
+from sys import argv
+
+import OpenGL.GLUT as glut
+
 import pyglet
 from pyglet.window import key
 import pyglet.gl as gl
+
+from pineal.config import TITLE_OVERVIEW, FULLSCREEN, OUTPUT_SIZE, RENDER_SIZE
 
 import camera
 
@@ -136,7 +141,9 @@ def predraw(w,h):
     )
 
 
-def create(visuals):
+def init(visuals):
+    glut.glutInit(argv)  # for the 3d presets
+
     global rendering, overview, master
 
     platform = pyglet.window.get_platform()
@@ -180,3 +187,11 @@ def create(visuals):
             visible = 1,
         )
         master.set_mouse_visible(False)
+
+
+def update():
+    for window in pyglet.app.windows:
+        window.switch_to()
+        window.dispatch_events()
+        window.dispatch_event('on_draw')
+        window.flip()

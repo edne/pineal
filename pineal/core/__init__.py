@@ -11,28 +11,17 @@ class Core(object):
     """Run visuals and show them in Overview and Master windows"""
     def __init__(self):
         self.visuals = {}
-        self.graphic = Graphic(self.visuals)
         self.osc = Osc(OSC_CORE, OSC_GUI)
 
         self.osc.listen('visual', self.cb_visual)
         self.osc.listen('audio', self.cb_audio)
         self.osc.listen('code', self.cb_code)
 
-        self._stop = False
-
     def run(self):
         print 'starting pineal.core'
         self.osc.start()
-        try:
-            while not self._stop:
-                self.graphic.update()
-        except KeyboardInterrupt:
-            pass
+        Graphic(self.visuals).run()
         self.osc.stop()
-
-    def stop(self):
-        print 'stopping pineal.core'
-        self._stop = True
 
     def cb_visual(self, path, tags, args, source):
         path = [s for s in path.split('/') if s]
@@ -54,7 +43,6 @@ class Core(object):
 
         # TODO replace that
         if name not in self.visuals.keys():
-            #self.visuals.new(visual)
             self.visuals[name] = Visual(self, name)
         #
         self.visuals[name].load(code)
