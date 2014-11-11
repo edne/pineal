@@ -8,18 +8,7 @@ import pyglet.gl as gl
 
 from pineal.config import TITLE_OVERVIEW, FULLSCREEN, OUTPUT_SIZE, RENDER_SIZE
 
-import camera
-
 rendering = None
-
-MAPPING = {
-    key.W: (0,-1),
-    key.S: (0,1),
-    key.A: (1,0),
-    key.D: (-1,0),
-    key.UP: (-1,),
-    key.DOWN: (1,)
-}
 
 
 def vec(*args):
@@ -39,23 +28,6 @@ class Overview(pyglet.window.Window):
             rendering.texture.blit(0,0,0, self.width,self.height)
 
         self.fps_display.draw()
-
-    def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
-        camera.rotate(float(dx)/100, float(dy)/100)
-
-    def on_key_press(self, symbol, modifiers):
-        if symbol == key.DELETE:
-            camera.reset()
-        if symbol in (key.W, key.S, key.A, key.D):
-            camera.start_rotate(*MAPPING[symbol])
-        if symbol in (key.UP, key.DOWN):
-            camera.start_move(*MAPPING[symbol])
-
-    def on_key_release(self, symbol, modifiers):
-        if symbol in (key.W, key.S, key.A, key.D):
-            camera.stop_rotate(*MAPPING[symbol])
-        if symbol in (key.UP, key.DOWN):
-            camera.stop_move(*MAPPING[symbol])
 
 
 class Rendering(pyglet.window.Window):
@@ -131,13 +103,9 @@ def predraw(w,h):
 
     gl.gluPerspective(45.0, 1, 0.1, 1000.0)
     gl.gluLookAt(
-        camera.x,
-        camera.y,
-        camera.z,
+        0,0,2.4,  # 2.4 = (4.0/3)/math.tan(45.0/2)
         0,0,0,
-        camera.up[0],
-        camera.up[1],
-        camera.up[2]
+        0,1,0
     )
 
 

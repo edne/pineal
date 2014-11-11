@@ -2,7 +2,6 @@ import OpenGL.GLUT as glut
 import pyglet.gl as gl
 import pyglet
 
-import camera
 import windows
 
 
@@ -12,7 +11,6 @@ class Graphic:
 
     def update(self):
         dt = pyglet.clock.tick()
-        camera.update(dt)
         windows.update()
         
     def run(self):
