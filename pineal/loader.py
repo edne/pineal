@@ -1,4 +1,5 @@
 import os
+from threading import Thread
 from time import sleep
 from glob import glob
 from os.path import getmtime
@@ -7,8 +8,9 @@ from pineal.osc import Osc
 from pineal.config import VISUALS_PATH, OSC_CORE
 
 
-class Loader(object):
+class Loader(Thread):
     def __init__(self):
+        Thread.__init__(self)
         self.times = {}
 
         self.path = os.path.join(os.path.dirname(__file__),VISUALS_PATH)

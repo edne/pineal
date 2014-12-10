@@ -1,3 +1,4 @@
+from threading import Thread
 from visuals import Visual
 from graphic import Graphic
 
@@ -7,9 +8,10 @@ from pineal.config import OSC_CORE, OSC_GUI
 import pineal.livecoding.audio
 
 
-class Core(object):
+class Core(Thread):
     """Run visuals and show them in Overview and Master windows"""
     def __init__(self):
+        Thread.__init__(self)
         self.visuals = {}
         self.osc = Osc(OSC_CORE, OSC_GUI)
 
@@ -20,8 +22,12 @@ class Core(object):
     def run(self):
         print 'starting pineal.core'
         self.osc.start()
-        Graphic(self.visuals).run()
+        self.graphic = Graphic(self.visuals)
+        self.graphic.run()
         self.osc.stop()
+
+    def stop(self):
+        self.graphic.stop()
 
     def cb_visual(self, path, tags, args, source):
         path = [s for s in path.split('/') if s]
