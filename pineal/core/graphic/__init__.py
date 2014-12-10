@@ -1,17 +1,15 @@
-import windows
+import OpenGL.GLUT as glut
+from windows import Output
 
 
 class Graphic:
     def __init__(self, visuals):
-        windows.init(visuals)
-
-    def update(self):
-        #dt = pyglet.clock.tick()
-        windows.update()
+        glut.glutInit([])
+        self.output = Output(visuals)
 
     def run(self):
         try:
             while True:
-                self.update()
+                self.output.update()
         except KeyboardInterrupt:
             pass
