@@ -17,4 +17,4 @@ TITLE_OVERVIEW = 'pineal-overview'
 
 VISUALS_PATH = '../visuals'
 
-MODULES = ['Core', 'Audio', 'Gui', 'Loader']
+MODULES = ['Core', 'Audio', 'Loader']
