@@ -7,9 +7,8 @@ BACKEND = 'portaudio'
 
 # Network
 OSC_CORE = ('localhost', 1420)
-OSC_GUI = ('localhost', 1421)
+#OSC_CODER = ('localhost', 1421)
+OSC_EAR = ('localhost', 1422)
 
 # Other
-TITLE = 'Pineal Loop Project'
-
 VISUALS_PATH = '../visuals'

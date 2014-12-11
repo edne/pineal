@@ -47,8 +47,6 @@ class Visual(dict):
             for k,v in d.items()
             if isinstance(v, float) and k!='dt' and k not in stored.keys()
         }
-        for (var, value) in added.items():
-            self.core.osc.send('add', self.name, var, value)
         self.update(added)
 
     def __setitem__(self, key, value):

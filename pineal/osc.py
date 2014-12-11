@@ -36,6 +36,6 @@ class Osc(threading.Thread):
 
     def send(self, path, *args):
         try:
-            self.client.send( OSCMessage('/'+path, args) )
+            self.client.send( OSCMessage(path, args) )
         except OSCClientError:  # sometime rises a 'connection refused'
             pass

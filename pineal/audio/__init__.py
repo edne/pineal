@@ -65,7 +65,7 @@ class Audio(Thread):
         #if self._pitch.get()>1:
         #    self._note = math.log(self._pitch.get()/16.35,2)%1.0
 
-        self.osc.send('/audio/amp', float(self._amp.get()))
-        self.osc.send('/audio/bass', float(self._bass.get()))
-        self.osc.send('/audio/high', float(self._high.get()))
+        self.osc.send('/audio','amp', float(self._amp.get()))
+        self.osc.send('/audio','bass', float(self._bass.get()))
+        self.osc.send('/audio', 'high', float(self._high.get()))
         #self.osc.send('/audio/note', float(self._note))
