@@ -1,5 +1,10 @@
+(import os)
+(import [glob [glob]])
+(import [time [sleep]])
+;(import [watchdog.observers [Observer]])
+;(import [watchdog.events [FileSystemEventHandler]])
 (import [utils.runner [Runner]])
-(import [config [OSC_EAR]])
+(import [config [OSC_EAR OSC_CORE VISUALS_PATH]])
 (import [utils.osc [Osc]])
 
 
@@ -8,13 +13,20 @@
       (.__init__ Runner self)
       (def self.osc (Osc))
       (.sender self.osc OSC_EAR)
+      (.sender self.osc OSC_CORE)
 
-      (.send self.osc "/ear/code" ["amp" "AMP"])
-      (.send self.osc "/ear/code" ["bass" "(LPF 110) AMP"])
-      (.send self.osc "/ear/code" ["high" "(HPF 1000) AMP"])
+      (for [filename (glob "visuals/*.py")]
+        (with [[f (open filename)]]
+          (.send self.osc "/watcher/new" [filename (.read f)] OSC_CORE)))
+
+      (.send self.osc "/ear/code" ["amp" "AMP"] OSC_EAR)
+      (.send self.osc "/ear/code" ["bass" "(LPF 110) AMP"] OSC_EAR)
+      (.send self.osc "/ear/code" ["high" "(HPF 1000) AMP"] OSC_EAR)
 
       None)]
 
     [run (fn [self]
-      ;(.iteration self)
-      )]])
+      (.iteration self (fn []
+        (sleep (/ 1 60))))
+
+      (.stop self.osc))]])

@@ -3,14 +3,12 @@ import hy
 from core import Core
 from coder import Coder
 from ear import Ear
-from watcher import Watcher
 
 if __name__=='__main__':
     ths = [
         Core(),
         Ear(),
         Coder(),
-        Watcher()
     ]
     for t in ths:
         t.start()

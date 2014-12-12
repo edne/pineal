@@ -5,7 +5,7 @@
   [ [__init__ (fn [self]
       (.__init__ Runner self)
       (def self.server None)
-      (def self.client None)
+      (def self.client {})
       (def self.cbs {})
       None)]
 
@@ -14,8 +14,8 @@
       (.addMsgHandler self.server "default" self.callback))]
 
     [sender (fn [self out_addr]
-      (def self.client (OSCClient))
-      (.connect self.client (tuple out_addr)))]
+      (def (get self.client out_addr) (OSCClient))
+      (.connect (get self.client out_addr) (tuple out_addr)))]
 
     [run (fn [self]
       (.iteration self (fn []
@@ -30,8 +30,12 @@
         (if (.startswith path k)
           ((get self.cbs k) path args))))]
 
-    [send (fn [self path args]
+    [send (fn [self path args &optional [out_addr None]]
       (try
         (if self.client
-          (.send self.client (OSCMessage path args)))
+          (.send
+            (if out_addr
+              (get self.client out_addr)
+              (get self.client (first self.client)))
+            (OSCMessage path args)))
       (catch [OSCClientError] None)))]])
