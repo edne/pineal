@@ -2,7 +2,7 @@ from threading import Thread
 from visuals import Visual
 from graphic import Graphic
 
-from pineal.osc import Osc
+from utils.osc import Osc
 from config import OSC_CORE
 
 import livecoding.audio
@@ -13,14 +13,15 @@ class Core(Thread):
     def __init__(self):
         Thread.__init__(self)
         self.visuals = {}
-        self.osc = Osc(OSC_CORE, None)
-
-        self.osc.listen('visual', self.cb_visual)
-        self.osc.listen('ear', self.cb_audio)
-        self.osc.listen('watcher', self.cb_code)
+        self.osc = Osc()
+        self.osc.reciver(OSC_CORE)
 
     def run(self):
         print 'starting pineal.core'
+
+        self.osc.listen('/ear', self.cb_audio)
+        self.osc.listen('/watcher/new', self.cb_code)
+
         self.osc.start()
         self.graphic = Graphic(self.visuals)
         self.graphic.run()
@@ -29,19 +30,11 @@ class Core(Thread):
     def stop(self):
         self.graphic.stop()
 
-    def cb_visual(self, path, tags, args, source):
-        path = [s for s in path.split('/') if s]
-        value = (args if tags[1:] else args[0]) if args else None
-        visual, var = path[1:]
-
-        self.visuals[visual][var] = value
-
-    def cb_audio(self, path, tags, args, source):
+    def cb_audio(self, path, args):
         livecoding.audio.__dict__[args[0]] = args[1]
 
-    def cb_code(self, path, tags, args, source):
-        name = args[0]
-        code = args[1]
+    def cb_code(self, path, args):
+        name, code = args
 
         # TODO replace that
         if name not in self.visuals.keys():
