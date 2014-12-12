@@ -3,9 +3,9 @@
 (import [time [sleep]])
 ;(import [watchdog.observers [Observer]])
 ;(import [watchdog.events [FileSystemEventHandler]])
-(import [runner [Runner]])
-(import [pineal.config [OSC_CORE VISUALS_PATH]])
-(import [osc [Osc]])
+(import [utils.runner [Runner]])
+(import [config [OSC_CORE VISUALS_PATH]])
+(import [utils.osc [Osc]])
 
 
 (defclass Watcher [Runner]

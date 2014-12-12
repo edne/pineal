@@ -1,8 +1,8 @@
 import math as m
 from time import time
-from pineal.livecoding import dt
-import pineal.livecoding.graphic as g
-import pineal.livecoding.audio as a
+from livecoding import dt
+import livecoding.graphic as g
+import livecoding.audio as a
 
 rad = 1.0
 

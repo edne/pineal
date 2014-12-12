@@ -2,7 +2,7 @@ import pyglet.gl as gl
 import thirdparty.ezpyinline as ezpyinline
 
 
-with open('pineal/livecoding/c/transformations.c') as f:
+with open('livecoding/c/transformations.c') as f:
     _ezc = ezpyinline.C(f.read())
 
 

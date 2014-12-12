@@ -1,10 +1,10 @@
 (import [sys [exit]])
 (import [time [sleep]])
-(import [runner [Runner]])
+(import [utils.runner [Runner]])
 (import [hy.lex [tokenize]])
 (import pyo)
-(import [pineal.config [OSC_CORE OSC_EAR BACKEND]])
-(import [osc [Osc]])
+(import [config [OSC_CORE OSC_EAR BACKEND]])
+(import [utils.osc [Osc]])
 
 (def TITLE "pineal.hear")
 

@@ -1,6 +1,6 @@
 from time import time
 from inspect import isclass
-import pineal.livecoding
+import livecoding
 
 
 class Visual(dict):
@@ -63,7 +63,7 @@ class Visual(dict):
         return log
 
     def loop(self):
-        pineal.livecoding.__dict__['dt'] = time() - self.lastTime
+        livecoding.__dict__['dt'] = time() - self.lastTime
         self.lastTime = time()
 
         self.box.loop()

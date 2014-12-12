@@ -1,6 +1,6 @@
-(import [runner [Runner]])
-(import [pineal.config [OSC_EAR]])
-(import [osc [Osc]])
+(import [utils.runner [Runner]])
+(import [config [OSC_EAR]])
+(import [utils.osc [Osc]])
 
 
 (defclass Coder [Runner]

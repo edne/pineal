@@ -3,9 +3,9 @@ from visuals import Visual
 from graphic import Graphic
 
 from pineal.osc import Osc
-from pineal.config import OSC_CORE
+from config import OSC_CORE
 
-import pineal.livecoding.audio
+import livecoding.audio
 
 
 class Core(Thread):
@@ -37,7 +37,7 @@ class Core(Thread):
         self.visuals[visual][var] = value
 
     def cb_audio(self, path, tags, args, source):
-        pineal.livecoding.audio.__dict__[args[0]] = args[1]
+        livecoding.audio.__dict__[args[0]] = args[1]
 
     def cb_code(self, path, tags, args, source):
         name = args[0]
