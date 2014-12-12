@@ -1,6 +1,6 @@
 #!/usr/bin/python
 import hy
-from pineal.core import Core
+from core import Core
 from coder import Coder
 from ear import Ear
 from watcher import Watcher
