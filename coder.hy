@@ -2,7 +2,6 @@
 (import [pineal.config [OSC_EAR]])
 (import [osc [Osc]])
 
-(def OUT_ADDR ["localhost" 1421])
 
 (defclass Coder [Runner]
 [ [__init__ (fn [self]
@@ -17,5 +16,5 @@
       None)]
 
     [run (fn [self]
-      (.iteration self)
-      (.stop self.osc))]])
+      ;(.iteration self)
+      )]])

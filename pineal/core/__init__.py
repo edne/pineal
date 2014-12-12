@@ -17,7 +17,7 @@ class Core(Thread):
 
         self.osc.listen('visual', self.cb_visual)
         self.osc.listen('ear', self.cb_audio)
-        self.osc.listen('code', self.cb_code)
+        self.osc.listen('watcher', self.cb_code)
 
     def run(self):
         print 'starting pineal.core'
@@ -40,8 +40,8 @@ class Core(Thread):
         pineal.livecoding.audio.__dict__[args[0]] = args[1]
 
     def cb_code(self, path, tags, args, source):
-        name = [s for s in path.split('/') if s][1]
-        code = args[0]
+        name = args[0]
+        code = args[1]
 
         # TODO replace that
         if name not in self.visuals.keys():

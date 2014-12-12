@@ -1,16 +1,16 @@
 #!/usr/bin/python
 import hy
 from pineal.core import Core
-from pineal.loader import Loader
 from coder import Coder
 from ear import Ear
+from watcher import Watcher
 
 if __name__=='__main__':
     ths = [
+        Core(),
         Ear(),
         Coder(),
-        Core(),
-        Loader(),
+        Watcher()
     ]
     for t in ths:
         t.start()
@@ -18,7 +18,7 @@ if __name__=='__main__':
     try:
         while True:
             for t in ths:
-                t.join(5)
+                t.join(1)
     except KeyboardInterrupt:
         pass
 

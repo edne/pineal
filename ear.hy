@@ -65,7 +65,7 @@
 
       (.iteration self (fn []
         (.update self)
-        (sleep (/ 1 60))))
+        (sleep (/ 1 30))))
 
       (.stop self.osc)
       (.stop self.s)
