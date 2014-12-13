@@ -4,7 +4,7 @@
 ;(import [watchdog.observers [Observer]])
 ;(import [watchdog.events [FileSystemEventHandler]])
 (import [utils.runner [Runner]])
-(import [config [OSC_EAR OSC_EYE VISUALS_PATH]])
+(import [config [OSC_EAR OSC_EYE]])
 (import [utils.osc [Osc]])
 
 
