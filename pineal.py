@@ -1,12 +1,12 @@
 #!/usr/bin/python
 import hy
-from core import Core
+from eye import Eye
 from coder import Coder
 from ear import Ear
 
 if __name__=='__main__':
     ths = [
-        Core(),
+        Eye(),
         Ear(),
         Coder(),
     ]

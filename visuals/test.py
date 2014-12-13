@@ -4,10 +4,10 @@ from livecoding import dt
 import livecoding.graphic as g
 import livecoding.audio as a
 
-rad = 1.0
-
 
 def loop():
+    rad = 1.0
+
     g.strokeWeight(2)
 
     g.colorMode("hsv")

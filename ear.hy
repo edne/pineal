@@ -3,7 +3,7 @@
 (import [utils.runner [Runner]])
 (import [hy.lex [tokenize]])
 (import pyo)
-(import [config [OSC_CORE OSC_EAR BACKEND]])
+(import [config [OSC_EYE OSC_EAR BACKEND]])
 (import [utils.osc [Osc]])
 
 (def TITLE "pineal.hear")
@@ -31,7 +31,7 @@
       (.__init__ Runner self)
       (def self.osc (Osc))
       (.reciver self.osc OSC_EAR)
-      (.sender self.osc OSC_CORE)
+      (.sender self.osc OSC_EYE)
 
       (def self.s
         (apply pyo.Server [] {
