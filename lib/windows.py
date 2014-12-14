@@ -2,12 +2,12 @@ import pyglet
 import pyglet.gl as gl
 
 
-class Output(pyglet.window.Window):
+class Window(pyglet.window.Window):
     def __init__(self, visuals):
         self.visuals = visuals
         pyglet.window.Window.__init__(
             self,
-            caption = 'Output',
+            caption = '(pineal)',
             width = 800,
             height = 600,
             vsync = 1,
@@ -17,14 +17,10 @@ class Output(pyglet.window.Window):
         gl.glEnable(gl.GL_BLEND)
         gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA)
 
-        #gl.glEnable( gl.GL_VERTEX_ARRAY )
-
         gl.glEnable( gl.GL_LINE_SMOOTH )
         gl.glEnable( gl.GL_POLYGON_SMOOTH )
         gl.glHint( gl.GL_LINE_SMOOTH_HINT, gl.GL_NICEST )
         gl.glHint( gl.GL_POLYGON_SMOOTH_HINT, gl.GL_NICEST )
-
-        #gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_FILL)
 
         gl.glEnable(gl.GL_LIGHTING)
         gl.glEnable(gl.GL_LIGHT0)

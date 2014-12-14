@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
 from threading import Thread
-from lib.graphic import Graphic
+
+import OpenGL.GLUT as glut
+from lib.windows import Window
 
 import hy
 from lib.osc import Osc
@@ -17,22 +19,29 @@ class Eye(Thread):
         self.visuals = {}
         self.osc = Osc()
         self.osc.reciver(OSC_EYE)
+        self._stop = False
 
     def run(self):
         print('starting eye.py')
+        glut.glutInit([])
 
         self.osc.listen('/ear', self.audio)
         self.osc.listen('/visual/new', self.new)
 
         self.osc.start()
-        self.graphic = Graphic(self.visuals)
-        self.graphic.run()
+        self.output = Window(self.visuals)
+
+        try:
+            while not self._stop:
+                self.output.update()
+        except KeyboardInterrupt:
+            pass
 
         print('\rstopping eye.py')
         self.osc.stop()
 
     def stop(self):
-        self.graphic.stop()
+        self._stop = True
 
     def audio(self, path, args):
         livecoding.audio.__dict__[args[0]] = args[1]
