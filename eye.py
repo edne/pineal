@@ -1,7 +1,10 @@
-from threading import Thread
-from utils.graphic import Graphic
+#!/usr/bin/env python
 
-from utils.osc import Osc
+from threading import Thread
+from lib.graphic import Graphic
+
+import hy
+from lib.osc import Osc
 from config import OSC_EYE
 
 import livecoding.audio
@@ -16,7 +19,7 @@ class Eye(Thread):
         self.osc.reciver(OSC_EYE)
 
     def run(self):
-        print 'starting pineal.core'
+        print('starting eye.py')
 
         self.osc.listen('/ear', self.audio)
         self.osc.listen('/visual/new', self.new)
@@ -24,6 +27,8 @@ class Eye(Thread):
         self.osc.start()
         self.graphic = Graphic(self.visuals)
         self.graphic.run()
+
+        print('\rstopping eye.py')
         self.osc.stop()
 
     def stop(self):
@@ -71,3 +76,7 @@ class Visual(dict):
 
     def loop(self):
         self.box.loop()
+
+
+if __name__ == "__main__":
+    Eye().run()

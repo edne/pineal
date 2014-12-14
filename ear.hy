@@ -1,10 +1,12 @@
+#!/usr/bin/env hy2
+
 (import [sys [exit]])
 (import [time [sleep]])
-(import [utils.runner [Runner]])
+(import [lib.runner [Runner]])
 (import [hy.lex [tokenize]])
 (import pyo)
 (import [config [OSC_EYE OSC_EAR BACKEND]])
-(import [utils.osc [Osc]])
+(import [lib.osc [Osc]])
 
 (def TITLE "pineal.hear")
 
@@ -43,7 +45,7 @@
         (.setInputOffset self.s 2)))]
 
     [run (fn [self]
-      (print "staritng pineal.ear")
+      (print "starting ear.hy")
       (.boot self.s)
       (.start self.s)
 
@@ -67,6 +69,7 @@
         (.update self)
         (sleep (/ 1 30))))
 
+      (print "\rstopping ear.hy")
       (.stop self.osc)
       (.stop self.s)
       (del self.s))]
@@ -79,3 +82,7 @@
     [code (fn [self path args]
       (def [key cmd] args)
       (def (get self.units key) (RUN self.src cmd)))]])
+
+
+(defmain [args]
+  (.run (Ear)))

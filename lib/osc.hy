@@ -1,4 +1,4 @@
-(import [runner [Runner]])
+(import [lib.runner [Runner]])
 (import [thirdparty.OSC [OSCServer OSCClient OSCClientError OSCMessage]])
 
 (defclass Osc [Runner]
