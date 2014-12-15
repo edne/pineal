@@ -1,6 +1,5 @@
 import math as m
 from time import time
-from livecoding import dt
 import livecoding.graphic as g
 import livecoding.audio as a
 
@@ -17,8 +16,4 @@ def loop():
     g.colorMode("rgb")
     g.fill(g.noise()*a.high*20)
 
-    g.pushMatrix()
-    g.rotate(0.2, 0.5)
-    g.rotateX((time()/10)%(2 * m.pi))
-    g.cube(rad * (1+a.bass*8))
-    g.popMatrix()
+    g.square(rad * (1+a.bass*8))

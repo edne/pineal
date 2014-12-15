@@ -1,9 +1,5 @@
 from color import Color, colorMode, fill, stroke, noFill, noStroke
-from transformations import rotate, rotateX, rotateY, rotateZ, translate, scale, pushMatrix, popMatrix, resetMatrix
-from solids import cube, tetrahedron, dodecahedron, octahedron
-from shapes import square, line, point, quad, rect, triangle, polygon, circle, ellipse
-#from lights import ambient, light, light_pos
-
+from shapes import square
 #
 import pyglet.gl as gl
 
