@@ -51,13 +51,12 @@ class Eye(Thread):
         self.visuals[name] = Visual(name, code)
 
 
-class Visual(dict):
+class Visual(object):
     class Box(object):
         def loop(self):
             None
 
     def __init__(self, name, code):
-        dict.__init__(self)
         self.name = name
 
         print 'creating visual'
