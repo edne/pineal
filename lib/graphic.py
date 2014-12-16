@@ -1,4 +1,4 @@
-from pyglet.gl import *
+import pyglet.gl as gl
 
 
 class Entity(object):
@@ -8,22 +8,22 @@ class Entity(object):
     def _generateVerts():
         verts = []
 
-        Entity.vertsGl = (GLfloat * len(verts))(*verts)
+        Entity.vertsGl = (gl.GLfloat * len(verts))(*verts)
 
     def __init__(self, side=1.0):
         self.side = side
         self.color = (0,1,1)
 
     def draw(self):
-        glLoadIdentity()
-        glScalef(self.side, self.side, 1)
-        glColor3f(1, 1, 1)
+        gl.glLoadIdentity()
+        gl.glScalef(self.side, self.side, 1)
+        gl.glColor3f(1, 1, 1)
 
-        glVertexPointer(2, GL_FLOAT, 0, self.vertsGl)
+        gl.glVertexPointer(2, gl.GL_FLOAT, 0, self.vertsGl)
 
-        glEnableClientState(GL_VERTEX_ARRAY)
-        glPolygonMode( GL_FRONT, GL_LINE )
-        glDrawArrays(GL_QUADS, 0, len(self.vertsGl) // 2)
+        gl.glEnableClientState(gl.GL_VERTEX_ARRAY)
+        gl.glPolygonMode( gl.GL_FRONT, gl.GL_LINE )
+        gl.glDrawArrays(gl.GL_QUADS, 0, len(self.vertsGl) // 2)
 
 
 class Square(Entity):
@@ -34,7 +34,7 @@ class Square(Entity):
             1, -1,
             1,  1,
             -1, 1]
-        Square.vertsGl = (GLfloat * len(verts))(*verts)
+        Square.vertsGl = (gl.GLfloat * len(verts))(*verts)
 
 
 Entity._generateVerts()
