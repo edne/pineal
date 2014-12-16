@@ -9,8 +9,6 @@ import hy
 from lib.osc import Osc
 from config import OSC_EYE
 
-import livecoding.audio
-
 
 class Eye(Thread):
     """Run visuals and show them in Overview and Master windows"""
@@ -44,7 +42,8 @@ class Eye(Thread):
         self._stop = True
 
     def audio(self, path, args):
-        livecoding.audio.__dict__[args[0]] = args[1]
+        for v in self.visuals.values():
+            v.box.__dict__[args[0]] = args[1]
 
     def new(self, path, args):
         name, code = args
@@ -53,8 +52,11 @@ class Eye(Thread):
 
 class Visual(object):
     class Box(object):
-        def loop(self):
-            None
+        def setup(self):
+            pass
+
+        def draw(self):
+            pass
 
     def __init__(self, name, code):
         self.name = name
@@ -66,24 +68,26 @@ class Visual(object):
         self.load(code)
 
     def load(self, code):
-        self._stack.append(code)
+        try:
+            exec(code, self.box.__dict__)
+            self.box.setup()
+            self._stack.append(code)
+        except Exception as e:
+            print(e)
 
     def iteration(self):
         if not self._stack:
             return
 
         try:
-            exec(self._stack[-1], self.box.__dict__)
-            self.loop()
-        except Exception:
+            self.box.draw()
+        except Exception as e:
+            print(e)
             self._stack = self._stack[:-1]
             if not self._stack:
                 print "%s.py is BROKEN" % self.name
             else:
                 self.iteration()
-
-    def loop(self):
-        self.box.loop()
 
 
 if __name__ == "__main__":
