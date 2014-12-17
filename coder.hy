@@ -13,7 +13,7 @@
 (defclass Coder [Runner]
 [ [__init__ (fn [self]
       (.__init__ Runner self)
-      (def self.osc (Osc))
+      (setv self.osc (Osc))
       (.sender self.osc OSC_EAR)
       (.sender self.osc OSC_EYE)
 

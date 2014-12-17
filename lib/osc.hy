@@ -4,17 +4,17 @@
 (defclass Osc [Runner]
   [ [__init__ (fn [self]
       (.__init__ Runner self)
-      (def self.server None)
-      (def self.client {})
-      (def self.cbs {})
+      (setv self.server None)
+      (setv self.client {})
+      (setv self.cbs {})
       None)]
 
     [reciver (fn [self in_addr]
-      (def self.server (-> in_addr tuple OSCServer))
+      (setv self.server (-> in_addr tuple OSCServer))
       (.addMsgHandler self.server "default" self.callback))]
 
     [sender (fn [self out_addr]
-      (def (get self.client out_addr) (OSCClient))
+      (setv (get self.client out_addr) (OSCClient))
       (.connect (get self.client out_addr) (tuple out_addr)))]
 
     [run (fn [self]
@@ -23,7 +23,7 @@
       (.close self.server))]
 
     [listen (fn [self key cb]
-      (def (get self.cbs key) cb))]
+      (setv (get self.cbs key) cb))]
 
     [callback (fn [self path tags args source]
       (for [k (.keys self.cbs)]

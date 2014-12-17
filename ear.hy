@@ -31,11 +31,11 @@
 (defclass Ear [Runner]
   [ [__init__ (fn [self]
       (.__init__ Runner self)
-      (def self.osc (Osc))
+      (setv self.osc (Osc))
       (.reciver self.osc OSC_EAR)
       (.sender self.osc OSC_EYE)
 
-      (def self.s
+      (setv self.s
         (apply pyo.Server [] {
           "audio" BACKEND
           "jackname" TITLE
@@ -50,17 +50,17 @@
       (.start self.s)
 
       (try (do
-        (def self.src
+        (setv self.src
           (apply pyo.Input [] {"chnl" [0 1]}))
         (print "Pyo is working properly!\n"))
       (catch [pyo.PyoServerStateException]
         (print "Pyo is not working")
         (exit 1)))
 
-      (def self.units {})
+      (setv self.units {})
 
-      ;(def self._pitch (pyo.Yin src))
-      ;(def self._note 0)
+      ;(setv self._pitch (pyo.Yin src))
+      ;(setv self._note 0)
 
       (.listen self.osc "/ear/code" self.code)
       (.start self.osc)
@@ -80,8 +80,8 @@
           [k (-> self.units (get k) .get float)])))]
 
     [code (fn [self path args]
-      (def [key cmd] args)
-      (def (get self.units key) (RUN self.src cmd)))]])
+      (setv [key cmd] args)
+      (setv (get self.units key) (RUN self.src cmd)))]])
 
 
 (defmain [args]
