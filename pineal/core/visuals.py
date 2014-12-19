@@ -35,7 +35,7 @@ class Visual(dict):
         #self.core.osc.send('error', self.name, '')
         try:
             stored = self.box.__dict__.copy()         # make a copy
-            exec(self._stack[-1], self.box.__dict__)  # update code changes
+            exec self._stack[-1] in self.box.__dict__
             self.box.__dict__.update({                # restore old values
                 k: v
                 for k,v in stored.items()
