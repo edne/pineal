@@ -17,7 +17,7 @@
       (.sender self.osc OSC_EAR)
       (.sender self.osc OSC_EYE)
 
-      (for [filename (glob "visuals/*.py")]
+      (for [filename (glob "visuals/*.hy")]
         (with [[f (open filename)]]
           (.send self.osc "/visual/new" [filename (.read f)] OSC_EYE)))
 
