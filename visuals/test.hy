@@ -2,4 +2,5 @@
 
 (setv square (Square))
 
-(def entities [square])
+;(def __entities__ [square])
+(entities [square])

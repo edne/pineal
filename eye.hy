@@ -9,6 +9,10 @@
 (import [visual [Visual]])
 
 
+(defmacro entities [es]
+  `(def __entities__ ~es))
+
+
 (defclass Visual []
   [ [__init__ (fn [self name code]
       (setv self.name name)
@@ -19,12 +23,12 @@
     [load (fn [self code]
       (try
         (do
-          (setv self.entities (->
+          (setv self.__entities__ (->
             (+
               "(do"
-              "(setv entities [])"
+              "(setv __entities__ [])"
               code
-              "entities)")
+              "__entities__)")
             tokenize first eval))
           (.append self._stack code))
         (catch [e Exception]
@@ -34,7 +38,7 @@
       (if self._stack
         (try
           (do
-            (for [entity self.entities] (entity.draw)))
+            (for [entity self.__entities__] (entity.draw)))
         (catch [e Exception]
           (print e)
           (setv self._stack (slice self._stack 0 -1))
