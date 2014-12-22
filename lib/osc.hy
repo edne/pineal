@@ -14,7 +14,7 @@
       (.addMsgHandler self.server "default" self.callback))]
 
     [sender (fn [self out_addr]
-      (setv (get self.client out_addr) (OSCClient))
+      (assoc self.client out_addr (OSCClient))
       (.connect (get self.client out_addr) (tuple out_addr)))]
 
     [run (fn [self]
@@ -23,7 +23,7 @@
       (.close self.server))]
 
     [listen (fn [self key cb]
-      (setv (get self.cbs key) cb))]
+      (assoc self.cbs key cb))]
 
     [callback (fn [self path tags args source]
       (for [k (.keys self.cbs)]

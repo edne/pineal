@@ -81,7 +81,7 @@
 
     [code (fn [self path args]
       (setv [key cmd] args)
-      (setv (get self.units key) (RUN self.src cmd)))]])
+      (assoc self.units key (RUN self.src cmd)))]])
 
 
 (defmain [args]
