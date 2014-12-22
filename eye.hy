@@ -6,7 +6,6 @@
 (import [lib.windows [Window]])
 (import [lib.osc [Osc]])
 (import [config [OSC_EYE]])
-(import [visual [Visual]])
 
 
 (defmacro entities [es]
