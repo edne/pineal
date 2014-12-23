@@ -5,7 +5,7 @@
 (import [coder [Coder]])
 
 (defmain [args]
-  (setv ths [(Eye) (Ear) (Coder)])
+  (setv ths [(Ear) (Eye) (Coder)])
 
   (for [t ths] (.start t))
 

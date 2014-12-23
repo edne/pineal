@@ -14,16 +14,11 @@
 [ [__init__ (fn [self]
       (.__init__ Runner self)
       (setv self.osc (Osc))
-      (.sender self.osc OSC_EAR)
       (.sender self.osc OSC_EYE)
 
       (for [filename (glob "visuals/*.hy")]
         (with [[f (open filename)]]
           (.send self.osc "/visual/new" [filename (.read f)] OSC_EYE)))
-
-      (.send self.osc "/ear/code" ["amp" "AMP"] OSC_EAR)
-      (.send self.osc "/ear/code" ["bass" "(LPF 110) AMP"] OSC_EAR)
-      (.send self.osc "/ear/code" ["high" "(HPF 1000) AMP"] OSC_EAR)
 
       None)]
 
