@@ -1,4 +1,5 @@
-(import [pyglet.gl :as gl])
+(import [pyglet.gl :as gl]
+        [math])
 
 (defclass GLEntity []
   [ [vertsGl None]
@@ -22,21 +23,24 @@
 
       (gl.glEnableClientState gl.GL_VERTEX_ARRAY)
       ;(gl.glPolygonMode gl.GL_FRONT gl.GL_LINE)
-      (gl.glDrawArrays gl.GL_QUADS 0 (len self.vertsGl))
-      )]])
+      (gl.glDrawArrays gl.GL_POLYGON 0 (len self.vertsGl)))]])
 
 
-(defclass Square [GLEntity]
+(defclass PolInt [GLEntity]
   [ [_generateVerts
-      (with-decorator staticmethod (fn []
-        (setv verts
-          [-1 -1
-            1 -1
-            1  1
-           -1  1])
-        (setv Square.vertsGl
+      (with-decorator staticmethod (fn [n]
+        (setv verts [])
+        (setv theta (/ math.pi -2))
+        (for [i (range (+ 1 n))]
+          (.append verts (math.cos theta))
+          (.append verts (math.sin theta))
+          (+= theta (/ (* 2 math.pi) n)))
+
+        (setv PolInt.vertsGl
           (apply (* gl.GLfloat (len verts)) verts))))]])
 
 
-(._generateVerts GLEntity)
-(._generateVerts Square)
+(defn Polygon [n]
+  (defclass PolClass [PolInt] [])
+  (._generateVerts PolClass n)
+  (PolClass))

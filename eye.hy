@@ -24,7 +24,8 @@
   [ [__init__ (fn [self name code osc]
       (setv self.name name)
       (setv self.osc osc)
-      (setv self.entities [])
+      (setv self.__entities__ [])
+      (setv self.__audio__ [])
       (.listen self.osc (+ "/eye/audio/" self.name) self.callback)
       (.load self code)
       None)]

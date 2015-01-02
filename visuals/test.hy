@@ -1,13 +1,10 @@
-(import [lib.graphic [Square]])
-(import [time [time]])
-(import [math [sin]])
+(import [lib.graphic [Polygon]]
+        [time [time]]
+        [math [sin]])
 
 (audio amp "AMP")
 
-(setv square (Square))
-;(setv square.side (fn [] (-> (time) sin)))
-(setv square.side amp)
-;(setv square.side (fn [] (* (bass) 2)))  ; if I want apply sometying (USE A MACRO!)
+(setv p (Polygon 3))
+(setv p.side (fn [] (+ (amp) 1)))
 
-;(def __entities__ [square])
-(entities [square])
+(entities [p])
