@@ -75,13 +75,13 @@
       (del self.s))]
 
     [update (fn [self]
-      (for [[visual var] (.keys self.units)]
+      (for [visual (.keys self.units)]
         (.send self.osc (+ "/eye/audio/" visual)
-          [var (-> self.units (get (tuple [visual var])) .get float)])))]
+          [(-> self.units (get visual) .get float)])))]
 
     [code (fn [self path args]
-      (setv [visual var cmd] args)
-      (assoc self.units (tuple [visual var]) (RUN self.src cmd)))]])
+      (setv [visual cmd] args)
+      (assoc self.units visual (RUN self.src cmd)))]])
 
 
 (defmain [args]

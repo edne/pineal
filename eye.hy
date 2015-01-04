@@ -1,68 +1,44 @@
 #!/usr/bin/env hy2
 
-(import [time [sleep]])
-(import [hy.lex [tokenize]])
-(import [lib.runner [Runner]])
-(import [lib.windows [Window]])
-(import [lib.osc [Osc]])
-(import [config [OSC_EAR OSC_EYE]])
-
-
-(defmacro entities [es]
-  `(setv __entities__ ~es))
-
-
-(defmacro audio [var code]
-  `(do
-    (import [config [OSC_EAR]])
-    (.send self.osc "/ear/code" [self.name (name '~var) ~code] OSC_EAR)
-    (assoc __audio__ (name '~var) 0)
-    (setv ~var (fn [] (get __audio__ (name '~var))))))
+(import [time [sleep]]
+        [importlib [import_module]]
+        [hy.lex [tokenize]]
+        [lib.runner [Runner]]
+        [lib.windows [Window]]
+        [lib.osc [listener]]
+        [config [OSC_EAR OSC_EYE]])
 
 
 (defclass Visual []
-  [ [__init__ (fn [self name code osc]
-      (setv self.name name)
-      (setv self.osc osc)
-      (setv self.__entities__ [])
-      (setv self.__audio__ [])
-      (.listen self.osc (+ "/eye/audio/" self.name) self.callback)
-      (.load self code)
+  [ [__init__ (fn [self fullname code]
+      (setv self.name (get (.split fullname "/") -1))
+      (.load self fullname)
       None)]
 
-    ; PUT TRY HERE! (maybe with a macro inside?)
-    [load (fn [self code]
-      (setv [self.__entities__ self.__audio__]
-        (->
-          (+
-            "(do"
-            "(setv __entities__ [])"
-            "(setv __audio__ {})"
-            code
-            "[__entities__ __audio__])")
-        tokenize first eval)))]
-
-    [callback (fn [self path args]
-      (setv [k v] args)
-      (assoc self.__audio__ k v))]
+    [load (fn [self fullname]
+      (setv modulename (get (.split self.name ".") 0))
+      (setv module (__import__ (% "visuals.%s" modulename)))
+      (.update self.__dict__ module.test.__dict__))]
 
     [iteration (fn [self]
-            (for [entity self.__entities__] (entity.draw)))]])
+      ;try
+      (.draw self))]
+
+    [draw (fn [self])]])
 
 
 (defclass Eye [Runner]
   [ [__init__ (fn [self]
       (.__init__ Runner self)
       (setv self.visuals {})
-      (setv self.osc (Osc))
-      (.sender self.osc OSC_EAR)
-      (.reciver self.osc OSC_EYE))]
+      (.sender listener OSC_EAR)
+      (.reciver listener OSC_EYE))]
 
     [run (fn [self]
       (print "starting eye.hy")
 
-      (.listen self.osc "/visual/new" self.new)
-      (.start self.osc)
+      (.listen listener "/visual/new" self.new)
+      (.start listener)
 
       (setv self.output (Window self.visuals))
 
@@ -71,12 +47,13 @@
         (sleep (/ 1 60))))
 
       (print "\rstopping eye.hy")
-      (.stop self.osc))]
+      (.stop listener))]
 
     [new (fn [self path args]
-      (setv [fullname code] args)
-      (setv name (get (.split fullname "/") -1))
-      (assoc self.visuals name (Visual name code self.osc)))]])
+      (setv [fullname] args)
+      (with [[f (open fullname)]]
+        (setv code (.read f)))
+      (assoc self.visuals name (Visual fullname code)))]])
 
 
 (defmain [args]

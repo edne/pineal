@@ -1,10 +1,13 @@
-(import [lib.graphic [Polygon]]
+(import [lib.graphic [polygon]]
+        [lib.audio :as audio]
         [time [time]]
         [math [sin]])
 
-(audio amp "AMP")
 
-(setv p (Polygon 3))
-(setv p.side (fn [] (+ (amp) 1)))
+(setv amp (audio.source "AMP"))
+(setv pol (polygon 4))
 
-(entities [p])
+
+(defn draw []
+  (setv pol.side (* 16 (amp)))
+  (.draw pol))

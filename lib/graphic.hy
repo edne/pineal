@@ -11,12 +11,12 @@
           (apply (* gl.GLfloat (len verts)) verts))))]
 
     [__init__ (fn [self &optional [side 1]]
-      (setv self.side (fn [] side))
+      (setv self.side side)
       None)]
 
     [draw (fn [self]
       (gl.glLoadIdentity)
-      (gl.glScalef (self.side) (self.side) 1)
+      (gl.glScalef self.side self.side 1)
       (gl.glColor3f 1 1 1)
 
       (gl.glVertexPointer 2 gl.GL_FLOAT 0 self.vertsGl)
@@ -40,7 +40,7 @@
           (apply (* gl.GLfloat (len verts)) verts))))]])
 
 
-(defn Polygon [n]
+(defn polygon [n]
   (defclass PolClass [PolInt] [])
   (._generateVerts PolClass n)
   (PolClass))

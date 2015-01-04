@@ -39,3 +39,7 @@
               (get self.client (first self.client)))
             (OSCMessage path args)))
       (catch [OSCClientError] None)))]])
+
+
+; eye singleton
+(def listener (Osc))
