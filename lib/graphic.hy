@@ -23,7 +23,7 @@
 
       (gl.glEnableClientState gl.GL_VERTEX_ARRAY)
       ;(gl.glPolygonMode gl.GL_FRONT gl.GL_LINE)
-      (gl.glDrawArrays gl.GL_POLYGON 0 (len self.vertsGl)))]])
+      (gl.glDrawArrays gl.GL_TRIANGLE_STRIP 0 (len self.vertsGl)))]])
 
 
 (defclass PolInt [GLEntity]
@@ -32,9 +32,16 @@
         (setv verts [])
         (setv theta (/ math.pi -2))
         (for [i (range (+ 1 n))]
+          (.append verts 0)
+          (.append verts 0)
+
           (.append verts (math.cos theta))
           (.append verts (math.sin theta))
-          (+= theta (/ (* 2 math.pi) n)))
+
+          (+= theta (/ (* 2 math.pi) n))
+
+          (.append verts (math.cos theta))
+          (.append verts (math.sin theta)))
 
         (setv PolInt.vertsGl
           (apply (* gl.GLfloat (len verts)) verts))))]])

@@ -11,5 +11,5 @@
 
 
 (defn draw []
-  (setv pol.side (* 16 (amp)))
+  (setv pol.side (+ 0.5 (* 16 (amp))))
   (.draw pol))
