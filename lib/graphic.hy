@@ -34,7 +34,7 @@
 
 (defclass PolInt [GLEntity]
   [ [_generateVerts
-      (with-decorator staticmethod (fn [n]
+      (with-decorator staticmethod (fn [c n]
         (setv verts [])
         (setv theta (/ math.pi -2))
         (for [i (range (+ 1 n))]
@@ -49,11 +49,11 @@
           (.append verts (math.cos theta))
           (.append verts (math.sin theta)))
 
-        (setv PolInt.vertsGl
+        (setv c.vertsGl
           (apply (* gl.GLfloat (len verts)) verts))))]])
 
 
 (defn Polygon [n]
   (defclass PolClass [PolInt] [])
-  (._generateVerts PolClass n)
+  (._generateVerts PolClass PolClass n)
   (PolClass))
