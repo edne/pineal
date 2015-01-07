@@ -10,20 +10,26 @@
         (setv GLEntity.vertsGl
           (apply (* gl.GLfloat (len verts)) verts))))]
 
-    [__init__ (fn [self &optional [side 1]]
-      (setv self.side side)
+    [__init__ (fn [self &optional [r 1]]
+      (setv self.r r)
+      (setv self.fill [1 1 1])
+      (setv self.stroke [1 1 1])
       None)]
 
     [draw (fn [self]
       (gl.glLoadIdentity)
-      (gl.glScalef self.side self.side 1)
-      (gl.glColor3f 1 1 1)
+      (gl.glScalef self.r self.r 1)
 
       (gl.glVertexPointer 2 gl.GL_FLOAT 0 self.vertsGl)
 
       (gl.glEnableClientState gl.GL_VERTEX_ARRAY)
       ;(gl.glPolygonMode gl.GL_FRONT gl.GL_LINE)
-      (gl.glDrawArrays gl.GL_TRIANGLE_STRIP 0 (len self.vertsGl)))]])
+
+      (apply gl.glColor3f self.fill)
+      (gl.glDrawArrays gl.GL_POLYGON 0 (len self.vertsGl))
+      (apply gl.glColor3f self.stroke)
+      (gl.glDrawArrays gl.GL_LINE_LOOP 0 (len self.vertsGl))
+    )]])
 
 
 (defclass PolInt [GLEntity]
@@ -47,7 +53,7 @@
           (apply (* gl.GLfloat (len verts)) verts))))]])
 
 
-(defn polygon [n]
+(defn Polygon [n]
   (defclass PolClass [PolInt] [])
   (._generateVerts PolClass n)
   (PolClass))

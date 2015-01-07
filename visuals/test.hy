@@ -1,4 +1,4 @@
-(import [lib.graphic [polygon]]
+(import [lib.graphic [Polygon]]
         [lib.audio :as audio]
         [lib.osc :as osc]
         [time [time]]
@@ -7,9 +7,10 @@
 
 (setv amp (audio.source "AMP"))
 (setv osc1 (osc.source "/test/value"))
-(setv pol (polygon 4))
+(setv pol (Polygon 4))
 
 
 (defn draw []
-  (setv pol.side (+ 0.5 (* 16 (amp))))
+  (setv pol.r (+ 0.5 (* 16 (amp))))
+  (setv pol.fill [0 (* 20 (amp)) 0])
   (.draw pol))
