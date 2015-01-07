@@ -10,13 +10,14 @@
 
 
 (defclass Visual []
-  [ [__init__ (fn [self fullname code]
-      (setv self.name (get (.split fullname "/") -1))
-      (.load self fullname)
+  [ [__init__ (fn [self name code]
+      (setv self.name (get (.split name "/") -1))
+      (.load self)
       None)]
 
-    [load (fn [self fullname]
+    [load (fn [self]
       (setv modulename (get (.split self.name ".") 0))
+      ;try
       (setv module (__import__ (% "visuals.%s" modulename)))
       (.update self.__dict__ module.test.__dict__))]
 
@@ -37,7 +38,8 @@
     [run (fn [self]
       (print "starting eye.hy")
 
-      (.listen listener "/visual/new" self.new)
+      (.listen listener "/visual/created" self.created)
+      (.listen listener "/visual/modified" self.modified)
       (.start listener)
 
       (setv self.output (Window self.visuals))
@@ -49,11 +51,14 @@
       (print "\rstopping eye.hy")
       (.stop listener))]
 
-    [new (fn [self path args]
-      (setv [fullname] args)
-      (with [[f (open fullname)]]
+    [created (fn [self path args]
+      (setv [name] args)
+      (with [[f (open name)]]
         (setv code (.read f)))
-      (assoc self.visuals name (Visual fullname code)))]])
+      (assoc self.visuals name (Visual name code)))]
+
+    [modified (fn [self path args]
+      (print args))]])
 
 
 (defmain [args]
