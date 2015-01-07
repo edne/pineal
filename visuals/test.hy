@@ -12,7 +12,9 @@
 
 
 (defn draw []
+  (setv tri.stroke [0 1 1 1])
+  (setv tri.fill [1 1 1 0.5])
   (setv pol.r (+ 0.5 (* 16 (amp))))
-  (setv pol.fill [0 (* 20 (amp)) 0])
+  (setv pol.fill [0 1 0 (* 20 (amp))])
   (.draw tri)
   (.draw pol))
