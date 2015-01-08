@@ -1,7 +1,8 @@
 #!/usr/bin/env hy2
 
 (import [time [sleep]]
-        [importlib [import_module]]
+        ;[importlib [import_module]]
+        [sys [modules]]
         [hy.lex [tokenize]]
         [lib.runner [Runner]]
         [lib.windows [Window]]
@@ -10,16 +11,18 @@
 
 
 (defclass Visual []
-  [ [__init__ (fn [self name code]
+  [ [__init__ (fn [self name]
       (setv self.name (get (.split name "/") -1))
       (.load self)
       None)]
 
     [load (fn [self]
+      (print "loading:" self.name)
       (setv modulename (get (.split self.name ".") 0))
-      ;try
+      ;try, push module on a stack
       (setv module (__import__ (% "visuals.%s" modulename)))
-      (.update self.__dict__ module.test.__dict__))]
+      (.update self.__dict__ module.test.__dict__)
+      (.pop modules (% "visuals.%s" modulename)))]
 
     [iteration (fn [self]
       ;try
@@ -53,12 +56,11 @@
 
     [created (fn [self path args]
       (setv [name] args)
-      (with [[f (open name)]]
-        (setv code (.read f)))
-      (assoc self.visuals name (Visual name code)))]
+      (assoc self.visuals name (Visual name)))]
 
     [modified (fn [self path args]
-      (print args))]])
+      (setv [name] args)
+      (.load (get self.visuals name)))]])
 
 
 (defmain [args]

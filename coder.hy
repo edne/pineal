@@ -39,6 +39,10 @@
       (.stop self.osc))]])
 
 
+(defn valid [path]
+  (or (.endswith path ".hy") (.endswith path ".py")))
+
+
 (defclass Handler [FileSystemEventHandler]
   [ [__init__ (fn [self osc]
       (.__init__ FileSystemEventHandler self)
@@ -46,21 +50,21 @@
       None)]
 
     [on_created (fn [self event]
-      (if-not event.is_directory
+      (if (valid event.src_path)
         (.send self.osc "/visual/created" [event.src_path] OSC_EYE)))]
 
     [on_deleted (fn [self event]
-      (if-not event.is_directory
+      (if (valid event.src_path)
         (.send self.osc "/visual/deleted" [event.src_path] OSC_EYE)))]
 
     [on_moved (fn [self event]
-      (if-not event.is_directory
+      (if (valid event.dest_path)
         (.send self.osc 
           "/visual/moved"
           [event.src_path event.dest_path] OSC_EYE)))]
 
     [on_modified (fn [self event]
-      (if-not event.is_directory
+      (if (valid event.src_path)
         (.send self.osc "/visual/modified" [event.src_path] OSC_EYE)))]])
 
 
