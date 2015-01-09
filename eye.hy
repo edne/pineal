@@ -13,20 +13,42 @@
 (defclass Visual []
   [ [__init__ (fn [self name]
       (setv self.name (get (.split name "/") -1))
+      (setv self.stack [])
       (.load self)
       None)]
 
     [load (fn [self]
       (print "loading:" self.name)
       (setv modulename (get (.split self.name ".") 0))
-      ;try, push module on a stack
-      (setv module (__import__ (% "visuals.%s" modulename)))
-      (.update self.__dict__ module.test.__dict__)
-      (.pop modules (% "visuals.%s" modulename)))]
+      (try
+        (do
+          (setv module (__import__ (% "visuals.%s" modulename)))
+          (.pop modules (% "visuals.%s" modulename)))  ; remove from sys.modules
+        (catch [e Exception]
+          (do
+            (print e)
+            (if self.stack
+              (setv module (get self.stack -1))
+              (print "BROKEN"))))
+        (else
+          (.append self.stack module)))
+      (print "stack" (len self.stack))
+      (.update self.__dict__ (. module __dict__ [modulename] __dict__)))]
 
     [iteration (fn [self]
-      ;try
-      (.draw self))]
+      (if self.stack  ; if is not broken
+        (try
+          (.draw self)
+          (catch [e Exception]
+            (do
+              (print e)
+              (.pop self.stack)  ; WHY HERE CAN BE EMPTY???
+              (if self.stack
+                (do
+                  (setv modulename (get (.split self.name ".") 0))
+                  (setv module (get self.stack -1))
+                  (.update self.__dict__ (. module __dict__ [modulename] __dict__)))
+                (print "BROKEN")))))))]
 
     [draw (fn [self])]])
 
