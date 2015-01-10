@@ -16,7 +16,7 @@
       (setv self.osc (Osc))
       (.sender self.osc OSC_EYE)
 
-      (for [filename (glob "visuals/*.hy")]
+      (for [filename (glob "visuals/*.py")]
           (.send self.osc "/visual/created" [filename] OSC_EYE))
 
       (setv handler (Handler self.osc))
