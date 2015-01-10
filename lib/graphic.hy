@@ -10,14 +10,16 @@
         (setv GLEntity.vertsGl
           (apply (* gl.GLfloat (len verts)) verts))))]
 
-    [__init__ (fn [self &optional [r 1]]
-      (setv self.r r)
+    [__init__ (fn [self]
+      (setv self.r 1)
+      (setv [self.x self.y self.z] [0 0 0])
       (setv self.fill [1 1 1 1])
       (setv self.stroke [1 1 1 1])
       None)]
 
     [draw (fn [self]
       (gl.glLoadIdentity)
+      (gl.glTranslatef self.x self.y self.z)
       (gl.glScalef self.r self.r 1)
 
       (gl.glVertexPointer 2 gl.GL_FLOAT 0 self.vertsGl)
@@ -28,7 +30,8 @@
       (apply gl.glColor4f self.fill)
       (gl.glDrawArrays gl.GL_TRIANGLE_FAN 0 (len self.vertsGl))
       (apply gl.glColor4f self.stroke)
-      (gl.glDrawArrays gl.GL_LINE_STRIP 0 (len self.vertsGl)))]])
+      (gl.glDrawArrays gl.GL_LINE_STRIP 0 (len self.vertsGl))
+      (gl.glTranslatef (- self.x) (- self.y) (- self.z)) )]])
 
 
 (defclass PolInt [GLEntity]
