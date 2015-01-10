@@ -2,6 +2,7 @@
 
 (import [time [sleep]]
         [importlib [import_module]]
+        [pyflakes.api [checkPath]]
         [sys]
         [hy.lex [tokenize]]
         [lib.runner [Runner]]
@@ -24,7 +25,6 @@
       (.pop sys.modules (% "visuals.%s" modulekey))
       (.update self.__dict__ module.__dict__))]
 
-    ; TODO check the code @ import stage
     [iteration (fn [self]
       (try
         (.draw self)
@@ -61,17 +61,20 @@
 
     [created (fn [self path args]
       (setv [name] args)
-      (assoc self.visuals name (Visual name)))]
+      (unless (in name (self.visuals.keys))
+        (assoc self.visuals name (Visual name))))]
 
     [modified (fn [self path args]
       (setv [name] args)
       (.load self (get self.visuals name)))]
 
     [load (fn [self visual]
-      (try
-        (.load visual)
-        (except [e Exception]
-          (print e))))]])
+      (unless (checkPath (% "visuals/%s" visual.name))
+        (try
+          (.load visual)
+          (except [e Exception]
+            (print e)))
+        ))]])
 
 
 (defmain [args]
