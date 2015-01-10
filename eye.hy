@@ -5,7 +5,7 @@
         [sys]
         [hy.lex [tokenize]]
         [lib.runner [Runner]]
-        [lib.windows [Window]]
+        [lib.windows [Renderer Overview]]
         [lib.osc [listener]]
         [config [OSC_EAR OSC_EYE]])
 
@@ -48,10 +48,12 @@
       (.listen listener "/visual/modified" self.modified)
       (.start listener)
 
-      (setv self.output (Window self.visuals))
+      (setv renderer (Renderer self.visuals))
+      (setv overview (Overview))
 
       (.iteration self (fn []
-        (.update self.output)
+        (.update renderer)
+        (.update overview renderer.texture)
         (sleep (/ 1 60))))
 
       (print "\rstopping eye.hy")

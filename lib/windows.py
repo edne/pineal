@@ -2,17 +2,34 @@ import pyglet
 import pyglet.gl as gl
 
 
-class Window(pyglet.window.Window):
+class Renderer(pyglet.window.Window):
     def __init__(self, visuals):
         self.visuals = visuals
-        pyglet.window.Window.__init__(
-            self,
-            caption = '(pineal)',
-            width = 800,
-            height = 600,
-            vsync = 1,
-            visible = 1
-        )
+
+        platform = pyglet.window.get_platform()
+        display = platform.get_default_display()
+        screens = display.get_screens()
+
+        if screens[:1]:
+            pyglet.window.Window.__init__(
+                self,
+                caption = '(pineal master)',
+                fullscreen = 1,
+                screen = screens[-1],
+                vsync = 1,
+                visible = 1
+            )
+            self.set_mouse_visible(False)
+        else:
+            pyglet.window.Window.__init__(
+                self,
+                caption = '(pineal master)',
+                fullscreen = 0,
+                width = 800,
+                height = 600,
+                vsync = 1,
+                visible = 0
+            )
 
         gl.glEnable(gl.GL_BLEND)
         gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA)
@@ -26,6 +43,8 @@ class Window(pyglet.window.Window):
         gl.glEnable(gl.GL_LIGHT0)
         gl.glEnable(gl.GL_COLOR_MATERIAL)
         gl.glShadeModel(gl.GL_SMOOTH)
+
+        self.texture = None
 
     def on_draw(self):
         self.clear()
@@ -51,7 +70,36 @@ class Window(pyglet.window.Window):
             gl.glMatrixMode(gl.GL_MODELVIEW)
             v.iteration()
 
+        buf = pyglet.image.get_buffer_manager().get_color_buffer()
+        rawimage = buf.get_image_data()
+        self.texture = rawimage.get_texture()
+
     def update(self):
+        self.switch_to()
+        self.dispatch_events()
+        self.dispatch_event('on_draw')
+        self.flip()
+
+
+class Overview(pyglet.window.Window):
+    def __init__(self):
+        pyglet.window.Window.__init__(
+            self,
+            caption = '(pineal overview)',
+            width = 600, height = 450,
+            vsync = 0
+        )
+        self.texture = None
+        #self.fps_display = pyglet.clock.ClockDisplay()  # segfaults
+
+    def on_draw(self):
+        self.clear()
+        if self.texture:
+            self.texture.blit(0,0,0, self.width,self.height)
+            #self.fps_display.draw()
+
+    def update(self, texture):
+        self.texture = texture
         self.switch_to()
         self.dispatch_events()
         self.dispatch_event('on_draw')
