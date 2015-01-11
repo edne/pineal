@@ -36,7 +36,6 @@
         (setv c.vertsGl (apply (* gl.GLfloat (len verts)) verts))))]
 
     [draw (fn [self]
-      (gl.glLoadIdentity)
       (gl.glTranslatef self.x self.y self.z)
       (gl.glScalef self.r self.r 1)
 
@@ -53,3 +52,23 @@
   (defclass PolClass [PolInt] [])
   (._generateVerts PolClass PolClass n)
   (PolClass))
+
+
+(defn push [] (gl.glPushMatrix))
+(defn pop [] (gl.glPopMatrix))
+
+(defmacro multidef [&rest margs]
+  (defn nestle [funcs]
+    (if funcs
+      `(try
+        (apply ~(get funcs 0) fargs)
+        (except [TypeError]
+          ~(nestle (slice funcs 1))))
+      '(throw TypeError)))
+  `(defn ~(get margs 0) [&rest fargs]
+    ~(nestle (slice margs 1))))
+
+(multidef scale
+  (fn [s] (gl.glScalef s s s))
+  (fn [x y] (gl.glScalef x y 1))
+  (fn [x y z] (gl.glScalef x y z)))
