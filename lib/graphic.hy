@@ -54,9 +54,6 @@
   (PolClass))
 
 
-(defn push [] (gl.glPushMatrix))
-(defn pop [] (gl.glPopMatrix))
-
 (defmacro multidef [&rest margs]
   (defn nestle [funcs]
     (if funcs
@@ -68,7 +65,38 @@
   `(defn ~(get margs 0) [&rest fargs]
     ~(nestle (slice margs 1))))
 
+
+(defn push [] (gl.glPushMatrix))
+(defn pop [] (gl.glPopMatrix))
+
+
 (multidef scale
   (fn [s] (gl.glScalef s s s))
   (fn [x y] (gl.glScalef x y 1))
   (fn [x y z] (gl.glScalef x y z)))
+
+
+(multidef rotate
+  (fn [angle]
+    (gl.glRotatef
+      (/ (* angle 180) math.pi)
+      0 0 1)
+  (fn [angle x y z]
+    (gl.glRotatef
+      (/ (* angle 180) math.pi)
+      x y z))))
+
+(defn rotateX [angle]
+  (gl.glRotatef
+      (* math.pi (/ angle 180))
+      1 0 0))
+
+(defn rotateY [angle]
+  (gl.glRotatef
+      (/ (* angle 180) math.pi)
+      0 1 0))
+
+(defn rotateZ [angle]
+  (gl.glRotatef
+      (/ (* angle 180) math.pi)
+      0 0 1))
