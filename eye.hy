@@ -14,6 +14,11 @@
   [ [__init__ (fn [self name]
       (setv self.name (get (.split name "/") -1))
       (setv self.stack [])
+
+      (defclass Box []
+        [ [draw (fn [self])]])
+      (setv self.box (Box))
+
       (.load self)
       None)]
 
@@ -21,7 +26,7 @@
       (print "loading:" self.name)
       (setv code (executer.load (% "visuals/%s" self.name)))  ; move in coder.hy
       (try
-        (.update self.__dict__ (executer.run code))
+        (.update self.box.__dict__ (executer.run code))
         (except [e Exception]
           (print self.name e))
         (else
@@ -41,7 +46,8 @@
               (.update self.__dict__ (executer.run code)))
             (print self.name "BROKEN!")))))]
 
-    [draw (fn [self])]])
+    [draw (fn [self]
+      (.draw self.box))]])
 
 
 (defclass Eye [Runner]

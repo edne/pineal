@@ -1,4 +1,4 @@
-from lib.graphic import Polygon, push, pop, rotate
+from lib.graphic import *
 import lib.audio as audio
 from math import *
 from time import time

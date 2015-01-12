@@ -1,7 +1,7 @@
 (import [pyglet.gl :as gl]
         [math])
 
-(defclass GLEntity []
+(defclass _GLEntity []
   [ [vertsGl None]
 
     [_generateVerts
@@ -16,7 +16,7 @@
     [draw (fn [self])]])
 
 
-(defclass PolInt [GLEntity]
+(defclass _PolInt [_GLEntity]
   [ [_generateVerts
       (with-decorator staticmethod (fn [c n]
         (setv verts [])
@@ -49,7 +49,7 @@
 
 
 (defn Polygon [n]
-  (defclass PolClass [PolInt] [])
+  (defclass PolClass [_PolInt] [])
   (._generateVerts PolClass PolClass n)
   (PolClass))
 
