@@ -10,7 +10,7 @@ class Renderer(pyglet.window.Window):
         display = platform.get_default_display()
         screens = display.get_screens()
 
-        if screens[:1]:
+        if len(screens) > 1:
             pyglet.window.Window.__init__(
                 self,
                 caption = '(pineal master)',
