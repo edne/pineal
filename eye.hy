@@ -6,7 +6,7 @@
         [lib.runner [Runner]]
         [lib.windows [Renderer Overview]]
         [lib.osc [listener]]
-        [lib.executer :as executer]
+        [lib.pyexec [pyexec]]
         [config [OSC_EAR OSC_EYE]])
 
 
@@ -24,15 +24,16 @@
 
     [load (fn [self]
       (print "loading:" self.name)
-      (setv code (executer.load (% "visuals/%s" self.name)))  ; move in coder.hy
-      (try
-        (.update self.box.__dict__ (executer.run code))
-        (except [e Exception]
-          (print self.name e))
-        (else
-          (.append self.stack code)))
-      ;(exec code self.__dict__)  ; waiting the fix in hy, or the swich to hy3
-    )]
+      (setv filename (% "visuals/%s" self.name))
+      (with [[f (open filename)]]
+        (setv code (.read f))
+        (try
+          ;(.update self.box.__dict__ (executer.run code))
+          (pyexec code self.box.__dict__)
+          (except [e Exception]
+            (print self.name e))
+          (else
+            (.append self.stack code)))))]
 
     [iteration (fn [self]
       (try
