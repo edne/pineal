@@ -28,7 +28,6 @@
       (with [[f (open filename)]]
         (setv code (.read f))
         (try
-          ;(.update self.box.__dict__ (executer.run code))
           (pyexec code self.box.__dict__)
           (except [e Exception]
             (print self.name e))
@@ -44,7 +43,7 @@
           (if self.stack
             (do
               (setv code (get self.stack -1))
-              (.update self.__dict__ (executer.run code)))
+              (pyexec code self.box.__dict__))
             (print self.name "BROKEN!")))))]
 
     [draw (fn [self]
