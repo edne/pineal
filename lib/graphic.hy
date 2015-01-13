@@ -66,8 +66,24 @@
     ~(nestle (slice margs 1))))
 
 
-(defn push [] (gl.glPushMatrix))
-(defn pop [] (gl.glPopMatrix))
+(def _matrix_sp 0)
+
+(defn push []
+  (global _matrix_sp)
+  (if (< _matrix_sp 30)
+    (do
+      (gl.glPushMatrix)
+      (+= _matrix_sp 1)
+    (gl.glLoadIdentity))))
+
+;(defn pop [] (gl.glPopMatrix))
+(defn pop []
+  (global _matrix_sp)
+  (if (> _matrix_sp 0)
+    (do
+      (gl.glPopMatrix)
+      (-= _matrix_sp 1))
+    (gl.glLoadIdentity)))
 
 
 (multidef scale
