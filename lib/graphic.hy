@@ -43,7 +43,7 @@
 
       (gl.glEnableClientState gl.GL_VERTEX_ARRAY)
 
-      (apply gl.glColor4f self.c)
+      (apply gl.glColor4f (_color self.c))
       (gl.glDrawArrays gl.GL_TRIANGLES 0 (len self.vertsGl))
       (gl.glTranslatef (- self.x) (- self.y) (- self.z)) )]])
 
@@ -116,3 +116,21 @@
   (gl.glRotatef
       (/ (* angle 180) math.pi)
       0 0 1))
+
+
+(multidef __color
+  (fn [x]       [x x x 1])
+  (fn [x a]     [x x x a])
+  (fn [r g b]   [r g b 1])
+  (fn [r g b a] [r g b a]))
+(defn _color [c]
+  (apply __color c))
+
+(import [colorsys [hsv_to_rgb]])
+(multidef hsv
+  (fn [h]       (hsv_to_rgb h 1 1))
+  (fn [h s v]   (hsv_to_rgb h s v))
+  (fn [h s v a]
+    (setv [r g b] (hsv_to_rgb h s v))
+    [r g b a])
+  (fn [h a] (hsv h 1 1 a)))

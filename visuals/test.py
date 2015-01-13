@@ -4,14 +4,19 @@ from math import *
 from time import time
 
 amp = audio.source("AMP")
-p = Polygon(3)
+bass = audio.source("(LPF 100) AMP")
+high = audio.source("(HPF 10000) AMP")
+p = Polygon(4)
 
 
 def draw():
-    p.r = sin(time()) + 1
-    #p.x = 0.7
-    push()
-    p.c = [1,1,1, 0.5]
-    rotate(time() % 2*pi)
-    p.draw()
-    pop()
+    p.r = 1
+    #p.c = [0, 0.5, 1, 0.8]
+    p.c = hsv(0.4, 0.5)
+    n = 1
+    for i in range(n):
+        push()
+        #p.x = bass() * 4
+        rotate(i*0.01*time() % 2*pi)
+        p.draw()
+        pop()
