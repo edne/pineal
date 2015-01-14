@@ -11,28 +11,29 @@
 
 
 (defclass Visual []
-  [ [__init__ (fn [self name]
-      (setv self.name (get (.split name "/") -1))
+  [ [__init__ (fn [self name code]
+      (.setName self name)
       (setv self.stack [])
 
       (defclass Box []
         [ [draw (fn [self])]])
       (setv self.box (Box))
 
-      (.load self)
+      (.update self code)
       None)]
 
-    [load (fn [self]
+    [setName (fn [self name]
+      (setv self.name (get (.split name "/") -1)))]
+
+    [update (fn [self code]
       (print "loading:" self.name)
       (setv filename (% "visuals/%s" self.name))
-      (with [[f (open filename)]]
-        (setv code (.read f))
-        (try
-          (pyexec code self.box.__dict__)
-          (except [e Exception]
-            (print self.name e))
-          (else
-            (.append self.stack code)))))]
+      (try
+        (pyexec code self.box.__dict__)
+        (except [e Exception]
+          (print self.name e))
+        (else
+          (.append self.stack code))))]
 
     [iteration (fn [self]
       (try
@@ -60,8 +61,10 @@
     [run (fn [self]
       (print "starting eye.hy")
 
-      (.listen listener "/visual/created" self.created)
-      (.listen listener "/visual/modified" self.modified)
+      (.listen listener "/visual/coder" self.coder)
+      (.listen listener "/visual/moved" self.moved)
+      ;(.listen listener "/visual/deleted" self.deleted)
+
       (.start listener)
 
       (setv renderer (Renderer self.visuals))
@@ -75,17 +78,19 @@
       (print "\rstopping eye.hy")
       (.stop listener))]
 
-    [created (fn [self path args]
-      (setv [name] args)
-      (unless (in name (self.visuals.keys))
-        (assoc self.visuals name (Visual name))))]
+    [coder (fn [self path args]
+      (setv [name code] args)
+      (if (in name (self.visuals.keys))
+        (.update (get self.visuals name) code)
+        (assoc self.visuals name (Visual name code))))]
 
-    [modified (fn [self path args]
-      (setv [name] args)
-      (.load self (get self.visuals name)))]
-
-    [load (fn [self visual]
-      (.load visual))]])
+    [moved (fn [self path args]
+      (setv [oldname newname] args)
+      (if (in oldname (self.visuals.keys))
+        (do
+          (.setName (get self.visuals oldname) newname)
+          (assoc self.visuals newname (.pop self.visuals oldname)))))]
+    ])
 
 
 (defmain [args]
