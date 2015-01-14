@@ -26,7 +26,7 @@
       (setv self.name (get (.split name "/") -1)))]
 
     [update (fn [self code]
-      (print "loading:" self.name)
+      (print "\rloading:" self.name)
       (setv filename (% "visuals/%s" self.name))
       (try
         (pyexec code self.box.__dict__)

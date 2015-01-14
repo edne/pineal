@@ -1,4 +1,5 @@
 import pyglet
+from pyglet import clock
 import pyglet.gl as gl
 
 
@@ -75,11 +76,14 @@ class Renderer(pyglet.window.Window):
         rawimage = buf.get_image_data()
         self.texture = rawimage.get_texture()
 
+        clock.tick()
+
     def update(self):
         self.switch_to()
         self.dispatch_events()
         self.dispatch_event('on_draw')
         self.flip()
+        print '\rfps: %3.1f' % clock.get_fps(),
 
 
 class Overview(pyglet.window.Window):
