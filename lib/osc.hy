@@ -1,5 +1,6 @@
-(import [lib.runner [Runner]])
-(import [thirdparty.OSC [OSCServer OSCClient OSCClientError OSCMessage]])
+(import [lib.runner [Runner]]
+        [time [sleep]]
+        [thirdparty.OSC [OSCServer OSCClient OSCClientError OSCMessage]])
 
 (defclass Osc [Runner]
   [ [__init__ (fn [self]
@@ -19,7 +20,8 @@
 
     [run (fn [self]
       (.iteration self (fn []
-        (.handle_request self.server)))
+        (.handle_request self.server)
+        (sleep (/ 1 1000))))
       (.close self.server))]
 
     [listen (fn [self key cb]
