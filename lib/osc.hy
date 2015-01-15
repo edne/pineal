@@ -21,7 +21,8 @@
     [run (fn [self]
       (.iteration self (fn []
         (.handle_request self.server)
-        (sleep (/ 1 1000))))
+        ;(sleep (/ 1 1000))
+        ))
       (.close self.server))]
 
     [listen (fn [self key cb]
