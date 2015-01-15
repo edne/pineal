@@ -2,10 +2,6 @@
         [config [OSC_EAR]])
 
 
-; counts the sources created
-(def id 0)
-
-
 (defn source [code]
   (defclass Status []
     [ [__init__ (fn [self]
@@ -20,9 +16,7 @@
 
   (setv status (Status))
 
-  (global id)
-  (.send listener "/ear/code" [(str id) code] OSC_EAR)
-  (.listen listener (+ "/eye/audio/" (str id)) status.cb)
-  (+= id 1)
+  (.send listener "/ear/code" [code] OSC_EAR)
+  (.listen listener (+ "/eye/audio/" code) status.cb)
 
   status.getv)

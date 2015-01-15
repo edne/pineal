@@ -80,8 +80,8 @@
           [(-> self.units (get visual) .get float)])))]
 
     [code (fn [self path args]
-      (setv [visual cmd] args)
-      (assoc self.units visual (RUN self.src cmd)))]])
+      (setv [cmd] args)
+      (assoc self.units cmd (RUN self.src cmd)))]])
 
 
 (defmain [args]
