@@ -158,6 +158,11 @@
       0 0 1))
 
 
+(multidef translate
+  (fn [x y] (gl.glTranslatef x y 0))
+  (fn [x y z] (gl.glTranslatef x y z)))
+
+
 (multidef __color
   (fn [x]       [x x x 1])
   (fn [x a]     [x x x a])
