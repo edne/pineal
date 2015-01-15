@@ -6,17 +6,23 @@ from time import time
 amp = audio.source("AMP")
 bass = audio.source("(LPF 100) AMP")
 high = audio.source("(HPF 10000) AMP")
-p = Polygon(4)
+p = Polygon(3)
+frame = Frame()
 
 
 def draw():
-    p.r = 1
-    #p.c = [0, 0.5, 1, 0.8]
-    p.c = hsv(0.4, 0.5)
-    n = 1
-    for i in range(n):
-        push()
-        #p.x = bass() * 4
-        rotate(i*0.01*time() % 2*pi)
-        p.draw()
-        pop()
+    frame.x = sin(0.2*time() % 2*pi)
+
+    push()
+    rotate(0.5*time() % 2*pi)
+    for i in xrange(6):
+        rotate(pi/3)
+        frame.draw()
+    pop()
+
+    p.c = hsv(2*time(), 1)
+    #p.c = [time() % 1]
+    push()
+    rotate(time() % 2*pi)
+    p.draw()
+    pop()

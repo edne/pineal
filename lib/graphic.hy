@@ -1,7 +1,8 @@
 (import [pyglet.gl :as gl]
+        [lib.windows [getFrame :as _getFrame]]
         [math])
 
-(defclass _GLEntity []
+(defclass _Entity []
   [ [vertsGl None]
 
     [_generateVerts
@@ -16,7 +17,7 @@
     [draw (fn [self])]])
 
 
-(defclass _PolInt [_GLEntity]
+(defclass _PolInt [_Entity]
   [ [_generateVerts
       (with-decorator staticmethod (fn [c n]
         (setv verts [])
@@ -52,6 +53,31 @@
   (defclass PolClass [_PolInt] [])
   (._generateVerts PolClass PolClass n)
   (PolClass))
+
+
+(defclass _ImageText [_Entity]
+  [ [__init__ (fn [self texture ratio]
+      (.__init__ _Entity self)
+      (setv self.texture texture)
+      (setv self.ratio ratio)
+      None)]
+
+    [draw (fn [self]
+      (setv w (* self.r self.ratio))
+      (setv h self.r)
+      (if self.texture
+        (.blit self.texture
+          (- self.x (/ w 2))
+          (- self.y (/ h 2))
+          self.z
+          w h)))]])
+
+(defclass _Frame [_ImageText]
+  [ [draw (fn [self]
+    (setv self.texture (_getFrame))
+    (.draw _ImageText self))]])
+
+(defn Frame [] (_Frame None (/ 4 3)))
 
 
 (defmacro multidef [&rest margs]

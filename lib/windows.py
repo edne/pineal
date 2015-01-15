@@ -3,6 +3,13 @@ from pyglet import clock
 import pyglet.gl as gl
 
 
+frame_texture = None
+
+
+def getFrame():
+    return frame_texture
+
+
 class Renderer(pyglet.window.Window):
     def __init__(self, visuals):
         self.visuals = visuals
@@ -67,6 +74,9 @@ class Renderer(pyglet.window.Window):
             0,1,0
         )
 
+        #if self.texture:
+        #    self.texture.blit(0,0, 0, 1,1)
+
         for v in self.visuals.values():
             gl.glMatrixMode(gl.GL_MODELVIEW)
             gl.glLoadIdentity()
@@ -75,6 +85,9 @@ class Renderer(pyglet.window.Window):
         buf = pyglet.image.get_buffer_manager().get_color_buffer()
         rawimage = buf.get_image_data()
         self.texture = rawimage.get_texture()
+
+        global frame_texture
+        frame_texture = self.texture
 
         clock.tick()
 
