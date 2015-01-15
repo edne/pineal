@@ -1,9 +1,12 @@
 (import [pyglet.gl :as gl]
+        [pyglet.graphics [draw]]
         [lib.windows [getFrame :as _getFrame]]
-        [math])
+        [math [cos sin pi]]
+        [colorsys [hsv_to_rgb]])
 
 (defclass _Entity []
   [ [vertsGl None]
+    [wVerts []]
 
     [_generateVerts
       (with-decorator staticmethod (fn []))]
@@ -11,7 +14,8 @@
     [__init__ (fn [self]
       (setv self.r 1)
       (setv [self.x self.y self.z] [0 0 0])
-      (setv self.c [1 1 1 1])
+      (setv self.fill [1 1 1 1])
+      (setv self.stroke [1 1 1 1])
       None)]
 
     [draw (fn [self])]])
@@ -26,34 +30,44 @@
           (.append verts 0)
           (.append verts 0)
 
-          (.append verts (math.cos theta))
-          (.append verts (math.sin theta))
+          (.append verts (cos theta))
+          (.append verts (sin theta))
 
-          (+= theta (/ (* 2 math.pi) n))
+          (+= theta (/ (* 2 pi) n))
 
-          (.append verts (math.cos theta))
-          (.append verts (math.sin theta)))
+          (.append verts (cos theta))
+          (.append verts (sin theta)))
 
-        (setv c.vertsGl (apply (* gl.GLfloat (len verts)) verts))))]
+        (setv c.vertsGl (apply (* gl.GLfloat (len verts)) verts))
+
+        (setv c.wVerts (flatten (map
+          (fn [i]
+            (setv theta (* i (* 2 (/ pi n))))
+            [(cos theta) (sin theta)])
+          (range n))))))]
 
     [draw (fn [self]
       (gl.glTranslatef self.x self.y self.z)
       (gl.glScalef self.r self.r 1)
 
       (gl.glVertexPointer 2 gl.GL_FLOAT 0 self.vertsGl)
-
       (gl.glEnableClientState gl.GL_VERTEX_ARRAY)
 
-      (apply gl.glColor4f (_color self.c))
+      (apply gl.glColor4f (_color self.fill))
       (gl.glDrawArrays gl.GL_TRIANGLES 0 (len self.vertsGl))
-      (gl.glTranslatef (- self.x) (- self.y) (- self.z)) )]])
+
+      (apply gl.glColor4f (_color self.stroke))
+      (draw
+        (// (len self.wVerts) 2) gl.GL_LINE_LOOP
+        (tuple ["v2f" self.wVerts]))
+
+      (gl.glTranslatef (- self.x) (- self.y) (- self.z)))]])
 
 
 (defn Polygon [n]
   (defclass PolClass [_PolInt] [])
   (._generateVerts PolClass PolClass n)
   (PolClass))
-
 
 (defclass _ImageText [_Entity]
   [ [__init__ (fn [self texture ratio]
@@ -121,26 +135,26 @@
 (multidef rotate
   (fn [angle]
     (gl.glRotatef
-      (/ (* angle 180) math.pi)
+      (/ (* angle 180) pi)
       0 0 1)
   (fn [angle x y z]
     (gl.glRotatef
-      (/ (* angle 180) math.pi)
+      (/ (* angle 180) pi)
       x y z))))
 
 (defn rotateX [angle]
   (gl.glRotatef
-      (* math.pi (/ angle 180))
+      (* pi (/ angle 180))
       1 0 0))
 
 (defn rotateY [angle]
   (gl.glRotatef
-      (/ (* angle 180) math.pi)
+      (/ (* angle 180) pi)
       0 1 0))
 
 (defn rotateZ [angle]
   (gl.glRotatef
-      (/ (* angle 180) math.pi)
+      (/ (* angle 180) pi)
       0 0 1))
 
 
@@ -152,7 +166,6 @@
 (defn _color [c]
   (apply __color c))
 
-(import [colorsys [hsv_to_rgb]])
 (multidef hsv
   (fn [h]       (hsv_to_rgb h 1 1))
   (fn [h s v]   (hsv_to_rgb h s v))
@@ -160,3 +173,7 @@
     (setv [r g b] (hsv_to_rgb h s v))
     [r g b a])
   (fn [h a] (hsv h 1 1 a)))
+
+
+(defn strokeWeight [weight]
+  (gl.glLineWidth weight))
