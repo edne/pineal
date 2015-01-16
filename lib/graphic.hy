@@ -25,7 +25,7 @@
   [ [_generateVerts
       (with-decorator staticmethod (fn [c n]
         (setv verts [])
-        (setv theta 0)
+        (setv theta (/ pi -2))
         (for [i (range n)]
           (.append verts 0)
           (.append verts 0)
@@ -42,7 +42,7 @@
 
         (setv c.wVerts (flatten (map
           (fn [i]
-            (setv theta (* i (* 2 (/ pi n))))
+            (setv theta (+ (/ pi -2) (* i (* 2 (/ pi n)))))
             [(cos theta) (sin theta)])
           (range n))))))]
 
@@ -77,8 +77,8 @@
       None)]
 
     [draw (fn [self]
-      (setv w (* self.r self.ratio))
-      (setv h self.r)
+      (setv w (* 2 self.r self.ratio))
+      (setv h (* 2 self.r))
       (if self.texture
         (.blit self.texture
           (- self.x (/ w 2))
