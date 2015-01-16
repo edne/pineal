@@ -4,7 +4,7 @@
         [sys]
         [hy.lex [tokenize]]
         [lib.runner [Runner]]
-        [lib.windows [Renderer Overview]]
+        [lib.windows [Renderer Master Overview]]
         [lib.osc [listener]]
         [lib.pyexec [pyexec]]
         [config [OSC_EAR OSC_EYE]])
@@ -68,11 +68,13 @@
       (.start listener)
 
       (setv renderer (Renderer self.visuals))
+      (setv master (Master))
       (setv overview (Overview))
 
       (.iteration self (fn []
         (.update renderer)
         (.update overview renderer.texture)
+        (.update master renderer.texture)
         (sleep (/ 1 60))))
 
       (print "\rstopping eye.hy")

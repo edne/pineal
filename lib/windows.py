@@ -3,6 +3,7 @@ from pyglet import clock
 import pyglet.gl as gl
 
 
+RATIO = 1.0
 frame_texture = None
 
 
@@ -14,30 +15,15 @@ class Renderer(pyglet.window.Window):
     def __init__(self, visuals):
         self.visuals = visuals
 
-        platform = pyglet.window.get_platform()
-        display = platform.get_default_display()
-        screens = display.get_screens()
-
-        if len(screens) > 1:
-            pyglet.window.Window.__init__(
-                self,
-                caption = '(pineal master)',
-                fullscreen = 1,
-                screen = screens[-1],
-                vsync = 1,
-                visible = 1
-            )
-            self.set_mouse_visible(False)
-        else:
-            pyglet.window.Window.__init__(
-                self,
-                caption = '(pineal master)',
-                fullscreen = 0,
-                width = 800,
-                height = 600,
-                vsync = 1,
-                visible = 0
-            )
+        pyglet.window.Window.__init__(
+            self,
+            caption = '(pineal renderer)',
+            fullscreen = 0,
+            width = 800,
+            height = 600,
+            vsync = 1,
+            visible = 0
+        )
 
         gl.glEnable(gl.GL_BLEND)
         gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA)
@@ -62,8 +48,8 @@ class Renderer(pyglet.window.Window):
         #glOrtho(-1, 1, -1, 1, -1, 1)
         (w,h) = self.get_size()
         gl.glScalef(
-            float(min(w,h))/w,
-            -float(min(w,h))/h,
+            (1.0/RATIO)*float(min(w,h))/w,
+            -(1.0/RATIO)*float(min(w,h))/h,
             1
         )
 
@@ -99,6 +85,57 @@ class Renderer(pyglet.window.Window):
         print '\rfps: %3.1f' % clock.get_fps(),
 
 
+class Master(pyglet.window.Window):
+    def __init__(self):
+        platform = pyglet.window.get_platform()
+        display = platform.get_default_display()
+        screens = display.get_screens()
+
+        if len(screens) > 1:
+            pyglet.window.Window.__init__(
+                self,
+                caption = '(pineal master)',
+                fullscreen = 1,
+                screen = screens[-1],
+                vsync = 1,
+                visible = 1
+            )
+            self.set_mouse_visible(False)
+        else:
+            pyglet.window.Window.__init__(
+                self,
+                caption = '(pineal master)',
+                fullscreen = 0,
+                width = 800,
+                height = 600,
+                vsync = 1,
+                visible = 0
+            )
+
+        self.texture = None
+
+    def on_draw(self):
+        w, h = self.width, self.height
+
+        gl.glTexParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_MAG_FILTER, gl.GL_NEAREST)
+
+        self.clear()
+        if self.texture:
+            self.texture.blit(
+                -(w*RATIO - w)/2,
+                -(h*RATIO - h)/2,
+                0,
+                RATIO*w,
+                RATIO*h)
+
+    def update(self, texture):
+        self.texture = texture
+        self.switch_to()
+        self.dispatch_events()
+        self.dispatch_event('on_draw')
+        self.flip()
+
+
 class Overview(pyglet.window.Window):
     def __init__(self):
         pyglet.window.Window.__init__(
@@ -111,10 +148,17 @@ class Overview(pyglet.window.Window):
         #self.fps_display = pyglet.clock.ClockDisplay()  # segfaults
 
     def on_draw(self):
+        w, h = self.width, self.height
+
         self.clear()
         if self.texture:
-            self.texture.blit(0,0,0, self.width,self.height)
-            #self.fps_display.draw()
+            self.texture.blit(
+                -(w*RATIO - w)/2,
+                -(h*RATIO - h)/2,
+                0,
+                RATIO*w,
+                RATIO*h)
+        #self.fps_display.draw()
 
     def update(self, texture):
         self.texture = texture
