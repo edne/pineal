@@ -4,7 +4,7 @@ An engine for graphic live-coding on an audio stream, something between
 [Fluxus](http://www.pawfal.org/fluxus/) and [Processing](https://processing.org/), 
 __but in Python!__  
 (ok that's not true, it was in Python, now the back-end is in a 
-[weird pythonic Lisp dialect](http://hylang.org), but the part you can live-code 
+[pythonic Lisp dialect](http://hylang.org), but the part you can live-code 
 is still in Python and I'm not planning to change that)
 
 
