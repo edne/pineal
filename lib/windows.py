@@ -1,6 +1,7 @@
 import pyglet
 from pyglet import clock
 import pyglet.gl as gl
+from config import RENDER_SIZE
 
 
 RATIO = 1.0
@@ -15,12 +16,13 @@ class Renderer(pyglet.window.Window):
     def __init__(self, visuals):
         self.visuals = visuals
 
+        W,H = RENDER_SIZE
         pyglet.window.Window.__init__(
             self,
             caption = '(pineal renderer)',
             fullscreen = 0,
-            width = 800,
-            height = 600,
+            width = W,
+            height = H,
             vsync = 1,
             visible = 0
         )
@@ -91,6 +93,7 @@ class Master(pyglet.window.Window):
         display = platform.get_default_display()
         screens = display.get_screens()
 
+        W,H = RENDER_SIZE
         if len(screens) > 1:
             pyglet.window.Window.__init__(
                 self,
@@ -106,8 +109,8 @@ class Master(pyglet.window.Window):
                 self,
                 caption = '(pineal master)',
                 fullscreen = 0,
-                width = 800,
-                height = 600,
+                width = W,
+                height = H,
                 vsync = 1,
                 visible = 0
             )
@@ -138,6 +141,7 @@ class Master(pyglet.window.Window):
 
 class Overview(pyglet.window.Window):
     def __init__(self):
+
         pyglet.window.Window.__init__(
             self,
             caption = '(pineal overview)',
