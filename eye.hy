@@ -61,9 +61,9 @@
     [run (fn [self]
       (print "starting eye.hy")
 
-      (.listen listener "/visual/coder" self.coder)
-      (.listen listener "/visual/moved" self.moved)
-      ;(.listen listener "/visual/deleted" self.deleted)
+      (.listen listener "/eye/code" self.coder)
+      (.listen listener "/eye/move" self.moved)
+      ;(.listen listener "/eye/delete" self.deleted)
 
       (.start listener)
 

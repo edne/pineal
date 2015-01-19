@@ -1,8 +1,9 @@
 #!/usr/bin/env hy2
 
-(import [eye [Eye]])
-(import [ear [Ear]])
-(import [coder [Coder]])
+(import [eye [Eye]]
+        [ear [Ear]]
+        [coder [Coder]])
+
 
 (defmain [args]
   (setv ths [(Ear) (Eye) (Coder)])
