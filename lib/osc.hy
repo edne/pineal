@@ -44,8 +44,10 @@
       (catch [OSCClientError] None)))]])
 
 
-; eye singleton
-(def listener (Osc))
+; Osc instance used by Eye, it is here as singleton and not inside the Eye
+; class in order to be accessible by audio.source and osc.source and permit
+; to live-coded parts to exchange OSC signals with Universe
+(def nerve (Osc))
 
 
 (defn source [path]
@@ -62,6 +64,6 @@
 
   (setv status (Status))
 
-  (.listen listener path status.cb)
+  (.listen nerve path status.cb)
 
   status.getv)

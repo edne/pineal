@@ -1,4 +1,4 @@
-(import [lib.osc [listener]]
+(import [osc [nerve]]
         [config [OSC_EAR]])
 
 
@@ -16,7 +16,7 @@
 
   (setv status (Status))
 
-  (.send listener "/ear/code" [code] OSC_EAR)
-  (.listen listener (+ "/eye/audio/" code) status.cb)
+  (.send nerve "/ear/code" [code] OSC_EAR)
+  (.listen nerve (+ "/eye/audio/" code) status.cb)
 
   status.getv)

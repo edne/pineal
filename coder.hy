@@ -17,7 +17,7 @@
 
 (defclass Coder [Runner]
   "
-  Waits for changes in `visuals/`
+  Waits for changes in `visions/`
 
   Sends to Eye:
     * `/eye/code    [filename code]`
@@ -29,12 +29,12 @@
       (setv self.osc (Osc))
       (.sender self.osc OSC_EYE)
 
-      (for [filename (glob "visuals/*.py")]
+      (for [filename (glob "visions/*.py")]
           (.send self.osc "/eye/code" [filename (getCode filename)] OSC_EYE))
 
       (setv handler (Handler self.osc))
       (setv self.observer (Observer))
-      (.schedule self.observer handler "visuals" False)
+      (.schedule self.observer handler "visions" False)
 
       None)]
 

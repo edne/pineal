@@ -75,9 +75,9 @@
       (del self.s))]
 
     [update (fn [self]
-      (for [visual (.keys self.units)]
-        (.send self.osc (+ "/eye/audio/" visual)
-          [(-> self.units (get visual) .get float)])))]
+      (for [cmd (.keys self.units)]
+        (.send self.osc (+ "/eye/audio/" cmd)
+          [(-> self.units (get cmd) .get float)])))]
 
     [code (fn [self path args]
       (setv [cmd] args)

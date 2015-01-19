@@ -13,8 +13,8 @@ def getFrame():
 
 
 class Renderer(pyglet.window.Window):
-    def __init__(self, visuals):
-        self.visuals = visuals
+    def __init__(self, visions):
+        self.visions = visions
 
         W,H = RENDER_SIZE
         pyglet.window.Window.__init__(
@@ -65,7 +65,7 @@ class Renderer(pyglet.window.Window):
         #if self.texture:
         #    self.texture.blit(0,0, 0, 1,1)
 
-        for v in self.visuals.values():
+        for v in self.visions.values():
             gl.glMatrixMode(gl.GL_MODELVIEW)
             gl.glLoadIdentity()
             v.iteration()
