@@ -8,58 +8,6 @@
         [config [OSC_EAR OSC_EYE]])
 
 
-(defclass Vision []
-  "
-  The vision instance
-  "
-  [ [__init__ (fn [self name code]
-      (.setName self name)
-
-      ; stack here the loaded codes, so when everything explodes, we can
-      ; always restore the last (opefully) working vision
-      (setv self.stack [])
-
-      (defclass Box []
-        "A small sandbox where to run the livecoded part"
-        [ [draw (fn [self])]])
-      (setv self.box (Box))
-
-      (.update self code)
-      None)]
-
-    [setName (fn [self name]
-      (setv self.name (get (.split name "/") -1)))]
-
-    [update (fn [self code]
-      (print "\rloading:" self.name)
-      (setv filename (% "visions/%s" self.name))
-      (try
-        (pyexec code self.box.__dict__)
-        (except [e Exception]
-          (print self.name e))
-        (else
-          (.append self.stack code))))]
-
-    [iteration (fn [self]
-      (try
-        (.draw self)
-        (except [e Exception]
-          (print self.name self.name e)
-          (.pop self.stack)
-
-          ; if there is an error and stack is empty you are in the situation
-          ; where the FIRST loaded vision is broken, that can be a problem
-          ; (for you, if you are livecoding)
-          (if self.stack
-            (do
-              (setv code (get self.stack -1))
-              (pyexec code self.box.__dict__))
-            (print self.name "BROKEN!")))))]
-
-    [draw (fn [self]
-      (.draw self.box))]])
-
-
 (defclass Eye [Runner]
   "
   Handles and draws the different visions
@@ -119,6 +67,58 @@
         (do
           (.setName (get self.visions oldname) newname)
           (assoc self.visions newname (.pop self.visions oldname)))))]])
+
+
+(defclass Vision []
+  "
+  The vision instance
+  "
+  [ [__init__ (fn [self name code]
+      (.setName self name)
+
+      ; stack here the loaded codes, so when everything explodes, we can
+      ; always restore the last (opefully) working vision
+      (setv self.stack [])
+
+      (defclass Box []
+        "A small sandbox where to run the livecoded part"
+        [ [draw (fn [self])]])
+      (setv self.box (Box))
+
+      (.update self code)
+      None)]
+
+    [setName (fn [self name]
+      (setv self.name (get (.split name "/") -1)))]
+
+    [update (fn [self code]
+      (print "\rloading:" self.name)
+      (setv filename (% "visions/%s" self.name))
+      (try
+        (pyexec code self.box.__dict__)
+        (except [e Exception]
+          (print self.name e))
+        (else
+          (.append self.stack code))))]
+
+    [iteration (fn [self]
+      (try
+        (.draw self)
+        (except [e Exception]
+          (print self.name self.name e)
+          (.pop self.stack)
+
+          ; if there is an error and stack is empty you are in the situation
+          ; where the FIRST loaded vision is broken, that can be a problem
+          ; (for you, if you are livecoding)
+          (if self.stack
+            (do
+              (setv code (get self.stack -1))
+              (pyexec code self.box.__dict__))
+            (print self.name "BROKEN!")))))]
+
+    [draw (fn [self]
+      (.draw self.box))]])
 
 
 (defmain [args]
