@@ -19,7 +19,7 @@
       (.connect (get self.client out_addr) (tuple out_addr)))]
 
     [run (fn [self]
-      (.iteration self (fn []
+      (.while-not-stopped self (fn []
         (.handle_request self.server)
         ;(sleep (/ 1 1000))
         ))

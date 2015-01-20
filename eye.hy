@@ -46,7 +46,7 @@
       (setv master (Master))
       (setv overview (Overview))
 
-      (.iteration self (fn []
+      (.while-not-stopped self (fn []
         (.update renderer)
         (.update overview renderer.texture)
         (.update master renderer.texture)

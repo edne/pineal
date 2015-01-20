@@ -77,7 +77,7 @@
       (.listen self.osc "/ear/code" self.code)
       (.start self.osc)
 
-      (.iteration self (fn []
+      (.while-not-stopped self (fn []
         (.update self)
         (sleep (/ 1 30))))
 

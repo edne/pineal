@@ -42,7 +42,7 @@
       (print "starting coder.hy")
       (.start self.observer)
 
-      (.iteration self (fn []
+      (.while-not-stopped self (fn []
         (sleep (/ 1 60))))
 
       (print "\rstopping coder.hy")
