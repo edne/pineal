@@ -8,10 +8,10 @@ __but in Python!__
 is still in Python and I'm not planning to change that)
 
 
-Examples
---------
+Example
+-------
 
-* [![Puff & Chill](http://img.youtube.com/vi/F1WsmDq4GzM/1.jpg)](http://www.youtube.com/watch?v=F1WsmDq4GzM)
+[![Puff & Chill](http://img.youtube.com/vi/F1WsmDq4GzM/1.jpg)](http://www.youtube.com/watch?v=F1WsmDq4GzM)
 
 
 Instructions
@@ -21,3 +21,10 @@ Instructions
 * Edit a `.py` file in the `visions` folder or create a new one
 * Every time you save output is updated
 * Have fun!
+
+
+Dependencies
+------------
+* On Debian-Ubuntu:
+
+      # apt-get install python-pyglet python-hy python-watchdog python-pyo

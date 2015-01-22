@@ -13,9 +13,9 @@ frame = Frame()
 
 def draw():
     strokeWeight(4)
-    p.r = 1
-    p.fill = [time() % 2*pi, 0]
-    p.stroke = [0.1 * time() % 2*pi, 1]
+    p.r = 0.9
+    p.fill = hsv(0.1 * time() % 2*pi  +0.3, 0.9)
+    p.stroke = hsv(0.1 * time() % 2*pi)
 
     push()
     rotate(-0.3*time() % 2*pi)
@@ -26,7 +26,7 @@ def draw():
     frame.x = 0.5
 
     push()
-    n = 4
+    n = 8
     rotate(0.2*time() % 2*pi)
     rotate(-pi/2)
     for i in xrange(n):
