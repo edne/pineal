@@ -6,7 +6,8 @@
         [watchdog.events [FileSystemEventHandler]]
         [lib.runner [Runner]]
         [config [OSC_EYE]]
-        [lib.osc [Osc]])
+        [lib.osc [Osc]]
+        os)
 
 
 (defn getCode [filename]
@@ -30,7 +31,7 @@
       (.sender self.osc OSC_EYE)
 
       (for [filename (glob "visions/*.py")]
-          (.send self.osc "/eye/code" [filename (getCode filename)] OSC_EYE))
+          (.send self.osc "/eye/code" [(.join os.path (.getcwd os) filename) (getCode filename)] OSC_EYE))
 
       (setv handler (Handler self.osc))
       (setv self.observer (Observer))
