@@ -93,7 +93,7 @@
     (setv self.texture (_getFrame))
     (.draw _ImageText self))]])
 
-(defn Frame [] (_Frame None (/ 4 3)))
+(defn Frame [] (_Frame None 1))
 
 
 (def _matrix_sp 0)

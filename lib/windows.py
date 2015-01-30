@@ -4,7 +4,6 @@ import pyglet.gl as gl
 from config import RENDER_SIZE
 
 
-RATIO = 1.0
 frame_texture = None
 
 
@@ -50,8 +49,8 @@ class Renderer(pyglet.window.Window):
         #glOrtho(-1, 1, -1, 1, -1, 1)
         (w,h) = self.get_size()
         gl.glScalef(
-            (1.0/RATIO)*float(min(w,h))/w,
-            -(1.0/RATIO)*float(min(w,h))/h,
+            float(min(w,h))/w,
+            -float(min(w,h))/h,
             1
         )
 
@@ -119,17 +118,17 @@ class Master(pyglet.window.Window):
 
     def on_draw(self):
         w, h = self.width, self.height
+        side = max(w,h)
 
         gl.glTexParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_MAG_FILTER, gl.GL_NEAREST)
 
         self.clear()
         if self.texture:
             self.texture.blit(
-                -(w*RATIO - w)/2,
-                -(h*RATIO - h)/2,
+                -(side-w)/2,
+                -(side-h)/2,
                 0,
-                RATIO*w,
-                RATIO*h)
+                side,side)
 
     def update(self, texture):
         self.texture = texture
@@ -144,6 +143,7 @@ class Overview(pyglet.window.Window):
 
         pyglet.window.Window.__init__(
             self,
+            resizable = True,
             caption = '(pineal overview)',
             width = 600, height = 450,
             vsync = 0
@@ -153,15 +153,15 @@ class Overview(pyglet.window.Window):
 
     def on_draw(self):
         w, h = self.width, self.height
+        side = max(w,h)
 
         self.clear()
         if self.texture:
             self.texture.blit(
-                -(w*RATIO - w)/2,
-                -(h*RATIO - h)/2,
+                -(side-w)/2,
+                -(side-h)/2,
                 0,
-                RATIO*w,
-                RATIO*h)
+                side,side)
         #self.fps_display.draw()
 
     def update(self, texture):

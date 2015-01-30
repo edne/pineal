@@ -11,4 +11,4 @@ OSC_EAR = ('localhost', 1422)
 
 
 # Size of the rendering window
-RENDER_SIZE = (800, 600)
+RENDER_SIZE = (800, 800)
