@@ -4,6 +4,8 @@
         [math [cos sin pi]]
         [colorsys [hsv_to_rgb]])
 
+(require hy.contrib.multi)
+
 (defclass _Entity []
   [ [vertsGl None]
     [wVerts []]
@@ -94,18 +96,6 @@
 (defn Frame [] (_Frame None (/ 4 3)))
 
 
-(defmacro multidef [&rest margs]
-  (defn nestle [funcs]
-    (if funcs
-      `(try
-        (apply ~(get funcs 0) fargs)
-        (except [TypeError]
-          ~(nestle (slice funcs 1))))
-      '(throw TypeError)))
-  `(defn ~(get margs 0) [&rest fargs]
-    ~(nestle (slice margs 1))))
-
-
 (def _matrix_sp 0)
 
 (defn push []
@@ -126,21 +116,17 @@
     (gl.glLoadIdentity)))
 
 
-(multidef scale
-  (fn [s] (gl.glScalef s s s))
-  (fn [x y] (gl.glScalef x y 1))
-  (fn [x y z] (gl.glScalef x y z)))
+(defmulti scale
+  ([s] (gl.glScalef s s s))
+  ([x y] (gl.glScalef x y 1))
+  ([x y z] (gl.glScalef x y z)))
 
 
-(multidef rotate
-  (fn [angle]
-    (gl.glRotatef
-      (/ (* angle 180) pi)
-      0 0 1)
-  (fn [angle x y z]
-    (gl.glRotatef
-      (/ (* angle 180) pi)
-      x y z))))
+(defmulti rotate
+  ([angle]
+    (gl.glRotatef (/ (* angle 180) pi) 0 0 1))
+  ([angle x y z]
+    (gl.glRotatef (/ (* angle 180) pi) x y z)))
 
 (defn rotateX [angle]
   (gl.glRotatef
@@ -158,26 +144,24 @@
       0 0 1))
 
 
-(multidef translate
-  (fn [x y] (gl.glTranslatef x y 0))
-  (fn [x y z] (gl.glTranslatef x y z)))
+(defmulti translate
+  ([x y] (gl.glTranslatef x y 0))
+  ([x y z] (gl.glTranslatef x y z)))
 
 
-(multidef __color
-  (fn [x]       [x x x 1])
-  (fn [x a]     [x x x a])
-  (fn [r g b]   [r g b 1])
-  (fn [r g b a] [r g b a]))
+(defmulti __color
+  ([x]       [x x x 1])
+  ([x a]     [x x x a])
+  ([r g b]   [r g b 1])
+  ([r g b a] [r g b a]))
 (defn _color [c]
   (apply __color c))
 
-(multidef hsv
-  (fn [h]       (hsv_to_rgb h 1 1))
-  (fn [h s v]   (hsv_to_rgb h s v))
-  (fn [h s v a]
-    (setv [r g b] (hsv_to_rgb h s v))
-    [r g b a])
-  (fn [h a] (hsv h 1 1 a)))
+(defmulti hsv
+  ([h]       (hsv_to_rgb h 1 1))
+  ([h s v]   (hsv_to_rgb h s v))
+  ([h s v a] (+ (list (hsv_to_rgb h s v)) [a]))
+  ([h a] (hsv h 1 1 a)))
 
 
 (defn strokeWeight [weight]
