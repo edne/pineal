@@ -16,6 +16,14 @@
   code)
 
 
+(defmacro last [l]
+  `(get ~l -1))
+
+
+(defn getName [filename]
+  (-> filename .lower (.split "/") last (.split ".") first))
+
+
 (defclass Coder [Runner]
   "
   Waits for changes in `visions/`
@@ -31,7 +39,7 @@
       (.sender self.osc OSC_EYE)
 
       (for [filename (glob "visions/*.py")]
-          (.send self.osc "/eye/code" [(.join os.path (.getcwd os) filename) (getCode filename)] OSC_EYE))
+          (.send self.osc "/eye/code" [(getName filename) (getCode filename)] OSC_EYE))
 
       (setv handler (Handler self.osc))
       (setv self.observer (Observer))
@@ -65,24 +73,24 @@
       (if (valid event.src_path)
         (.send
           self.osc "/eye/code"
-          [event.src_path (getCode event.src_path)]
+          [(getName event.src_path) (getCode event.src_path)]
           OSC_EYE)))]
 
     [on_deleted (fn [self event]
       (if (valid event.src_path)
-        (.send self.osc "/eye/delete" [event.src_path] OSC_EYE)))]
+        (.send self.osc "/eye/delete" [(getName event.src_path)] OSC_EYE)))]
 
     [on_moved (fn [self event]
       (if (valid event.dest_path)
         (.send self.osc 
           "/eye/move"
-          [event.src_path event.dest_path] OSC_EYE)))]
+          [(getName event.src_path) (getName event.dest_path)] OSC_EYE)))]
 
     [on_modified (fn [self event]
       (if (valid event.src_path)
         (.send
           self.osc "/eye/code"
-          [event.src_path (getCode event.src_path)]
+          [(getName event.src_path) (getCode event.src_path)]
           OSC_EYE)))]])
 
 
