@@ -8,6 +8,7 @@
 
 (defclass _Entity []
   [ [vertsGl None]
+    [sVerts []]
     [wVerts []]
 
     [_generateVerts
@@ -26,21 +27,15 @@
 (defclass _PolInt [_Entity]
   [ [_generateVerts
       (with-decorator staticmethod (fn [c n]
-        (setv verts [])
-        (setv theta (/ pi -2))
-        (for [i (range n)]
-          (.append verts 0)
-          (.append verts 0)
-
-          (.append verts (cos theta))
-          (.append verts (sin theta))
-
-          (+= theta (/ (* 2 pi) n))
-
-          (.append verts (cos theta))
-          (.append verts (sin theta)))
-
-        (setv c.vertsGl (apply (* gl.GLfloat (len verts)) verts))
+        (setv c.sVerts (flatten (map
+          (fn [i]
+            (setv dtheta (* 2 (/ pi n)))
+            (setv theta0 (* i dtheta))
+            (setv theta1 (+ theta0 dtheta))
+            [ 0 0
+              (cos theta0) (sin theta0)
+              (cos theta1) (sin theta1)])
+          (range n))))
 
         (setv c.wVerts (flatten (map
           (fn [i]
@@ -56,7 +51,9 @@
       (gl.glEnableClientState gl.GL_VERTEX_ARRAY)
 
       (apply gl.glColor4f (_color self.fill))
-      (gl.glDrawArrays gl.GL_TRIANGLES 0 (len self.vertsGl))
+      (draw
+        (// (len self.sVerts) 2) gl.GL_TRIANGLES
+        (tuple ["v2f" self.sVerts]))
 
       (apply gl.glColor4f (_color self.stroke))
       (draw
