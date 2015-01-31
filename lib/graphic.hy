@@ -47,9 +47,6 @@
       (gl.glTranslatef self.x self.y self.z)
       (gl.glScalef self.r self.r 1)
 
-      (gl.glVertexPointer 2 gl.GL_FLOAT 0 self.vertsGl)
-      (gl.glEnableClientState gl.GL_VERTEX_ARRAY)
-
       (apply gl.glColor4f (_color self.fill))
       (draw
         (// (len self.sVerts) 2) gl.GL_TRIANGLES
@@ -103,7 +100,6 @@
       (+= _matrix_sp 1)
     (gl.glLoadIdentity))))
 
-;(defn pop [] (gl.glPopMatrix))
 (defn pop []
   (global _matrix_sp)
   (if (> _matrix_sp 0)
