@@ -2,9 +2,11 @@
         [pyglet.graphics [draw]]
         [lib.windows [getFrame :as _getFrame]]
         [math [cos sin pi]]
-        [colorsys [hsv_to_rgb]])
+        [lib.graphic.transforming [*]]
+        [lib.graphic.coloring [*]])
 
 (require hy.contrib.multi)
+
 
 (defclass _Entity []
   [ [vertsGl None]
@@ -47,12 +49,12 @@
       (gl.glTranslatef self.x self.y self.z)
       (gl.glScalef self.r self.r 1)
 
-      (apply gl.glColor4f (_color self.fill))
+      (apply gl.glColor4f (color self.fill))
       (draw
         (// (len self.sVerts) 2) gl.GL_TRIANGLES
         (tuple ["v2f" self.sVerts]))
 
-      (apply gl.glColor4f (_color self.stroke))
+      (apply gl.glColor4f (color self.stroke))
       (draw
         (// (len self.wVerts) 2) gl.GL_LINE_LOOP
         (tuple ["v2f" self.wVerts]))
@@ -64,6 +66,7 @@
   (defclass PolClass [_PolInt] [])
   (._generateVerts PolClass PolClass n)
   (PolClass))
+
 
 (defclass _ImageText [_Entity]
   [ [__init__ (fn [self texture ratio]
@@ -82,80 +85,10 @@
           self.z
           w h)))]])
 
+
 (defclass _Frame [_ImageText]
   [ [draw (fn [self]
     (setv self.texture (_getFrame))
     (.draw _ImageText self))]])
 
 (defn Frame [] (_Frame None 1))
-
-
-(def _matrix_sp 0)
-
-(defn push []
-  (global _matrix_sp)
-  (if (< _matrix_sp 30)
-    (do
-      (gl.glPushMatrix)
-      (+= _matrix_sp 1)
-    (gl.glLoadIdentity))))
-
-(defn pop []
-  (global _matrix_sp)
-  (if (> _matrix_sp 0)
-    (do
-      (gl.glPopMatrix)
-      (-= _matrix_sp 1))
-    (gl.glLoadIdentity)))
-
-
-(defmulti scale
-  ([s] (gl.glScalef s s s))
-  ([x y] (gl.glScalef x y 1))
-  ([x y z] (gl.glScalef x y z)))
-
-
-(defmulti rotate
-  ([angle]
-    (gl.glRotatef (/ (* angle 180) pi) 0 0 1))
-  ([angle x y z]
-    (gl.glRotatef (/ (* angle 180) pi) x y z)))
-
-(defn rotateX [angle]
-  (gl.glRotatef
-      (* pi (/ angle 180))
-      1 0 0))
-
-(defn rotateY [angle]
-  (gl.glRotatef
-      (/ (* angle 180) pi)
-      0 1 0))
-
-(defn rotateZ [angle]
-  (gl.glRotatef
-      (/ (* angle 180) pi)
-      0 0 1))
-
-
-(defmulti translate
-  ([x y] (gl.glTranslatef x y 0))
-  ([x y z] (gl.glTranslatef x y z)))
-
-
-(defmulti __color
-  ([x]       [x x x 1])
-  ([x a]     [x x x a])
-  ([r g b]   [r g b 1])
-  ([r g b a] [r g b a]))
-(defn _color [c]
-  (apply __color (flatten [c])))
-
-(defmulti hsv
-  ([h]       (hsv_to_rgb h 1 1))
-  ([h s v]   (hsv_to_rgb h s v))
-  ([h s v a] (+ (list (hsv_to_rgb h s v)) [a]))
-  ([h a] (hsv h 1 1 a)))
-
-
-(defn strokeWeight [weight]
-  (gl.glLineWidth weight))
