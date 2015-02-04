@@ -148,7 +148,7 @@
   ([r g b]   [r g b 1])
   ([r g b a] [r g b a]))
 (defn _color [c]
-  (apply __color c))
+  (apply __color (flatten [c])))
 
 (defmulti hsv
   ([h]       (hsv_to_rgb h 1 1))
