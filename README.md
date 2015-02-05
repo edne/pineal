@@ -28,3 +28,12 @@ Dependencies
 * On Debian-Ubuntu:
 
       # apt-get install python-pyglet python-hy python-watchdog python-pyo
+
+
+Hacking
+-------
+* Fork
+* Write your amazing graphical modules in `lib/graphic/` folder using Python or Hy
+* Import them in `lib/graphic/__init__.py`
+* Check if everyting works
+* Make a pull-request
