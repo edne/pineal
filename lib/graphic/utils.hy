@@ -59,6 +59,7 @@
         (// (len self.wVerts) 2) gl.GL_LINE_LOOP
         (tuple ["v2f" self.wVerts]))
 
+      (gl.glScalef (/ 1 self.r) (/ 1 self.r) 1)
       (gl.glTranslatef (- self.x) (- self.y) (- self.z)))]])
 
 
