@@ -1,5 +1,5 @@
 (import [pyglet.gl :as gl]
-        [pyglet.graphics [draw]]
+        [pyglet.graphics [draw vertex_list]]
         [lib.windows [getFrame :as _getFrame]]
         [math [cos sin pi]]
         [lib.graphic.transforming [*]]
@@ -10,10 +10,11 @@
 
 (defclass _Entity []
   [ [vertsGl None]
-    [sVerts []]
-    [wVerts []]
+    [n 4]
+    [slist []]
+    [wlist []]
 
-    [_generateVerts
+    [_definePolygon
       (with-decorator staticmethod (fn []))]
 
     [__init__ (fn [self]
@@ -27,37 +28,41 @@
 
 
 (defclass _PolInt [_Entity]
-  [ [_generateVerts
+  [ [_definePolygon
       (with-decorator staticmethod (fn [c n]
-        (setv c.sVerts (flatten (map
-          (fn [i]
-            (setv dtheta (* 2 (/ pi n)))
-            (setv theta0 (* i dtheta))
-            (setv theta1 (+ theta0 dtheta))
-            [ 0 0
-              (cos theta0) (sin theta0)
-              (cos theta1) (sin theta1)])
-          (range n))))
-
-        (setv c.wVerts (flatten (map
-          (fn [i]
-            (setv theta (+ (/ pi -2) (* i (* 2 (/ pi n)))))
-            [(cos theta) (sin theta)])
-          (range n))))))]
+        (setv c.n n)))]
 
     [draw (fn [self]
       (gl.glTranslatef self.x self.y self.z)
       (gl.glScalef self.r self.r 1)
 
-      (apply gl.glColor4f (color self.fill))
-      (draw
-        (// (len self.sVerts) 2) gl.GL_TRIANGLES
-        (tuple ["v2f" self.sVerts]))
+      (unless self.wlist
+        (setv self.wlist
+          (vertex_list self.n
+            (tuple ["v2f/static" (flatten (map (fn [i]
+              (setv theta (+ (/ pi -2) (* i (* 2 (/ pi self.n)))))
+              [(cos theta) (sin theta)])
+              (range self.n)))])
+            (tuple ["c4f" (* [1] 4 self.n)]))))
 
-      (apply gl.glColor4f (color self.stroke))
-      (draw
-        (// (len self.wVerts) 2) gl.GL_LINE_LOOP
-        (tuple ["v2f" self.wVerts]))
+      (unless self.slist
+        (setv self.slist
+          (vertex_list (* self.n 3)
+            (tuple ["v2f/static" (flatten (map (fn [i]
+              (setv dtheta (* 2 (/ pi self.n)))
+              (setv theta0 (* i dtheta))
+              (setv theta1 (+ theta0 dtheta))
+              [ 0 0
+                (cos theta0) (sin theta0)
+                (cos theta1) (sin theta1)])
+            (range self.n)))])
+            (tuple ["c4f" (* [1] 4 (* self.n 3))]))))
+
+      (setv self.wlist.colors (* (color self.stroke) self.n))
+      (setv self.slist.colors (* (color self.fill) (* self.n 3)))
+
+      (.draw self.slist gl.GL_TRIANGLES)
+      (.draw self.wlist gl.GL_LINE_LOOP)
 
       (gl.glScalef (/ 1 self.r) (/ 1 self.r) 1)
       (gl.glTranslatef (- self.x) (- self.y) (- self.z)))]])
@@ -65,7 +70,7 @@
 
 (defn Polygon [n]
   (defclass PolClass [_PolInt] [])
-  (._generateVerts PolClass PolClass n)
+  (._definePolygon PolClass PolClass n)
   (PolClass))
 
 
