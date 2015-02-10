@@ -36,7 +36,7 @@
       (gl.glTranslatef self.x self.y self.z)
       (gl.glScalef self.r self.r 1)
 
-      (unless self.wlist
+      (if-not self.wlist
         (setv self.wlist
           (vertex_list self.n
             (tuple ["v2f/static" (flatten (map (fn [i]
@@ -45,7 +45,7 @@
               (range self.n)))])
             (tuple ["c4f" (* [1] 4 self.n)]))))
 
-      (unless self.slist
+      (if-not self.slist
         (setv self.slist
           (vertex_list (* self.n 3)
             (tuple ["v2f/static" (flatten (map (fn [i]
