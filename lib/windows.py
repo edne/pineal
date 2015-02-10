@@ -22,7 +22,7 @@ class Renderer(pyglet.window.Window):
             fullscreen = 0,
             width = W,
             height = H,
-            vsync = 1,
+            vsync = 0,
             visible = 0
         )
 

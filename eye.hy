@@ -49,8 +49,7 @@
       (.while-not-stopped self (fn []
         (.update renderer)
         (.update overview renderer.texture)
-        (.update master renderer.texture)
-        (sleep (/ 1 60))))
+        (.update master renderer.texture)))
 
       (print "\rstopping eye.hy")
       (.stop nerve))]
