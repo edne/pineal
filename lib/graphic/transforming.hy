@@ -12,15 +12,28 @@
     (do
       (gl.glPushMatrix)
       (+= _matrix_sp 1)
-    (gl.glLoadIdentity))))
+      true)
+    false))
 
 (defn pop []
   (global _matrix_sp)
   (if (> _matrix_sp 0)
     (do
       (gl.glPopMatrix)
-      (-= _matrix_sp 1))
-    (gl.glLoadIdentity)))
+      (-= _matrix_sp 1)
+      true)
+    false))
+
+(defn pushmatrix [f]
+  "
+  Decorator to handle matrix stack
+  that can be used as implicit exit condition in recursions
+  "
+  (defn decorated [&rest args &kwargs kwargs]
+    (if (push)
+      (do
+        (apply f args kwargs)
+        (pop)))))
 
 
 (defmulti scale
