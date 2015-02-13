@@ -52,6 +52,7 @@
 
 
 (defmulti translate
+  ([x] (gl.glTranslatef x 0 0))
   ([x y] (gl.glTranslatef x y 0))
   ([x y z] (gl.glTranslatef x y z)))
 
