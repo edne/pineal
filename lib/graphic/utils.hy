@@ -36,16 +36,16 @@
       (gl.glTranslatef self.x self.y self.z)
       (gl.glScalef self.r self.r 1)
 
-      (if-not self.wlist
+      (unless self.wlist
         (setv self.wlist
           (vertex_list self.n
             (tuple ["v2f/static" (flatten (map (fn [i]
               (setv theta (+ (/ pi -2) (* i (* 2 (/ pi self.n)))))
               [(cos theta) (sin theta)])
               (range self.n)))])
-            (tuple ["c4f" (* [1] 4 self.n)]))))
+            (tuple ["c4f/stream" (* [1] 4 self.n)]))))
 
-      (if-not self.slist
+      (unless self.slist
         (setv self.slist
           (vertex_list (* self.n 3)
             (tuple ["v2f/static" (flatten (map (fn [i]
@@ -56,7 +56,7 @@
                 (cos theta0) (sin theta0)
                 (cos theta1) (sin theta1)])
             (range self.n)))])
-            (tuple ["c4f" (* [1] 4 (* self.n 3))]))))
+            (tuple ["c4f/stream" (* [1] 4 (* self.n 3))]))))
 
       (setv self.wlist.colors (* (color self.stroke) self.n))
       (setv self.slist.colors (* (color self.fill) (* self.n 3)))
