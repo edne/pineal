@@ -70,3 +70,12 @@
   ([x y z] (gl.glTranslatef x y z)))
 
 
+(defn turnaroud [n]
+  "Decorator to rotate N times"
+  (defn decorator [f]
+    (defn decorated [&rest args &kwargs kwargs]
+      (push)
+      (for [i (range n)]
+        (rotate (/ (* 2 pi) n))
+        (apply f args kwargs))
+      (pop))))
