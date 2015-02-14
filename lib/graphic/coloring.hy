@@ -12,6 +12,10 @@
 (defn color [c]
   (apply _color (flatten [c])))
 
+
+(defun rgb [&rest args]
+  (color args))
+
 (defmulti hsv
   ([h]       (hsv_to_rgb h 1 1))
   ([h s v]   (hsv_to_rgb h s v))
