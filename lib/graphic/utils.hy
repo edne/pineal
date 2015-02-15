@@ -8,18 +8,6 @@
 (require hy.contrib.multi)
 
 
-(defn maxdepth [depth]
-  "Decorator to set a maximum recursion limit"
-  (defn decorator [f]
-    (defn decorated [&rest args &kwargs kwargs]
-      (if (in "depth" (.keys f.func_dict))
-        (+= f.depth 1)
-        (setv f.depth 0))
-      (if (> f.depth depth)
-        (setv f.depth 0)  ; reset the counter
-        (apply f args kwargs)))))
-
-
 (defclass _Entity []
   [ [vertsGl None]
     [n 4]
