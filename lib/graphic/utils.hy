@@ -2,10 +2,16 @@
         [pyglet.graphics [draw vertex_list]]
         [lib.windows [getFrame :as _getFrame]]
         [math [cos sin pi]]
+        [time [time]]
         [lib.graphic.transforming [*]]
         [lib.graphic.coloring [*]])
 
 (require hy.contrib.multi)
+
+
+(defun time2rad [&optional [mult 1]]
+  "trigonometric functions don't handle really hight numbers"
+  (% (* mult (time)) (* 2 pi)))
 
 
 (defclass _Entity []
