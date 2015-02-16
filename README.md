@@ -1,5 +1,8 @@
 Pineal
 ======
+
+![random150215](http://i.imgur.com/dGbEcQi.png)
+
 An engine for graphic live-coding on an audio stream, something between 
 [Fluxus](http://www.pawfal.org/fluxus/) and [Processing](https://processing.org/), 
 __but in Python!__  
