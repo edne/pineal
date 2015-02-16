@@ -79,5 +79,4 @@
         (rotate (/ (* 2 pi i) n))
         (translate r)
         (apply f args kwargs)
-        (pop))
-      )))
+        (pop)))))

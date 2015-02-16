@@ -47,7 +47,7 @@
   [ [__init__ (fn [self]
       (.__init__ Runner self)
       (setv self.osc (Osc))
-      (.reciver self.osc OSC_EAR)
+      (.receiver self.osc OSC_EAR)
       (.sender self.osc OSC_EYE)
 
       (setv self.s

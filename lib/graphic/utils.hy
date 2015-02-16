@@ -15,6 +15,9 @@
 
 
 (defclass _Entity []
+  "
+  Base class of drawing primitives
+  "
   [ [vertsGl None]
     [n 4]
     [slist []]
@@ -34,6 +37,9 @@
 
 
 (defclass _PolInt [_Entity]
+  "
+  Interface of polygon classes
+  "
   [ [_definePolygon
       (with-decorator staticmethod (fn [c n]
         (setv c.n n)))]
@@ -75,20 +81,26 @@
 
 
 (defn Polygon [n]
+  "
+  Generates a new polygon class, with the given number of sides,
+  and return an instance
+  "
   (defclass PolClass [_PolInt] [])
   (._definePolygon PolClass PolClass n)
   (PolClass))
 
 
 (defclass _ImageText [_Entity]
-  [ [__init__ (fn [self texture ratio]
+  "
+  Base texture
+  "
+  [ [__init__ (fn [self texture]
       (.__init__ _Entity self)
       (setv self.texture texture)
-      (setv self.ratio ratio)
       None)]
 
     [draw (fn [self]
-      (setv w (* 2 self.r self.ratio))
+      (setv w (* 2 self.r))
       (setv h (* 2 self.r))
       (if self.texture
         (.blit self.texture
@@ -99,8 +111,11 @@
 
 
 (defclass _Frame [_ImageText]
+  "
+  Gets framebuffer from renderer window and displays it
+  "
   [ [draw (fn [self]
     (setv self.texture (_getFrame))
     (.draw _ImageText self))]])
 
-(defn Frame [] (_Frame None 1))
+(defn Frame [] (_Frame None))

@@ -30,7 +30,7 @@
       (.__init__ Runner self)
       (setv self.visions {})
       (.sender nerve OSC_EAR)
-      (.reciver nerve OSC_EYE))]
+      (.receiver nerve OSC_EYE))]
 
     [run (fn [self]
       (print "starting eye.hy")

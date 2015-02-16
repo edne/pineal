@@ -12,6 +12,9 @@ def getFrame():
 
 
 class Renderer(pyglet.window.Window):
+    """
+    Offscreen windows where render stuff
+    """
     def __init__(self, visions):
         self.visions = visions
 
@@ -87,6 +90,9 @@ class Renderer(pyglet.window.Window):
 
 
 class Master(pyglet.window.Window):
+    """
+    Master output, on secondary monitor is exists, hidden otherwise
+    """
     def __init__(self):
         platform = pyglet.window.get_platform()
         display = platform.get_default_display()
@@ -139,6 +145,9 @@ class Master(pyglet.window.Window):
 
 
 class Overview(pyglet.window.Window):
+    """
+    Overview for the programmer, nothing else to say
+    """
     def __init__(self):
 
         pyglet.window.Window.__init__(

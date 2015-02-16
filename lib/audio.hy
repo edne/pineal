@@ -3,6 +3,7 @@
 
 
 (defn source [code]
+  "Permits to get audio signals in the livecoding part"
   (defclass Status []
     [ [__init__ (fn [self]
         (setv self.v 0)

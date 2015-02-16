@@ -6,6 +6,7 @@
 
 
 (defmain [args]
+  "Run program parts as threads, and wait KeyboardInterrupt"
   (setv ths [(Ear) (Eye) (Coder)])
 
   (for [t ths] (.start t))

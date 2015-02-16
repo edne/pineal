@@ -2,7 +2,11 @@
         [time [sleep]]
         [thirdparty.OSC [OSCServer OSCClient OSCClientError OSCMessage]])
 
+
 (defclass Osc [Runner]
+  "
+  Personal-use wrapper around thirdparty.OSC
+  "
   [ [__init__ (fn [self]
       (.__init__ Runner self)
       (setv self.server None)
@@ -10,7 +14,7 @@
       (setv self.cbs {})
       None)]
 
-    [reciver (fn [self in_addr]
+    [receiver (fn [self in_addr]
       (setv self.server (-> in_addr tuple OSCServer))
       (.addMsgHandler self.server "default" self.callback))]
 
@@ -20,9 +24,7 @@
 
     [run (fn [self]
       (.while-not-stopped self (fn []
-        (.handle_request self.server)
-        ;(sleep (/ 1 1000))
-        ))
+        (.handle_request self.server)))
       (.close self.server))]
 
     [listen (fn [self key cb]
@@ -51,6 +53,7 @@
 
 
 (defn source [path]
+  "A copy-paste from audio.source, should work but I've never tried"
   (defclass Status []
     [ [__init__ (fn [self]
         (setv self.v 0)
