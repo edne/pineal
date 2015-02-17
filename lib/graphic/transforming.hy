@@ -80,3 +80,22 @@
         (translate r)
         (apply f args kwargs)
         (pop)))))
+
+
+(defn grid [n &optional [m 1]]
+  "Decorator to dispose in grid style"
+  (defn decorator [f]
+    (defn decorated [&rest args &kwargs kwargs]
+      (push)
+      (translate -1)
+      (translate (/ 1 n))
+      (for [i (range n)]
+        (push)
+        (translate 0 -1)
+        (translate 0 (/ 1 m))
+        (for [j (range m)]
+          (apply f args kwargs)
+          (translate 0 (/ 2 m)))
+        (pop)
+        (translate (/ 2 n)))
+      (pop))))
