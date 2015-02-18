@@ -17,7 +17,7 @@ Examples
 ### random170215
 ![random170215](http://giant.gfycat.com/AshamedOrangeEastsiberianlaika.gif)
 
-### liveconding
+### livecoding
 
 * [Youtube link:  
 ![Puff & Chill](http://img.youtube.com/vi/F1WsmDq4GzM/0.jpg)](http://www.youtube.com/watch?v=F1WsmDq4GzM)
