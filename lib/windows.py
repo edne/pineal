@@ -4,11 +4,11 @@ import pyglet.gl as gl
 from config import RENDER_SIZE
 
 
-frame_texture = None
+current_context = None
 
 
-def getFrame():
-    return frame_texture
+def getContext():
+    return current_context
 
 
 class Renderer(pyglet.window.Window):
@@ -64,8 +64,9 @@ class Renderer(pyglet.window.Window):
             0,1,0
         )
 
-        #if self.texture:
-        #    self.texture.blit(0,0, 0, 1,1)
+        # for now there is just one context
+        global current_context
+        current_context = self
 
         for v in self.visions.values():
             gl.glMatrixMode(gl.GL_MODELVIEW)
@@ -75,9 +76,6 @@ class Renderer(pyglet.window.Window):
         buf = pyglet.image.get_buffer_manager().get_color_buffer()
         rawimage = buf.get_image_data()
         self.texture = rawimage.get_texture()
-
-        global frame_texture
-        frame_texture = self.texture
 
         clock.tick()
 

@@ -1,6 +1,6 @@
 (import [pyglet.gl :as gl]
         [pyglet.graphics [draw vertex_list]]
-        [lib.windows [getFrame :as _getFrame]]
+        [lib.windows [getContext :as _getContext]]
         [math [cos sin pi]]
         [time [time]]
         [lib.graphic.transforming [*]]
@@ -115,7 +115,8 @@
   Gets framebuffer from renderer window and displays it
   "
   [ [draw (fn [self]
-    (setv self.texture (_getFrame))
+    (setv context (_getContext))
+    (setv self.texture context.texture)
     (.draw _ImageText self))]])
 
 (defn Frame [] (_Frame None))
