@@ -11,10 +11,16 @@ __but in Python!__
 is still in Python and I'm not planning to change that)
 
 
-Example
--------
+Examples
+--------
 
-[![Puff & Chill](http://img.youtube.com/vi/F1WsmDq4GzM/1.jpg)](http://www.youtube.com/watch?v=F1WsmDq4GzM)
+### random170215
+![random170215](http://giant.gfycat.com/AshamedOrangeEastsiberianlaika.gif)
+
+### livecoding
+
+* [Youtube link:  
+![Puff & Chill](http://img.youtube.com/vi/F1WsmDq4GzM/0.jpg)](http://www.youtube.com/watch?v=F1WsmDq4GzM)
 
 
 Instructions
