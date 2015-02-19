@@ -16,7 +16,7 @@ q = Polygon(20)
 
 @turnaroud(5)
 @pushmatrix
-def realmagic():
+def feedback():
     rotate((0.1*time()) % 2*pi)
     scale(0.8)
     frame.draw()
@@ -81,5 +81,5 @@ def draw():
     #rotate(0.05*time() % 2*pi)
     rotate(pi/4)
 
-    realmagic()
+    feedback()
     qu()

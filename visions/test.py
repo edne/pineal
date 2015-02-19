@@ -35,7 +35,7 @@ def b():
 
 
 @turnaroud(13)
-def realmagic():
+def feedback():
     frame.r = 0.5
     frame.x = 0.5
 
@@ -50,4 +50,4 @@ def draw():
     rotate(time2rad(-2))
     b()
 
-    realmagic()
+    feedback()

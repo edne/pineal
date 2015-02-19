@@ -22,7 +22,7 @@ def a():
     p.draw()
 
 
-def realmagic():
+def feedback():
     frame.r = 0.98 + amp()
     frame.draw()
     frame.r = 0.5
@@ -32,6 +32,6 @@ def realmagic():
 def draw():
     strokeWeight(4)
 
-    realmagic()
+    feedback()
     rotate(time2rad(2))
     a()
