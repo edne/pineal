@@ -18,24 +18,22 @@ class Renderer(pyglet.window.Window):
     def __init__(self, visions):
         self.visions = visions
 
-        W,H = RENDER_SIZE
-        pyglet.window.Window.__init__(
-            self,
-            caption = '(pineal renderer)',
-            fullscreen = 0,
-            width = W,
-            height = H,
-            vsync = 0,
-            visible = 0
-        )
+        W, H = RENDER_SIZE
+        pyglet.window.Window.__init__(self,
+                                      caption='(pineal renderer)',
+                                      fullscreen=0,
+                                      width=W,
+                                      height=H,
+                                      vsync=0,
+                                      visible=0)
 
         gl.glEnable(gl.GL_BLEND)
         gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA)
 
-        gl.glEnable( gl.GL_LINE_SMOOTH )
-        gl.glEnable( gl.GL_POLYGON_SMOOTH )
-        gl.glHint( gl.GL_LINE_SMOOTH_HINT, gl.GL_NICEST )
-        gl.glHint( gl.GL_POLYGON_SMOOTH_HINT, gl.GL_NICEST )
+        gl.glEnable(gl.GL_LINE_SMOOTH)
+        gl.glEnable(gl.GL_POLYGON_SMOOTH)
+        gl.glHint(gl.GL_LINE_SMOOTH_HINT, gl.GL_NICEST)
+        gl.glHint(gl.GL_POLYGON_SMOOTH_HINT, gl.GL_NICEST)
 
         gl.glEnable(gl.GL_LIGHTING)
         gl.glEnable(gl.GL_LIGHT0)
@@ -49,20 +47,17 @@ class Renderer(pyglet.window.Window):
 
         gl.glMatrixMode(gl.GL_PROJECTION)
         gl.glLoadIdentity()
-        #glOrtho(-1, 1, -1, 1, -1, 1)
-        (w,h) = self.get_size()
+        (w, h) = self.get_size()
         gl.glScalef(
-            float(min(w,h))/w,
-            -float(min(w,h))/h,
+            float(min(w, h))/w,
+            -float(min(w, h))/h,
             1
         )
 
         gl.gluPerspective(45.0, 1, 0.1, 1000.0)
-        gl.gluLookAt(
-            0,0,2.4,  # 2.4 = (4.0/3)/math.tan(45.0/2)
-            0,0,0,
-            0,1,0
-        )
+        gl.gluLookAt(0, 0, 2.4,
+                     0, 0, 0,
+                     0, 1, 0)
 
         # for now there is just one context
         global current_context
@@ -96,43 +91,40 @@ class Master(pyglet.window.Window):
         display = platform.get_default_display()
         screens = display.get_screens()
 
-        W,H = RENDER_SIZE
+        W, H = RENDER_SIZE
         if len(screens) > 1:
-            pyglet.window.Window.__init__(
-                self,
-                caption = '(pineal master)',
-                fullscreen = 1,
-                screen = screens[-1],
-                vsync = 1,
-                visible = 1
-            )
+            pyglet.window.Window.__init__(self,
+                                          caption='(pineal master)',
+                                          fullscreen=1,
+                                          screen=screens[-1],
+                                          vsync=1,
+                                          visible=1)
             self.set_mouse_visible(False)
         else:
-            pyglet.window.Window.__init__(
-                self,
-                caption = '(pineal master)',
-                fullscreen = 0,
-                width = W,
-                height = H,
-                vsync = 1,
-                visible = 0
-            )
+            pyglet.window.Window.__init__(self,
+                                          caption='(pineal master)',
+                                          fullscreen=0,
+                                          width=W,
+                                          height=H,
+                                          vsync=1,
+                                          visible=0)
 
         self.texture = None
 
     def on_draw(self):
         w, h = self.width, self.height
-        side = max(w,h)
+        side = max(w, h)
 
-        gl.glTexParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_MAG_FILTER, gl.GL_NEAREST)
+        gl.glTexParameteri(gl.GL_TEXTURE_2D,
+                           gl.GL_TEXTURE_MAG_FILTER,
+                           gl.GL_NEAREST)
 
         self.clear()
         if self.texture:
-            self.texture.blit(
-                -(side-w)/2,
-                -(side-h)/2,
-                0,
-                side,side)
+            self.texture.blit(-(side-w)/2,
+                              -(side-h)/2,
+                              0,
+                              side, side)
 
     def update(self, texture):
         self.texture = texture
@@ -148,28 +140,25 @@ class Overview(pyglet.window.Window):
     """
     def __init__(self):
 
-        pyglet.window.Window.__init__(
-            self,
-            resizable = True,
-            caption = '(pineal overview)',
-            width = 600, height = 450,
-            vsync = 0
-        )
+        pyglet.window.Window.__init__(self,
+                                      resizable=True,
+                                      caption='(pineal overview)',
+                                      width=600, height=450,
+                                      vsync=0)
         self.texture = None
-        #self.fps_display = pyglet.clock.ClockDisplay()  # segfaults
+        # self.fps_display = pyglet.clock.ClockDisplay()  # segfaults
 
     def on_draw(self):
         w, h = self.width, self.height
-        side = max(w,h)
+        side = max(w, h)
 
         self.clear()
         if self.texture:
-            self.texture.blit(
-                -(side-w)/2,
-                -(side-h)/2,
-                0,
-                side,side)
-        #self.fps_display.draw()
+            self.texture.blit(-(side-w)/2,
+                              -(side-h)/2,
+                              0,
+                              side, side)
+        # self.fps_display.draw()
 
     def update(self, texture):
         self.texture = texture
