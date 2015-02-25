@@ -46,3 +46,8 @@ Hacking
 * Import them in `lib/graphic/__init__.py`
 * Check if everyting works
 * Make a pull-request
+
+
+IRC
+---
+`#pineal` on Freenode
