@@ -15,6 +15,36 @@ Examples
 --------
 
 ### random170215
+The code ([view the file](https://github.com/edne/pineal/blob/master/visions/examples/random170215.py)):
+```python
+amp = audio.source("AMP")
+p = Polygon(30)
+frame = Frame()
+
+
+@turnaroud(6)
+def a():
+    translate(0.1 + amp())
+    p.r = 0.04
+    p.fill = hsv(time())
+    p.stroke = rgb(0,0)
+
+    p.draw()
+
+
+def feedback():
+    frame.r = 0.98 + amp()
+    frame.draw()
+    frame.r = 0.5
+    frame.draw()
+
+
+def draw():
+    feedback()
+    rotate(time2rad(2))
+    a()
+```
+tapping on the microphone outputs:
 ![random170215](http://giant.gfycat.com/AshamedOrangeEastsiberianlaika.gif)
 
 
@@ -30,16 +60,13 @@ Instructions
 Dependencies
 ------------
 * On Debian-Ubuntu:
-
-
+  ```
       # apt-get install python-pyglet python-hy python-watchdog python-pyo
-
-
+```
 * On other systems:
-
-
+  ```
       $ pip install hy pyglet watchdog
-
+```
   and manually download and install Pyo from [ajaxsoundstudio.com](http://ajaxsoundstudio.com/software/pyo/).
 
 
