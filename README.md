@@ -17,11 +17,6 @@ Examples
 ### random170215
 ![random170215](http://giant.gfycat.com/AshamedOrangeEastsiberianlaika.gif)
 
-### livecoding
-
-* [Youtube link:  
-![Puff & Chill](http://img.youtube.com/vi/F1WsmDq4GzM/0.jpg)](http://www.youtube.com/watch?v=F1WsmDq4GzM)
-
 
 Instructions
 ------------
@@ -36,7 +31,16 @@ Dependencies
 ------------
 * On Debian-Ubuntu:
 
+
       # apt-get install python-pyglet python-hy python-watchdog python-pyo
+
+
+* On other systems:
+
+
+      $ pip install hy pyglet watchdog
+
+  and manually download and install Pyo from [ajaxsoundstudio.com](http://ajaxsoundstudio.com/software/pyo/).
 
 
 Hacking
@@ -51,3 +55,8 @@ Hacking
 IRC
 ---
 `#pineal` on Freenode
+
+
+License
+-------
+This project is released under the terms of [GNU AGPL](http://www.gnu.org/licenses/agpl-3.0.html), see [LICENSE](LICENSE) file for details
