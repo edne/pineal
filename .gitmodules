@@ -1,0 +1,3 @@
+[submodule "thirdparty/gletools"]
+	path = thirdparty/gletools
+	url = https://github.com/edne/gletools
