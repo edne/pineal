@@ -4,11 +4,11 @@ import pyglet.gl as gl
 from config import RENDER_SIZE
 
 
-current_context = None
+render_texture = None
 
 
-def getContext():
-    return current_context
+def getRenderTexture():
+    return render_texture
 
 
 class Renderer(pyglet.window.Window):
@@ -59,9 +59,8 @@ class Renderer(pyglet.window.Window):
                      0, 0, 0,
                      0, 1, 0)
 
-        # for now there is just one context
-        global current_context
-        current_context = self
+        global render_texture
+        render_texture = self.texture
 
         for v in self.visions.values():
             gl.glMatrixMode(gl.GL_MODELVIEW)
