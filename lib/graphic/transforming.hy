@@ -1,10 +1,12 @@
-(import [pyglet.gl :as gl]
-        [math [pi]])
+(import
+  [pyglet.gl :as gl]
+  [math [pi]])
 
 (require hy.contrib.multi)
 
 
 (def _matrix_sp 0)
+
 
 (defn push []
   (global _matrix_sp)
@@ -15,6 +17,7 @@
       true)
     false))
 
+
 (defn pop []
   (global _matrix_sp)
   (if (> _matrix_sp 0)
@@ -24,50 +27,55 @@
       true)
     false))
 
+
 (defn pushmatrix [f]
   "
   Decorator to handle matrix stack
   that can be used as implicit exit condition in recursions
   "
   (defn decorated [&rest args &kwargs kwargs]
-    (if (push)
-      (do
-        (apply f args kwargs)
-        (pop)))))
+    (when (push)
+      (apply f args kwargs)
+      (pop))))
 
 
 (defmulti scale
-  ([s] (gl.glScalef s s s))
-  ([x y] (gl.glScalef x y 1))
-  ([x y z] (gl.glScalef x y z)))
+          ([s]     (gl.glScalef s s s))
+          ([x y]   (gl.glScalef x y 1))
+          ([x y z] (gl.glScalef x y z)))
 
 
 (defmulti rotate
-  ([angle]
-    (gl.glRotatef (/ (* angle 180) pi) 0 0 1))
-  ([angle x y z]
-    (gl.glRotatef (/ (* angle 180) pi) x y z)))
+          ([angle]
+           (gl.glRotatef (/ (* angle 180) pi)
+                         0 0 1))
+          ([angle x y z]
+           (gl.glRotatef (/ (* angle 180) pi)
+                         x y z)))
+
 
 (defn rotateX [angle]
   (gl.glRotatef
-      (* pi (/ angle 180))
-      1 0 0))
+    (* pi (/ angle 180))
+    1 0 0))
+
 
 (defn rotateY [angle]
   (gl.glRotatef
-      (/ (* angle 180) pi)
-      0 1 0))
+    (/ (* angle 180) pi)
+    0 1 0))
+
 
 (defn rotateZ [angle]
   (gl.glRotatef
-      (/ (* angle 180) pi)
-      0 0 1))
+    (/ (* angle 180) pi)
+    0 0 1))
 
 
 (defmulti translate
-  ([x] (gl.glTranslatef x 0 0))
-  ([x y] (gl.glTranslatef x y 0))
-  ([x y z] (gl.glTranslatef x y z)))
+          ([x]     (gl.glTranslatef x 0 0))
+          ([x y]   (gl.glTranslatef x y 0))
+          ([x y z] (gl.glTranslatef x y z)))
 
 
 (defn turnaroud [n &optional [r 0]]
@@ -75,11 +83,11 @@
   (defn decorator [f]
     (defn decorated [&rest args &kwargs kwargs]
       (for [i (range n)]
-        (push)
-        (rotate (/ (* 2 pi i) n))
-        (translate r)
-        (apply f args kwargs)
-        (pop)))))
+           (push)
+           (rotate (/ (* 2 pi i) n))
+           (translate r)
+           (apply f args kwargs)
+           (pop)))))
 
 
 (defn grid [n &optional [m 1]]
@@ -90,12 +98,12 @@
       (translate -1)
       (translate (/ 1 n))
       (for [i (range n)]
-        (push)
-        (translate 0 -1)
-        (translate 0 (/ 1 m))
-        (for [j (range m)]
-          (apply f args kwargs)
-          (translate 0 (/ 2 m)))
-        (pop)
-        (translate (/ 2 n)))
+           (push)
+           (translate 0 -1)
+           (translate 0 (/ 1 m))
+           (for [j (range m)]
+                (apply f args kwargs)
+                (translate 0 (/ 2 m)))
+           (pop)
+           (translate (/ 2 n)))
       (pop))))
