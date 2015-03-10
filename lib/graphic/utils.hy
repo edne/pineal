@@ -151,6 +151,7 @@
   "
   [ [draw
       (fn [self]
+          ;(print testvariable)
           (setv self.texture (_getRenderTexture))
           (.draw _ImageText self))]])
 

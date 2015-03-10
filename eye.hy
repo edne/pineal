@@ -31,6 +31,7 @@
       (fn [self]
           (.__init__ Runner self)
           (setv self.visions {})
+          (setv self.renderer None)
           (.sender nerve OSC_EAR)
           (.receiver nerve OSC_EYE))]
 
@@ -45,15 +46,16 @@
          (.start nerve)
 
          ; windows
-         (setv renderer (Renderer self.visions))
+         ; for now just one renderer -> TODO one for each vision
+         (setv self.renderer (Renderer self.visions))
          (setv master (Master))
          (setv overview (Overview))
 
          (.while-not-stopped self
                              (fn []
-                                 (.update renderer)
-                                 (.update overview renderer.texture)
-                                 (.update master renderer.texture)))
+                                 (.update self.renderer)
+                                 (.update overview self.renderer.texture)
+                                 (.update master self.renderer.texture)))
 
          (print "\rstopping eye.hy")
          (.stop nerve))]
@@ -62,11 +64,11 @@
      (fn [self path args]
          (setv [name code] args)
          (if (in name (self.visions.keys))
-           (.update (get self.visions name)
+           (.load (get self.visions name)
                     code)
            (assoc self.visions
                   name
-                  (Vision name code))))]
+                  (Vision name code self.renderer))))]
 
    [moved
      (fn [self path args]
@@ -84,8 +86,9 @@
   The vision instance
   "
   [[__init__
-      (fn [self name code]
+      (fn [self name code renderer]  ; TODO renderer generation INSIDE
           (.setName self name)
+          (setv self.renderer renderer)
 
           ; stack here the loaded codes, so when everything explodes, we can
           ; always restore the last (opefully) working vision
@@ -93,12 +96,12 @@
 
           (defclass Box []
             "A small sandbox where to run the livecoded part"
-            [ [draw
+            [[draw
                 (fn [self])]])
 
           (setv self.box (Box))
 
-          (.update self code)
+          (.load self code)
           None)]
 
    [setName
@@ -106,7 +109,7 @@
          (setv self.name
                (get (.split name "/") -1)))]
 
-   [update
+   [load
      (fn [self code]
          (print "\rloading:" self.name)
          (setv filename (% "visions/%s" self.name))

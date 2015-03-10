@@ -19,7 +19,7 @@ def a():
     translate(bass()*4)
 
     p.fill = rgb(1, 0.5)
-    p.stroke = rgb(1, 1)
+    p.stroke = rgb(0, 1)
 
     p.draw()
 
@@ -28,10 +28,10 @@ def a():
 @pushmatrix
 def b():
     q.fill = hsv(0.6, 8*high()*gauss(0, 1))
-    q.stroke = hsv(0.6)
+    q.stroke = rgb(0)
     translate(4*amp())
     scale(0.1)
-    q.draw()
+    #q.draw()
 
 
 @turnaroud(13)
