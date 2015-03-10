@@ -108,7 +108,7 @@ class Master(pyglet.window.Window):
                                           vsync=1,
                                           visible=0)
 
-        self.texture = None
+        self.textures = []
 
     def on_draw(self):
         w, h = self.width, self.height
@@ -119,14 +119,14 @@ class Master(pyglet.window.Window):
                            gl.GL_NEAREST)
 
         self.clear()
-        if self.texture:
-            self.texture.blit(-(side-w)/2,
-                              -(side-h)/2,
-                              0,
-                              side, side)
+        for text in self.textures:
+            text.blit(-(side-w)/2,
+                      -(side-h)/2,
+                      0,
+                      side, side)
 
-    def update(self, texture):
-        self.texture = texture
+    def update(self, textures):
+        self.textures = textures
         self.switch_to()
         self.dispatch_events()
         self.dispatch_event('on_draw')
@@ -144,7 +144,7 @@ class Overview(pyglet.window.Window):
                                       caption='(pineal overview)',
                                       width=600, height=450,
                                       vsync=0)
-        self.texture = None
+        self.textures = []
         # self.fps_display = pyglet.clock.ClockDisplay()  # segfaults
 
     def on_draw(self):
@@ -152,15 +152,15 @@ class Overview(pyglet.window.Window):
         side = max(w, h)
 
         self.clear()
-        if self.texture:
-            self.texture.blit(-(side-w)/2,
-                              -(side-h)/2,
-                              0,
-                              side, side)
+        for text in self.textures:
+            text.blit(-(side-w)/2,
+                      -(side-h)/2,
+                      0,
+                      side, side)
         # self.fps_display.draw()
 
-    def update(self, texture):
-        self.texture = texture
+    def update(self, textures):
+        self.textures = textures
         self.switch_to()
         self.dispatch_events()
         self.dispatch_event('on_draw')

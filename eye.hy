@@ -54,8 +54,8 @@
          (.while-not-stopped self
                              (fn []
                                  (.update self.renderer)
-                                 (.update overview self.renderer.texture)
-                                 (.update master self.renderer.texture)))
+                                 (.update overview [self.renderer.texture])
+                                 (.update master [self.renderer.texture])))
 
          (print "\rstopping eye.hy")
          (.stop nerve))]
