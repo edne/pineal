@@ -78,7 +78,7 @@
           ([x y z] (gl.glTranslatef x y z)))
 
 
-(defn turnaroud [n &optional [r 0]]
+(defn turnaround [n &optional [r 0]]
   "Decorator to rotate N times"
   (defn decorator [f]
     (defn decorated [&rest args &kwargs kwargs]
