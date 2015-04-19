@@ -1,6 +1,8 @@
 (import
   [pyglet.gl :as gl]
   [pyglet.graphics [vertex_list]]
+  [pyglet.image]
+  [pyglet.image.codecs.png [PNGImageDecoder]]
   [lib.windows [getRenderTexture :as _getRenderTexture]]
   [math [cos sin pi]]
   [time [time]]
@@ -123,36 +125,48 @@
   (PolClass))
 
 
-(defclass _ImageText [_Entity]
+(defclass _Blittable [_Entity]
   "
-  Base texture
+  Base image
   "
   [[__init__
-      (fn [self texture]
+      (fn [self blittable]
           (.__init__ _Entity self)
-          (setv self.texture texture)
+          (setv self.blittable blittable)
           None)]
 
    [draw
      (fn [self]
          (setv w (* 2 self.r))
-         (setv h (* 2 self.r))
-         (if self.texture
-           (.blit self.texture
+         (setv h (* -2 self.r))
+         (if self.blittable
+           (.blit self.blittable
                   (- self.x (/ w 2))
                   (- self.y (/ h 2))
                   self.z
                   w h)))]])
 
 
-(defclass _Frame [_ImageText]
+(defclass _Frame [_Blittable]
   "
   Gets framebuffer from renderer window and displays it
   "
   [ [draw
       (fn [self]
-          ;(print testvariable)
-          (setv self.texture (_getRenderTexture))
-          (.draw _ImageText self))]])
+          (setv self.blittable (_getRenderTexture))
+          (.draw _Blittable self))]])
 
 (defn Frame [] (_Frame None))
+
+(defclass Image [_Blittable]
+  "
+  Image from png file
+  "
+  [[__init__
+     (fn [self name]
+         (.__init__ _Blittable
+                    self
+                    (apply pyglet.image.load
+                           [(+ "images/" name ".png")]
+                           {"decoder" (PNGImageDecoder)}))
+         None)]])
