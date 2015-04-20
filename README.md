@@ -22,7 +22,7 @@ p = Polygon(30)
 frame = Frame()
 
 
-@turnaroud(6)
+@turnaround(6)
 def a():
     translate(0.1 + amp())
     p.r = 0.04

@@ -14,7 +14,7 @@ p = Polygon(4)
 q = Polygon(20)
 
 
-@turnaroud(5)
+@turnaround(5)
 @pushmatrix
 def feedback():
     rotate((0.1*time()) % 2*pi)
@@ -22,7 +22,7 @@ def feedback():
     frame.draw()
 
 
-@turnaroud(7)
+@turnaround(7)
 @pushmatrix
 def atom(r, minr= 0.2):
     p.fill = rgb(sin(8*time()%2*pi)*0.2 + gauss(0, 0.2), 1)
@@ -62,7 +62,7 @@ def _atom():
     #rotate((time()) % 2*pi)
 
 
-@turnaroud(4)
+@turnaround(4)
 @pushmatrix
 def qu():
     q.fill = hsv(0.6, 8*high())

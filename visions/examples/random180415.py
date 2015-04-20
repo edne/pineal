@@ -12,7 +12,7 @@ q = Polygon(4)
 frame = Frame()
 
 
-@turnaroud(3, 0.5)
+@turnaround(3, 0.5)
 @pushmatrix
 def a():
     p.r = 0.4 + bass()
@@ -32,7 +32,7 @@ def b():
     q.draw()
 
 
-@turnaroud(9)
+@turnaround(9)
 def feedback():
     frame.r = 1.3
     frame.draw()

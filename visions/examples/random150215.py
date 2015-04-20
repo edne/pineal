@@ -12,7 +12,7 @@ q = Polygon(20)
 frame = Frame()
 
 
-@turnaroud(2, 0.5)
+@turnaround(2, 0.5)
 @pushmatrix
 def a():
     p.r = 0.4
@@ -24,7 +24,7 @@ def a():
     p.draw()
 
 
-@turnaroud(2)
+@turnaround(2)
 @pushmatrix
 def b():
     q.fill = hsv(0.6, 8*high()*gauss(0, 1))
@@ -34,7 +34,7 @@ def b():
     q.draw()
 
 
-@turnaroud(13)
+@turnaround(13)
 def feedback():
     frame.r = 0.5
     frame.x = 0.5

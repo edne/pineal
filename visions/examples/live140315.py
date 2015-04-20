@@ -15,8 +15,8 @@ frame = Frame()
 
 
 # @grid(4, 2)
-# @turnaroud(4)
-@turnaroud(3)
+# @turnaround(4)
+@turnaround(3)
 def a():
     scale((amp()*0.5 + bass()*2 + 0.5*gauss(0, 1*high())) + sin(time2rad()))
     rotate(time2rad(2))
@@ -29,7 +29,7 @@ def a():
     p.draw()
 
 
-@turnaroud(2)
+@turnaround(2)
 def fb1():
     scale(0.99 + 0.5*amp())
     frame.draw()
@@ -37,7 +37,7 @@ def fb1():
     frame.draw()
 
 
-@turnaroud(8)
+@turnaround(8)
 @pushmatrix
 def b():
     rotate(time2rad(0.4))
@@ -51,7 +51,7 @@ def b():
     p.draw()
 
 
-@turnaroud(7)
+@turnaround(7)
 @pushmatrix
 def c():
     # scale(10*high() + 0.5*bass())
