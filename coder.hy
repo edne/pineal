@@ -10,21 +10,40 @@
   [lib.osc [Osc]]
   os)
 
-
-(defn getCode [filename]
-  (with [[f (open filename)]]
-        (.read f)))
+(require lib.runner)
 
 
 (defmacro last [l]
   `(get ~l -1))
 
 
-(defn getName [filename]
+(defmacro handler-method [check action]
+  `(fn [self event]
+         (when ~check
+           ~action)))
+
+
+(defn get-code [filename]
+  (with [[f (open filename)]]
+        (.read f)))
+
+
+(defn get-name [filename]
   (-> filename
       .lower
       (.split "/") last
       (.split ".") first))
+
+
+(defn valid? [path]
+  (.endswith path ".py"))
+
+
+(defmacro osc-send [path data]
+  `(.send self.osc
+          ~path
+          ~data
+          OSC_EYE))
 
 
 (defclass Coder [Runner]
@@ -36,80 +55,55 @@
   * `/eye/delete  [filename]`
   * `/eye/move    [oldname newname]`
   "
-  [[__init__
-      (fn [self]
-          (.__init__ Runner self)
-          (setv self.osc (Osc))
-          (.sender self.osc OSC_EYE)
-
-          (for [filename (glob "visions/*.py")]
-               (.send self.osc
-                      "/eye/code"
-                      [(getName filename) (getCode filename)]
-                      OSC_EYE))
-
-          (setv handler (Handler self.osc))
-          (setv self.observer (Observer))
-          (.schedule self.observer handler "visions" False)
-
-          None)]
-
-   [run
+  [[run
      (fn [self]
          (print "starting coder.hy")
-         (.start self.observer)
 
-         (.while-not-stopped self
-                             (fn []
-                                 (sleep (/ 1 60))))
+         (setv self.osc (Osc))
+         (.sender self.osc OSC_EYE)
+
+         (for [filename (glob "visions/*.py")]
+              (osc-send "/eye/code"
+                        [(get-name filename)
+                         (get-code filename)]))
+
+         (setv handler (Handler))
+         (setv handler.osc self.osc)
+
+         (setv observer (Observer))
+         (.schedule observer handler "visions" False)
+         (.start observer)
+
+         (running (sleep (/ 1 60)))
 
          (print "\rstopping coder.hy")
-         (.stop self.observer)
-         (.join self.observer))]])
-
-
-(defn valid [path]
-  (.endswith path ".py"))
+         (.stop observer)
+         (.join observer))]])
 
 
 (defclass Handler [FileSystemEventHandler]
-  [[__init__
-      (fn [self osc]
-          (.__init__ FileSystemEventHandler self)
-          (setv self.osc osc)
-          None)]
+  [[on-created
+     (handler-method (valid? event.src-path)
+                     (osc-send "/eye/code"
+                               [(get-name event.src-path)
+                                (get-code event.src-path)]))]
 
-   [on_created
-     (fn [self event]
-         (if (valid event.src_path)
-           (.send self.osc
-                  "/eye/code"
-                  [(getName event.src_path) (getCode event.src_path)]
-                  OSC_EYE)))]
+   [on-deleted
+     (handler-method (valid? event.src-path)
+                     (osc-send "/eye/delete"
+                               [(get-name event.src-path)]))]
 
-   [on_deleted
-     (fn [self event]
-         (if (valid event.src_path)
-           (.send self.osc
-                  "/eye/delete"
-                  [(getName event.src_path)]
-                  OSC_EYE)))]
+   [on-moved
+     (handler-method (valid? event.dest-path)
+                     (osc-send "/eye/move"
+                               [(get-name event.src-path)
+                                (get-name event.dest-path)]))]
 
-   [on_moved
-     (fn [self event]
-         (if (valid event.dest_path)
-           (.send self.osc
-                  "/eye/move"
-                  [(getName event.src_path) (getName event.dest_path)]
-                  OSC_EYE)))]
-
-   [on_modified
-     (fn [self event]
-         (if (valid event.src_path)
-           (.send
-             self.osc "/eye/code"
-             [(getName event.src_path) (getCode event.src_path)]
-             OSC_EYE)))]])
+   [on-modified
+     (handler-method (valid? event.src-path)
+                     (osc-send "/eye/code"
+                               [(get-name event.src-path)
+                                (get-code event.src-path)]))]])
 
 
 (defmain [args]
