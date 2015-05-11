@@ -13,16 +13,6 @@
 (require lib.runner)
 
 
-(defmacro last [l]
-  `(get ~l -1))
-
-(defmacro osc-send [path data]
-  `(.send self.osc ~path ~data OSC_EYE))
-
-
-(defn valid? [path] (.endswith path ".py"))
-
-
 (defclass Coder [Runner]
   "
   Waits for changes in `visions/`
@@ -36,21 +26,8 @@
      (fn [self]
          (print "starting coder.hy")
 
-         (setv path "visions")
-         (setv self.osc (Osc))
-         (.sender self.osc OSC_EYE)
-
-         (for [filename (glob (+ path "/*"))]
-              (when (valid? filename)
-                (osc-send "/eye/code"
-                          [(get-name filename)
-                           (get-code filename)])))
-
-         (setv handler (Handler))
-         (setv handler.osc self.osc)
-
          (setv observer (Observer))
-         (.schedule observer handler path false)
+         (.schedule observer (new-handler) "visions" false)
          (.start observer)
 
          (running (sleep (/ 1 60)))
@@ -60,7 +37,15 @@
          (.join observer))]])
 
 
-;-- HANDLER
+(defmacro last [l]
+  `(get ~l -1))
+
+
+(defmacro osc-send [path data]
+  `(.send osc ~path ~data OSC_EYE))
+
+(defn valid? [path] (.endswith path ".py"))
+
 
 (defmacro handle [check path data]
   `(fn [self event]
@@ -87,18 +72,30 @@
 (defmacro dest-name   [] '(get-name event.dest-path))
 
 
-(defclass Handler [FileSystemEventHandler]
-  [[on-created  (handle (valid-src?)
-                        "/eye/code" [(src-name) (src-code)])]
+(defn new-handler []
+  (setv osc (Osc))
+  (.sender osc OSC_EYE)  ; TODO refactor osc.hy too
 
-   [on-deleted  (handle (valid-src?)
-                        "/eye/delete" [(src-name)])]
+  (for [filename (glob "visions/*")]
+       (when (valid? filename)
+         (osc-send "/eye/code"
+                   [(get-name filename)
+                    (get-code filename)])))
 
-   [on-moved    (handle (valid-dest?)
-                        "/eye/move" [(src-name) (dest-name)])]
+  ; is inside the scope where defined osc
+  (defclass Handler [FileSystemEventHandler]
+    [[on-created  (handle (valid-src?)
+                          "/eye/code" [(src-name) (src-code)])]
 
-   [on-modified (handle (valid-src?)
-                        "/eye/code" [(src-name) (src-code)])]])
+     [on-deleted  (handle (valid-src?)
+                          "/eye/delete" [(src-name)])]
+
+     [on-moved    (handle (valid-dest?)
+                          "/eye/move" [(src-name) (dest-name)])]
+
+     [on-modified (handle (valid-src?)
+                          "/eye/code" [(src-name) (src-code)])]])
+  (Handler))
 
 
 (defmain [args]
