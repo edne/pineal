@@ -16,34 +16,11 @@
 (defmacro last [l]
   `(get ~l -1))
 
-
-(defmacro handler-method [check action]
-  `(fn [self event]
-         (when ~check
-           ~action)))
-
-
-(defn get-code [filename]
-  (with [[f (open filename)]]
-        (.read f)))
-
-
-(defn get-name [filename]
-  (-> filename
-      .lower
-      (.split "/") last
-      (.split ".") first))
-
-
-(defn valid? [path]
-  (.endswith path ".py"))
-
-
 (defmacro osc-send [path data]
-  `(.send self.osc
-          ~path
-          ~data
-          OSC_EYE))
+  `(.send self.osc ~path ~data OSC_EYE))
+
+
+(defn valid? [path] (.endswith path ".py"))
 
 
 (defclass Coder [Runner]
@@ -59,51 +36,69 @@
      (fn [self]
          (print "starting coder.hy")
 
+         (setv path "visions")
          (setv self.osc (Osc))
          (.sender self.osc OSC_EYE)
 
-         (for [filename (glob "visions/*.py")]
-              (osc-send "/eye/code"
-                        [(get-name filename)
-                         (get-code filename)]))
+         (for [filename (glob (+ path "/*"))]
+              (when (valid? filename)
+                (osc-send "/eye/code"
+                          [(get-name filename)
+                           (get-code filename)])))
 
          (setv handler (Handler))
          (setv handler.osc self.osc)
 
          (setv observer (Observer))
-         (.schedule observer handler "visions" False)
+         (.schedule observer handler path false)
          (.start observer)
 
          (running (sleep (/ 1 60)))
-
          (print "\rstopping coder.hy")
+
          (.stop observer)
          (.join observer))]])
 
 
+;-- HANDLER
+
+(defmacro handle [check path data]
+  `(fn [self event]
+       (when ~check (osc-send ~path ~data))))
+
+
+(defn get-code [filename]
+  (with [[f (open filename)]]
+        (.read f)))
+
+
+(defn get-name [filename]
+  (-> filename
+      .lower
+      (.split "/") last
+      (.split ".") first))
+
+
+(defmacro valid-src?  [] '(valid? event.src-path))
+(defmacro valid-dest? [] '(valid? event.dest-path))
+
+(defmacro src-name    [] '(get-name event.src-path))
+(defmacro src-code    [] '(get-code event.src-path))
+(defmacro dest-name   [] '(get-name event.dest-path))
+
+
 (defclass Handler [FileSystemEventHandler]
-  [[on-created
-     (handler-method (valid? event.src-path)
-                     (osc-send "/eye/code"
-                               [(get-name event.src-path)
-                                (get-code event.src-path)]))]
+  [[on-created  (handle (valid-src?)
+                        "/eye/code" [(src-name) (src-code)])]
 
-   [on-deleted
-     (handler-method (valid? event.src-path)
-                     (osc-send "/eye/delete"
-                               [(get-name event.src-path)]))]
+   [on-deleted  (handle (valid-src?)
+                        "/eye/delete" [(src-name)])]
 
-   [on-moved
-     (handler-method (valid? event.dest-path)
-                     (osc-send "/eye/move"
-                               [(get-name event.src-path)
-                                (get-name event.dest-path)]))]
+   [on-moved    (handle (valid-dest?)
+                        "/eye/move" [(src-name) (dest-name)])]
 
-   [on-modified
-     (handler-method (valid? event.src-path)
-                     (osc-send "/eye/code"
-                               [(get-name event.src-path)
-                                (get-code event.src-path)]))]])
+   [on-modified (handle (valid-src?)
+                        "/eye/code" [(src-name) (src-code)])]])
 
 
 (defmain [args]
