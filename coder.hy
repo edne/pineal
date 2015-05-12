@@ -11,7 +11,7 @@
 (require lib.runner)
 
 
-(runner Coder
+(runner Coder [self]
         "
         Waits for changes in `visions/`
 

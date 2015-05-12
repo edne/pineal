@@ -35,7 +35,7 @@
        tokenize first eval))
 
 
-(runner Ear
+(runner Ear [self]
          (print "starting ear.hy")
 
           (setv osc (Osc))

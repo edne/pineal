@@ -25,14 +25,14 @@
          (setv self._stop True))]])
 
 
-(defmacro runner [name &rest body]
+(defmacro runner [name args &rest body]
   `(defn ~name []
 
      (import [threading [Thread]])
 
      (defclass Class [Thread]
        [[__init__
-          (fn [self]
+          (fn ~args
               (.__init__ Thread self)
               (setv self._stop false)
               None)]
