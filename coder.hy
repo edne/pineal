@@ -5,36 +5,32 @@
   [time [sleep]]
   [watchdog.observers [Observer]]
   [watchdog.events [FileSystemEventHandler]]
-  [lib.runner [Runner]]
   [config [OSC_EYE]]
-  [lib.osc [Osc]]
-  os)
+  [lib.osc [Osc]])
 
 (require lib.runner)
 
 
-(defclass Coder [Runner]
-  "
-  Waits for changes in `visions/`
+(runner Coder
+        "
+        Waits for changes in `visions/`
 
-  Sends to Eye:
-  * `/eye/code    [filename code]`
-  * `/eye/delete  [filename]`
-  * `/eye/move    [oldname newname]`
-  "
-  [[run
-     (fn [self]
-         (print "starting coder.hy")
+        Sends to Eye:
+        * `/eye/code    [filename code]`
+        * `/eye/delete  [filename]`
+        * `/eye/move    [oldname newname]`
+        "
+        (print "starting coder.hy")
 
-         (setv observer (Observer))
-         (.schedule observer (new-handler) "visions" false)
-         (.start observer)
+        (setv observer (Observer))
+        (.schedule observer (new-handler) "visions" false)
+        (.start observer)
 
-         (running (sleep (/ 1 60)))
-         (print "\rstopping coder.hy")
+        (running (sleep (/ 1 60)))
+        (print "\rstopping coder.hy")
 
-         (.stop observer)
-         (.join observer))]])
+        (.stop observer)
+        (.join observer))
 
 
 (defmacro last [l]
