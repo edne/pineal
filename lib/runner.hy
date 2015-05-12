@@ -46,6 +46,6 @@
      (Class)))
 
 
-(defmacro running [action]
+(defmacro running [&rest body]
   `(while (not self._stop)
-          ~action))
+          ~@body))

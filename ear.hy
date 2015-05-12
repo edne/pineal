@@ -3,11 +3,13 @@
 (import
   [sys [exit]]
   [time [sleep]]
-  [lib.runner [Runner]]
   [hy.lex [tokenize]]
   [pyo]
   [config [OSC_EYE OSC_EAR BACKEND]]
   [lib.osc [Osc]])
+
+
+(require lib.runner)
 
 
 ; A small DSL for audio analysis:
@@ -33,24 +35,14 @@
        tokenize first eval))
 
 
-(defclass Ear [Runner]
-  "
-  Does the analysis on the audio input
+(runner Ear
+         (print "starting ear.hy")
 
-  Recives from Eye:
-  * `/ear/code  [cmd]` to generate the audio units
+          (setv osc (Osc))
+          (.receiver osc OSC_EAR)
+          (.sender osc OSC_EYE)
 
-  Sends to Eye:
-  * `/eye/audio/[cmd]  [value]`
-  "
-  [[__init__
-      (fn [self]
-          (.__init__ Runner self)
-          (setv self.osc (Osc))
-          (.receiver self.osc OSC_EAR)
-          (.sender self.osc OSC_EYE)
-
-          (setv self.s
+          (setv pyo-server
                 (apply pyo.Server
                        []
                        {"audio" BACKEND
@@ -58,54 +50,44 @@
                        "nchnls" 2}))
 
           (if (= BACKEND "jack")
-            (.setInputOffset self.s 2)))]
+            (.setInputOffset pyo-server 2))
 
-   [run
-     (fn [self]
-         (print "starting ear.hy")
-         (.boot self.s)
-         (.start self.s)
+          (.boot pyo-server)
+          (.start pyo-server)
 
-         (try (do
-                (setv self.src
-                      (apply pyo.Input
-                             []
-                             {"chnl" [0 1]}))
-                (print "Pyo is working properly!\n"))
-              (catch [pyo.PyoServerStateException]
-                     (print "Pyo is not working")
-                     (exit 1)))
+          (try (do
+                 (setv self.src
+                       (apply pyo.Input
+                              []
+                              {"chnl" [0 1]}))
+                 (print "Pyo is working properly!\n"))
+               (catch [pyo.PyoServerStateException]
+                      (print "Pyo is not working")
+                      (exit 1)))
 
-         (setv self.units {})
+          (setv self.units {})
 
-         (.listen self.osc "/ear/code" self.code)
-         (.start self.osc)
+          (.listen osc "/ear/code"
+                   (fn [path args]
+                       (setv [cmd] args)
+                       (assoc self.units
+                              cmd
+                              (Ugen self.src cmd))))
+          (.start osc)
 
-         (.while-not-stopped self
-                             (fn []
-                                 (.update self)
-                                 (sleep (/ 1 30))))
+          (running
+            (for [cmd (.keys self.units)]
+                 (.send osc
+                        (+ "/eye/audio/" cmd)
+                        [(-> self.units
+                             (get cmd) .get
+                             float)]))
+            (sleep (/ 1 30)))
 
-         (print "\rstopping ear.hy")
-         (.stop self.osc)
-         (.stop self.s)
-         (del self.s))]
-
-   [code
-     (fn [self path args]
-         (setv [cmd] args)
-         (assoc self.units
-                cmd
-                (Ugen self.src cmd)))]
-
-   [update
-     (fn [self]
-         (for [cmd (.keys self.units)]
-              (.send self.osc
-                     (+ "/eye/audio/" cmd)
-                     [(-> self.units
-                          (get cmd) .get
-                          float)])))]])
+          (print "\rstopping ear.hy")
+          (.stop osc)
+          (.stop pyo-server)
+          (del pyo-server))
 
 
 (defmain [args]
