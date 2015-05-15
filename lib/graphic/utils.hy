@@ -56,63 +56,65 @@
 
    [draw
      (fn [self]
-         (gl.glTranslatef self.x
-                          self.y
-                          self.z)
-         (gl.glScalef self.r
-                      self.r
-                      1)
+         (when (!= self.r 0)  ; TODO do something else, please
 
-         (unless self.wlist
-           (setv self.wlist
-                 (vertex_list self.n
-                              (tuple ["v2f/static"
-                                      (flatten
-                                        (map (fn [i]
-                                                 (setv theta
-                                                       (-> (/ pi self.n)
-                                                           (* 2 i)
-                                                           (+ (/ pi -2))))
-                                                 [(cos theta) (sin theta)])
-                                             (range self.n)))])
-                              (tuple ["c4f/stream"
-                                      (* [1] 4
-                                         self.n)]))))
+           (gl.glTranslatef self.x
+                            self.y
+                            self.z)
+           (gl.glScalef self.r
+                        self.r
+                        1)
 
-         (unless self.slist
-           (setv self.slist
-                 (vertex_list (* self.n 3)
-                              (tuple ["v2f/static"
-                                      (flatten
-                                        (map (fn [i]
-                                                 (setv dtheta
-                                                       (* 2 (/ pi self.n)))
-                                                 (setv theta0
-                                                       (* i dtheta))
-                                                 (setv theta1
-                                                       (+ theta0 dtheta))
-                                                 [ 0 0
-                                                   (cos theta0) (sin theta0)
-                                                   (cos theta1) (sin theta1)])
-                                             (range self.n)))])
-                              (tuple ["c4f/stream"
-                                      (* [1] 4
-                                         (* self.n 3))]))))
+           (unless self.wlist
+             (setv self.wlist
+                   (vertex_list self.n
+                                (tuple ["v2f/static"
+                                        (flatten
+                                          (map (fn [i]
+                                                   (setv theta
+                                                         (-> (/ pi self.n)
+                                                             (* 2 i)
+                                                             (+ (/ pi -2))))
+                                                   [(cos theta) (sin theta)])
+                                               (range self.n)))])
+                                (tuple ["c4f/stream"
+                                        (* [1] 4
+                                           self.n)]))))
 
-         (setv self.wlist.colors (* (color self.stroke)
-                                    self.n))
-         (setv self.slist.colors (* (color self.fill)
-                                    (* self.n 3)))
+           (unless self.slist
+             (setv self.slist
+                   (vertex_list (* self.n 3)
+                                (tuple ["v2f/static"
+                                        (flatten
+                                          (map (fn [i]
+                                                   (setv dtheta
+                                                         (* 2 (/ pi self.n)))
+                                                   (setv theta0
+                                                         (* i dtheta))
+                                                   (setv theta1
+                                                         (+ theta0 dtheta))
+                                                   [ 0 0
+                                                     (cos theta0) (sin theta0)
+                                                     (cos theta1) (sin theta1)])
+                                               (range self.n)))])
+                                (tuple ["c4f/stream"
+                                        (* [1] 4
+                                           (* self.n 3))]))))
 
-         (.draw self.slist gl.GL_TRIANGLES)
-         (.draw self.wlist gl.GL_LINE_LOOP)
+           (setv self.wlist.colors (* (color self.stroke)
+                                      self.n))
+           (setv self.slist.colors (* (color self.fill)
+                                      (* self.n 3)))
 
-         (gl.glScalef (/ 1 self.r)
-                      (/ 1 self.r)
-                      1)
-         (gl.glTranslatef (- self.x)
-                          (- self.y)
-                          (- self.z)))]])
+           (.draw self.slist gl.GL_TRIANGLES)
+           (.draw self.wlist gl.GL_LINE_LOOP)
+
+           (gl.glScalef (/ 1 self.r)
+                        (/ 1 self.r)
+                        1)
+           (gl.glTranslatef (- self.x)
+                            (- self.y)
+                            (- self.z))))]])
 
 
 (defn Polygon [n]
