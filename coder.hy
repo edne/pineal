@@ -6,7 +6,7 @@
   [watchdog.observers [Observer]]
   [watchdog.events [FileSystemEventHandler]]
   [config [OSC_EYE]]
-  [lib.osc [Osc]])
+  [lib.osc [osc-sender]])
 
 (require lib.runner)
 
@@ -37,9 +37,6 @@
   `(get ~l -1))
 
 
-(defmacro osc-send [path data]
-  `(.send osc ~path ~data OSC_EYE))
-
 (defn valid? [path] (.endswith path ".py"))
 
 
@@ -69,8 +66,8 @@
 
 
 (defn new-handler []
-  (setv osc (Osc))
-  (.sender osc OSC_EYE)  ; TODO refactor osc.hy too
+  ;(setv osc (Osc-sender OSC_EYE))
+  (setv osc-send (osc-sender OSC_EYE))
 
   (for [filename (glob "visions/*")]
        (when (valid? filename)

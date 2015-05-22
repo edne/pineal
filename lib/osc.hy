@@ -65,6 +65,18 @@
            (catch [OSCClientError] None)))]])
 
 
+(defn osc-sender [out_addr]
+  (setv client (OSCClient))
+
+  (.connect client
+            (tuple out_addr))
+
+  (fn [path args]
+      (try (.send client
+                  (OSCMessage path args))
+           (catch [OSCClientError] None))))
+
+
 ; Osc instance used by Eye, it is here as singleton and not inside the Eye
 ; class in order to be accessible by audio.source and osc.source and permit
 ; to live-coded parts to exchange OSC signals with Universe
