@@ -6,6 +6,8 @@
                     OSCClientError
                     OSCMessage]])
 
+(require lib.runner)
+
 
 (defclass Osc [Runner]
   "
@@ -63,6 +65,35 @@
                       (get self.client (first self.client)))
                     (OSCMessage path args)))
            (catch [OSCClientError] None)))]])
+
+
+(defn osc-receiver [in_addr cbs]
+  (runner Class [self]
+          (setv server
+                (-> in_addr tuple OSCServer))
+
+          (defn callback [path tags args source]
+            "handles callbacks"
+            (for [k (.keys cbs)]
+                 (if (.startswith path k)
+                   ((get cbs k) path args))))
+
+          (.addMsgHandler server
+                          "default"
+                          callback)
+
+          (running
+            (.handle_request server))
+
+          (.close server))
+
+  (defn receiver-start []
+    "starts the thread and returns the stop function"
+    (setv receiver (Class))
+    (.start receiver)
+    receiver.stop)
+
+  receiver-start)
 
 
 (defn osc-sender [out_addr]

@@ -6,7 +6,7 @@
   [hy.lex [tokenize]]
   [pyo]
   [config [OSC_EYE OSC_EAR BACKEND]]
-  [lib.osc [Osc osc-sender]])
+  [lib.osc [osc-receiver osc-sender]])
 
 
 (require lib.runner)
@@ -38,10 +38,6 @@
 (runner Ear [self]
          (print "starting ear.hy")
 
-          (setv osc (Osc))
-          (.receiver osc OSC_EAR)
-          (setv osc-send (osc-sender OSC_EYE))
-
           (setv pyo-server
                 (apply pyo.Server
                        []
@@ -67,13 +63,19 @@
 
           (setv self.units {})
 
-          (.listen osc "/ear/code"
-                   (fn [path args]
-                       (setv [cmd] args)
-                       (assoc self.units
-                              cmd
-                              (Ugen self.src cmd))))
-          (.start osc)
+          (setv osc-send (osc-sender OSC_EYE))
+
+          (defn code-cb [path args]
+            (setv [cmd] args)
+            (assoc self.units
+                   cmd
+                   (Ugen self.src cmd)))
+
+          (setv osc-receiver-start
+                (osc-receiver OSC_EAR
+                              {"/ear/code" code-cb}))
+          (setv osc-receiver-stop
+                (osc-receiver-start))
 
           (running
             (for [cmd (.keys self.units)]
@@ -84,7 +86,7 @@
             (sleep (/ 1 30)))
 
           (print "\rstopping ear.hy")
-          (.stop osc)
+          (osc-receiver-stop)
           (.stop pyo-server)
           (del pyo-server))
 
