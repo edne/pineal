@@ -6,7 +6,7 @@
   [hy.lex [tokenize]]
   [pyo]
   [config [OSC_EYE OSC_EAR BACKEND]]
-  [lib.osc [Osc]])
+  [lib.osc [Osc osc-sender]])
 
 
 (require lib.runner)
@@ -40,7 +40,7 @@
 
           (setv osc (Osc))
           (.receiver osc OSC_EAR)
-          (.sender osc OSC_EYE)
+          (setv osc-send (osc-sender OSC_EYE))
 
           (setv pyo-server
                 (apply pyo.Server
@@ -77,11 +77,10 @@
 
           (running
             (for [cmd (.keys self.units)]
-                 (.send osc
-                        (+ "/eye/audio/" cmd)
-                        [(-> self.units
-                             (get cmd) .get
-                             float)]))
+                 (osc-send (+ "/eye/audio/" cmd)
+                           [(-> self.units
+                                (get cmd) .get
+                                float)]))
             (sleep (/ 1 30)))
 
           (print "\rstopping ear.hy")
