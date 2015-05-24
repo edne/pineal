@@ -66,7 +66,6 @@
 
 
 (defn new-handler []
-  ;(setv osc (Osc-sender OSC_EYE))
   (setv osc-send (osc-sender OSC_EYE))
 
   (for [filename (glob "visions/*")]

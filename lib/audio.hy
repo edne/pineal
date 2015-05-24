@@ -1,5 +1,5 @@
 (import
-  [osc [nerve]]
+  [osc [nerve-send nerve-cb!]]
   [config [OSC_EAR]])
 
 
@@ -7,9 +7,9 @@
   "Permits to get audio signals in the livecoding part"
   (defclass Status []
     [[__init__
-        (fn [self]
-            (setv self.v 0)
-            None)]
+       (fn [self]
+           (setv self.v 0)
+           None)]
 
      [cb
        (fn [self path args]
@@ -21,13 +21,9 @@
 
   (setv status (Status))
 
-  (.send nerve
-         "/ear/code"
-         [code]
-         OSC_EAR)
+  (nerve-send "/ear/code" [code])
 
-  (.listen nerve
-           (+ "/eye/audio/" code)
-           status.cb)
+  (nerve-cb! (+ "/eye/audio/" code)
+             status.cb)
 
   status.getv)

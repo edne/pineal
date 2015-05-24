@@ -3,9 +3,8 @@
 (import
   [time [sleep]]
   [lib.windows [Renderer Master Overview]]
-  [lib.osc [nerve]]
-  [lib.pyexec [pyexec]]
-  [config [OSC_EAR OSC_EYE]])
+  [lib.osc [nerve-cb! nerve-start]]
+  [lib.pyexec [pyexec]])
 
 (require lib.runner)
 
@@ -31,8 +30,6 @@
         (print "starting eye.hy")
 
         (setv visions {})
-        (.sender nerve OSC_EAR)
-        (.receiver nerve OSC_EYE)
 
         ; windows
         ; for now just one renderer -> TODO one for each vision
@@ -40,29 +37,27 @@
         (setv master (Master))
         (setv overview (Overview))
 
-        (.listen nerve
-                 "/eye/code"
-                 (fn [path args]
-                     (setv [name code] args)
-                     (if (in name (visions.keys))
-                       (.load (get visions name)
-                              code)
-                       (assoc visions
-                              name
-                              (Vision name code renderer)))))
-        (.listen nerve
-                 "/eye/move"
-                 (fn [path args]
-                     (setv [oldname newname] args)
-                     (when (in oldname (visions.keys))
-                       (.setName (get visions oldname)
-                                 newname)
-                       (assoc visions
-                              newname
-                              (.pop visions oldname)))))
-        ;(.listen nerve "/eye/delete" self.deleted)
+        (nerve-cb! "/eye/code"
+                   (fn [path args]
+                       (setv [name code] args)
+                       (if (in name (visions.keys))
+                         (.load (get visions name)
+                                code)
+                         (assoc visions
+                                name
+                                (Vision name code renderer)))))
 
-        (.start nerve)
+        (nerve-cb! "/eye/move"
+                   (fn [path args]
+                       (setv [oldname newname] args)
+                       (when (in oldname (visions.keys))
+                         (.setName (get visions oldname)
+                                   newname)
+                         (assoc visions
+                                newname
+                                (.pop visions oldname)))))
+
+        (setv nerve-stop (nerve-start))
 
         (running
           (.update renderer)
@@ -70,7 +65,7 @@
           (.update master [renderer.texture]))
 
         (print "\rstopping eye.hy")
-        (.stop nerve))
+        (nerve-stop))
 
 
 (defclass Vision []
@@ -78,23 +73,23 @@
   The vision instance
   "
   [[__init__
-      (fn [self name code renderer]  ; TODO renderer generation INSIDE
-          (.setName self name)
-          (setv self.renderer renderer)
+     (fn [self name code renderer]  ; TODO renderer generation INSIDE
+         (.setName self name)
+         (setv self.renderer renderer)
 
-          ; stack here the loaded codes, so when everything explodes, we can
-          ; always restore the last (opefully) working vision
-          (setv self.stack [])
+         ; stack here the loaded codes, so when everything explodes, we can
+         ; always restore the last (opefully) working vision
+         (setv self.stack [])
 
-          (defclass Box []
-            "A small sandbox where to run the livecoded part"
-            [[draw
-                (fn [self])]])
+         (defclass Box []
+           "A small sandbox where to run the livecoded part"
+           [[draw
+              (fn [self])]])
 
-          (setv self.box (Box))
+         (setv self.box (Box))
 
-          (.load self code)
-          None)]
+         (.load self code)
+         None)]
 
    [setName
      (fn [self name]
