@@ -45,7 +45,7 @@
                                 code)
                          (assoc visions
                                 name
-                                (Vision name code renderer)))))
+                                (new-vision name code)))))
 
         (setv nerve-stop (nerve-start))
 
@@ -58,56 +58,55 @@
         (nerve-stop))
 
 
-(defclass Vision []
-  "
-  The vision instance
-  "
-  [[__init__
-     (fn [self name code renderer]  ; TODO renderer generation INSIDE
-         (setv self.name
-               (get (.split name "/") -1))
-         (setv self.renderer renderer)
+(defn new-vision [path code]
+  (setv name
+        (get (.split path "/") -1))
 
-         ; stack here the loaded codes, so when everything explodes, we can
-         ; always restore the last (opefully) working vision
-         (setv self.stack [])
+  ; stack here the loaded codes, so when everything explodes, we can
+  ; always restore the last (opefully) working vision
+  (setv stack [])
 
-         (defclass Box []
-           "A small sandbox where to run the livecoded part"
-           [[draw
-              (fn [self])]])
+  (defclass Box []
+    "A small sandbox where to run the livecoded part"
+    [[draw
+       (fn [self])]])
 
-         (setv self.box (Box))
+  (setv box (Box))
 
-         (.load self code)
-         None)]
+  (defclass Vision []
+    "
+    The vision instance
+    "
+    [[load
+       (fn [self code]
+           (print "\rloading:" name)
+           (setv filename (% "visions/%s" name))
+           (try
+             (pyexec code box.__dict__)
+             (except [e Exception]
+                     (print name e))
+             (else
+               (.append stack code))))]
 
-   [load
-     (fn [self code]
-         (print "\rloading:" self.name)
-         (setv filename (% "visions/%s" self.name))
-         (try
-           (pyexec code self.box.__dict__)
-           (except [e Exception]
-                   (print self.name e))
-           (else
-             (.append self.stack code))))]
+     [iteration
+       (fn [self]
+           (try
+             (.draw box)
+             ; if there is an error and stack is empty you are in the situation
+             ; where the FIRST loaded vision is broken, that can be a problem
+             ; (for you, if you are livecoding)
+             (except [e Exception]
+                     (print name name e)
+                     (.pop stack)
 
-   [iteration
-     (fn [self]
-         (try
-           (.draw self.box)
-           ; if there is an error and stack is empty you are in the situation
-           ; where the FIRST loaded vision is broken, that can be a problem
-           ; (for you, if you are livecoding)
-           (except [e Exception]
-                   (print self.name self.name e)
-                   (.pop self.stack)
+                     (if stack
+                       (pyexec (get stack -1)
+                               box.__dict__)
+                       (print name "BROKEN!")))))]])
 
-                   (if self.stack
-                     (pyexec (get self.stack -1)
-                             self.box.__dict__)
-                     (print self.name "BROKEN!")))))]])
+  (setv vision (Vision))
+  (.load vision code)
+  vision)
 
 
 (defmain [args]
