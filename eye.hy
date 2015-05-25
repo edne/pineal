@@ -47,16 +47,6 @@
                                 name
                                 (Vision name code renderer)))))
 
-        (nerve-cb! "/eye/move"
-                   (fn [path args]
-                       (setv [oldname newname] args)
-                       (when (in oldname (visions.keys))
-                         (.setName (get visions oldname)
-                                   newname)
-                         (assoc visions
-                                newname
-                                (.pop visions oldname)))))
-
         (setv nerve-stop (nerve-start))
 
         (running
@@ -74,7 +64,8 @@
   "
   [[__init__
      (fn [self name code renderer]  ; TODO renderer generation INSIDE
-         (.setName self name)
+         (setv self.name
+               (get (.split name "/") -1))
          (setv self.renderer renderer)
 
          ; stack here the loaded codes, so when everything explodes, we can
@@ -91,11 +82,6 @@
          (.load self code)
          None)]
 
-   [setName
-     (fn [self name]
-         (setv self.name
-               (get (.split name "/") -1)))]
-
    [load
      (fn [self code]
          (print "\rloading:" self.name)
@@ -110,7 +96,7 @@
    [iteration
      (fn [self]
          (try
-           (.draw self)
+           (.draw self.box)
            ; if there is an error and stack is empty you are in the situation
            ; where the FIRST loaded vision is broken, that can be a problem
            ; (for you, if you are livecoding)
@@ -121,11 +107,7 @@
                    (if self.stack
                      (pyexec (get self.stack -1)
                              self.box.__dict__)
-                     (print self.name "BROKEN!")))))]
-
-   [draw
-     (fn [self]
-         (.draw self.box))]])
+                     (print self.name "BROKEN!")))))]])
 
 
 (defmain [args]
