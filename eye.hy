@@ -34,8 +34,8 @@
         ; windows
         ; for now just one renderer -> TODO one for each vision
         (setv renderer (Renderer visions))
-        (setv master (Master))
-        (setv overview (Overview))
+        (setv master (Master renderer))
+        (setv overview (Overview renderer))
 
         (nerve-cb! "/eye/code"
                    (fn [path args]
@@ -51,8 +51,8 @@
 
         (running
           (.update renderer)
-          (.update overview [renderer.texture])
-          (.update master [renderer.texture]))
+          (.update overview)
+          (.update master))
 
         (print "\rstopping eye.hy")
         (nerve-stop))

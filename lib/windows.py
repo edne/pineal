@@ -85,7 +85,9 @@ class Master(pyglet.window.Window):
     """
     Master output, on secondary monitor is exists, hidden otherwise
     """
-    def __init__(self):
+    def __init__(self, source):
+        self.source = source
+
         platform = pyglet.window.get_platform()
         display = platform.get_default_display()
         screens = display.get_screens()
@@ -108,8 +110,6 @@ class Master(pyglet.window.Window):
                                           vsync=1,
                                           visible=0)
 
-        self.textures = []
-
     def on_draw(self):
         w, h = self.width, self.height
         side = max(w, h)
@@ -119,14 +119,13 @@ class Master(pyglet.window.Window):
                            gl.GL_NEAREST)
 
         self.clear()
-        for text in self.textures:
-            text.blit(-(side-w)/2,
-                      -(side-h)/2,
-                      0,
-                      side, side)
+        if self.source.texture:
+            self.source.texture.blit(-(side-w)/2,
+                                     -(side-h)/2,
+                                     0,
+                                     side, side)
 
-    def update(self, textures):
-        self.textures = textures
+    def update(self):
         self.switch_to()
         self.dispatch_events()
         self.dispatch_event('on_draw')
@@ -137,14 +136,14 @@ class Overview(pyglet.window.Window):
     """
     Overview for the programmer, nothing else to say
     """
-    def __init__(self):
+    def __init__(self, source):
+        self.source = source
 
         pyglet.window.Window.__init__(self,
                                       resizable=True,
                                       caption='(pineal overview)',
                                       width=600, height=450,
                                       vsync=0)
-        self.textures = []
         # self.fps_display = pyglet.clock.ClockDisplay()  # segfaults
 
     def on_draw(self):
@@ -152,15 +151,14 @@ class Overview(pyglet.window.Window):
         side = max(w, h)
 
         self.clear()
-        for text in self.textures:
-            text.blit(-(side-w)/2,
-                      -(side-h)/2,
-                      0,
-                      side, side)
+        if self.source.texture:
+            self.source.texture.blit(-(side-w)/2,
+                                     -(side-h)/2,
+                                     0,
+                                     side, side)
         # self.fps_display.draw()
 
-    def update(self, textures):
-        self.textures = textures
+    def update(self):
         self.switch_to()
         self.dispatch_events()
         self.dispatch_event('on_draw')
