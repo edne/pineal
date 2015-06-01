@@ -73,8 +73,7 @@
                                           (map (fn [i]
                                                    (setv theta
                                                          (-> (/ pi self.n)
-                                                             (* 2 i)
-                                                             (+ (/ pi -2))))
+                                                             (* 2 i)))
                                                    [(cos theta) (sin theta)])
                                                (range self.n)))])
                                 (tuple ["c4f/stream"
