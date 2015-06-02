@@ -92,7 +92,7 @@ This project is released under the terms of [GNU AGPL](http://www.gnu.org/licens
 Little Tutorial
 ---------------
 
-Visuals files are located in the `visuals` folder, and are responsible for visualizing things on the screen - and thus they are the frontend for the livecoding stuff.
+Visuals files are located in the `visions` folder, and are responsible for visualizing things on the screen - and thus they are the frontend for the livecoding stuff.
 
 All those files must be written in valid Python - if you save a broken source Pineal will complain (in the debug window), and will keep executing the last valid source.
 
