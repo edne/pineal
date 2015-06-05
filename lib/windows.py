@@ -32,7 +32,6 @@ def new_renderer(visions):
                         fullscreen=0,
                         width=W,
                         height=H,
-                        vsync=0,  # TODO: set to 1 after removing the while 1
                         visible=0)
 
     window.visions = visions
@@ -119,7 +118,6 @@ def new_master(source):
     window = new_output_window(caption='(pineal master)',
                                fullscreen=dual_screen,
                                screen=screens[-1],
-                               vsync=1,
                                visible=dual_screen)
     window.source = source
     return window
@@ -131,7 +129,6 @@ def new_overview(source):
     """
     window = new_output_window(resizable=True,
                                caption='(pineal overview)',
-                               width=600, height=450,
-                               vsync=0)
+                               width=600, height=450)
     window.source = source
     return window
