@@ -115,23 +115,12 @@ def new_master(source):
     display = platform.get_default_display()
     screens = display.get_screens()
 
-    # TODO: refactor this with a second monitor
-    W, H = RENDER_SIZE
-    if len(screens) > 1:
-        window = new_window(caption='(pineal master)',
-                            fullscreen=1,
-                            screen=screens[-1],
-                            vsync=1,
-                            visible=1)
-        window.set_mouse_visible(False)
-    else:
-        window = new_window(caption='(pineal master)',
-                            fullscreen=0,
-                            width=W,
-                            height=H,
-                            vsync=1,
-                            visible=0)
-    #
+    dual_screen = len(screens) > 1
+    window = new_output_window(caption='(pineal master)',
+                               fullscreen=dual_screen,
+                               screen=screens[-1],
+                               vsync=1,
+                               visible=dual_screen)
     window.source = source
     return window
 
