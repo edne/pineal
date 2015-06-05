@@ -2,7 +2,7 @@
 
 (import
   [time [sleep]]
-  [lib.windows [Renderer Master Overview]]
+  [lib.windows [new-renderer new-master new-overview]]
   [lib.osc [nerve-cb! nerve-start]]
   [lib.pyexec [pyexec]])
 
@@ -33,9 +33,9 @@
 
         ; windows
         ; for now just one renderer -> TODO one for each vision
-        (setv renderer (Renderer visions))
-        (setv master (Master renderer))
-        (setv overview (Overview renderer))
+        (setv renderer (new-renderer visions))
+        (setv master (new-master renderer))
+        (setv overview (new-overview renderer))
 
         (nerve-cb! "/eye/code"
                    (fn [path args]

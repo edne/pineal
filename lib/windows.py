@@ -11,7 +11,7 @@ def getRenderTexture():
     return render_texture
 
 
-def Window(*args, **kwargs):
+def new_window(*args, **kwargs):
     window = pyglet.window.Window(*args, **kwargs)
 
     def update():
@@ -23,17 +23,17 @@ def Window(*args, **kwargs):
     return window
 
 
-def Renderer(visions):
+def new_renderer(visions):
     """
     Offscreen windows where render stuff
     """
     W, H = RENDER_SIZE
-    window = Window(caption='(pineal renderer)',
-                    fullscreen=0,
-                    width=W,
-                    height=H,
-                    vsync=0,  # TODO: set to 1 after removing the while 1
-                    visible=0)
+    window = new_window(caption='(pineal renderer)',
+                        fullscreen=0,
+                        width=W,
+                        height=H,
+                        vsync=0,  # TODO: set to 1 after removing the while 1
+                        visible=0)
 
     window.visions = visions
 
@@ -89,8 +89,8 @@ def Renderer(visions):
     return window
 
 
-def OutputWindow(*args, **kwargs):
-    window = Window(*args, **kwargs)
+def new_output_window(*args, **kwargs):
+    window = new_window(*args, **kwargs)
 
     def on_draw():
         w, h = window.width, window.height
@@ -107,7 +107,7 @@ def OutputWindow(*args, **kwargs):
     return window
 
 
-def Master(source):
+def new_master(source):
     """
     Master output, on secondary monitor is exists, hidden otherwise
     """
@@ -118,31 +118,31 @@ def Master(source):
     # TODO: refactor this with a second monitor
     W, H = RENDER_SIZE
     if len(screens) > 1:
-        window = Window(caption='(pineal master)',
-                        fullscreen=1,
-                        screen=screens[-1],
-                        vsync=1,
-                        visible=1)
+        window = new_window(caption='(pineal master)',
+                            fullscreen=1,
+                            screen=screens[-1],
+                            vsync=1,
+                            visible=1)
         window.set_mouse_visible(False)
     else:
-        window = Window(caption='(pineal master)',
-                        fullscreen=0,
-                        width=W,
-                        height=H,
-                        vsync=1,
-                        visible=0)
+        window = new_window(caption='(pineal master)',
+                            fullscreen=0,
+                            width=W,
+                            height=H,
+                            vsync=1,
+                            visible=0)
     #
     window.source = source
     return window
 
 
-def Overview(source):
+def new_overview(source):
     """
     Overview for the programmer, nothing else to say
     """
-    window = OutputWindow(resizable=True,
-                          caption='(pineal overview)',
-                          width=600, height=450,
-                          vsync=0)
+    window = new_output_window(resizable=True,
+                               caption='(pineal overview)',
+                               width=600, height=450,
+                               vsync=0)
     window.source = source
     return window
