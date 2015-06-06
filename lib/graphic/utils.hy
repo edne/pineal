@@ -57,32 +57,34 @@
 (defn Polygon [n]
   (setv p (_Entity))
 
-  (setv p.fill [1 1 1 1])
-  (setv p.stroke [1 1 1 1])
-
   ; vertex_list has to be generated inside draw
-  (setv p.wired-list None)
   (setv p.solid-list None)
 
-  (defn draw []
-    (unless p.wired-list
-      (setv p.wired-list
-            (build-wired-list n)))
-
+  (defn fill [fill-color]
     (unless p.solid-list
       (setv p.solid-list
             (build-solid-list n)))
 
-    (setv p.wired-list.colors
-          (* (color p.stroke) n))
-
     (setv p.solid-list.colors
-          (* (color p.fill) (* n 3)))
+          (* (color fill-color) (* n 3)))
 
-    (.draw p.solid-list gl.GL_TRIANGLES)
+    (.draw p.solid-list gl.GL_TRIANGLES))
+  (setv p.fill fill)
+
+
+  (setv p.wired-list None)
+
+  (defn stroke [stroke-color]
+    (unless p.wired-list
+      (setv p.wired-list
+            (build-wired-list n)))
+
+    (setv p.wired-list.colors
+          (* (color stroke-color) n))
+
     (.draw p.wired-list gl.GL_LINE_LOOP))
+  (setv p.stroke stroke)
 
-  (setv p.draw draw)
   p)
 
 
