@@ -55,7 +55,10 @@
                                 (when self._stop
                                   (.exit pyglet.app) ))
                             (/ 1 120))
-        (.run pyglet.app)
+        (try
+          (.run pyglet.app)
+          (catch [KeyboardInterrupt]
+                 None))
 
         (print "\rstopping eye.hy")
         (nerve-stop))

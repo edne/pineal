@@ -1,4 +1,4 @@
-#!/usr/bin/env hy
+#!/usr/bin/env hy2
 
 (import
   [sys [exit]]

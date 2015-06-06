@@ -14,12 +14,6 @@
          (setv self._stop False)
          None)]
 
-   ; TODO replace everywhere with running macro
-   [while-not-stopped (fn [ self
-                            &optional [action (fn [] None)]]
-                            (while (not self._stop)
-                                   (action)))]
-
    [stop
      (fn [self]
          (setv self._stop True))]])
@@ -47,5 +41,7 @@
 
 
 (defmacro running [&rest body]
-  `(while (not self._stop)
-          ~@body))
+  `(try (while (not self._stop)
+               ~@body)
+        (catch [KeyboardInterrupt]
+               None)))
