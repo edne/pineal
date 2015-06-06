@@ -126,48 +126,41 @@
   (PolClass))
 
 
-(defclass _Blittable [_Entity]
-  "
-  Base image
-  "
-  [[__init__
-      (fn [self blittable]
-          (.__init__ _Entity self)
-          (setv self.blittable blittable)
-          None)]
+(defn new-blittable [inner]
+  (setv entity (_Entity))
+  (setv entity.inner inner)  ; I don't like it, too OOP
 
-   [draw
-     (fn [self]
-         (setv w (* 2 self.r))
-         (setv h (* -2 self.r))
-         (if self.blittable
-           (.blit self.blittable
-                  (- self.x (/ w 2))
-                  (- self.y (/ h 2))
-                  self.z
-                  w h)))]])
+  (defn draw []
+    (setv w (* 2 entity.r))
+    (setv h (* -2 entity.r))
+    (if entity.inner
+      (.blit entity.inner
+             (- entity.x (/ w 2))
+             (- entity.y (/ h 2))
+             entity.z
+             w h)))
+
+  (setv entity.draw draw)
+  entity)
 
 
-(defclass _Frame [_Blittable]
-  "
-  Gets framebuffer from renderer window and displays it
-  "
-  [ [draw
-      (fn [self]
-          (setv self.blittable (_getRenderTexture))
-          (.draw _Blittable self))]])
+(defn Frame []
+  (setv frame (new-blittable None))
 
-(defn Frame [] (_Frame None))
+  (setv old-draw frame.draw)
+  (defn draw []
+    (setv frame.inner (_getRenderTexture))
+    (old-draw))
 
-(defclass Image [_Blittable]
+  (setv frame.draw draw)
+
+  frame)
+
+
+(defn Image [name]
   "
   Image from png file
   "
-  [[__init__
-     (fn [self name]
-         (.__init__ _Blittable
-                    self
-                    (apply pyglet.image.load
-                           [(+ "images/" name ".png")]
-                           {"decoder" (PNGImageDecoder)}))
-         None)]])
+  (new-blittable (apply pyglet.image.load
+                        [(+ "images/" name ".png")]
+                        {"decoder" (PNGImageDecoder)})))
