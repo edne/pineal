@@ -15,17 +15,17 @@ frame = Frame()
 @turnaround(6)
 def a():
     translate(0.1 + amp())
-    p.r = 0.04
+    scale(0.04)
     p.fill = hsv(time())
-    p.stroke = rgb(0,0)
+    p.stroke = rgb(0, 0)
 
     p.draw()
 
 
 def feedback():
-    frame.r = 0.98 + amp()
+    scale(0.98 + amp())
     frame.draw()
-    frame.r = 0.5
+    scale(0.5 / (0.98 + amp()))
     frame.draw()
 
 

@@ -25,7 +25,7 @@ frame = Frame()
 @turnaround(6)
 def a():
     translate(0.1 + amp())
-    p.r = 0.04
+    scale(0.04)
     p.fill = hsv(time())
     p.stroke = rgb(0,0)
 
@@ -33,9 +33,9 @@ def a():
 
 
 def feedback():
-    frame.r = 0.98 + amp()
+    scale(0.98 + amp())
     frame.draw()
-    frame.r = 0.5
+    scale(0.5 / (0.98 + amp()))
     frame.draw()
 
 
@@ -175,9 +175,6 @@ You can apply a bunch of decorators to each layer, for easy transforms:
 The Polygon object has the following properties:
 * `fill`: a value from the hsv or rgb function
 * `stroke`: a value from the hsv or rgb function
-* `r`: radius of the polygon - float
-* `x`: relative horizontal position
-* `y`: relative vertical position
 
 and methods:
 * `draw()`: draws the shape on the screen. Note: you can invoke this function multiple times, e.g. after you've tweaked some parameters.

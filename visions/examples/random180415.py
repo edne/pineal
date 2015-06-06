@@ -15,7 +15,7 @@ frame = Frame()
 @turnaround(3, 0.5)
 @pushmatrix
 def a():
-    p.r = 0.4 + bass()
+    scale(0.4 + bass())
     # translate(bass()*4)
 
     p.fill = rgb(0, 0.5)
@@ -34,10 +34,10 @@ def b():
 
 @turnaround(9)
 def feedback():
-    frame.r = 1.3
+    scale(1.3)
     frame.draw()
 
-    frame.r = 0.5
+    scale(0.5/1.3)
     frame.draw()
 
 

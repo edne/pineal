@@ -23,7 +23,7 @@ def a():
 
 @turnaround(23)
 def feedback():
-    frame.r = 0.9
+    scale(0.9)
     frame.draw()
 
 
