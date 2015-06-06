@@ -105,15 +105,17 @@
   (PolClass))
 
 
+(defn blit [img]
+  (.blit img
+         -1 1 0
+         2 -2))
+
+
 (defn new-blittable [inner]
   (setv entity (_Entity))
-  (setv entity.inner inner)  ; I don't like it, too OOP
 
   (defn draw []
-    (if entity.inner
-      (.blit entity.inner
-             -1 1 0
-             2 -2)))
+      (blit inner))
 
   (setv entity.draw draw)
   entity)
@@ -122,13 +124,10 @@
 (defn Frame []
   (setv frame (new-blittable None))
 
-  (setv old-draw frame.draw)
   (defn draw []
-    (setv frame.inner (_getRenderTexture))
-    (old-draw))
+    (blit (_getRenderTexture)))
 
   (setv frame.draw draw)
-
   frame)
 
 
