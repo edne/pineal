@@ -53,36 +53,36 @@
                        (* [1] 4
                           (* n 3))])))
 
+(def memo-solid {})
+(def memo-wired {})
 
 (defn Polygon [n]
   (setv p (_Entity))
 
-  ; vertex_list has to be generated inside draw
-  (setv p.solid-list None)
-
   (defn fill [fill-color]
-    (unless p.solid-list
-      (setv p.solid-list
-            (build-solid-list n)))
+    (unless (in n memo-solid)
+      (assoc memo-solid n
+             (build-solid-list n)))
 
-    (setv p.solid-list.colors
+    (setv solid-list
+          (get memo-solid n))
+    (setv solid-list.colors
           (* (color fill-color) (* n 3)))
 
-    (.draw p.solid-list gl.GL_TRIANGLES))
+    (.draw solid-list gl.GL_TRIANGLES))
   (setv p.fill fill)
 
-
-  (setv p.wired-list None)
-
   (defn stroke [stroke-color]
-    (unless p.wired-list
-      (setv p.wired-list
-            (build-wired-list n)))
+    (unless (in n memo-wired)
+      (assoc memo-wired n
+             (build-wired-list n)))
 
-    (setv p.wired-list.colors
+    (setv wired-list
+          (get memo-wired n))
+    (setv wired-list.colors
           (* (color stroke-color) n))
 
-    (.draw p.wired-list gl.GL_LINE_LOOP))
+    (.draw wired-list gl.GL_LINE_LOOP))
   (setv p.stroke stroke)
 
   p)
