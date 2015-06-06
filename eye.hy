@@ -49,10 +49,13 @@
 
         (setv nerve-stop (nerve-start))
 
-        (running
-          (.update renderer)
-          (.update overview)
-          (.update master))
+        (import [pyglet])
+        (.schedule_interval pyglet.clock
+                            (fn [dt]
+                                (when self._stop
+                                  (.exit pyglet.app) ))
+                            (/ 1 120))
+        (.run pyglet.app)
 
         (print "\rstopping eye.hy")
         (nerve-stop))

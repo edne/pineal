@@ -13,13 +13,6 @@ def getRenderTexture():
 
 def new_window(*args, **kwargs):
     window = pyglet.window.Window(*args, **kwargs)
-
-    def update():
-        window.switch_to()
-        window.dispatch_events()
-        window.dispatch_event('on_draw')
-        window.flip()
-    window.update = update
     return window
 
 
@@ -45,6 +38,7 @@ def new_renderer(visions):
 
     window.texture = None
 
+    @window.event
     def on_draw():
         window.clear()
 
@@ -76,13 +70,13 @@ def new_renderer(visions):
 
         clock.tick()
         print '\rfps: %3.1f' % clock.get_fps(),
-    window.on_draw = on_draw
     return window
 
 
 def new_output_window(*args, **kwargs):
     window = new_window(*args, **kwargs)
 
+    @window.event
     def on_draw():
         w, h = window.width, window.height
         side = max(w, h)
@@ -94,8 +88,6 @@ def new_output_window(*args, **kwargs):
                          -(side-h)/2,
                          0,
                          side, side)
-
-    window.on_draw = on_draw
     return window
 
 
