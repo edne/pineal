@@ -75,15 +75,8 @@ def new_renderer(visions):
         window.texture = rawimage.get_texture()
 
         clock.tick()
-    window.on_draw = on_draw
-
-    old_update = window.update
-
-    def update():
-        old_update()
         print '\rfps: %3.1f' % clock.get_fps(),
-    window.update = update
-
+    window.on_draw = on_draw
     return window
 
 
