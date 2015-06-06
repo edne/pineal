@@ -23,8 +23,8 @@
   "
   [[vertsGl None]
    [n 4]
-   [slist []]
-   [wlist []]
+   [solid-list []]
+   [wired-list []]
 
    [_definePolygon
      (with-decorator staticmethod (fn []))]
@@ -41,58 +41,65 @@
      (fn [self])]])
 
 
+(defn build-wired-list [n]
+  (vertex_list n
+               (tuple ["v2f/static"
+                       (flatten
+                         (map (fn [i]
+                                  (setv theta
+                                        (-> (/ pi n)
+                                            (* 2 i)))
+                                  [(cos theta) (sin theta)])
+                              (range n)))])
+               (tuple ["c4f/stream"
+                       (* [1] 4 n)])))
+
+
+(defn build-solid-list [n]
+  (vertex_list (* n 3)
+               (tuple ["v2f/static"
+                       (flatten
+                         (map (fn [i]
+                                  (setv dtheta
+                                        (* 2 (/ pi n)))
+                                  (setv theta0
+                                        (* i dtheta))
+                                  (setv theta1
+                                        (+ theta0 dtheta))
+                                  [ 0 0
+                                    (cos theta0) (sin theta0)
+                                    (cos theta1) (sin theta1)])
+                              (range n)))])
+               (tuple ["c4f/stream"
+                       (* [1] 4
+                          (* n 3))])))
+
+
 (defclass _PolInt [_Entity]
   "
   Interface of polygon classes
   "
   [[_definePolygon
-      (with-decorator staticmethod (fn [c n]
-                                       (setv c.n n)))]
+     (with-decorator staticmethod (fn [c n]
+                                      (setv c.n n)))]
 
    [draw
      (fn [self]
-           (unless self.wlist
-             (setv self.wlist
-                   (vertex_list self.n
-                                (tuple ["v2f/static"
-                                        (flatten
-                                          (map (fn [i]
-                                                   (setv theta
-                                                         (-> (/ pi self.n)
-                                                             (* 2 i)))
-                                                   [(cos theta) (sin theta)])
-                                               (range self.n)))])
-                                (tuple ["c4f/stream"
-                                        (* [1] 4
-                                           self.n)]))))
+         (unless self.wired-list
+           (setv self.wired-list
+                 (build-wired-list self.n)))
 
-           (unless self.slist
-             (setv self.slist
-                   (vertex_list (* self.n 3)
-                                (tuple ["v2f/static"
-                                        (flatten
-                                          (map (fn [i]
-                                                   (setv dtheta
-                                                         (* 2 (/ pi self.n)))
-                                                   (setv theta0
-                                                         (* i dtheta))
-                                                   (setv theta1
-                                                         (+ theta0 dtheta))
-                                                   [ 0 0
-                                                     (cos theta0) (sin theta0)
-                                                     (cos theta1) (sin theta1)])
-                                               (range self.n)))])
-                                (tuple ["c4f/stream"
-                                        (* [1] 4
-                                           (* self.n 3))]))))
+         (unless self.solid-list
+           (setv self.solid-list
+                 (build-solid-list self.n)))
 
-           (setv self.wlist.colors (* (color self.stroke)
-                                      self.n))
-           (setv self.slist.colors (* (color self.fill)
-                                      (* self.n 3)))
+         (setv self.wired-list.colors (* (color self.stroke)
+                                         self.n))
+         (setv self.solid-list.colors (* (color self.fill)
+                                         (* self.n 3)))
 
-           (.draw self.slist gl.GL_TRIANGLES)
-           (.draw self.wlist gl.GL_LINE_LOOP))]])
+         (.draw self.solid-list gl.GL_TRIANGLES)
+         (.draw self.wired-list gl.GL_LINE_LOOP))]])
 
 
 (defn Polygon [n]
@@ -122,10 +129,12 @@
 
 
 (defn Frame []
-  (setv frame (new-blittable None))
+  (setv frame (_Entity))
 
   (defn draw []
-    (blit (_getRenderTexture)))
+    (setv texture (_getRenderTexture))
+    (when texture
+      (blit texture)))
 
   (setv frame.draw draw)
   frame)
