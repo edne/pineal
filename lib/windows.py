@@ -29,7 +29,6 @@ def new_renderer(visions):
     """
     W, H = RENDER_SIZE
     window = new_window(caption='(pineal renderer)',
-                        fullscreen=0,
                         width=W,
                         height=H,
                         visible=0)
@@ -94,13 +93,14 @@ def new_output_window(*args, **kwargs):
     def on_draw():
         w, h = window.width, window.height
         side = max(w, h)
+        texture = window.source.texture
 
         window.clear()
-        if window.source.texture:
-            window.source.texture.blit(-(side-w)/2,
-                                       -(side-h)/2,
-                                       0,
-                                       side, side)
+        if texture:
+            texture.blit(-(side-w)/2,
+                         -(side-h)/2,
+                         0,
+                         side, side)
 
     window.on_draw = on_draw
     return window
@@ -129,6 +129,7 @@ def new_overview(source):
     """
     window = new_output_window(resizable=True,
                                caption='(pineal overview)',
-                               width=600, height=450)
+                               width=600,
+                               height=450)
     window.source = source
     return window
