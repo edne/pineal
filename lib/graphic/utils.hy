@@ -54,11 +54,8 @@
                           (* n 3))])))
 
 (def memo-solid {})
-(def memo-wired {})
 
-(defn Polygon [n]
-  (setv p (_Entity))
-
+(defn polygon-solid [n]
   (defn fill [fill-color]
     (unless (in n memo-solid)
       (assoc memo-solid n
@@ -69,9 +66,12 @@
     (setv solid-list.colors
           (* (color fill-color) (* n 3)))
 
-    (.draw solid-list gl.GL_TRIANGLES))
-  (setv p.fill fill)
+    (.draw solid-list gl.GL_TRIANGLES)))
 
+
+(def memo-wired {})
+
+(defn polygon-wired [n]
   (defn stroke [stroke-color]
     (unless (in n memo-wired)
       (assoc memo-wired n
@@ -82,9 +82,13 @@
     (setv wired-list.colors
           (* (color stroke-color) n))
 
-    (.draw wired-list gl.GL_LINE_LOOP))
-  (setv p.stroke stroke)
+    (.draw wired-list gl.GL_LINE_LOOP)))
 
+
+(defn Polygon [n]
+  (setv p (_Entity))
+  (setv p.fill (polygon-solid n))
+  (setv p.stroke (polygon-wired n))
   p)
 
 
