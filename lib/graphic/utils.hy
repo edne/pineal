@@ -86,7 +86,7 @@
   p)
 
 
-(defn blit [img]
+(defn blit-img [img]
   (.blit img
          -1 1 0
          2 -2))
@@ -95,22 +95,22 @@
 (defn new-blittable [inner]
   (setv entity (_Entity))
 
-  (defn draw []
-      (blit inner))
+  (defn blit []
+      (blit-img inner))
 
-  (setv entity.draw draw)
+  (setv entity.blit blit)
   entity)
 
 
 (defn Frame []
   (setv frame (_Entity))
 
-  (defn draw []
+  (defn blit []
     (setv texture (_getRenderTexture))
     (when texture
-      (blit texture)))
+      (blit-img texture)))
 
-  (setv frame.draw draw)
+  (setv frame.blit blit)
   frame)
 
 

@@ -6,6 +6,7 @@ from random import *
 amp = audio.source("AMP")
 p = Polygon(4)
 frame = Frame()
+img = Image("alquemix")
 
 
 @turnaround(2)
@@ -19,12 +20,13 @@ def a():
     p.stroke = rgb(1 - c, c)
 
     p.draw()
+    img.blit()
 
 
 @turnaround(23)
 def feedback():
     scale(0.9)
-    frame.draw()
+    frame.blit()
 
 
 def draw():

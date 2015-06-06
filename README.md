@@ -45,7 +45,7 @@ def feedback():
     scale(0.98 + amp())
     frame.draw()
     scale(0.5 / (0.98 + amp()))
-    frame.draw()
+    frame.blit()
 
 
 def draw():
@@ -189,7 +189,8 @@ The Polygon object has the following properties:
 and methods:
 * `draw()`: draws the shape on the screen. Note: you can invoke this function multiple times, e.g. after you've tweaked some parameters.
 
-The Image object (as well as the Frame object) has the same properties and methods of the Polygon, except the coloring stuff (fill and stroke).
+The Image object has the following method:
+* `blit()`: to blit the image on the screen
 
 #### Color functions
 All those functions return a Color object, to be assigned to a fill or a stroke property
