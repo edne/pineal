@@ -75,41 +75,33 @@
                           (* n 3))])))
 
 
-(defclass _PolInt [_Entity]
-  "
-  Interface of polygon classes
-  "
-  [[_definePolygon
-     (with-decorator staticmethod (fn [c n]
-                                      (setv c.n n)))]
-
-   [draw
-     (fn [self]
-         (unless self.wired-list
-           (setv self.wired-list
-                 (build-wired-list self.n)))
-
-         (unless self.solid-list
-           (setv self.solid-list
-                 (build-solid-list self.n)))
-
-         (setv self.wired-list.colors (* (color self.stroke)
-                                         self.n))
-         (setv self.solid-list.colors (* (color self.fill)
-                                         (* self.n 3)))
-
-         (.draw self.solid-list gl.GL_TRIANGLES)
-         (.draw self.wired-list gl.GL_LINE_LOOP))]])
-
-
 (defn Polygon [n]
-  "
-  Generates a new polygon class, with the given number of sides,
-  and return an instance
-  "
-  (defclass PolClass [_PolInt] [])
-  (._definePolygon PolClass PolClass n)
-  (PolClass))
+  (setv p (_Entity))
+
+  ; vertex_list has to be generated inside draw
+  (setv p.wired-list None)
+  (setv p.solid-list None)
+
+  (defn draw []
+    (unless p.wired-list
+      (setv p.wired-list
+            (build-wired-list n)))
+
+    (unless p.solid-list
+      (setv p.solid-list
+            (build-solid-list n)))
+
+    (setv p.wired-list.colors
+          (* (color p.stroke) n))
+
+    (setv p.solid-list.colors
+          (* (color p.fill) (* n 3)))
+
+    (.draw p.solid-list gl.GL_TRIANGLES)
+    (.draw p.wired-list gl.GL_LINE_LOOP))
+
+  (setv p.draw draw)
+  p)
 
 
 (defn blit [img]
