@@ -17,28 +17,7 @@
   (% (* mult (time)) (* 2 pi)))
 
 
-(defclass _Entity []
-  "
-  Base class of drawing primitives
-  "
-  [[vertsGl None]
-   [n 4]
-   [solid-list []]
-   [wired-list []]
-
-   [_definePolygon
-     (with-decorator staticmethod (fn []))]
-
-   [__init__
-     (fn [self]
-         (setv self.fill
-               [1 1 1 1])
-         (setv self.stroke
-               [1 1 1 1])
-         None)]
-
-   [draw
-     (fn [self])]])
+(defclass _Entity [] [])
 
 
 (defn build-wired-list [n]
@@ -77,6 +56,9 @@
 
 (defn Polygon [n]
   (setv p (_Entity))
+
+  (setv p.fill [1 1 1 1])
+  (setv p.stroke [1 1 1 1])
 
   ; vertex_list has to be generated inside draw
   (setv p.wired-list None)
