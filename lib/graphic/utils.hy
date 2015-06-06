@@ -13,7 +13,7 @@
 
 
 (defun time2rad [&optional [mult 1]]
-  "trigonometric functions don't handle really hight numbers"
+  "trigonometric functions don't handle really high numbers"
   (% (* mult (time)) (* 2 pi)))
 
 
@@ -31,11 +31,6 @@
 
    [__init__
      (fn [self]
-         (setv self.r 1)
-
-         (setv [self.x self.y self.z]
-               [0 0 0])
-
          (setv self.fill
                [1 1 1 1])
          (setv self.stroke
@@ -56,15 +51,6 @@
 
    [draw
      (fn [self]
-         (when (!= self.r 0)  ; TODO do something else, please
-
-           (gl.glTranslatef self.x
-                            self.y
-                            self.z)
-           (gl.glScalef self.r
-                        self.r
-                        1)
-
            (unless self.wlist
              (setv self.wlist
                    (vertex_list self.n
@@ -106,14 +92,7 @@
                                       (* self.n 3)))
 
            (.draw self.slist gl.GL_TRIANGLES)
-           (.draw self.wlist gl.GL_LINE_LOOP)
-
-           (gl.glScalef (/ 1 self.r)
-                        (/ 1 self.r)
-                        1)
-           (gl.glTranslatef (- self.x)
-                            (- self.y)
-                            (- self.z))))]])
+           (.draw self.wlist gl.GL_LINE_LOOP))]])
 
 
 (defn Polygon [n]
@@ -131,14 +110,10 @@
   (setv entity.inner inner)  ; I don't like it, too OOP
 
   (defn draw []
-    (setv w (* 2 entity.r))
-    (setv h (* -2 entity.r))
     (if entity.inner
       (.blit entity.inner
-             (- entity.x (/ w 2))
-             (- entity.y (/ h 2))
-             entity.z
-             w h)))
+             -1 1 0
+             2 -2)))
 
   (setv entity.draw draw)
   entity)
