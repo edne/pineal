@@ -15,9 +15,18 @@ Examples
 --------
 
 ### random170215
-The code ([view the file](https://github.com/edne/pineal/blob/master/visions/examples/random170215.py)):
+The code:
 ```python
+from lib.graphic import *
+import lib.audio as audio
+from math import *
+from random import *
+from time import time
+
 amp = audio.source("AMP")
+bass = audio.source("(LPF 100) AMP")
+high = audio.source("(HPF 10000) AMP")
+
 p = Polygon(30)
 frame = Frame()
 
@@ -27,7 +36,7 @@ def a():
     translate(0.1 + amp())
     scale(0.04)
     p.fill = hsv(time())
-    p.stroke = rgb(0,0)
+    p.stroke = rgb(0, 0)
 
     p.draw()
 
@@ -40,10 +49,11 @@ def feedback():
 
 
 def draw():
+    strokeWeight(4)
+
     feedback()
     rotate(time2rad(2))
-    a()
-```
+    a()```
 tapping on the microphone outputs:
 ![random170215](http://giant.gfycat.com/AshamedOrangeEastsiberianlaika.gif)
 
