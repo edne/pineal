@@ -66,7 +66,8 @@
     (defn decorated [&rest args &kwargs kwargs]
       (for [i (range n)]
            (push)
-           (gl.glRotatef (/ (* 2 pi i) n)
+           (setv angle (/ (* 2 pi i) n))
+           (gl.glRotatef (/ (* angle 180) pi)
                          0 0 1)
            (gl.glTranslatef r 0 0)
            (apply f args kwargs)
