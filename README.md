@@ -27,14 +27,12 @@ amp = audio.source("AMP")
 bass = audio.source("(LPF 100) AMP")
 high = audio.source("(HPF 10000) AMP")
 
-p = polygon_solid(30)
-
 
 @turnaround(6)
 def a():
     translate(0.1 + amp())
     scale(0.04)
-    p(hsv(time()))
+    psolid(30, hsv(time()))
 
 
 def feedback():
@@ -106,7 +104,6 @@ All those files must be written in valid Python - if you save a broken source Pi
 A visual file is composed by those parts:
 * global declarations:
   - audio sources creation with the PinealAudioDSL
-  - polygon creation
 * a `draw()` function
 * a function for every layer of shape manipulation
 
@@ -133,18 +130,13 @@ mid = audio.source"(HPF 1000) (LPF 4000) AMP")  # mid() returns the volume of a 
 All the functions obtained through `audio.source` will return a float value of the currespondent parameter (respectively amplitude, bass and high), in the `[0.0, 1.0]` range.
 
 #### Polygons
-You can create a new shape with the `polygon_solid(sides)` or the `polygon_wired(sides)` constructor, passing the number of desidered sides in as a parameter.
-Polygons are functions, they take a value from the hsv or rgb function and display the shape on the screen
+You can draw a new shape with the `psolid(sides, color)` or the `pwired(sides, color)` functions, passing the number of desidered sides and the color in as a parameter.
+Colors are generated with `rgb()` and `hsv()` functions.
 
 Example:
 ```python
-p = polygon_wired(4)  # p is an empty square
-q = polygon_solid(40)  # q is almost a circle
-```
-and inside draw():
-```python
-p(rgb(1))  # shows a white square
-q(hsv(0.3))  # shows a green circle
+p(4, rgb(1))  # shows a white square
+q(40, hsv(0.3))  # shows a green circle
 ```
 
 
