@@ -9,11 +9,9 @@ amp = audio.source("AMP")
 def draw():
     strokeWeight(4)
 
-    @turnaround(2)
-    @translate(0.5 + amp())
-    @scale(0.4)
+    c = 8*amp() + 0.1
+
     def square():
-        c = 8*amp()
         psolid(4)(rgb(1, c))
         pwired(4)(hsv(1 - c, c))
 
@@ -21,4 +19,7 @@ def draw():
        scale(0.9),
        frame)()
 
-    square()
+    do(turnaround(2),
+       translate(0.5 + amp()),
+       scale(0.4),
+       square)()
