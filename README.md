@@ -50,7 +50,8 @@ def draw():
 
     feedback()
     rotate(time2rad(2))
-    a()```
+    a()
+```
 tapping on the microphone outputs:
 ![random170215](http://giant.gfycat.com/AshamedOrangeEastsiberianlaika.gif)
 
