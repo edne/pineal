@@ -32,7 +32,7 @@ high = audio.source("(HPF 10000) AMP")
 def a():
     translate(0.1 + amp())
     scale(0.04)
-    psolid(30, hsv(time()))
+    psolid(30)(hsv(time()))
 
 
 def feedback():
@@ -130,13 +130,21 @@ mid = audio.source"(HPF 1000) (LPF 4000) AMP")  # mid() returns the volume of a 
 All the functions obtained through `audio.source` will return a float value of the currespondent parameter (respectively amplitude, bass and high), in the `[0.0, 1.0]` range.
 
 #### Polygons
-You can draw a new shape with the `psolid(sides, color)` or the `pwired(sides, color)` functions, passing the number of desidered sides and the color in as a parameter.
-Colors are generated with `rgb()` and `hsv()` functions.
+You can draw a new shape with the `psolid(sides, color)` or the `pwired(sides)` constructor, passing the number of desidered sides in as a parameter.
+Polygons are functions, they take a value from the hsv or rgb function and display the shape on the screen
 
 Example:
 ```python
-p(4, rgb(1))  # shows a white square
-q(40, hsv(0.3))  # shows a green circle
+p = pwired(4)  # p is an empty square
+q = psolid(40)  # q is almost a circle
+# and then:
+p(rgb(1))  # shows a white square
+q(hsv(0.3))  # shows a green circle
+```
+or in a more compact way:
+```python
+pwired(4)(rgb(1))
+psolid(40)(hsv(0.3))
 ```
 
 

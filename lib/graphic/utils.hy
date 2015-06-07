@@ -52,32 +52,34 @@
 
 (def memo-solid {})
 
-(defn psolid [n fill-color]
-  (unless (in n memo-solid)
-    (assoc memo-solid n
-           (build-solid-list n)))
+(defn psolid [n]
+  (defn fill [fill-color]
+    (unless (in n memo-solid)
+      (assoc memo-solid n
+             (build-solid-list n)))
 
-  (setv solid-list
-        (get memo-solid n))
-  (setv solid-list.colors
-        (* (color fill-color) (* n 3)))
+    (setv solid-list
+          (get memo-solid n))
+    (setv solid-list.colors
+          (* (color fill-color) (* n 3)))
 
-  (.draw solid-list gl.GL_TRIANGLES))
+    (.draw solid-list gl.GL_TRIANGLES)))
 
 
 (def memo-wired {})
 
-(defn pwired [n stroke-color]
-  (unless (in n memo-wired)
-    (assoc memo-wired n
-           (build-wired-list n)))
+(defn pwired [n]
+  (defn stroke [stroke-color]
+    (unless (in n memo-wired)
+      (assoc memo-wired n
+             (build-wired-list n)))
 
-  (setv wired-list
-        (get memo-wired n))
-  (setv wired-list.colors
-        (* (color stroke-color) n))
+    (setv wired-list
+          (get memo-wired n))
+    (setv wired-list.colors
+          (* (color stroke-color) n))
 
-  (.draw wired-list gl.GL_LINE_LOOP))
+    (.draw wired-list gl.GL_LINE_LOOP)))
 
 
 (defn blit-img [img]

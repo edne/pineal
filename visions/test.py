@@ -13,8 +13,8 @@ def a():
     scale(0.4)
 
     c = 8*amp()
-    psolid(4, rgb(1, c))
-    pwired(4, hsv(1 - c, c))
+    psolid(4)(rgb(1, c))
+    pwired(4)(hsv(1 - c, c))
 
 
 @turnaround(23)
