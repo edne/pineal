@@ -17,6 +17,12 @@
   (% (* mult (time)) (* 2 pi)))
 
 
+(defun nestle [&rest fs]
+    (if (cdr fs)
+      ((car fs) (apply nestle (cdr fs)))
+      (car fs)))
+
+
 (defn build-wired-list [n]
   (vertex_list n
                (tuple ["v2f/static"
