@@ -20,7 +20,7 @@
 (defun nestle [&rest fs]
     (if (cdr fs)
       ((car fs) (apply nestle (cdr fs)))
-      (car fs)))
+      ((car fs))))
 
 
 (defn build-wired-list [n]
@@ -60,32 +60,38 @@
 
 (defn psolid [n]
   (defn fill [fill-color]
-    (unless (in n memo-solid)
-      (assoc memo-solid n
-             (build-solid-list n)))
+    (fn [&optional f]
+        (fn []
+            (unless (in n memo-solid)
+              (assoc memo-solid n
+                     (build-solid-list n)))
 
-    (setv solid-list
-          (get memo-solid n))
-    (setv solid-list.colors
-          (* (color fill-color) (* n 3)))
+            (setv solid-list
+                  (get memo-solid n))
+            (setv solid-list.colors
+                  (* (color fill-color) (* n 3)))
 
-    (.draw solid-list gl.GL_TRIANGLES)))
+            (.draw solid-list gl.GL_TRIANGLES)
+            (when f (f))))))
 
 
 (def memo-wired {})
 
 (defn pwired [n]
   (defn stroke [stroke-color]
-    (unless (in n memo-wired)
-      (assoc memo-wired n
-             (build-wired-list n)))
+    (fn [&optional f]
+        (fn []
+            (unless (in n memo-wired)
+              (assoc memo-wired n
+                     (build-wired-list n)))
 
-    (setv wired-list
-          (get memo-wired n))
-    (setv wired-list.colors
-          (* (color stroke-color) n))
+            (setv wired-list
+                  (get memo-wired n))
+            (setv wired-list.colors
+                  (* (color stroke-color) n))
 
-    (.draw wired-list gl.GL_LINE_LOOP)))
+            (.draw wired-list gl.GL_LINE_LOOP)
+            (when f (f))))))
 
 
 (defn blit-img [img]
@@ -95,14 +101,15 @@
 
 
 (defn new-blittable [inner]
-  (defn blit []
-      (blit-img inner))
-  blit)
+  (fn []
+      (blit-img inner)))
 
 
-(defn frame []
-  (setv texture (_getRenderTexture))
-  (when texture (blit-img texture)))
+(defn frame [&optional f]
+  (fn []
+      (setv texture (_getRenderTexture))
+      (when texture (blit-img texture))
+      (when f (f))))
 
 
 (def memo-img {})
@@ -111,9 +118,12 @@
   "
   Image from png file
   "
-  (unless (in name memo-img)
-    (assoc memo-img name
-           (new-blittable (apply pyglet.image.load
-                                 [(+ "images/" name ".png")]
-                                 {"decoder" (PNGImageDecoder)}))))
-  ((get memo-img name)))
+  (fn [&optional f]
+      (fn []
+          (unless (in name memo-img)
+            (assoc memo-img name
+                   (new-blittable (apply pyglet.image.load
+                                         [(+ "images/" name ".png")]
+                                         {"decoder" (PNGImageDecoder)}))))
+          ((get memo-img name))
+          (when f (f)))))
