@@ -12,10 +12,13 @@ def draw():
 
     do(turnaround(23),
        scale(0.9),
-       frame)()
+       frame)
 
     do(turnaround(2),
        translate(0.5 + amp()),
        scale(0.4),
        psolid(4)(rgb(1, c)),
-       pwired(4)(hsv(1 - c, c)))()
+       pwired(4)(hsv(1 - c, c)))
+
+    do(scale(1 + amp()),
+       pwired(4)(rgb(0, 1, 0)))
