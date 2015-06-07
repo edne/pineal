@@ -85,13 +85,6 @@
     (.draw wired-list gl.GL_LINE_LOOP)))
 
 
-(defn Polygon [n]
-  (setv p (_Entity))
-  (setv p.fill (polygon-solid n))
-  (setv p.stroke (polygon-wired n))
-  p)
-
-
 (defn blit-img [img]
   (.blit img
          -1 1 0

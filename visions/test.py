@@ -4,7 +4,8 @@ from math import *
 from random import *
 
 amp = audio.source("AMP")
-p = Polygon(4)
+solid = polygon_solid(4)
+wired = polygon_wired(4)
 frame = Frame()
 
 
@@ -15,8 +16,8 @@ def a():
     scale(0.4)
 
     c = 8*amp()
-    p.fill(rgb(1, c))
-    p.stroke(hsv(1 - c, c))
+    solid(rgb(1, c))
+    wired(hsv(1 - c, c))
 
 
 @turnaround(23)

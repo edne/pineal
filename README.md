@@ -27,7 +27,7 @@ amp = audio.source("AMP")
 bass = audio.source("(LPF 100) AMP")
 high = audio.source("(HPF 10000) AMP")
 
-p = Polygon(30)
+p = polygon_solid(30)
 frame = Frame()
 
 
@@ -35,8 +35,7 @@ frame = Frame()
 def a():
     translate(0.1 + amp())
     scale(0.04)
-    p.fill(hsv(time()))
-    p.stroke(rgb(0, 0))
+    p(hsv(time()))
 
 
 def feedback():
@@ -136,13 +135,20 @@ mid = audio.source"(HPF 1000) (LPF 4000) AMP")  # mid() returns the volume of a 
 All the functions obtained through `audio.source` will return a float value of the currespondent parameter (respectively amplitude, bass and high), in the `[0.0, 1.0]` range.
 
 #### Polygons
-You can create a new shape with the `Polygon(sides)` constructor, passing the number of desidered sides in as a parameter.
+You can create a new shape with the `polygon_solid(sides)` or the `polygon_wired(sides)` constructor, passing the number of desidered sides in as a parameter.
+Polygons are functions, they take a value from the hsv or rgb function and display the shape on the screen
 
 Example:
 ```python
-p = Polygon(4)  # p is a square
-q = Polygon(40)  # q is almost a circle
+p = polygon_wired(4)  # p is an empty square
+q = polygon_solid(40)  # q is almost a circle
 ```
+and inside draw():
+```python
+p(rgb(1))  # shows a white square
+q(hsv(0.3))  # shows a green circle
+```
+
 
 #### Images
 You can load images into Pineal as long as they are in png format and in the `images` folder.
@@ -178,15 +184,7 @@ You can apply a bunch of decorators to each layer, for easy transforms:
 * `@turnaround(n)`: draws the layer n times, rotating it by one complete rotation divided by n.
 * `@pushmatrix`: isolates the other functions from transformations applied into the function
 
-#### Objects properties - polygons and images
-
-The Polygon object has the following properties:
-* `fill(color)`: draws the shape on the screen, takes a value from the hsv or rgb function
-* `stroke(color)`: draws only the border of the shape on the screen, takes a value from the hsv or rgb function
-
-and methods:
-* `draw()`: draws the shape on the screen. Note: you can invoke this function multiple times, e.g. after you've tweaked some parameters.
-
+#### Objects properties - images
 The Image object has the following method:
 * `blit()`: to blit the image on the screen
 
