@@ -28,7 +28,7 @@ bass = audio.source("(LPF 100) AMP")
 high = audio.source("(HPF 10000) AMP")
 
 p = polygon_solid(30)
-frame = Frame()
+frame = last_frame()
 
 
 @turnaround(6)
@@ -40,9 +40,9 @@ def a():
 
 def feedback():
     scale(0.98 + amp())
-    frame.blit()
+    frame()
     scale(0.5 / (0.98 + amp()))
-    frame.blit()
+    frame()
 
 
 def draw():
@@ -152,17 +152,18 @@ q(hsv(0.3))  # shows a green circle
 
 #### Images
 You can load images into Pineal as long as they are in png format and in the `images` folder.
+Images are functions, diplayed when called
 
 ```python
-# This loads the images/antani.png file
-image = Image("antani")
+# This loads the images/antani.png file, calling image() will be diplayed
+image = load_image("antani")
 ```
 
-#### Frame
-The Frame is a dynamic image - it contains the screenshot of what you drawn just one moment ago - interesting for creating some magic feedback effects.
+#### last_frame
+The last_frame is a dynamic image - it contains the screenshot of what you drawn just one moment ago - interesting for creating some magic feedback effects.
 
 ```python
-frame = Frame()
+frame = last_frame()
 ```
 
 ### Layers
@@ -183,10 +184,6 @@ Keep in mind that the coordinates of the screen canvas on which you are drawing 
 You can apply a bunch of decorators to each layer, for easy transforms:
 * `@turnaround(n)`: draws the layer n times, rotating it by one complete rotation divided by n.
 * `@pushmatrix`: isolates the other functions from transformations applied into the function
-
-#### Objects properties - images
-The Image object has the following method:
-* `blit()`: to blit the image on the screen
 
 #### Color functions
 All those functions return a Color object, to be assigned to a fill or a stroke property

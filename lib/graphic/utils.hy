@@ -17,9 +17,6 @@
   (% (* mult (time)) (* 2 pi)))
 
 
-(defclass _Entity [] [])
-
-
 (defn build-wired-list [n]
   (vertex_list n
                (tuple ["v2f/static"
@@ -92,28 +89,19 @@
 
 
 (defn new-blittable [inner]
-  (setv entity (_Entity))
-
   (defn blit []
       (blit-img inner))
-
-  (setv entity.blit blit)
-  entity)
+  blit)
 
 
-(defn Frame []
-  (setv frame (_Entity))
-
+(defn last-frame []
   (defn blit []
     (setv texture (_getRenderTexture))
-    (when texture
-      (blit-img texture)))
-
-  (setv frame.blit blit)
-  frame)
+    (when texture (blit-img texture)))
+  blit)
 
 
-(defn Image [name]
+(defn load-image [name]
   "
   Image from png file
   "
