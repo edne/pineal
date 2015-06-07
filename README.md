@@ -28,7 +28,6 @@ bass = audio.source("(LPF 100) AMP")
 high = audio.source("(HPF 10000) AMP")
 
 p = polygon_solid(30)
-frame = last_frame()
 
 
 @turnaround(6)
@@ -108,8 +107,6 @@ A visual file is composed by those parts:
 * global declarations:
   - audio sources creation with the PinealAudioDSL
   - polygon creation
-  - image loading
-  - Frame instantiation
 * a `draw()` function
 * a function for every layer of shape manipulation
 
@@ -153,18 +150,18 @@ q(hsv(0.3))  # shows a green circle
 
 #### Images
 You can load images into Pineal as long as they are in png format and in the `images` folder.
-Images are functions, diplayed when called
+The file is loaded just the first time the function is called.
 
 ```python
-# This loads the images/antani.png file, calling image() will be diplayed
-image = load_image("antani")
+# This shows the images/antani.png file
+image("antani")
 ```
 
-#### last_frame
-The last_frame is a dynamic image - it contains the screenshot of what you drawn just one moment ago - interesting for creating some magic feedback effects.
+#### frame
+The frame is a dynamic image - it contains the screenshot of what you drawn just one moment ago - interesting for creating some magic feedback effects.
 
 ```python
-frame = last_frame()
+frame()  # shows the screenshot
 ```
 
 ### Layers

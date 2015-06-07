@@ -6,7 +6,6 @@ from random import *
 amp = audio.source("AMP")
 solid = polygon_solid(4)
 wired = polygon_wired(4)
-frame = last_frame()
 
 
 @turnaround(2)

@@ -94,17 +94,20 @@
   blit)
 
 
-(defn last-frame []
-  (defn blit []
-    (setv texture (_getRenderTexture))
-    (when texture (blit-img texture)))
-  blit)
+(defn frame []
+  (setv texture (_getRenderTexture))
+  (when texture (blit-img texture)))
 
 
-(defn load-image [name]
+(def memo-img {})
+
+(defn image [name]
   "
   Image from png file
   "
-  (new-blittable (apply pyglet.image.load
-                        [(+ "images/" name ".png")]
-                        {"decoder" (PNGImageDecoder)})))
+  (unless (in name memo-img)
+    (assoc memo-img name
+           (new-blittable (apply pyglet.image.load
+                                 [(+ "images/" name ".png")]
+                                 {"decoder" (PNGImageDecoder)}))))
+  ((get memo-img name)))
