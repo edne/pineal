@@ -54,24 +54,6 @@
                          x y z)))
 
 
-(defn rotateX [angle]
-  (gl.glRotatef
-    (* pi (/ angle 180))
-    1 0 0))
-
-
-(defn rotateY [angle]
-  (gl.glRotatef
-    (/ (* angle 180) pi)
-    0 1 0))
-
-
-(defn rotateZ [angle]
-  (gl.glRotatef
-    (/ (* angle 180) pi)
-    0 0 1))
-
-
 (defmulti translate
           ([x]     (gl.glTranslatef x 0 0))
           ([x y]   (gl.glTranslatef x y 0))
@@ -84,8 +66,9 @@
     (defn decorated [&rest args &kwargs kwargs]
       (for [i (range n)]
            (push)
-           (rotate (/ (* 2 pi i) n))
-           (translate r)
+           (gl.glRotatef (/ (* 2 pi i) n)
+                         0 0 1)
+           (gl.glTranslatef r 0 0)
            (apply f args kwargs)
            (pop)))))
 
@@ -95,15 +78,15 @@
   (defn decorator [f]
     (defn decorated [&rest args &kwargs kwargs]
       (push)
-      (translate -1)
-      (translate (/ 1 n))
+      (gl.glTranslatef -1 0 0)
+      (gl.glTranslatef (/ 1 n) 0 0)
       (for [i (range n)]
            (push)
-           (translate 0 -1)
-           (translate 0 (/ 1 m))
+           (gl.glTranslatef 0 -1 0)
+           (gl.glTranslatef 0 (/ 1 m) 0)
            (for [j (range m)]
                 (apply f args kwargs)
-                (translate 0 (/ 2 m)))
+                (gl.glTranslatef 0 (/ 2 m) 0))
            (pop)
-           (translate (/ 2 n)))
+           (gl.glTranslatef (/ 2 n) 0 0))
       (pop))))
