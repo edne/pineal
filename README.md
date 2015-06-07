@@ -11,48 +11,6 @@ __but in Python!__
 is still in Python and I'm not planning to change that)
 
 
-Examples
---------
-
-### random170215
-The code:
-```python
-from lib.graphic import *
-import lib.audio as audio
-from math import *
-from random import *
-from time import time
-
-amp = audio.source("AMP")
-bass = audio.source("(LPF 100) AMP")
-high = audio.source("(HPF 10000) AMP")
-
-
-@turnaround(6)
-def a():
-    translate(0.1 + amp())
-    scale(0.04)
-    psolid(30)(hsv(time()))
-
-
-def feedback():
-    scale(0.98 + amp())
-    frame()
-    scale(0.5 / (0.98 + amp()))
-    frame()
-
-
-def draw():
-    strokeWeight(4)
-
-    feedback()
-    rotate(time2rad(2))
-    a()
-```
-tapping on the microphone outputs:
-![random170215](http://giant.gfycat.com/AshamedOrangeEastsiberianlaika.gif)
-
-
 Instructions
 ------------
 * Play your music
@@ -84,11 +42,6 @@ Hacking
 * Make a pull-request
 
 
-IRC
----
-`#pineal` on Freenode
-
-
 License
 -------
 This project is released under the terms of [GNU AGPL](http://www.gnu.org/licenses/agpl-3.0.html), see [LICENSE](LICENSE) file for details
@@ -105,7 +58,7 @@ A visual file is composed by those parts:
 * global declarations:
   - audio sources creation with the PinealAudioDSL
 * a `draw()` function
-* a function for every layer of shape manipulation
+* containing a function for every layer of shape manipulation
 
 ### Global declarations
 
@@ -170,7 +123,6 @@ Why is it convenient to do that?
 Mainly because Pineal provides a set of Decorators that you can apply to the function, to apply a transformation to the layer in an easy way.
 
 #### Layer methods
-Keep in mind that the coordinates of the screen canvas on which you are drawing are between -1 and 1 (this holds for both X and Y)
 
 * `translate(x)`: moves the layer to the left or to the right of the x amount
 * `translate(x, y)`: set both x and y
@@ -179,9 +131,14 @@ Keep in mind that the coordinates of the screen canvas on which you are drawing 
 * `scale(x, y)`: scales both x and y. Of course if you pass '1' as a value no transformation is applied
 
 #### Decorators
+Keep in mind that the coordinates of the screen canvas on which you are drawing are between -1 and 1 (this holds for both X and Y)
 You can apply a bunch of decorators to each layer, for easy transforms:
+* `@translate(x)`: moves the layer to the left or to the right of the x amount
+* `@translate(x, y)`: set both x and y
+* `@rotate(rad)`: rotates the layer of the rad amount (in radiants). To keep things rotating try to pass in e.g. `time.time()`
+* `@scale(x)`: scales the layer horizontally
+* `@scale(x, y)`: scales both x and y. Of course if you pass '1' as a value no transformation is applied
 * `@turnaround(n)`: draws the layer n times, rotating it by one complete rotation divided by n.
-* `@pushmatrix`: isolates the other functions from transformations applied into the function
 
 #### Color functions
 All those functions return a Color object, to be assigned to a fill or a stroke property
