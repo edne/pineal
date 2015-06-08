@@ -11,6 +11,47 @@ __but in Python!__
 is still in Python and I'm not planning to change that)
 
 
+Examples
+--------
+
+### random170215
+The code:
+```python
+from lib.graphic import *
+import lib.audio as audio
+from math import *
+from random import *
+from time import time
+
+amp = audio.source("AMP")
+bass = audio.source("(LPF 100) AMP")
+high = audio.source("(HPF 10000) AMP")
+
+
+def draw():
+    strokeWeight(4)
+
+    do(
+        scale(0.98 + 2*amp()),
+        frame,
+    )
+    do(
+        scale(0.5),
+        frame,
+    )
+
+    do(
+        rotate(time2rad(2)),
+        turnaround(6),
+        translate(0.1 + 2*amp()),
+        scale(0.04),
+        psolid(30)(hsv(time())),
+    )
+```
+tapping on the microphone outputs:
+![random170215](http://giant.gfycat.com/AshamedOrangeEastsiberianlaika.gif)
+
+
 Instructions
 ------------
 * Play your music
@@ -83,21 +124,21 @@ mid = audio.source"(HPF 1000) (LPF 4000) AMP")  # mid() returns the volume of a 
 All the functions obtained through `audio.source` will return a float value of the currespondent parameter (respectively amplitude, bass and high), in the `[0.0, 1.0]` range.
 
 #### Polygons
-You can draw a new shape with the `psolid(sides, color)` or the `pwired(sides)` constructor, passing the number of desidered sides in as a parameter.
-Polygons are functions, they take a value from the hsv or rgb function and display the shape on the screen
-
 Example:
 ```python
-p = pwired(4)  # p is an empty square
+p = pwired(4)  # p is an empty square, 4 is the number of sides
 q = psolid(40)  # q is almost a circle
 # and then:
-p(rgb(1))  # shows a white square
-q(hsv(0.3))  # shows a green circle
+colored_p = p(rgb(1))  # generate a white square
+colored_q = (hsv(0.3))  # generate a green circle
+# finally show with:
+colored_p()
+colored_q()
 ```
 or in a more compact way:
 ```python
-pwired(4)(rgb(1))
-psolid(40)(hsv(0.3))
+pwired(4)(rgb(1))()
+psolid(40)(hsv(0.3))()
 ```
 
 
@@ -106,8 +147,14 @@ You can load images into Pineal as long as they are in png format and in the `im
 The file is loaded just the first time the function is called.
 
 ```python
-# This shows the images/antani.png file
-image("antani")
+# This load the images/antani.png file
+img = image("antani")
+# and this shows it
+img()
+```
+or in a compact way:
+```python
+image("antani")()
 ```
 
 #### frame
@@ -122,14 +169,6 @@ A clean way to draw multiple indipendent layers on the screen (in order to make 
 Why is it convenient to do that?
 Mainly because Pineal provides a set of Decorators that you can apply to the function, to apply a transformation to the layer in an easy way.
 
-#### Layer methods
-
-* `translate(x)`: moves the layer to the left or to the right of the x amount
-* `translate(x, y)`: set both x and y
-* `rotate(rad)`: rotates the layer of the rad amount (in radiants). To keep things rotating try to pass in e.g. `time.time()`
-* `scale(x)`: scales the layer horizontally
-* `scale(x, y)`: scales both x and y. Of course if you pass '1' as a value no transformation is applied
-
 #### Decorators
 Keep in mind that the coordinates of the screen canvas on which you are drawing are between -1 and 1 (this holds for both X and Y)
 You can apply a bunch of decorators to each layer, for easy transforms:
@@ -139,6 +178,22 @@ You can apply a bunch of decorators to each layer, for easy transforms:
 * `@scale(x)`: scales the layer horizontally
 * `@scale(x, y)`: scales both x and y. Of course if you pass '1' as a value no transformation is applied
 * `@turnaround(n)`: draws the layer n times, rotating it by one complete rotation divided by n.
+
+#### Do
+Decorators and drawing functions can be nestled with the do syntax:
+```python
+do(
+    turnaround(23),
+    scale(0.9),
+    frame,
+)
+
+do(
+    translate(0.5 + amp()),
+    psolid(4)(rgb(1)),
+    pwired(4)(hsv(0.3)),
+)
+```
 
 #### Color functions
 All those functions return a Color object, to be assigned to a fill or a stroke property

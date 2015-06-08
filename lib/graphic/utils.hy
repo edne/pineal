@@ -21,15 +21,17 @@
   (defn nestle-inner [&rest fs]
     (if (cdr fs)
       ((car fs) (apply nestle-inner (cdr fs)))
-      ((car fs))))
+      (car fs)))
   ((apply nestle-inner fs)))
 
 
 (defn pack [f]
   (fn [&optional next]
+      (if next
       (fn []
           (f)
-          (when next (next)))))
+          (next))
+      (f))))
 
 
 (defn build-wired-list [n]
