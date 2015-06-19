@@ -22,7 +22,7 @@
     (if (cdr fs)
       ((car fs) (apply nestle-inner (cdr fs)))
       (car fs)))
-  ((apply nestle-inner fs)))
+  (apply nestle-inner fs))
 
 
 (defn pack [f]
