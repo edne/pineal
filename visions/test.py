@@ -9,27 +9,25 @@ high = audio.source("(HPF 10000) AMP")
 
 
 def draw():
-    strokeWeight(4)
-    c = 8*amp() + 0.1
+    strokeWeight(5)
 
     do(
-        turnaround(1),  # 23
-        scale(0.9),
+        turnaround(7),
+        scale(0.92 + 8*bass() + 4*amp()),
         frame,
     )()
 
-    some = do(
-        pwired(3)(rgb(0, 0, 1)),
-    )
-
-    n = 3 + int(8*bass())
     do(
-        some,
-        turnaround(n),
-        scale(0.9 + high()),
-        pwired(4)(rgb(1, 4*amp())),
-        translate(1 - 4*bass()),
-        scale(0.1),
-        psolid(n)(rgb(1, 0*0.1)),
-        pwired(n)(hsv(1 - c, 0*c)),
+        scale(0.94 + 0*bass()),
+        frame,
+    )()
+
+    n = 4
+    do(
+        turnaround(4 * int(100*bass()) or 4),
+        translate(0.5 + 8*bass()),
+        scale(4*bass()),
+        scale(2 + 16*amp()),
+        psolid(n)(rgb(0, 0.5)),
+        pwired(n)(hsv(2*time(), 1 - bass())),
     )()
