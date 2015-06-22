@@ -34,11 +34,11 @@ def draw():
     do(
         scale(0.98 + 2*amp()),
         frame,
-    )
+    )()
     do(
         scale(0.5),
         frame,
-    )
+    )()
 
     do(
         rotate(time2rad(2)),
@@ -46,7 +46,7 @@ def draw():
         translate(0.1 + 2*amp()),
         scale(0.04),
         psolid(30)(hsv(time())),
-    )
+    )()
 ```
 tapping on the microphone outputs:
 ![random170215](http://giant.gfycat.com/AshamedOrangeEastsiberianlaika.gif)
@@ -186,13 +186,13 @@ do(
     turnaround(23),
     scale(0.9),
     frame,
-)
+)()
 
 do(
     translate(0.5 + amp()),
     psolid(4)(rgb(1)),
     pwired(4)(hsv(0.3)),
-)
+)()
 ```
 
 #### Color functions
