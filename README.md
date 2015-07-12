@@ -74,18 +74,20 @@ Dependencies
   and manually download and install Pyo from [ajaxsoundstudio.com](http://ajaxsoundstudio.com/software/pyo/).
 
 
-Hacking
--------
-* Fork
-* Write your amazing graphical modules in `lib/graphic/` folder using Python or Hy
-* Import them in `lib/graphic/__init__.py`
-* Check if everyting works
-* Make a pull-request
-
-
 License
 -------
 This project is released under the terms of [GNU AGPL](http://www.gnu.org/licenses/agpl-3.0.html), see [LICENSE](LICENSE) file for details
+
+
+Warning
+-------
+This project is heavily in development. You can use it, I use it in "production"
+(coding at parties). But be prepared to continuous and unexpected changes in
+syntax (it's getting even more functional) and new features that randomly appear
+or disappear.
+
+I'll try to keep the following section updated, in case of doubt you can look at
+`visions/test.py`, it should always work.
 
 
 Little Tutorial
