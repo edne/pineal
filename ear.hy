@@ -12,27 +12,14 @@
 (require lib.runner)
 
 
-; A small DSL for audio analysis:
-(defmacro AMP [src]
-  `(pyo.Follower ~src))
+(defn AMP [src]
+  (pyo.Follower src))
 
-(defmacro LPF [src f]
-  `(apply pyo.Biquad [~src ~f] {"type" 0}))
+(defn LPF [src f]
+  (apply pyo.Biquad [src f] {"type" 0}))
 
-(defmacro HPF [src f]
-  `(apply pyo.Biquad [~src ~f] {"type" 1}))
-
-; examples:
-;   "AMP"             volume
-;   "(LPF 100) AMP"   volume of low-passed signal @ 100 Hz
-;   "(HPF 10000) AMP" volume of high-passed signal @ 10 kHz
-
-; and the macro to "interpreter" it and generate audio units:
-(defmacro Ugen [src cmd]
-  `(-> (+ "(do
-             (import pyo)
-             (-> " '~src " " ~cmd "))")
-     tokenize first eval))
+(defn HPF [src f]
+  (apply pyo.Biquad [src f] {"type" 1}))
 
 
 (runner Ear [self]
@@ -63,9 +50,9 @@
 
         (setv osc-send (osc-sender OSC_EYE))
 
-        (setv amp (Ugen self.src "AMP"))
-        (setv bass (Ugen self.src "(LPF 100) AMP"))
-        (setv high (Ugen self.src "(HPF 10000) AMP"))
+        (setv amp  (-> self.src AMP))
+        (setv bass (-> self.src (LPF 100) AMP))
+        (setv high (-> self.src (HPF 10000) AMP))
 
         (running (osc-send "/eye/audio/amp"  (float (.get amp)))
                  (osc-send "/eye/audio/bass" (float (.get bass)))
