@@ -32,63 +32,63 @@
   `(-> (+ "(do
              (import pyo)
              (-> " '~src " " ~cmd "))")
-       tokenize first eval))
+     tokenize first eval))
 
 
 (runner Ear [self]
-         (print "starting ear.hy")
+        (print "starting ear.hy")
 
-          (setv pyo-server
-                (apply pyo.Server
-                       []
-                       {"audio" BACKEND
-                       "jackname" "(pineal)"
-                       "nchnls" 2}))
+        (setv pyo-server
+          (apply pyo.Server
+            []
+            {"audio" BACKEND
+             "jackname" "(pineal)"
+             "nchnls" 2}))
 
-          (if (= BACKEND "jack")
-            (.setInputOffset pyo-server 2))
+        (if (= BACKEND "jack")
+          (.setInputOffset pyo-server 2))
 
-          (.boot pyo-server)
-          (.start pyo-server)
+        (.boot pyo-server)
+        (.start pyo-server)
 
-          (try (do
-                 (setv self.src
-                       (apply pyo.Input
-                              []
-                              {"chnl" [0 1]}))
-                 (print "Pyo is working properly!\n"))
-               (catch [pyo.PyoServerStateException]
-                      (print "Pyo is not working")
-                      (exit 1)))
+        (try (do
+               (setv self.src
+                 (apply pyo.Input
+                   []
+                   {"chnl" [0 1]}))
+               (print "Pyo is working properly!\n"))
+          (catch [pyo.PyoServerStateException]
+            (print "Pyo is not working")
+            (exit 1)))
 
-          (setv self.units {})
+        (setv self.units {})
 
-          (setv osc-send (osc-sender OSC_EYE))
+        (setv osc-send (osc-sender OSC_EYE))
 
-          (defn code-cb [path args]
-            (setv [cmd] args)
-            (assoc self.units
-                   cmd
-                   (Ugen self.src cmd)))
+        (defn code-cb [path args]
+          (setv [cmd] args)
+          (assoc self.units
+            cmd
+            (Ugen self.src cmd)))
 
-          (setv osc-receiver-start
-                (osc-receiver OSC_EAR
-                              {"/ear/code" code-cb}))
-          (setv osc-receiver-stop
-                (osc-receiver-start))
+        (setv osc-receiver-start
+          (osc-receiver OSC_EAR
+                        {"/ear/code" code-cb}))
+        (setv osc-receiver-stop
+          (osc-receiver-start))
 
-          (running
-            (for [cmd (.keys self.units)]
-                 (osc-send (+ "/eye/audio/" cmd)
-                           [(-> self.units
+        (running
+                 (for [cmd (.keys self.units)]
+                   (osc-send (+ "/eye/audio/" cmd)
+                             [(-> self.units
                                 (get cmd) .get
                                 float)]))
-            (sleep (/ 1 30)))
+                 (sleep (/ 1 30)))
 
-          (print "\rstopping ear.hy")
-          (osc-receiver-stop)
-          (.stop pyo-server)
-          (del pyo-server))
+        (print "\rstopping ear.hy")
+        (osc-receiver-stop)
+        (.stop pyo-server)
+        (del pyo-server))
 
 
 (defmain [args]
