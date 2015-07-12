@@ -77,12 +77,19 @@
         (setv osc-receiver-stop
           (osc-receiver-start))
 
+        (setv amp (Ugen self.src "AMP"))
+        (setv bass (Ugen self.src "(LPF 100) AMP"))
+        (setv high (Ugen self.src "(HPF 10000) AMP"))
+
         (running
                  (for [cmd (.keys self.units)]
                    (osc-send (+ "/eye/audio/" cmd)
                              [(-> self.units
                                 (get cmd) .get
                                 float)]))
+                 (osc-send "/eye/audio/amp"  (float (.get amp)))
+                 (osc-send "/eye/audio/bass" (float (.get bass)))
+                 (osc-send "/eye/audio/high" (float (.get high)))
                  (sleep (/ 1 30)))
 
         (print "\rstopping ear.hy")

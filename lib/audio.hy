@@ -2,15 +2,16 @@
   [osc [nerve-send nerve-cb!]])
 
 
-(defn source [code]
-  "Permits to get audio signals in the livecoding part"
+(defn new-source [name]
+     (setv container [0])
 
-  (setv container [0])
+     (nerve-cb! name
+                (fn [path args]
+                  (setv [(car container)] args)))
 
-  (nerve-send "/ear/code" [code])
+     (fn [] (car container)))
 
-  (nerve-cb! (+ "/eye/audio/" code)
-             (fn [path args]
-                 (setv [(car container)] args)))
 
-  (fn [] (car container)))
+(def amp (new-source "/eye/audio/amp"))
+(def bass (new-source "/eye/audio/bass"))
+(def high (new-source "/eye/audio/high"))
