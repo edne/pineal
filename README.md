@@ -63,15 +63,10 @@ Instructions
 
 Dependencies
 ------------
-* On Debian-Ubuntu:
-  ```
-      # apt-get install python-pyglet python-hy python-watchdog python-pyo
+Make sure you are using Python 2, and run:
 ```
-* On other systems:
-  ```
-      $ pip install hy pyglet watchdog
+      $ pip install -r requirements.txt
 ```
-  and manually download and install Pyo from [ajaxsoundstudio.com](http://ajaxsoundstudio.com/software/pyo/).
 
 
 License
