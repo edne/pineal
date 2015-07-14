@@ -1,0 +1,4 @@
+hy
+pyglet
+watchdog
+svn+http://pyo.googlecode.com/svn/trunk/

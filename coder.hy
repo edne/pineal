@@ -1,4 +1,4 @@
-#!/usr/bin/env hy2
+#!/usr/bin/env hy
 
 (import
   [glob [glob]]
