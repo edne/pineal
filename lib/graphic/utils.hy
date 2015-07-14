@@ -7,6 +7,7 @@
   [math [cos sin pi]]
   [time [time]]
   [lib.graphic.transforming [*]]
+  [lib.graphic.framebuffer [Framebuffer]]
   [lib.graphic.coloring [*]])
 
 (require hy.contrib.multi)
@@ -135,3 +136,24 @@
                                          [(+ "images/" name ".png")]
                                          {"decoder" (PNGImageDecoder)}))))
           ((get memo-img name)))))
+
+
+(def memo-buffer {})
+
+(defn frame-buffer []
+  "
+  Magic cloak over FrameBuffer
+  "
+  (defclass buffer-class [Framebuffer]
+    [[--call--
+      (fn [self &optional next]
+        (setv f (fn []
+                  (blit-img self.texture)))
+        (if next
+          (fn []
+            (f)
+            (next))
+          (f)))]])
+
+  ; memo stuff
+  (buffer-class 800 800))
