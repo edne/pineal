@@ -1,12 +1,11 @@
 (import
-  [lib.runner [Runner]]
   [time [sleep]]
   [thirdparty.OSC [ OSCServer
                     OSCClient
                     OSCClientError
                     OSCMessage]])
 
-(require lib.runner)
+(require core.runner)
 
 
 (defn osc-receiver [in_addr cbs]

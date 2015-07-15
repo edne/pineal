@@ -2,11 +2,11 @@
 
 (import
   [time [sleep]]
-  [lib.windows [new-renderer new-master new-overview]]
-  [lib.osc [nerve-cb! nerve-start]]
-  [lib.pyexec [pyexec]])
+  [core.windows [new-renderer new-master new-overview]]
+  [core.osc [nerve-cb! nerve-start]]
+  [core.pyexec [pyexec]])
 
-(require lib.runner)
+(require core.runner)
 
 
 (runner Eye [self]
@@ -25,7 +25,7 @@
         * `/eye/audio/[cmd]  [value]` signal handled by lib.audio.source
 
         Recives from Universe:
-        * `[anything]  [?]` signal handled by lib.osc.source (not tested)
+        * `[anything]  [?]` signal handled by core.osc.source (not tested)
         "
         (print "starting eye.hy")
 

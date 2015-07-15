@@ -1,5 +1,5 @@
 (import
-  [osc [nerve-send nerve-cb!]])
+  [core.osc [nerve-send nerve-cb!]])
 
 
 (defn new-source [name]

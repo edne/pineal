@@ -6,10 +6,10 @@
   [hy.lex [tokenize]]
   [pyo]
   [config [OSC_EYE BACKEND]]
-  [lib.osc [osc-sender]])
+  [core.osc [osc-sender]])
 
 
-(require lib.runner)
+(require core.runner)
 
 
 (defn AMP [src]

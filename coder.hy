@@ -6,9 +6,9 @@
   [watchdog.observers [Observer]]
   [watchdog.events [FileSystemEventHandler]]
   [config [OSC_EYE]]
-  [lib.osc [osc-sender]])
+  [core.osc [osc-sender]])
 
-(require lib.runner)
+(require core.runner)
 
 
 (runner Coder [self]
