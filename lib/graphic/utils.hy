@@ -7,7 +7,7 @@
   [time [time]]
   [lib.graphic.transforming [*]]
   [lib.graphic.framebuffer [Framebuffer]]
-  [lib.graphic.coloring [*]])
+  [tools.coloring [*]])
 
 (require hy.contrib.multi)
 
