@@ -140,7 +140,7 @@
 
 (def memo-buffer {})
 
-(defn frame-buffer []
+(defn frame-buffer [name]
   "
   Magic cloak over FrameBuffer
   "
@@ -155,5 +155,8 @@
             (next))
           (f)))]])
 
-  ; memo stuff
-  (buffer-class 800 800))
+  (unless (in name memo-buffer)
+    (assoc memo-buffer name
+      (buffer-class 800 800)))
+
+  (get memo-buffer name))
