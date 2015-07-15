@@ -3,7 +3,6 @@
   [pyglet.graphics [vertex_list]]
   [pyglet.image]
   [pyglet.image.codecs.png [PNGImageDecoder]]
-  [lib.windows [getRenderTexture :as _getRenderTexture]]
   [math [cos sin pi]]
   [time [time]]
   [lib.graphic.transforming [*]]
@@ -114,12 +113,6 @@
 (defn new-blittable [inner]
   (fn []
       (blit-img inner)))
-
-
-(def frame
-     (pack (fn []
-               (setv texture (_getRenderTexture))
-               (when texture (blit-img texture)))))
 
 
 (def memo-img {})
