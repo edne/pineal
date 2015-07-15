@@ -1,12 +1,8 @@
 from lib.graphic import *
-import lib.audio as audio
 from math import *
 from random import *
 
-
-amp = audio.source("AMP")
-bass = audio.source("(LPF 100) AMP")
-high = audio.source("(HPF 10000) AMP")
+from lib.audio import amp, bass, high
 
 
 def draw():
