@@ -1,12 +1,8 @@
 (import
-  [pyglet.gl :as gl]
   [pyglet.image]
   [pyglet.image.codecs.png [PNGImageDecoder]]
   [lib.graphic.transforming [*]]
-  [lib.graphic.framebuffer [Framebuffer]]
-  [core.shapes [solid-polygon
-                wired-polygon]]
-  [tools.coloring [*]])
+  [lib.graphic.framebuffer [Framebuffer]])
 
 
 (defn nestle [&rest fs]
@@ -15,77 +11,6 @@
       ((car fs) (apply nestle-inner (cdr fs)))
       (car fs)))
   (apply nestle-inner fs))
-
-
-(defn pack [f &rest args &kwargs kwargs]
-  (fn [&optional next]
-      (if next
-      (fn []
-          (apply f args kwargs)
-          (next))
-      (apply f args kwargs))))
-
-
-(defclass Entity []
-  [[setup (fn [self])]
-   [draw (fn [self])]
-
-   [--init--
-    (fn [self
-         &rest args
-         &kwargs kwargs]
-      (apply self.setup args kwargs)
-      None)]
-
-   [--call--
-    (fn [self
-         &rest args
-         &kwargs kwargs]
-
-      (apply pack
-        (+ [self.draw]
-           (list args))
-        kwargs))]])
-
-
-(defclass psolid [Entity]
-  [[memo {}]
-
-   [setup
-    (fn [self n]
-      (setv self.n n))]
-
-   [draw
-    (fn [self solid-color]
-      (setv n self.n)
-      (unless (in n self.memo)
-        (assoc self.memo n
-          (solid-polygon n)))
-
-      (setv solid-list
-        (get self.memo n))
-      (setv solid-list.colors
-        (* (color solid-color) (* n 3)))
-
-      (.draw solid-list gl.GL_TRIANGLES))]])
-
-
-(def memo-wired {})
-
-(defn pwired [n]
-  (defn stroke [stroke-color]
-    (pack
-        (fn []
-            (unless (in n memo-wired)
-              (assoc memo-wired n
-                     (wired-polygon n)))
-
-            (setv wired-list
-                  (get memo-wired n))
-            (setv wired-list.colors
-                  (* (color stroke-color) n))
-
-            (.draw wired-list gl.GL_LINE_LOOP)))))
 
 
 (defn blit-img [img]
@@ -105,7 +30,7 @@
   "
   Image from png file
   "
-  (pack
+  (_pack
       (fn []
           (unless (in name memo-img)
             (assoc memo-img name
