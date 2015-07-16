@@ -1,3 +1,4 @@
+from tools import *
 from lib.graphic import *
 from math import *
 from random import *

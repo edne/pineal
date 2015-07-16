@@ -2,18 +2,11 @@
   [pyglet.gl :as gl]
   [pyglet.image]
   [pyglet.image.codecs.png [PNGImageDecoder]]
-  [math [pi]]
-  [time [time]]
   [lib.graphic.transforming [*]]
   [lib.graphic.framebuffer [Framebuffer]]
   [core.shapes [solid-polygon
                 wired-polygon]]
   [tools.coloring [*]])
-
-
-(defn time2rad [&optional [mult 1]]
-  "trigonometric functions don't handle really high numbers"
-  (% (* mult (time)) (* 2 pi)))
 
 
 (defn nestle [&rest fs]
