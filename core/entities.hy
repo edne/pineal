@@ -1,12 +1,3 @@
-(defn _pack [f &rest args &kwargs kwargs]
-  (fn [&optional next]
-      (if next
-      (fn []
-          (apply f args kwargs)
-          (next))
-      (apply f args kwargs))))
-
-
 (defclass Entity []
   [[setup (fn [self])]
    [draw (fn [self])]
@@ -23,7 +14,9 @@
          &rest args
          &kwargs kwargs]
 
-      (apply _pack
-        (+ [self.draw]
-           (list args))
-        kwargs))]]) 
+      (fn [&optional f]
+        (if f
+          (fn []
+            (apply self.draw args kwargs)
+            (f))
+          (apply self.draw args kwargs))))]])
