@@ -28,7 +28,7 @@ def draw():
             rotate(time2rad()),
             translate(0.5 + 8*bass()),
             scale(0.1 + 4*bass()),
-            psolid(n)(rgb(0, 0.5)),
+            psolid(n)(rgb(0.0, 1.0)),
             pwired(n)(hsv(2*time(), 1 - bass())),
         )()
 

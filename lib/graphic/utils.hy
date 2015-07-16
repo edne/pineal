@@ -17,31 +17,57 @@
   (apply nestle-inner fs))
 
 
-(defn pack [f]
+(defn pack [f &rest args &kwargs kwargs]
   (fn [&optional next]
       (if next
       (fn []
-          (f)
+          (apply f args kwargs)
           (next))
-      (f))))
+      (apply f args kwargs))))
 
 
-(def memo-solid {})
+(defclass Entity []
+  [[setup (fn [self])]
+   [draw (fn [self])]
 
-(defn psolid [n]
-  (defn fill [fill-color]
-    (pack
-        (fn []
-            (unless (in n memo-solid)
-              (assoc memo-solid n
-                     (solid-polygon n)))
+   [--init--
+    (fn [self
+         &rest args
+         &kwargs kwargs]
+      (apply self.setup args kwargs)
+      None)]
 
-            (setv solid-list
-                  (get memo-solid n))
-            (setv solid-list.colors
-                  (* (color fill-color) (* n 3)))
+   [--call--
+    (fn [self
+         &rest args
+         &kwargs kwargs]
 
-            (.draw solid-list gl.GL_TRIANGLES)))))
+      (apply pack
+        (+ [self.draw]
+           (list args))
+        kwargs))]])
+
+
+(defclass psolid [Entity]
+  [[memo {}]
+
+   [setup
+    (fn [self n]
+      (setv self.n n))]
+
+   [draw
+    (fn [self solid-color]
+      (setv n self.n)
+      (unless (in n self.memo)
+        (assoc self.memo n
+          (solid-polygon n)))
+
+      (setv solid-list
+        (get self.memo n))
+      (setv solid-list.colors
+        (* (color solid-color) (* n 3)))
+
+      (.draw solid-list gl.GL_TRIANGLES))]])
 
 
 (def memo-wired {})
