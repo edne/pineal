@@ -1,6 +1,4 @@
 (import
-  [pyglet.image]
-  [pyglet.image.codecs.png [PNGImageDecoder]]
   [lib.graphic.transforming [*]]
   [lib.graphic.framebuffer [Framebuffer]])
 
@@ -13,33 +11,6 @@
   (apply nestle-inner fs))
 
 
-(defn blit-img [img]
-  (.blit img
-         -1 1 0
-         2 -2))
-
-
-(defn new-blittable [inner]
-  (fn []
-      (blit-img inner)))
-
-
-(def memo-img {})
-
-(defn image [name]
-  "
-  Image from png file
-  "
-  (_pack
-      (fn []
-          (unless (in name memo-img)
-            (assoc memo-img name
-                   (new-blittable (apply pyglet.image.load
-                                         [(+ "images/" name ".png")]
-                                         {"decoder" (PNGImageDecoder)}))))
-          ((get memo-img name)))))
-
-
 (def memo-buffer {})
 
 (defn frame-buffer [name]
@@ -50,7 +21,9 @@
     [[--call--
       (fn [self &optional next]
         (setv f (fn []
-                  (blit-img self.texture)))
+      (.blit self.texture
+             -1 1 0
+             2 -2)))
         (if next
           (fn []
             (f)
