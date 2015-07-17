@@ -1,6 +1,7 @@
 (import
   [pyglet.gl :as gl]
-  [math [pi]])
+  [math [pi]]
+  [core.entities [Effect]])
 
 (require hy.contrib.multi)
 
@@ -62,14 +63,13 @@
                                x y z)))
 
 
-(defn turnaround [n]
-  "Decorator to rotate N times"
-  (defn decorator [f]
-    (defn decorated [&rest args &kwargs kwargs]
+(defclass turnaround [Effect]
+  [[wrap
+    (fn [self f n]
       (for [i (range n)]
-           (push)
-           (setv angle (/ (* 2 pi i) n))
-           (gl.glRotatef (/ (* angle 180) pi)
-                         0 0 1)
-           (apply f args kwargs)
-           (pop)))))
+        (push)
+        (setv angle (/ (* 2 pi i) n))
+        (gl.glRotatef (/ (* angle 180) pi)
+                      0 0 1)
+        (f)
+        (pop)))]])
