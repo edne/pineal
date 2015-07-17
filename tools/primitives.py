@@ -9,10 +9,6 @@ from core.shapes import solid_polygon, wired_polygon
 class psolid(Entity):
     memo = {}
 
-    def setup(self, n, color):
-        self.n = n
-        self.color = color
-
     def draw(self, n, color):
         if n not in self.memo:
             self.memo[n] = solid_polygon(n)
@@ -25,10 +21,6 @@ class psolid(Entity):
 class pwired(Entity):
     memo = {}
 
-    def setup(self, n, color):
-        self.n = n
-        self.color = color
-
     def draw(self, n, color):
         if n not in self.memo:
             self.memo[n] = wired_polygon(n)
@@ -40,9 +32,6 @@ class pwired(Entity):
 
 class image(Entity):
     memo = {}
-
-    def setup(self, name):
-        self.name = name
 
     def draw(self, name):
         if name not in self.memo:
