@@ -1,5 +1,4 @@
 (import
-  [lib.graphic.transforming [*]]
   [lib.graphic.framebuffer [Framebuffer]])
 
 
