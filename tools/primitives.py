@@ -9,12 +9,11 @@ from core.shapes import solid_polygon, wired_polygon
 class psolid(Entity):
     memo = {}
 
-    def setup(self, n):
+    def setup(self, n, color):
         self.n = n
+        self.color = color
 
-    def draw(self, color):
-        n = self.n
-
+    def draw(self, n, color):
         if n not in self.memo:
             self.memo[n] = solid_polygon(n)
 
@@ -26,12 +25,11 @@ class psolid(Entity):
 class pwired(Entity):
     memo = {}
 
-    def setup(self, n):
+    def setup(self, n, color):
         self.n = n
+        self.color = color
 
-    def draw(self, color):
-        n = self.n
-
+    def draw(self, n, color):
         if n not in self.memo:
             self.memo[n] = wired_polygon(n)
 
@@ -46,9 +44,7 @@ class image(Entity):
     def setup(self, name):
         self.name = name
 
-    def draw(self):
-        name = self.name
-
+    def draw(self, name):
         if name not in self.memo:
             self.memo[name] = pyglet.image.load("images/%s.png" % name,
                                                 decoder=PNGImageDecoder())

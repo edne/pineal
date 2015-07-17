@@ -1,22 +1,18 @@
 (defclass Entity []
-  [[setup (fn [self])]
-   [draw (fn [self])]
+  [[draw (fn [self])]
 
    [--init--
     (fn [self
          &rest args
          &kwargs kwargs]
-      (apply self.setup args kwargs)
+      (setv self._args args)
+      (setv self._kwargs kwargs)
       None)]
 
    [--call--
-    (fn [self
-         &rest args
-         &kwargs kwargs]
-
-      (fn [&optional f]
-        (if f
-          (fn []
-            (apply self.draw args kwargs)
-            (f))
-          (apply self.draw args kwargs))))]])
+    (fn [self &optional f]
+      (if f
+        (fn []
+          (apply self.draw self._args self._kwargs)
+          (f))
+        (apply self.draw self._args self._kwargs)))]])
