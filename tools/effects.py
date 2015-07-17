@@ -4,7 +4,7 @@ from core.entities import Effect
 from core.matrix import push, pop
 
 
-class translate(Effect):
+class Translate(Effect):
     def wrap(self, f,
              x, y=0.0, z=0.0):
         push()
@@ -13,7 +13,7 @@ class translate(Effect):
         pop()
 
 
-class scale(Effect):
+class Scale(Effect):
     def wrap(self, f,
              *args):
 
@@ -32,7 +32,7 @@ class scale(Effect):
         pop()
 
 
-class rotate(Effect):
+class Rotate(Effect):
     def wrap(self, f,
              angle,
              x=0.0, y=0.0, z=1.0):
@@ -43,7 +43,7 @@ class rotate(Effect):
         pop()
 
 
-class turnaround(Effect):
+class Turnaround(Effect):
     def wrap(self, f, n):
         for i in range(n):
             push()

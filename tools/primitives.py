@@ -6,7 +6,7 @@ from core.entities import Entity
 from core.shapes import solid_polygon, wired_polygon
 
 
-class psolid(Entity):
+class Psolid(Entity):
     memo = {}
 
     def draw(self, n, color):
@@ -18,7 +18,7 @@ class psolid(Entity):
         vlist.draw(gl.GL_TRIANGLES)
 
 
-class pwired(Entity):
+class Pwired(Entity):
     memo = {}
 
     def draw(self, n, color):
@@ -30,7 +30,7 @@ class pwired(Entity):
         vlist.draw(gl.GL_LINE_LOOP)
 
 
-class image(Entity):
+class Image(Entity):
     memo = {}
 
     def draw(self, name):

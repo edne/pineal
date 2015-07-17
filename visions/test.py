@@ -18,18 +18,18 @@ def draw():
     n = 4
     with fb1:
         do(
-            scale(0.9 + high()),
-            turnaround(7),
+            Scale(0.9 + high()),
+            Turnaround(7),
             fb2,
             )()
 
         do(
-            turnaround(4),
-            rotate(time2rad()),
-            translate(0.5 + 8*bass()),
-            scale(0.1 + 4*bass()),
-            psolid(n, rgb(0.0, 1.0)),
-            pwired(n, hsv(2*time(), 1 - bass())),
+            Turnaround(4),
+            Rotate(time2rad()),
+            Translate(0.5 + 8*bass()),
+            Scale(0.1 + 4*bass()),
+            Psolid(n, rgb(0.0, 1.0)),
+            Pwired(n, hsv(2*time(), 1 - bass())),
         )()
 
     with fb2:
