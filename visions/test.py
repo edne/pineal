@@ -9,18 +9,14 @@ from lib.audio import amp, bass, high
 def draw():
     strokeWeight(5)
 
-    # fb = Framebuffer(800, 800)
-    fb1 = Layer("asd")
-    fb2 = Layer("fb2")
-
-    fb2()
+    Layer("out")()
 
     n = 4
-    with fb1:
+    with Layer("asd"):
         do(
             Scale(0.9 + high()),
             Turnaround(7),
-            fb2,
+            Layer("out"),
             )()
 
         do(
@@ -32,5 +28,5 @@ def draw():
             Pwired(n, hsv(2*time(), 1 - bass())),
         )()
 
-    with fb2:
-        fb1()
+    with Layer("out"):
+        Layer("asd")()
