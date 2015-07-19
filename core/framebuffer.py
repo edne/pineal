@@ -35,6 +35,9 @@ def buffer_texture(width, height):
 
 
 class Framebuffer(object):
+    def draw(self):
+        pass
+
     def __init__(self, width, height):
         if not gl.gl_info.have_extension('GL_EXT_framebuffer_object'):
             raise Exception('framebuffer object extension not available')

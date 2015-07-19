@@ -10,8 +10,8 @@ def draw():
     strokeWeight(5)
 
     # fb = Framebuffer(800, 800)
-    fb1 = frame_buffer("asd")
-    fb2 = frame_buffer("fb2")
+    fb1 = Layer("asd")
+    fb2 = Layer("fb2")
 
     fb2()
 
