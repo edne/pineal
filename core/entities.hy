@@ -1,42 +1,53 @@
 (import [core.framebuffer [Framebuffer]])
 
-(defclass BaseEntity []
-  [[--init--
+
+(defclass Entity []
+  [[draw
+    (fn [self
+         &rest args
+         &kwargs kwargs])]
+
+   [wrap
+    (fn [self f
+         &rest args
+         &kwargs kwargs]
+      (f))]
+
+   [--init--
     (fn [self
          &rest args
          &kwargs kwargs]
       (setv self._args args)
       (setv self._kwargs kwargs)
-      None)]])
-
-
-(defclass Entity [BaseEntity]
-  [[draw (fn [self])]
+      None)]
 
    [--call--
     (fn [self &optional f]
       (if f
-        (fn []
-          (apply self.draw self._args self._kwargs)
-          (f))
-        (apply self.draw self._args self._kwargs)))]])
+        (LambdaEntity (fn []
+                        (apply self.draw self._args self._kwargs)
+                        (apply self.wrap
+                          (+ [f] (list self._args))
+                          self._kwargs)))
+        (apply self.draw self._args self._kwargs)))]
+
+   [--or--
+    (fn [self other]
+      (other self))]])
 
 
-(defclass Effect [BaseEntity]
-  [[wrap
+(defclass LambdaEntity [Entity]
+  [[--init--
     (fn [self f]
-      (f))]
-
-   [--call--
-    (fn [self &optional f]
-      (when f
-        (fn []
-          (apply self.wrap
-            (+ [f] (list self._args))
-            self._kwargs))))]])
+      (.--init-- Entity self)
+      (setv self.draw f)
+      None)]])
 
 
-(defclass Layer [BaseEntity]
+(defclass Effect [Entity] [])
+
+
+(defclass Layer [Entity]
   [[memo {}]
 
    [draw
@@ -47,21 +58,13 @@
 
    [--init--
     (fn [self name]
-      (.--init-- BaseEntity self)
+      (.--init-- Entity self)
       (unless (in name self.memo)
         (assoc self.memo name
           (Framebuffer 800 800)))
 
       (setv self.buffer (get self.memo name))
       None)]
-
-   [--call--
-    (fn [self &optional f]
-      (if f
-        (fn []
-          (self.draw)
-          (f))
-        (self.draw)))]
 
    [--enter--
     (fn [self]

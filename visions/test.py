@@ -30,3 +30,9 @@ def draw():
 
     with Layer("out"):
         Layer("asd")()
+
+    (
+        Psolid(n, rgb(1.0, 1.0)) |
+        Scale(0.5) |
+        Pwired(n, hsv(2*time(), 1 - bass()))
+    )()
