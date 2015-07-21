@@ -1,5 +1,4 @@
 from tools import *
-from lib.graphic import *
 from math import *
 from random import *
 
@@ -13,26 +12,16 @@ def draw():
 
     n = 4
     with Layer("asd"):
-        do(
-            Scale(0.9 + high()),
-            Turnaround(7),
-            Layer("out"),
-            )()
+        Scale(0.9 + high())(
+            Turnaround(7)(
+                Layer("out")))()
 
-        do(
-            Turnaround(4),
-            Rotate(time2rad()),
-            Translate(0.5 + 8*bass()),
-            Scale(0.1 + 4*bass()),
-            Psolid(n, rgb(0.0, 1.0)),
-            Pwired(n, hsv(2*time(), 1 - bass())),
-        )()
+        Turnaround(4)(
+            Rotate(time2rad())(
+                Translate(0.5 + 8*bass())(
+                    Scale(0.1 + 4*bass())(
+                        Psolid(n, rgb(0.0, 1.0)),
+                        Pwired(n, hsv(2*time(), 1 - bass()))))))()
 
     with Layer("out"):
         Layer("asd")()
-
-    (
-        Psolid(n, rgb(1.0, 1.0)) |
-        Scale(0.5) |
-        Pwired(n, hsv(2*time(), 1 - bass()))
-    )()

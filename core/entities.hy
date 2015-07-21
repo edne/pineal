@@ -8,10 +8,11 @@
          &kwargs kwargs])]
 
    [wrap
-    (fn [self f
+    (fn [self fs
          &rest args
          &kwargs kwargs]
-      (f))]
+      (for [f fs]
+        (f)))]
 
    [--init--
     (fn [self
@@ -22,12 +23,12 @@
       None)]
 
    [--call--
-    (fn [self &optional f]
-      (if f
+    (fn [self &rest fs]
+      (if fs
         (LambdaEntity (fn []
                         (apply self.draw self._args self._kwargs)
                         (apply self.wrap
-                          (+ [f] (list self._args))
+                          (+ [fs] (list self._args))
                           self._kwargs)))
         (apply self.draw self._args self._kwargs)))]
 
