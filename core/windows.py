@@ -99,7 +99,7 @@ def new_master(source):
     display = platform.get_default_display()
     screens = display.get_screens()
 
-    dual_screen = len(screens) > 1
+    dual_screen = 0 * len(screens) > 1
     window = new_output_window(caption='(pineal master)',
                                fullscreen=dual_screen,
                                screen=screens[-1],
