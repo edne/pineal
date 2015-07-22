@@ -13,15 +13,16 @@ def draw():
     n = 4
     Layer("asd")(
         Scale(0.9 + high())(
-            Turnaround(7)(
+            Turnaround(3)(
                 Layer("out"))),
 
         Turnaround(4)(
             Rotate(time2rad())(
-                Translate(0.5 + 8*bass())(
+                Translate(0.5 + 8*amp())(
+                    Pwired(n, hsv(2*time(), 1 - bass())),
                     Scale(0.1 + 4*bass())(
-                        Psolid(n, rgb(0.0, 1.0)),
-                        Pwired(n, hsv(2*time(), 1 - bass())))))))()
+                        Psolid(n, rgb(0.0, 1)))))))()
 
     Layer("out")(
-        Layer("asd"))()
+        Scale(1.0 - bass())(
+            Layer("asd")))()
