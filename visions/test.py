@@ -11,17 +11,17 @@ def draw():
     Layer("out")()
 
     n = 4
-    with Layer("asd"):
+    Layer("asd")(
         Scale(0.9 + high())(
             Turnaround(7)(
-                Layer("out")))()
+                Layer("out"))),
 
         Turnaround(4)(
             Rotate(time2rad())(
                 Translate(0.5 + 8*bass())(
                     Scale(0.1 + 4*bass())(
                         Psolid(n, rgb(0.0, 1.0)),
-                        Pwired(n, hsv(2*time(), 1 - bass()))))))()
+                        Pwired(n, hsv(2*time(), 1 - bass())))))))()
 
-    with Layer("out"):
-        Layer("asd")()
+    Layer("out")(
+        Layer("asd"))()

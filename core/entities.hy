@@ -1,54 +1,45 @@
 (import [core.framebuffer [Framebuffer]])
 
 
-(defclass Entity []
+(defclass BaseEntity []
+  [[--init--
+    (fn [self
+         &rest args
+         &kwargs kwargs]
+      (setv self._args (list args))
+      (setv self._kwargs kwargs)
+      None)]])
+
+
+(defclass Entity [BaseEntity]
   [[draw
     (fn [self
          &rest args
-         &kwargs kwargs])]
+         &kwargs kwargs])] 
 
-   [wrap
+   [--call--
+    (fn [self]
+      (apply self.draw self._args self._kwargs))]])
+
+
+(defclass Effect [BaseEntity]
+  [[wrap
     (fn [self fs
          &rest args
          &kwargs kwargs]
       (for [f fs]
         (f)))]
 
-   [--init--
-    (fn [self
-         &rest args
-         &kwargs kwargs]
-      (setv self._args args)
-      (setv self._kwargs kwargs)
-      None)]
-
    [--call--
     (fn [self &rest fs]
       (if fs
-        (LambdaEntity (fn []
-                        (apply self.draw self._args self._kwargs)
-                        (apply self.wrap
-                          (+ [fs] (list self._args))
-                          self._kwargs)))
-        (apply self.draw self._args self._kwargs)))]
-
-   [--or--
-    (fn [self other]
-      (other self))]])
+        (fn []
+          (apply self.wrap
+            (+ [fs] self._args)
+            self._kwargs))))]])
 
 
-(defclass LambdaEntity [Entity]
-  [[--init--
-    (fn [self f]
-      (.--init-- Entity self)
-      (setv self.draw f)
-      None)]])
-
-
-(defclass Effect [Entity] [])
-
-
-(defclass Layer [Entity]
+(defclass Layer [Entity Effect]
   [[memo {}]
 
    [draw
@@ -57,15 +48,30 @@
              -1 1 0
              2 -2))]
 
+   [wrap
+    (fn [self fs]
+      (self.buffer.--enter--)
+      (for [f fs]
+        (f))
+      (self.buffer.--exit--))]
+
    [--init--
     (fn [self name]
-      (.--init-- Entity self)
       (unless (in name self.memo)
         (assoc self.memo name
           (Framebuffer 800 800)))
-
+ 
+      (.--init-- Entity self)
+      (.--init-- Effect self)
+      
       (setv self.buffer (get self.memo name))
       None)]
+
+   [--call--
+    (fn [self &rest fs]
+      (if fs
+        (fn [] (.wrap self fs))
+        (.--call-- Entity self)))]
 
    [--enter--
     (fn [self]
@@ -75,4 +81,4 @@
     (fn [self
          &rest args
          &kwargs kwargs]
-      (apply self.buffer.--exit-- args kwargs))]])
+      (apply self.buffer.--exit-- [] {}))]])
