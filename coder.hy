@@ -42,19 +42,19 @@
 
 (defmacro handle [check path data]
   `(fn [self event]
-       (when ~check (osc-send ~path ~data))))
+     (when ~check (osc-send ~path ~data))))
 
 
 (defn get-code [filename]
   (with [[f (open filename)]]
-        (.read f)))
+    (.read f)))
 
 
 (defn get-name [filename]
   (-> filename
-      .lower
-      (.split "/") last
-      (.split ".") first))
+    .lower
+    (.split "/") last
+    (.split ".") first))
 
 
 (defmacro valid-src?  [] '(valid? event.src-path))
@@ -69,10 +69,10 @@
   (setv osc-send (osc-sender OSC_EYE))
 
   (for [filename (glob "visions/*")]
-       (when (valid? filename)
-         (osc-send "/eye/code"
-                   [(get-name filename)
-                    (get-code filename)])))
+    (when (valid? filename)
+      (osc-send "/eye/code"
+                [(get-name filename)
+                 (get-code filename)])))
 
   ; is inside the scope where defined osc
   (defclass Handler [FileSystemEventHandler]

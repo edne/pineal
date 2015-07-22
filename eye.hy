@@ -39,26 +39,26 @@
 
         (nerve-cb! "/eye/code"
                    (fn [path args]
-                       (setv [name code] args)
-                       (if (in name (visions.keys))
-                         (.load (get visions name)
-                                code)
-                         (assoc visions
-                                name
-                                (new-vision name code)))))
+                     (setv [name code] args)
+                     (if (in name (visions.keys))
+                       (.load (get visions name)
+                              code)
+                       (assoc visions
+                         name
+                         (new-vision name code)))))
 
         (setv nerve-stop (nerve-start))
 
         (import [pyglet])
         (.schedule_interval pyglet.clock
                             (fn [dt]
-                                (when self._stop
-                                  (.exit pyglet.app) ))
+                              (when self._stop
+                                (.exit pyglet.app) ))
                             (/ 1 120))
         (try
           (.run pyglet.app)
           (catch [KeyboardInterrupt]
-                 None))
+            None))
 
         (print "\rstopping eye.hy")
         (nerve-stop))
@@ -66,7 +66,7 @@
 
 (defn new-vision [path code]
   (setv name
-        (get (.split path "/") -1))
+    (get (.split path "/") -1))
 
   ; stack here the loaded codes, so when everything explodes, we can
   ; always restore the last (opefully) working vision
@@ -75,7 +75,7 @@
   (defclass Box []
     "A small sandbox where to run the livecoded part"
     [[draw
-       (fn [self])]])
+      (fn [self])]])
 
   (setv box (Box))
 
@@ -84,31 +84,31 @@
     The vision instance
     "
     [[load
-       (fn [self code]
-           (print "\rloading:" name)
-           (setv filename (% "visions/%s" name))
-           (try
-             (pyexec code box.__dict__)
-             (except [e Exception]
-                     (print name e))
-             (else
-               (.append stack code))))]
+      (fn [self code]
+        (print "\rloading:" name)
+        (setv filename (% "visions/%s" name))
+        (try
+          (pyexec code box.__dict__)
+          (except [e Exception]
+            (print name e))
+          (else
+            (.append stack code))))]
 
      [iteration
-       (fn [self]
-           (try
-             (.draw box)
-             ; if there is an error and stack is empty you are in the situation
-             ; where the FIRST loaded vision is broken, that can be a problem
-             ; (for you, if you are livecoding)
-             (except [e Exception]
-                     (print name name e)
-                     (.pop stack)
+      (fn [self]
+        (try
+          (.draw box)
+          ; if there is an error and stack is empty you are in the situation
+          ; where the FIRST loaded vision is broken, that can be a problem
+          ; (for you, if you are livecoding)
+          (except [e Exception]
+            (print name name e)
+            (.pop stack)
 
-                     (if stack
-                       (pyexec (get stack -1)
-                               box.__dict__)
-                       (print name "BROKEN!")))))]])
+            (if stack
+              (pyexec (get stack -1)
+                      box.__dict__)
+              (print name "BROKEN!")))))]])
 
   (setv vision (Vision))
   (.load vision code)

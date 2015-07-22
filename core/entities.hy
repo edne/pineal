@@ -1,4 +1,5 @@
-(import [core.framebuffer [Framebuffer]])
+(import
+  [core.framebuffer [Framebuffer]])
 
 
 (defclass BaseEntity []
@@ -60,10 +61,10 @@
       (unless (in name self.memo)
         (assoc self.memo name
           (Framebuffer 800 800)))
- 
+
       (.--init-- Entity self)
       (.--init-- Effect self)
-      
+
       (setv self.buffer (get self.memo name))
       None)]
 

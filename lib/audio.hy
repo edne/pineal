@@ -3,13 +3,13 @@
 
 
 (defn new-source [name]
-     (setv container [0])
+  (setv container [0])
 
-     (nerve-cb! name
-                (fn [path args]
-                  (setv [(car container)] args)))
+  (nerve-cb! name
+             (fn [path args]
+               (setv [(car container)] args)))
 
-     (fn [] (car container)))
+  (fn [] (car container)))
 
 
 (def amp (new-source "/eye/audio/amp"))

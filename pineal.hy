@@ -13,14 +13,14 @@
              (Coder)])
 
   (for [t ths]
-       (.start t))
+    (.start t))
 
   (try
-    (while True
-           (for [t ths]
-                (.join t 1)))
+    (while true
+      (for [t ths]
+        (.join t 1)))
     (catch [KeyboardInterrupt]
-           None))
+      None))
 
   (for [t ths]
-       (.stop t)))
+    (.stop t)))
