@@ -34,8 +34,8 @@
         ; windows
         ; for now just one renderer -> TODO one for each vision
         (setv renderer (new-renderer visions))
-        (setv master (new-master renderer))
-        (setv overview (new-overview renderer))
+        (new-master renderer)
+        (new-overview renderer)
 
         (nerve-cb! "/eye/code"
                    (fn [path args]

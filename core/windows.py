@@ -4,13 +4,6 @@ import pyglet.gl as gl
 from config import RENDER_SIZE
 
 
-render_texture = None
-
-
-def getRenderTexture():
-    return render_texture
-
-
 def new_window(*args, **kwargs):
     window = pyglet.window.Window(*args, **kwargs)
     return window
@@ -56,9 +49,6 @@ def new_renderer(visions):
                      0, 0, 0,
                      0, 1, 0)
 
-        global render_texture
-        render_texture = window.texture
-
         for v in window.visions.values():
             gl.glMatrixMode(gl.GL_MODELVIEW)
             gl.glLoadIdentity()
@@ -99,11 +89,9 @@ def new_master(source):
     display = platform.get_default_display()
     screens = display.get_screens()
 
-    dual_screen = 0 * len(screens) > 1
     window = new_output_window(caption='(pineal master)',
-                               fullscreen=dual_screen,
-                               screen=screens[-1],
-                               visible=dual_screen)
+                               resizable=True,
+                               screen=screens[-1])
     window.source = source
     return window
 
