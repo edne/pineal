@@ -3,12 +3,13 @@
 (import
   [eye [Eye]]
   [ear [Ear]]
-  [coder [Coder]])
+  [coder [Coder]]
+  [config])
 
 
 (defmain [args]
   "Run program parts as threads, and wait KeyboardInterrupt"
-  (setv ths [(Ear)
+  (setv ths [(Ear config)
              (Eye)
              (Coder)])
 

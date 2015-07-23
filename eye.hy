@@ -9,7 +9,7 @@
 (require core.runner)
 
 
-(runner Eye [self]
+(runner Eye []
         "
         Handles and draws the different visions
 
@@ -52,8 +52,8 @@
         (import [pyglet])
         (.schedule_interval pyglet.clock
                             (fn [dt]
-                              (when self._stop
-                                (.exit pyglet.app) ))
+                              (when (car _stop)  ; TODO: undefined? NO, macro-magic!
+                                (.exit pyglet.app)))
                             (/ 1 120))
         (try
           (.run pyglet.app)

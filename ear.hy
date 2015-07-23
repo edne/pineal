@@ -5,7 +5,6 @@
   [time [sleep]]
   [hy.lex [tokenize]]
   [pyo]
-  [config [OSC_EYE BACKEND]]
   [core.osc [osc-sender]])
 
 
@@ -22,24 +21,24 @@
   (apply pyo.Biquad [src f] {"type" 1}))
 
 
-(runner Ear [self]
+(runner Ear [conf]
         (print "starting ear.hy")
 
         (setv pyo-server
           (apply pyo.Server
             []
-            {"audio" BACKEND
+            {"audio" conf.BACKEND
              "jackname" "(pineal)"
              "nchnls" 2}))
 
-        (if (= BACKEND "jack")
+        (if (= conf.BACKEND "jack")
           (.setInputOffset pyo-server 2))
 
         (.boot pyo-server)
         (.start pyo-server)
 
         (try (do
-               (setv self.src
+               (setv src
                  (apply pyo.Input
                    []
                    {"chnl" [0 1]}))
@@ -48,11 +47,11 @@
             (print "Pyo is not working")
             (exit 1)))
 
-        (setv osc-send (osc-sender OSC_EYE))
+        (setv osc-send (osc-sender conf.OSC_EYE))
 
-        (setv amp  (-> self.src AMP))
-        (setv bass (-> self.src (LPF 100) AMP))
-        (setv high (-> self.src (HPF 10000) AMP))
+        (setv amp  (-> src AMP))
+        (setv bass (-> src (LPF 100) AMP))
+        (setv high (-> src (HPF 10000) AMP))
 
         (running (osc-send "/eye/audio/amp"  (float (.get amp)))
                  (osc-send "/eye/audio/bass" (float (.get bass)))

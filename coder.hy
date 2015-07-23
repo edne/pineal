@@ -11,7 +11,7 @@
 (require core.runner)
 
 
-(runner Coder [self]
+(runner Coder []
         "
         Waits for changes in `visions/`
 
