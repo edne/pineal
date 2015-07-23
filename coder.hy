@@ -5,13 +5,12 @@
   [time [sleep]]
   [watchdog.observers [Observer]]
   [watchdog.events [FileSystemEventHandler]]
-  [config [OSC_EYE]]
   [core.osc [osc-sender]])
 
 (require core.runner)
 
 
-(runner Coder []
+(runner Coder [conf]
         "
         Waits for changes in `visions/`
 
@@ -23,7 +22,9 @@
         (print "starting coder.hy")
 
         (setv observer (Observer))
-        (.schedule observer (new-handler) "visions" false)
+        (.schedule observer
+                   (new-handler (osc-sender conf.OSC_EYE))
+                   "visions" false)
         (.start observer)
 
         (running (sleep (/ 1 60)))
@@ -65,8 +66,8 @@
 (defmacro dest-name   [] '(get-name event.dest-path))
 
 
-(defn new-handler []
-  (setv osc-send (osc-sender OSC_EYE))
+(defn new-handler [addr]
+  (setv osc-send addr)
 
   (for [filename (glob "visions/*")]
     (when (valid? filename)

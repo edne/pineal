@@ -11,7 +11,7 @@
   "Run program parts as threads, and wait KeyboardInterrupt"
   (setv ths [(Ear config)
              (Eye)
-             (Coder)])
+             (Coder config)])
 
   (for [t ths]
     (.start t))
