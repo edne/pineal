@@ -1,7 +1,4 @@
 from tools import *
-from math import *
-from random import *
-
 from lib.audio import amp, bass, high
 
 
@@ -11,7 +8,7 @@ def draw():
     Layer("out")()
 
     n = 4
-    Layer("asd")(
+    Layer("layer1")(
         Scale(0.9 + high())(
             Turnaround(3)(
                 Layer("out"))),
@@ -25,4 +22,4 @@ def draw():
 
     Layer("out")(
         Scale(1.0 - bass())(
-            Layer("asd")))()
+            Layer("layer1")))()
