@@ -1,23 +1,22 @@
 (import
-  [lib.runner [Runner]]
   [time [sleep]]
-  [thirdparty.OSC [ OSCServer
-                    OSCClient
-                    OSCClientError
-                    OSCMessage]])
+  [thirdparty.OSC [OSCServer
+                   OSCClient
+                   OSCClientError
+                   OSCMessage]])
 
-(require lib.runner)
+(require core.runner)
 
 
 (defn osc-receiver [in_addr cbs]
 
   (defn callback [path tags args source]
     (for [k (.keys cbs)]
-         (if (.startswith path k)
-           ((get cbs k) path args))))
+      (if (.startswith path k)
+        ((get cbs k) path args))))
 
   (setv server
-        (-> in_addr tuple OSCServer))
+    (-> in_addr tuple OSCServer))
 
   (.addMsgHandler server
                   "default"
@@ -44,9 +43,9 @@
             (tuple out_addr))
 
   (fn [path args]
-      (try (.send client
-                  (OSCMessage path args))
-           (catch [OSCClientError] None))))
+    (try (.send client
+                (OSCMessage path args))
+      (catch [OSCClientError] None))))
 
 
 (import [config [OSC_EAR OSC_EYE]])
