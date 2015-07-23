@@ -3,7 +3,7 @@
 (import
   [time [sleep]]
   [core.windows [new-renderer new-master new-overview]]
-  [core.osc [nerve-cb! nerve-start]]
+  [core.nerve [nerve-cb! nerve-start]]
   [core.pyexec [pyexec]])
 
 (require core.runner)
