@@ -34,40 +34,31 @@
         (.join observer))
 
 
-(defmacro last [l]
-  `(get ~l -1))
-
-
-(defn valid? [path] (.endswith path ".py"))
-
-
-(defmacro handle [check path data]
-  `(fn [self event]
-     (when ~check (osc-send ~path ~data))))
-
-
-(defn get-code [filename]
-  (with [[f (open filename)]]
-    (.read f)))
-
-
-(defn get-name [filename]
-  (-> filename
-    .lower
-    (.split "/") last
-    (.split ".") first))
-
-
-(defmacro valid-src?  [] '(valid? event.src-path))
-(defmacro valid-dest? [] '(valid? event.dest-path))
-
-(defmacro src-name    [] '(get-name event.src-path))
-(defmacro src-code    [] '(get-code event.src-path))
-(defmacro dest-name   [] '(get-name event.dest-path))
-
-
 (defn new-handler [addr]
   (setv osc-send addr)
+
+  (defn get-code [filename]
+    (with [[f (open filename)]]
+      (.read f)))
+
+  ; TODO use python standard library
+  (defn get-name [filename]
+    (-> filename .lower
+      (.split "/") last
+      (.split ".") first))
+
+  (defn valid? [path] (.endswith path ".py"))
+
+  (defmacro handle [check path data]
+    `(fn [self event]
+       (defmacro valid-src?  [] '(valid? event.src-path))
+       (defmacro valid-dest? [] '(valid? event.dest-path))
+
+       (defmacro src-name    [] '(get-name event.src-path))
+       (defmacro src-code    [] '(get-code event.src-path))
+       (defmacro dest-name   [] '(get-name event.dest-path))
+
+       (when ~check (osc-send ~path ~data))))
 
   (for [filename (glob "visions/*")]
     (when (valid? filename)
