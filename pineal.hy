@@ -10,7 +10,7 @@
 (defmain [args]
   "Run program parts as threads, and wait KeyboardInterrupt"
   (setv ths [(Ear config)
-             (Eye)
+             (Eye config)
              (Coder config)])
 
   (for [t ths]

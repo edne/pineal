@@ -59,9 +59,9 @@
    [--init--
     (fn [self name]
       (unless (in name self.memo)
-        (import [config [RENDER_SIZE]])
+        (import [core [conf]])
         (assoc self.memo name
-          (apply Framebuffer RENDER_SIZE)))
+          (apply Framebuffer conf.RENDER-SIZE)))
 
       (.--init-- Entity self)
       (.--init-- Effect self)

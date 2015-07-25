@@ -1,7 +1,6 @@
 import pyglet
 from pyglet import clock
 import pyglet.gl as gl
-from config import RENDER_SIZE
 
 
 def new_window(*args, **kwargs):
@@ -9,11 +8,11 @@ def new_window(*args, **kwargs):
     return window
 
 
-def new_renderer(visions):
+def new_renderer(visions, size):
     """
     Offscreen windows where render stuff
     """
-    W, H = RENDER_SIZE
+    W, H = size
     window = new_window(caption='(pineal renderer)',
                         width=W,
                         height=H,

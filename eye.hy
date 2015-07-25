@@ -9,7 +9,7 @@
 (require core.runner)
 
 
-(runner Eye []
+(runner Eye [conf]
         "
         Handles and draws the different visions
 
@@ -29,11 +29,18 @@
         "
         (print "starting eye.hy")
 
+        ; update impure config
+        (import [core
+                 [conf :as impure-conf]])
+        (setv impure-conf.RENDER-SIZE conf.RENDER-SIZE)
+        (setv impure-conf.OSC-EYE     conf.OSC-EYE)
+
         (setv visions {})
 
         ; windows
         ; for now just one renderer -> TODO one for each vision
-        (setv renderer (new-renderer visions))
+        (setv renderer (new-renderer visions
+                                     conf.RENDER-SIZE))
         (new-master renderer)
         (new-overview renderer)
 
