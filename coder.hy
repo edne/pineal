@@ -78,16 +78,20 @@
   ; is inside the scope where defined osc
   (defclass Handler [FileSystemEventHandler]
     [[on-created  (handle (valid-src?)
-                          "/eye/code" [(src-name) (src-code)])]
+                          "/eye/code"
+                          [(src-name) (src-code)])]
 
      [on-deleted  (handle (valid-src?)
-                          "/eye/delete" [(src-name)])]
+                          "/eye/delete"
+                          [(src-name)])]
 
      [on-moved    (handle (valid-dest?)
-                          "/eye/move" [(src-name) (dest-name)])]
+                          "/eye/move"
+                          [(src-name) (dest-name)])]
 
      [on-modified (handle (valid-src?)
-                          "/eye/code" [(src-name) (src-code)])]])
+                          "/eye/code"
+                          [(src-name) (src-code)])]])
   (Handler))
 
 
