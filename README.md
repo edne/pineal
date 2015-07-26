@@ -17,7 +17,6 @@ Example
 
 ```python
 from tools import *
-from lib.audio import amp, bass, high
 
 
 def draw():
