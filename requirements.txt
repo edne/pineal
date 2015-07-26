@@ -1,4 +1,4 @@
 hy
 pyglet
 watchdog
-svn+http://pyo.googlecode.com/svn/trunk/
+git+https://github.com/edne/pyo
