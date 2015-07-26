@@ -1,26 +1,23 @@
 (defmacro runner [name args &rest body]
-  `(defn ~name []
+  `(defn ~name ~args
 
      (import [threading [Thread]])
+     (setv _stop [false])
 
      (defclass Class [Thread]
-       [[__init__
-         (fn ~args
-           (.__init__ Thread self)
-           (setv self._stop false)
-           None)]
-
-        [run (fn [self] ~@body)]
+       [[run
+         (fn [self]
+           ~@body)]
 
         [stop
          (fn [self]
-           (setv self._stop true))]])
+           (setv (car _stop) true))]])
 
      (Class)))
 
 
 (defmacro running [&rest body]
-  `(try (while (not self._stop)
+  `(try (while (not (car _stop))
           ~@body)
      (catch [KeyboardInterrupt]
        None)))

@@ -5,13 +5,12 @@
   [time [sleep]]
   [watchdog.observers [Observer]]
   [watchdog.events [FileSystemEventHandler]]
-  [config [OSC_EYE]]
   [core.osc [osc-sender]])
 
 (require core.runner)
 
 
-(runner Coder [self]
+(runner Coder [conf]
         "
         Waits for changes in `visions/`
 
@@ -23,7 +22,9 @@
         (print "starting coder.hy")
 
         (setv observer (Observer))
-        (.schedule observer (new-handler) "visions" false)
+        (.schedule observer
+                   (new-handler (osc-sender conf.OSC_EYE))
+                   "visions" false)
         (.start observer)
 
         (running (sleep (/ 1 60)))
@@ -33,40 +34,31 @@
         (.join observer))
 
 
-(defmacro last [l]
-  `(get ~l -1))
+(defn new-handler [addr]
+  (setv osc-send addr)
 
+  (defn get-code [filename]
+    (with [[f (open filename)]]
+      (.read f)))
 
-(defn valid? [path] (.endswith path ".py"))
+  ; TODO use python standard library
+  (defn get-name [filename]
+    (-> filename .lower
+      (.split "/") last
+      (.split ".") first))
 
+  (defn valid? [path] (.endswith path ".py"))
 
-(defmacro handle [check path data]
-  `(fn [self event]
-     (when ~check (osc-send ~path ~data))))
+  (defmacro handle [check path data]
+    `(fn [self event]
+       (defmacro valid-src?  [] '(valid? event.src-path))
+       (defmacro valid-dest? [] '(valid? event.dest-path))
 
+       (defmacro src-name    [] '(get-name event.src-path))
+       (defmacro src-code    [] '(get-code event.src-path))
+       (defmacro dest-name   [] '(get-name event.dest-path))
 
-(defn get-code [filename]
-  (with [[f (open filename)]]
-    (.read f)))
-
-
-(defn get-name [filename]
-  (-> filename
-    .lower
-    (.split "/") last
-    (.split ".") first))
-
-
-(defmacro valid-src?  [] '(valid? event.src-path))
-(defmacro valid-dest? [] '(valid? event.dest-path))
-
-(defmacro src-name    [] '(get-name event.src-path))
-(defmacro src-code    [] '(get-code event.src-path))
-(defmacro dest-name   [] '(get-name event.dest-path))
-
-
-(defn new-handler []
-  (setv osc-send (osc-sender OSC_EYE))
+       (when ~check (osc-send ~path ~data))))
 
   (for [filename (glob "visions/*")]
     (when (valid? filename)
@@ -77,16 +69,20 @@
   ; is inside the scope where defined osc
   (defclass Handler [FileSystemEventHandler]
     [[on-created  (handle (valid-src?)
-                          "/eye/code" [(src-name) (src-code)])]
+                          "/eye/code"
+                          [(src-name) (src-code)])]
 
      [on-deleted  (handle (valid-src?)
-                          "/eye/delete" [(src-name)])]
+                          "/eye/delete"
+                          [(src-name)])]
 
      [on-moved    (handle (valid-dest?)
-                          "/eye/move" [(src-name) (dest-name)])]
+                          "/eye/move"
+                          [(src-name) (dest-name)])]
 
      [on-modified (handle (valid-src?)
-                          "/eye/code" [(src-name) (src-code)])]])
+                          "/eye/code"
+                          [(src-name) (src-code)])]])
   (Handler))
 
 

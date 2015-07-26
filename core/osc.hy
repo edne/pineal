@@ -22,7 +22,7 @@
                   "default"
                   callback)
 
-  (runner Receiver [self]
+  (runner Receiver []
           (running
             (.handle_request server))
           (.close server))
@@ -46,16 +46,3 @@
     (try (.send client
                 (OSCMessage path args))
       (catch [OSCClientError] None))))
-
-
-(import [config [OSC_EAR OSC_EYE]])
-(def nerve-cbs {})
-
-(setv nerve-start (osc-receiver OSC_EYE
-                                nerve-cbs))
-
-(def nerve-send
-  (osc-sender OSC_EAR))
-
-(defn nerve-cb! [key cb]
-  (assoc nerve-cbs key cb))
