@@ -1,3 +1,5 @@
+LOG_LEVEL = "debug"
+
 # Audio backend used by pyo
 # http://ajaxsoundstudio.com/pyodoc/api/classes/server.html
 BACKEND = 'portaudio'  # multiplatform
