@@ -1,9 +1,3 @@
-(defn get-config [args]
-  (import [config])
-  ; TODO parse arguments with getopt
-  config)
-
-
 ; default values, changed in an impure way to be accesed
 ; by livecoding part
 (def RENDER-SIZE [0 0])

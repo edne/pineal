@@ -3,8 +3,7 @@
 (import
   [eye [Eye]]
   [ear [Ear]]
-  [coder [Coder]]
-  [core.conf [get-config]])
+  [coder [Coder]])
 
 (require core.macros)
 
@@ -12,8 +11,7 @@
 (defmain [args]
   "Run program parts as threads,
   and wait KeyboardInterrupt"
-  (setv conf (get-config args))
-  (setv log (new-logger conf))
+  (setv log (new-logger))
   (setv ths [(Ear)
              (Eye)
              (Coder)])

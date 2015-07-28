@@ -1,18 +1,30 @@
-(defmacro new-logger [conf]
+(defmacro get-config []
+  `(do
+     (import [config])
+     (import sys)
+     (let [[args sys.argv]]
+       ; TODO parse arguments with getopt
+       )
+     config))
+
+
+(defmacro new-logger []
   `(do
      (import [logging])
+     (let [[conf (get-config)]
+           [numeric-level
 
-     (setv numeric-level
-       (getattr logging
-                (.upper (. ~conf LOG-LEVEL))
-                None))
+            (getattr logging
+                     (.upper (. conf LOG-LEVEL))
+                     None)]]
 
-     (unless (isinstance numeric-level
-                         int)
-       (raise (ValueError "Invalid log level")))
+       (unless
+         (isinstance numeric-level
+                     int)
+         (raise (ValueError "Invalid log level")))
 
-     (apply logging.basicConfig
-       [] {"level" numeric-level})
+       (apply logging.basicConfig
+         [] {"level" numeric-level}))
 
      (logging.getLogger --name--)))
 
@@ -47,8 +59,6 @@
                (setv (car ~stopped) true))]])
 
          (~classname))
-       (import sys)
-       (import [core.conf [get-config]])
-       (setv conf (get-config sys.argv))
-       (setv log (new-logger conf))
+       (setv conf (get-config))
+       (setv log  (new-logger))
        (~inner conf log))))
