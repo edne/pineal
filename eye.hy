@@ -6,7 +6,7 @@
   [core.nerve [nerve-cb! nerve-start]]
   [core.pyexec [pyexec]])
 
-(require core.runner)
+(require core.macros)
 
 
 (runner Eye [conf]

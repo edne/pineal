@@ -5,7 +5,7 @@
                    OSCClientError
                    OSCMessage]])
 
-(require core.runner)
+(require core.macros)
 
 
 (defn osc-receiver [in_addr cbs]

@@ -7,7 +7,7 @@
   [watchdog.events [FileSystemEventHandler]]
   [core.osc [osc-sender]])
 
-(require core.runner)
+(require core.macros)
 
 
 (runner Coder [conf]

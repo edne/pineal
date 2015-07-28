@@ -8,7 +8,7 @@
   [core.osc [osc-sender]])
 
 
-(require core.runner)
+(require core.macros)
 
 
 (defn AMP [src]
