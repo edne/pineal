@@ -1,22 +1,28 @@
 (defmacro runner [name args &rest body]
-  `(defn ~name ~args
+  (with-gensyms [stopped
+                 classname
+                 running-body]
 
-     (import [threading [Thread]])
-     (setv _stop [false])
+    `(defn ~name ~args
+       (import [threading [Thread]])
+       (setv ~stopped [false])
 
-     (defmacro running [&rest body]
-       `(try (while (not (car _stop))
-               ~@body)
-          (catch [KeyboardInterrupt]
-            None)))
+       (defn stopped? []
+         (car ~stopped))
 
-     (defclass Class [Thread]
-       [[run
-         (fn [self]
-           ~@body)]
+       (defmacro running [&rest ~running-body]
+         `(try (while (not (stopped?))
+                 ~@~running-body)
+            (catch [KeyboardInterrupt]
+              None)))
 
-        [stop
-         (fn [self]
-           (setv (car _stop) true))]])
+       (defclass ~classname [Thread]
+         [[run
+           (fn [self]
+             ~@body)]
 
-     (Class)))
+          [stop
+           (fn [self]
+             (setv (car ~stopped) true))]])
+
+       (~classname))))

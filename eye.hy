@@ -51,9 +51,7 @@
         (import [pyglet])
         (.schedule_interval pyglet.clock
                             (fn [dt]
-                              ; TODO: undefined?
-                              ; NO, macro-magic!
-                              (when (car _stop)
+                              (when (stopped?)
                                 (.exit pyglet.app)))
                             (/ 1 120))
         (try
