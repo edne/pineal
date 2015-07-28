@@ -4,18 +4,19 @@
   [eye [Eye]]
   [ear [Ear]]
   [coder [Coder]]
-  [core.conf [get-config]]
-  [core.logger [new-logger]])
+  [core.conf [get-config]])
+
+(require core.macros)
 
 
 (defmain [args]
   "Run program parts as threads,
   and wait KeyboardInterrupt"
-  (setv config (get-config args))
-  (setv log (new-logger --name-- config))
-  (setv ths [(Ear config)
-             (Eye config)
-             (Coder config)])
+  (setv conf (get-config args))
+  (setv log (new-logger conf))
+  (setv ths [(Ear conf)
+             (Eye conf)
+             (Coder conf)])
 
   (for [t ths]
     (.start t))

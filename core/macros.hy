@@ -1,3 +1,22 @@
+(defmacro new-logger [conf]
+  `(do
+     (import [logging])
+
+     (setv numeric-level
+       (getattr logging
+                (.upper (. ~conf LOG-LEVEL))
+                None))
+
+     (unless (isinstance numeric-level
+                         int)
+       (raise (ValueError "Invalid log level")))
+
+     (apply logging.basicConfig
+       [] {"level" numeric-level})
+
+     (logging.getLogger --name--)))
+
+
 (defmacro runner [name args &rest body]
   (with-gensyms [stopped
                  classname
