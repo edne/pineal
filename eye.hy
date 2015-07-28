@@ -67,6 +67,8 @@
   (setv name
     (get (.split path "/") -1))
 
+  (setv log (new-logger))  ; TODO pass name
+
   ; stack here the loaded codes,
   ; so when everything explodes, we can
   ; always restore the last (opefully) working vision
@@ -85,12 +87,12 @@
     "
     [[load
       (fn [self code]
-        (print "loading:" name)
+        (log.info (% "loading: %s" name))
         (setv filename (% "visions/%s" name))
         (try
           (pyexec code box.__dict__)
           (except [e Exception]
-            (print name e))
+            (log.error name e))
           (else
             (.append stack code))))]
 
@@ -101,7 +103,7 @@
           ; if there is an error and stack is empty
           ; the FIRST loaded vision is broken
           (except [e Exception]
-            (print name name e)
+            (log.error name name e)
             (.pop stack)
 
             (if stack
