@@ -14,9 +14,9 @@
   and wait KeyboardInterrupt"
   (setv conf (get-config args))
   (setv log (new-logger conf))
-  (setv ths [(Ear conf)
-             (Eye conf)
-             (Coder conf)])
+  (setv ths [(Ear)
+             (Eye)
+             (Coder)])
 
   (for [t ths]
     (.start t))

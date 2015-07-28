@@ -10,7 +10,7 @@
 (require core.macros)
 
 
-(runner Coder [conf]
+(runner Coder [conf log]
         "
         Waits for changes in `visions/`
 
@@ -19,7 +19,7 @@
         * `/eye/delete  [filename]`
         * `/eye/move    [oldname newname]`
         "
-        (print "starting coder.hy")
+        (log.info "starting coder.hy")
 
         (setv observer (Observer))
         (.schedule observer
@@ -28,7 +28,7 @@
         (.start observer)
 
         (running (sleep (/ 1 60)))
-        (print "\rstopping coder.hy")
+        (log.info "stopping coder.hy")
 
         (.stop observer)
         (.join observer))

@@ -22,7 +22,7 @@
                   "default"
                   callback)
 
-  (runner Receiver []
+  (runner Receiver [conf log]
           (running
             (.handle_request server))
           (.close server))

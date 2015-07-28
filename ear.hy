@@ -21,8 +21,8 @@
   (apply pyo.Biquad [src f] {"type" 1}))
 
 
-(runner Ear [conf]
-        (print "starting ear.hy")
+(runner Ear [conf log]
+        (log.info "starting ear.hy")
 
         (setv pyo-server
           (apply pyo.Server
@@ -42,9 +42,9 @@
                  (apply pyo.Input
                    []
                    {"chnl" [0 1]}))
-               (print "Pyo is working properly!\n"))
+               (log.info "Pyo is working properly!\n"))
           (catch [pyo.PyoServerStateException]
-            (print "Pyo is not working")
+            (log.error "Pyo is not working")
             (exit 1)))
 
         (setv osc-send (osc-sender conf.OSC_EYE))
@@ -64,7 +64,7 @@
 
                  (sleep (/ 1 30)))
 
-        (print "\rstopping ear.hy")
+        (log.info "stopping ear.hy")
         (.stop pyo-server)
         (del pyo-server))
 

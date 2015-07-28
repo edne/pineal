@@ -9,7 +9,7 @@
 (require core.macros)
 
 
-(runner Eye [conf]
+(runner Eye [conf log]
         "
         Handles and draws the different visions
 
@@ -21,7 +21,7 @@
         Recives from Ear:
         * `/eye/audio/[cmd]  [value]`
         "
-        (print "starting eye.hy")
+        (log.info "starting eye.hy")
 
         ; update impure config
         (import [core
@@ -59,7 +59,7 @@
           (catch [KeyboardInterrupt]
             None))
 
-        (print "\rstopping eye.hy")
+        (log.info "stopping eye.hy")
         (nerve-stop))
 
 
@@ -85,7 +85,7 @@
     "
     [[load
       (fn [self code]
-        (print "\rloading:" name)
+        (print "loading:" name)
         (setv filename (% "visions/%s" name))
         (try
           (pyexec code box.__dict__)
@@ -107,7 +107,7 @@
             (if stack
               (pyexec (get stack -1)
                       box.__dict__)
-              (print name "BROKEN!")))))]])
+              (log.error name "BROKEN!")))))]])
 
   (setv vision (Vision))
   (.load vision code)
