@@ -1,12 +1,18 @@
 #!/usr/bin/env hy
 
+(require core.macros)
+
+; update impure config
+(let [[conf (get-config)]]
+  (import [core [conf :as impure-conf]])
+  (setv impure-conf.RENDER-SIZE conf.RENDER-SIZE)
+  (setv impure-conf.OSC-EYE     conf.OSC-EYE))
+
 (import
   [time [sleep]]
   [core.windows [new-renderer new-master new-overview]]
   [core.nerve [nerve-cb! nerve-start]]
   [core.pyexec [pyexec]])
-
-(require core.macros)
 
 
 (runner Eye [conf log]
@@ -22,12 +28,6 @@
         * `/eye/audio/[cmd]  [value]`
         "
         (log.info "starting eye.hy")
-
-        ; update impure config
-        (import [core
-                 [conf :as impure-conf]])
-        (setv impure-conf.RENDER-SIZE conf.RENDER-SIZE)
-        (setv impure-conf.OSC-EYE     conf.OSC-EYE)
 
         (setv visions {})
 
