@@ -25,8 +25,9 @@
   ([h]       (hsv_to_rgb h 1 1))
   ([h a]     (hsv h 1 1 a))
   ([h s v]   (hsv_to_rgb h s v))
-  ([h s v a] (+ [a] (list
-                      (hsv_to_rgb h s v)))))
+  ([h s v a] (+ (list
+                      (hsv_to_rgb h s v))
+                [a])))
 
 
 (defn strokeWeight [weight]
