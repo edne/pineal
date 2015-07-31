@@ -9,10 +9,8 @@
   (setv impure-conf.OSC-EYE     conf.OSC-EYE))
 
 (import
-  [time [sleep]]
   [core.windows [new-renderer new-master new-overview]]
-  [core.nerve [nerve-cb! nerve-start]]
-  [core.pyexec [pyexec]])
+  [core.nerve [nerve-cb! nerve-start]])
 
 
 (runner Eye [conf log]
@@ -88,7 +86,7 @@
     [[load
       (fn [self code]
         (log.info (% "loading: %s" name))
-        (setv filename (% "visions/%s" name))
+        (import [core.pyexec [pyexec]])
         (try
           (pyexec code box.__dict__)
           (except [e Exception]
@@ -107,8 +105,7 @@
             (.pop stack)
 
             (if stack
-              (pyexec (get stack -1)
-                      box.__dict__)
+              (.load self (get stack -1))
               (log.error name "BROKEN!")))))]])
 
   (setv vision (Vision))
