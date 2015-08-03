@@ -1,4 +1,5 @@
 hy
 pyglet
 watchdog
-git+https://github.com/edne/pyo
+numpy
+hear

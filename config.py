@@ -1,11 +1,5 @@
 LOG_LEVEL = "debug"
 
-# Audio backend used by pyo
-# http://ajaxsoundstudio.com/pyodoc/api/classes/server.html
-BACKEND = 'portaudio'  # multiplatform
-# BACKEND = 'jack'       # Linux and Mac, if you know what you are doing
-# BACKEND = 'coreaudio'  # Mac only, untested
-
 
 # OSC adresses
 OSC_EYE = ('localhost', 1420)
