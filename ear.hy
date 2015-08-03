@@ -11,16 +11,6 @@
 (require core.macros)
 
 
-(defn AMP [src]
-  (pyo.Follower src))
-
-(defn LPF [src f]
-  (apply pyo.Biquad [src f] {"type" 0}))
-
-(defn HPF [src f]
-  (apply pyo.Biquad [src f] {"type" 1}))
-
-
 (runner Ear [conf log]
         (log.info "starting ear.hy")
 
@@ -47,20 +37,16 @@
             (log.error "Pyo is not working")
             (exit 1)))
 
-        (setv osc-send (osc-sender conf.OSC_EYE))
+        (setv _osc-send (osc-sender conf.OSC_EYE))
+        (setv osc-send
+          (fn [path val]
+            (log.debug (+ path " " (str val)))
+            (_osc-send path val)))
 
-        (setv amp  (-> src AMP))
-        (setv bass (-> src (LPF 100) AMP))
-        (setv high (-> src (HPF 10000) AMP))
+        (setv amp  (pyo.Follower src))
 
         (running (osc-send "/eye/audio/amp"
                            (float (.get amp)))
-
-                 (osc-send "/eye/audio/bass"
-                           (float (.get bass)))
-
-                 (osc-send "/eye/audio/high"
-                           (float (.get high)))
 
                  (sleep (/ 1 30)))
 

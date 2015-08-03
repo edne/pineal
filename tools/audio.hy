@@ -13,5 +13,3 @@
 
 
 (def amp (new-source "/eye/audio/amp"))
-(def bass (new-source "/eye/audio/bass"))
-(def high (new-source "/eye/audio/high"))
