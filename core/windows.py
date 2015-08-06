@@ -1,5 +1,4 @@
 import pyglet
-from pyglet import clock
 import pyglet.gl as gl
 
 
@@ -30,8 +29,12 @@ def new_renderer(visions, size):
 
     window.texture = None
 
+    # pyglet.clock.schedule_interval(window.update, 1.0/128.0)
+    # pyglet.clock.set_fps_limit(30)
+
     @window.event
     def on_draw():
+        pyglet.clock.tick()
         window.clear()
 
         gl.glMatrixMode(gl.GL_PROJECTION)
@@ -57,9 +60,20 @@ def new_renderer(visions, size):
         rawimage = buf.get_image_data()
         window.texture = rawimage.get_texture()
 
-        clock.tick()
-        print '\rfps: %3.1f' % clock.get_fps(),
     return window
+
+
+def output_draw(window):
+    w, h = window.width, window.height
+    side = max(w, h)
+    texture = window.source.texture
+
+    window.clear()
+    if texture:
+        texture.blit(-(side-w)/2,
+                     -(side-h)/2,
+                     0,
+                     side, side)
 
 
 def new_output_window(*args, **kwargs):
@@ -67,16 +81,7 @@ def new_output_window(*args, **kwargs):
 
     @window.event
     def on_draw():
-        w, h = window.width, window.height
-        side = max(w, h)
-        texture = window.source.texture
-
-        window.clear()
-        if texture:
-            texture.blit(-(side-w)/2,
-                         -(side-h)/2,
-                         0,
-                         side, side)
+        output_draw(window)
     return window
 
 
@@ -99,9 +104,16 @@ def new_overview(source):
     """
     Overview for the programmer, nothing else to say
     """
+    fps = pyglet.clock.ClockDisplay()
     window = new_output_window(resizable=True,
                                caption='(pineal overview)',
                                width=600,
                                height=450)
+
+    @window.event
+    def on_draw():
+        output_draw(window)
+        fps.draw()
+
     window.source = source
     return window
