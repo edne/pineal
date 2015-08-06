@@ -1,9 +1,6 @@
 #!/usr/bin/env hy
 
 (import
-  [sys [exit]]
-  [time [sleep]]
-  [hy.lex [tokenize]]
   [hear [hear]]
   [numpy :as np]
   [core.osc [osc-sender]])
@@ -15,27 +12,19 @@
 (runner Ear [conf log]
         (log.info "starting ear.hy")
 
-        (setv _osc-send (osc-sender conf.OSC_EYE))
-        (setv osc-send
-          (fn [path val]
-            (log.debug (+ path " " (str val)))
-            (_osc-send path val)))
-
-        (setv amp [0 0])
+        (setv osc-send (osc-sender conf.OSC_EYE))
 
         (apply hear
           []
           {"callback"
            (fn [data]
-             (setv (car amp)
-               (-> (car data) np.mean np.abs)))
+             (osc-send "/eye/audio/amp"
+                       (-> (get data 0)
+                         np.mean np.abs)))
 
-           "body"
-           (fn []
-             (running (osc-send "/eye/audio/amp"
-                                (float (car amp)))
-
-                      (sleep (/ 1 30))))})
+           "jack_client" "Pineal"
+           "channels" conf.CHANNELS
+           "rate"     conf.RATE})
 
         (log.info "stopping ear.hy"))
 
