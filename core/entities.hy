@@ -7,6 +7,8 @@
     (fn [self
          &rest args
          &kwargs kwargs]
+      ; entities like Psolid take arguments in the
+      ; constructor, and process them in draw() 
       (setv self._args (list args))
       (setv self._kwargs kwargs)
       None)]])
