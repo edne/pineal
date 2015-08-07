@@ -90,7 +90,8 @@
         (try
           (pyexec code box.__dict__)
           (except [e Exception]
-            (log.error name e))
+            (log.error (+ name " "
+                          (str e))))
           (else
             (.append stack code))))]
 
@@ -101,12 +102,13 @@
           ; if there is an error and stack is empty
           ; the FIRST loaded vision is broken
           (except [e Exception]
-            (log.error name name e)
+            (log.error (+ name " "
+                          (str e)))
             (.pop stack)
 
             (if stack
               (.load self (get stack -1))
-              (log.error name "BROKEN!")))))]])
+              (log.error "BROKEN!")))))]])
 
   (setv vision (Vision))
   (.load vision code)
