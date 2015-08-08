@@ -1,6 +1,7 @@
 #!/usr/bin/env hy
 
 (import
+  [time [sleep]]
   [hear [hear]]
   [numpy :as np]
   [core.osc [osc-sender]])
@@ -21,6 +22,10 @@
              (osc-send "/eye/audio/amp"
                        (-> (get data 0)
                          np.mean np.abs)))
+
+           "body"
+           (fn []
+             (running (sleep (/ 1 60))))
 
            "jack_client" "Pineal"
            "channels" conf.CHANNELS
