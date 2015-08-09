@@ -13,6 +13,20 @@
   [core.nerve [nerve-cb! nerve-start]])
 
 
+(defmacro eye-loop [fps]
+  `(do
+     (import [pyglet])
+     (.schedule_interval pyglet.clock
+                         (fn [dt]
+                           (when (stopped?)
+                             (.exit pyglet.app)))
+                         (/ 1 ~fps))
+     (try
+       (.run pyglet.app)
+       (catch [KeyboardInterrupt]
+         nil))) )
+
+
 (runner Eye [conf log]
         "
         Handles and draws the different visions
@@ -46,16 +60,7 @@
 
         (setv nerve-stop (nerve-start))
 
-        (import [pyglet])
-        (.schedule_interval pyglet.clock
-                            (fn [dt]
-                              (when (stopped?)
-                                (.exit pyglet.app)))
-                            (/ 1 120))
-        (try
-          (.run pyglet.app)
-          (catch [KeyboardInterrupt]
-            None))
+        (eye-loop 120)
 
         (log.info "stopping eye.hy")
         (nerve-stop))
