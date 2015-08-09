@@ -51,10 +51,10 @@ def new_renderer(visions, size):
                      0, 0, 0,
                      0, 1, 0)
 
-        for v in window.visions.values():
+        for vision in window.visions.values():
             gl.glMatrixMode(gl.GL_MODELVIEW)
             gl.glLoadIdentity()
-            v.iteration()
+            vision()
 
         buf = pyglet.image.get_buffer_manager().get_color_buffer()
         rawimage = buf.get_image_data()

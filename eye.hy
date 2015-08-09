@@ -52,8 +52,7 @@
                    (fn [path args]
                      (setv [name code] args)
                      (if (in name (visions.keys))
-                       (.load (get visions name)
-                              code)
+                       ((get visions name) code)
                        (assoc visions
                          name
                          (new-vision name code)))))
@@ -66,58 +65,31 @@
         (nerve-stop))
 
 
-(defn new-vision [path code]
-  (setv name
-    (get (.split path "/") -1))
-
+(defn new-vision [name code]
   (setv log (new-logger))  ; TODO pass name
 
   ; stack here the loaded codes,
   ; so when everything explodes, we can
-  ; always restore the last (opefully) working vision
-  (setv stack [])
+  ; always restore the last (hopefully) working vision
+  (setv stack [code])
 
-  (defclass Box []
-    "A small sandbox where to run the livecoded part"
-    [[draw
-      (fn [self])]])
+  (defn load [code]
+    (log.info (% "loading: %s" name))
+    (.append stack code))
 
-  (setv box (Box))
+  (defn draw []
+    (import [core.pyexec [pyexec]])
+    (try
+      (pyexec (last stack))
+      (except [e Exception]
+        (log.error (+ name " " (str e)))
+        (.pop stack)
 
-  (defclass Vision []
-    "
-    The vision instance
-    "
-    [[load
-      (fn [self code]
-        (log.info (% "loading: %s" name))
-        (import [core.pyexec [pyexec]])
-        (try
-          (pyexec code box.__dict__)
-          (except [e Exception]
-            (log.error (+ name " "
-                          (str e))))
-          (else
-            (.append stack code))))]
+        (unless stack
+          (log.error "BROKEN!")))))
 
-     [iteration
-      (fn [self]
-        (try
-          (.draw box)
-          ; if there is an error and stack is empty
-          ; the FIRST loaded vision is broken
-          (except [e Exception]
-            (log.error (+ name " "
-                          (str e)))
-            (.pop stack)
-
-            (if stack
-              (.load self (get stack -1))
-              (log.error "BROKEN!")))))]])
-
-  (setv vision (Vision))
-  (.load vision code)
-  vision)
+  (fn [&optional code]
+    (if code (load code) (draw))))
 
 
 (defmain [args]
