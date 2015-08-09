@@ -2,9 +2,7 @@ all: test style
 
 
 test:
-	coverage erase
-	nosetests -v --with-coverage --cover-package=.
-	coverage report
+	nosetests -v --with-coverage --cover-erase --cover-package=core,tools
 
 
 style:
