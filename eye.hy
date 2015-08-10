@@ -86,7 +86,8 @@
         (.pop stack)
 
         (unless stack
-          (log.error "BROKEN!")))))
+          (log.error "BROKEN!")
+          (raise e)))))
 
   (fn [&optional code]
     (if code (load code) (draw))))
