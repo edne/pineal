@@ -2,21 +2,19 @@
 (require eye)
 
 
-(defn test-broken-vision []
+(defn test-vision []
   (import [eye [new-vision]])
-  (setv vision (new-vision "asd" "failing code"))
-  (try
-      (vision)
-    (except [Exception]
-      (assert true))
-    (else (assert false)))) 
+  (setv vision (new-vision "tested-vision" "failing code"))
+  (assert (= (vision) :broken))
+  (assert (= (vision) :working))
+  (assert (= (vision) :working)))
 
 
 (defn test-empty-eye []
   (import
     [core.windows [new-renderer new-master new-overview]])
 
-  (runner eye [conf log]
+  (runner Eye [conf log]
           (setv renderer (new-renderer {}
                                        conf.RENDER-SIZE))
           (new-master renderer)
@@ -24,4 +22,8 @@
 
           (eye-loop 120))
 
-  (.run (eye)))
+  (let [[eye (Eye)]]
+    (import [time [sleep]])
+    (.start eye)
+    (sleep 1)
+    (.stop eye)))

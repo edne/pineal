@@ -71,7 +71,7 @@
   ; stack here the loaded codes,
   ; so when everything explodes, we can
   ; always restore the last (hopefully) working vision
-  (setv stack [code])
+  (setv stack ["" code])
 
   (defn load [code]
     (log.info (% "loading: %s" name))
@@ -80,14 +80,13 @@
   (defn draw []
     (import [core.pyexec [pyexec]])
     (try
-      (pyexec (last stack))
+      (do
+        (pyexec (last stack))
+        :working)
       (except [e Exception]
         (log.error (+ name " " (str e)))
         (.pop stack)
-
-        (unless stack
-          (log.error "BROKEN!")
-          (raise e)))))
+        :broken)))
 
   (fn [&optional code]
     (if code (load code) (draw))))
