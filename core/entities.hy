@@ -26,20 +26,16 @@
 
 
 (defclass Effect [BaseEntity]
-  [[wrap
-    (fn [self fs
-         &rest args
-         &kwargs kwargs]
-      (for [f fs]
-        (f)))]
+  [[--init--
+    (fn [self args &rest fs]
+      (apply self.wrap
+        (+ [fs] args)))]
 
-   [--call--
-    (fn [self &rest fs]
-      (if fs
-        (fn []
-          (apply self.wrap
-            (+ [fs] self._args)
-            self._kwargs))))]])
+   [wrap
+    (fn [self fs
+         &rest args]
+      (for [f fs]
+        (f)))]])
 
 
 (defclass Layer [Entity Effect]
