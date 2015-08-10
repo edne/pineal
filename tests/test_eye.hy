@@ -10,6 +10,13 @@
   (assert (= (vision) :working)))
 
 
+(defn test-eval-str []
+  (import [eye [eval-str]])
+  (assert (= (eval-str "1") 1))
+  (assert (= (eval-str "(+ 1 2)") 3))
+  (assert (= (eval-str "(setv x 1) (+ x 1)") 2)))
+
+
 (defn test-empty-eye []
   (import
     [core.windows [new-renderer new-master new-overview]])

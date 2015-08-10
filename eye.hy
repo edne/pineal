@@ -13,6 +13,11 @@
   [core.nerve [nerve-cb! nerve-start]])
 
 
+(defn eval-str [s]
+  (import [hy.lex [tokenize]])
+  (eval `(do ~@(tokenize s))))
+
+
 (defmacro eye-loop [fps]
   `(do
      (import [pyglet])
@@ -81,7 +86,8 @@
     (import [core.pyexec [pyexec]])
     (try
       (do
-        (pyexec (last stack))
+        (eval-str (+ "(import [tools [*]])\n\n"
+                     (last stack)))
         :working)
       (except [e Exception]
         (log.error (+ name " " (str e)))

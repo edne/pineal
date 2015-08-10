@@ -47,7 +47,7 @@
       (.split "/") last
       (.split ".") first))
 
-  (defn valid? [path] (.endswith path ".py"))
+  (defn valid? [path] (.endswith path ".hy"))
 
   (defmacro handle [check path data]
     `(fn [self event]
