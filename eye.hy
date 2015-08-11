@@ -83,10 +83,10 @@
     (.append stack code))
 
   (defn draw []
-    (import [core.pyexec [pyexec]])
     (try
       (do
-        (eval-str (+ "(import [tools [*]])\n\n"
+        (eval-str (+ "(import [tools [*]])\n"
+                     "(require core.dsl)\n\n"
                      (last stack)))
         :working)
       (except [e Exception]
