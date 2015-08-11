@@ -27,15 +27,14 @@
 
 (defclass Effect [BaseEntity]
   [[--init--
-    (fn [self args &rest fs]
+    (fn [self args f]
       (apply self.wrap
-        (+ [fs] args)))]
+        (+ [f] args)))]
 
    [wrap
-    (fn [self fs
+    (fn [self f
          &rest args]
-      (for [f fs]
-        (f)))]])
+      (f))]])
 
 
 (defclass Layer [Entity Effect]
