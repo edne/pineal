@@ -30,5 +30,5 @@
                 [a])))
 
 
-(defn strokeWeight [weight]
+(defn stroke-weight [weight]
   (gl.glLineWidth weight))
