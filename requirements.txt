@@ -1,5 +1,5 @@
 hy
 pyglet
 watchdog
-numpy
+numpy=="1.6.1"
 hear
