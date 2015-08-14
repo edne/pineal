@@ -3,7 +3,7 @@
 
 (def memo-source {})
 
-(defn new-source [name]
+(defn get-source [name]
   (unless (in name memo-source)
     (setv container [0])
 

@@ -1,5 +1,10 @@
-(defmacro osc-source [name path]
-  `(def ~name (new-source ~path)))
+(defmacro/g! osc-source [name path]
+  `(defn ~name [&optional [mult 1]]
+     (setv ~g!source
+       (get-source ~path))
+
+     (* mult
+       (~g!source))))
 
 
 (defmacro fx [name parameters
