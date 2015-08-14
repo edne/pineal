@@ -7,11 +7,19 @@
        (~g!source))))
 
 
-(defmacro fx [name parameters
-              &rest body]
-  `(apply ~name
-     (+ [(fn [] ~@body)]
-        ~parameters)))
+(defmacro fx [efs &rest body]
+  (setv ef (car efs))
+  (if (cdr efs)
+    `(fx [~ef]
+         (fx [~@(cdr efs)]
+             ~@body))
+    ; else:
+    (let [[name (car ef)]
+          [args (list
+                  (cdr ef))]]
+      `(apply ~name
+         (+ [(fn [] ~@body)]
+            ~args)))))
 
 
 (defmacro draw [name]
@@ -19,5 +27,5 @@
 
 
 (defmacro on [name &rest body]
-  `(fx on-layer [(str '~name)]
+  `(fx [(on-layer (str '~name))]
        ~@body))
