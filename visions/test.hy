@@ -1,3 +1,6 @@
+(osc-source amp "/eye/audio/amp")
+
+
 (stroke-weight 4)
 
 (on my-layer

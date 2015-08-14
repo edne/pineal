@@ -1,5 +1,5 @@
 import hy
-from audio import *  # TODO replace with generic OSC handler
+from osc import *
 from misc import *
 from coloring import *
 from primitives import *

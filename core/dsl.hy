@@ -1,3 +1,7 @@
+(defmacro osc-source [name path]
+  `(def ~name (new-source ~path)))
+
+
 (defmacro fx [name parameters
               &rest body]
   `(apply ~name
