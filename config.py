@@ -2,7 +2,7 @@ LOG_LEVEL = "debug"
 
 
 # Audio
-CHANNELS = 1
+CHANNELS = ["r", "l"]
 RATE = 44100
 
 

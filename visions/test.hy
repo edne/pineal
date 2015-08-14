@@ -1,4 +1,6 @@
-(osc-source amp "/eye/audio/amp")
+(osc-source amp "/amp")
+(osc-source r   "/r/amp")
+(osc-source l   "/l/amp")
 
 
 (stroke-weight 4)

@@ -19,16 +19,25 @@
           []
           {"callback"
            (fn [data]
-             (osc-send "/eye/audio/amp"
-                       (-> (get data 0)
-                         np.mean np.abs)))
+             (setv amps {})
+
+             (for [(, i ch) (enumerate conf.CHANNELS)]
+               (assoc amps ch
+                 (-> (get data i) np.mean np.abs)))
+
+             (for [ch conf.CHANNELS]
+               (osc-send (.format "/{}/amp" ch)
+                         (get amps ch)))
+
+             (osc-send "/amp"
+                       (np.mean (.values amps))))
 
            "body"
            (fn []
              (running (sleep (/ 1 60))))
 
            "jack_client" "Pineal"
-           "channels" conf.CHANNELS
+           "channels" (len conf.CHANNELS)
            "rate"     conf.RATE})
 
         (log.info "stopping ear.hy"))
