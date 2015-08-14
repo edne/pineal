@@ -19,18 +19,24 @@
           []
           {"callback"
            (fn [data]
-             (setv amps {})
+             (defn analyze [name operation]
+               (setv values {})
 
-             (for [(, i ch) (enumerate conf.CHANNELS)]
-               (assoc amps ch
-                 (-> (get data i) np.mean np.abs)))
+               (for [(, i ch) (enumerate conf.CHANNELS)]
+                 (assoc values ch
+                   (operation (get data i))))
 
-             (for [ch conf.CHANNELS]
-               (osc-send (.format "/{}/amp" ch)
-                         (get amps ch)))
+               (for [ch conf.CHANNELS]
+                 (osc-send (.format "/{0}/{1}"
+                                    ch name)
+                           (get values ch)))
 
-             (osc-send "/amp"
-                       (np.mean (.values amps))))
+               (osc-send (.format "/{}" name)
+                         (np.mean (.values values))))
+
+             (analyze "amp"
+                      (fn [xs]
+                        (-> xs np.mean np.abs))))
 
            "body"
            (fn []
