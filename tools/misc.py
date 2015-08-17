@@ -1,5 +1,5 @@
 from time import time
-from math import pi
+from math import *
 
 
 def time2rad(mult=1):
