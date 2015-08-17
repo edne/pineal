@@ -2,4 +2,4 @@ hy
 pyglet
 watchdog
 scipy
-git+https://github.com/edne/hear
+jack-client

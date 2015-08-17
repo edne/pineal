@@ -2,7 +2,7 @@
 
 (import
   [time [sleep]]
-  [hear [hear]]
+  [core.audio [hear]]
   [numpy :as np]
   [scipy.signal [iirfilter lfilter]]
   [core.osc [osc-sender]])
