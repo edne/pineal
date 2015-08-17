@@ -16,6 +16,17 @@
 
         (setv osc-send (osc-sender conf.OSC_EYE))
 
+        (defn hz [f]
+          "0Hz -> 0, Nyquist/2 -> 1"
+          (setv ny/2 (/ conf.RATE 2))
+          (/ f ny/2))
+
+        (setv (, lp-b lp-a)
+          (iirfilter 4 [(hz 1) (hz 1000)]))
+
+        (setv (, hp-b hp-a)
+          (iirfilter 4 [(hz 10000) (hz 20000)]))
+
         (apply hear
           []
           {"callback"
@@ -39,21 +50,10 @@
                       (fn [xs]
                         (-> xs np.abs np.mean )))
 
-             (defn hz [f]
-               "0Hz -> 0, Nyquist/2 -> 1"
-               (setv ny/2 (/ conf.RATE 2))
-               (/ f ny/2))
-
-             (setv (, lp-b lp-a)
-               (iirfilter 4 [(hz 1) (hz 1000)]))
-
              (analyze "bass"
                       (fn [xs]
                         (-> (lfilter lp-b lp-a xs)
                           np.abs np.mean )))
-
-             (setv (, hp-b hp-a)
-               (iirfilter 4 [(hz 10000) (hz 20000)]))
 
              (analyze "high"
                       (fn [xs]
