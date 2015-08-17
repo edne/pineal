@@ -6,8 +6,7 @@
 (stroke-weight 4)
 
 (on my-layer
-
-    (fx [(scale (+ 1 (amp)))]
+    (fx [(scale (amp 1 1))]
         (draw my-layer))
 
     (fx [(scale (amp 4))]
