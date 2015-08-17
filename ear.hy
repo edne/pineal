@@ -36,7 +36,7 @@
 
              (analyze "amp"
                       (fn [xs]
-                        (-> xs np.mean np.abs))))
+                        (-> xs np.abs np.mean ))))
 
            "body"
            (fn []
