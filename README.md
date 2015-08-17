@@ -6,48 +6,45 @@ Pineal
 An engine for graphic live-coding on an audio stream, something between
 [Fluxus](http://www.pawfal.org/fluxus/) and [Processing](https://processing.org/),
 __but in Python!__  
-(ok that's not true, it was in Python, now the back-end is in a
-[pythonic Lisp dialect](http://hylang.org), but the part you can live-code
-is still in Python <del>and I'm not planning to change that</del> (parentheses
-are coming))
+(ok that's not true, it was in Python, now it is mainly in a
+[pythonic Lisp dialect](http://hylang.org))
 
 
 Example
 -------
 
-```python
-from tools import *
+```hy
+(osc-source amp  "/amp")
+(osc-source bass "/bass")
+(osc-source high "/high")
 
 
-def draw():
-    strokeWeight(5)
+(stroke-weight 4)
 
-    Layer("out")()
+(on my-layer
+    (fx [(scale (amp 1 1))]
+        (draw my-layer))
 
-    n = 4
-    Layer("layer1")(
-        Scale(0.9 + high())(
-            Turnaround(3)(
-                Layer("out"))),
+    (fx [(scale (amp 4))]
+        (pwired 4 [0 1 1 1])
+        (psolid 4 [0 0 0 0.1]))
 
-        Turnaround(4)(
-            Rotate(time2rad())(
-                Translate(0.5 + 8*amp())(
-                    Pwired(n, hsv(2*time(), 1 - bass())),
-                    Scale(0.1 + 4*bass())(
-                        Psolid(n, rgb(0.0, 1)))))))()
+    (fx [(scale (bass 2))]
+        (pwired 4 [0 1 0 1])
+        (psolid 4 [0 0 0 0.1]))
 
-    Layer("out")(
-        Scale(1.0 - bass())(
-            Layer("layer1")))()
-```
+    (fx [(scale (high 4))]
+        (pwired 4 [1 1 1 1])
+        (psolid 4 [0 0 0 0.1])))
+
+(draw my-layer)```
 
 
 Instructions
 ------------
 * Play your music
 * Run `./pineal.hy`
-* Edit a `.py` file in the `visions` folder or create a new one
+* Edit a `.hy` file in the `visions` folder or create a new one
 * Every time you save output is updated
 * Have fun!
 
@@ -72,4 +69,4 @@ This project is heavily in development. You can use it, I use it in "production"
 syntax (it's getting even more functional) and new features that randomly appear
 or disappear.
 
-In case of doubt you can look at `visions/test.py`, it should always work.
+In case of doubt you can look at `visions/test.hy`, it should always work.
