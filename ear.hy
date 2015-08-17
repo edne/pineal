@@ -15,6 +15,7 @@
         (log.info "starting ear.hy")
 
         (setv osc-send (osc-sender conf.OSC_EYE))
+        (setv out-dict {})
 
         (defn hz [f]
           "0Hz -> 0, Nyquist/2 -> 1"
@@ -39,12 +40,12 @@
                    (operation (get data i))))
 
                (for [ch conf.CHANNELS]
-                 (osc-send (.format "/{0}/{1}"
-                                    ch name)
-                           (get values ch)))
+                 (assoc out-dict (.format "/{0}/{1}"
+                                          ch name)
+                   (get values ch)))
 
-               (osc-send (.format "/{}" name)
-                         (np.mean (.values values))))
+               (assoc out-dict (.format "/{}" name)
+                 (np.mean (.values values))))
 
              (analyze "amp"
                       (fn [xs]
@@ -62,7 +63,10 @@
 
            "body"
            (fn []
-             (running (sleep (/ 1 60))))
+             (running
+               (for [(, key val) (.items out-dict)]
+                 (osc-send key val))
+               (sleep (/ 1 60))))
 
            "jack_client" "Pineal"
            "channels" (len conf.CHANNELS)
