@@ -1,5 +1,3 @@
-#!/usr/bin/env hy
-
 (import
   [glob [glob]]
   [time [sleep]]
@@ -10,7 +8,7 @@
 (require pineal.macros)
 
 
-(runner Coder [conf log]
+(runner coder-runner [conf log]
         "
         Waits for changes in `visions/`
 
@@ -84,7 +82,3 @@
                           "/eye/code"
                           [(src-name) (src-code)])]])
   (Handler))
-
-
-(defmain [args]
-  (.run (Coder)))

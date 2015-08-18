@@ -1,5 +1,3 @@
-#!/usr/bin/env hy
-
 (import
   [time [sleep]]
   [pineal.audio [hear]]
@@ -11,7 +9,7 @@
 (require pineal.macros)
 
 
-(runner Ear [conf log]
+(runner ear-runner [conf log]
         (log.info "starting ear.hy")
 
         (setv osc-send (osc-sender conf.OSC_EYE))
@@ -73,7 +71,3 @@
            "rate"     conf.RATE})
 
         (log.info "stopping ear.hy"))
-
-
-(defmain [args]
-  (.run (Ear)))

@@ -1,31 +1,14 @@
 #!/usr/bin/env hy
-
-(import
-  [pineal.eye [Eye]]
-  [pineal.ear [Ear]]
-  [pineal.coder [Coder]])
-
-(require pineal.macros)
+(require pineal.core)
 
 
 (defmain [args]
   "Run program parts as threads,
   and wait KeyboardInterrupt"
-  (setv log (new-logger))
-  (setv ths [(Ear)
-             (Eye)
-             (Coder)])
+  (start-pineal)
 
-  (for [t ths]
-    (.start t))
-
-  (log.info "started pineal")
   (try
-    (while true
-      (for [t ths]
-        (.join t 1)))
-    (catch [KeyboardInterrupt]
-      None))
+    (while true nil)
+    (catch [KeyboardInterrupt] nil))
 
-  (for [t ths]
-    (.stop t)))
+  (stop-pineal))

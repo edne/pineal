@@ -1,5 +1,3 @@
-#!/usr/bin/env hy
-
 (require pineal.macros)
 
 ; update impure config
@@ -32,7 +30,7 @@
          nil))) )
 
 
-(runner Eye [conf log]
+(runner eye-runner [conf log]
         "
         Handles and draws the different visions
 
@@ -96,7 +94,3 @@
 
   (fn [&optional code]
     (if code (load code) (draw))))
-
-
-(defmain [args]
-  (.run (Eye)))
