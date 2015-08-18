@@ -1,5 +1,7 @@
 (defmacro/g! osc-source [name path]
   `(defn ~name [&rest args]
+     (import [core.nerve [get-source]])
+
      (setv mult
        (if args (car args) 1))
      (setv add
