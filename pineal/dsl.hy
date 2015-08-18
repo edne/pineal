@@ -1,6 +1,6 @@
 (defmacro/g! osc-source [name path]
   `(defn ~name [&rest args]
-     (import [core.nerve [get-source]])
+     (import [pineal.nerve [get-source]])
 
      (setv mult
        (if args (car args) 1))

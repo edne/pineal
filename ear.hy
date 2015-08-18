@@ -2,13 +2,13 @@
 
 (import
   [time [sleep]]
-  [core.audio [hear]]
+  [pineal.audio [hear]]
   [numpy :as np]
   [scipy.signal [iirfilter lfilter]]
-  [core.osc [osc-sender]])
+  [pineal.osc [osc-sender]])
 
 
-(require core.macros)
+(require pineal.macros)
 
 
 (runner Ear [conf log]

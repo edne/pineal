@@ -1,16 +1,16 @@
 #!/usr/bin/env hy
 
-(require core.macros)
+(require pineal.macros)
 
 ; update impure config
 (let [[conf (get-config)]]
-  (import [core [conf :as impure-conf]])
+  (import [pineal [conf :as impure-conf]])
   (setv impure-conf.RENDER-SIZE conf.RENDER-SIZE)
   (setv impure-conf.OSC-EYE     conf.OSC-EYE))
 
 (import
-  [core.windows [new-renderer new-master new-overview]]
-  [core.nerve [nerve-cb! nerve-start]])
+  [pineal.windows [new-renderer new-master new-overview]]
+  [pineal.nerve [nerve-cb! nerve-start]])
 
 
 (defn eval-str [s]
@@ -86,7 +86,7 @@
     (try
       (do
         (eval-str (+ "(import [tools [*]])\n"
-                     "(require core.dsl)\n\n"
+                     "(require pineal.dsl)\n\n"
                      (last stack)))
         :working)
       (except [e Exception]

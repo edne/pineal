@@ -1,6 +1,6 @@
 from math import pi
 import pyglet.gl as gl
-from core.matrix import push, pop
+from pineal.matrix import push, pop
 
 
 def translate(f,

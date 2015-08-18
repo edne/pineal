@@ -5,7 +5,7 @@
   [ear [Ear]]
   [coder [Coder]])
 
-(require core.macros)
+(require pineal.macros)
 
 
 (defmain [args]

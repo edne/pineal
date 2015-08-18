@@ -5,7 +5,7 @@
                    OSCClientError
                    OSCMessage]])
 
-(require core.macros)
+(require pineal.macros)
 
 
 (defn osc-receiver [in_addr cbs]

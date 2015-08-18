@@ -1,7 +1,7 @@
 (import
-  [core [conf]]
-  [core.osc [osc-receiver
-             osc-sender]])
+  [pineal [conf]]
+  [pineal.osc [osc-receiver
+               osc-sender]])
 
 (def nerve-cbs {})  ; visible from eye
 

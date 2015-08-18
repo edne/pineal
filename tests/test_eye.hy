@@ -1,4 +1,4 @@
-(require core.macros)
+(require pineal.macros)
 (require eye)
 
 
@@ -19,7 +19,7 @@
 
 (defn test-empty-eye []
   (import
-    [core.windows [new-renderer new-master new-overview]])
+    [pineal.windows [new-renderer new-master new-overview]])
 
   (runner Eye [conf log]
           (setv renderer (new-renderer {}

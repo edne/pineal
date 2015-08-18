@@ -2,7 +2,7 @@ import pyglet.gl as gl
 import pyglet.image
 from pyglet.image.codecs.png import PNGImageDecoder
 
-from core.shapes import solid_polygon, wired_polygon
+from pineal.shapes import solid_polygon, wired_polygon
 
 
 psolid_memo = {}
@@ -39,8 +39,8 @@ def image(name):
 
 
 def on_layer(f, name):
-    from core.framebuffer import Framebuffer
-    from core import conf
+    from pineal.framebuffer import Framebuffer
+    from pineal import conf
 
     if name not in layer_memo:
         layer_memo[name] = Framebuffer(*conf.RENDER_SIZE)

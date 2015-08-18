@@ -5,9 +5,9 @@
   [time [sleep]]
   [watchdog.observers [Observer]]
   [watchdog.events [FileSystemEventHandler]]
-  [core.osc [osc-sender]])
+  [pineal.osc [osc-sender]])
 
-(require core.macros)
+(require pineal.macros)
 
 
 (runner Coder [conf log]
