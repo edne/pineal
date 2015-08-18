@@ -1,9 +1,9 @@
 #!/usr/bin/env hy
 
 (import
-  [eye [Eye]]
-  [ear [Ear]]
-  [coder [Coder]])
+  [pineal.eye [Eye]]
+  [pineal.ear [Ear]]
+  [pineal.coder [Coder]])
 
 (require pineal.macros)
 
