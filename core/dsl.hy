@@ -1,6 +1,6 @@
 (defmacro/g! osc-source [name path]
   `(defn ~name [&rest args]
-     (setv mul
+     (setv mult
        (if args (car args) 1))
      (setv add
        (if (cdr args) (get args 1) 0))
@@ -9,7 +9,7 @@
        (get-source ~path))
 
      (+ add
-        (* mul
+        (* mult
           (~g!source)))))
 
 
