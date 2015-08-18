@@ -7,8 +7,8 @@ from pineal.shapes import solid_polygon, wired_polygon
 
 psolid_memo = {}
 pwired_memo = {}
-image_memo  = {}
-layer_memo  = {}
+image_memo = {}
+layer_memo = {}
 
 
 def psolid(n, color):
@@ -32,10 +32,10 @@ def pwired(n, color):
 def image(name):
     if name not in image_memo:
         image_memo[name] = pyglet.image.load("images/%s.png" % name,
-                decoder=PNGImageDecoder())
+                                             decoder=PNGImageDecoder())
 
         image_memo[name].blit(-1.0, 1.0, 0.0,
-                2.0, 2.0)
+                              2.0, 2.0)
 
 
 def on_layer(f, name):
