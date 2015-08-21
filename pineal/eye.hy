@@ -11,9 +11,11 @@
   [pineal.nerve [nerve-cb! nerve-start]])
 
 
-(defn eval-str [s]
-  (import [hy.lex [tokenize]])
-  (eval `(do ~@(tokenize s))))
+(defn eval-str [s namespace]
+  (import
+    [hy.lex [tokenize]]
+    [hy.importer [hy-eval]])
+  (hy-eval `(do ~@(tokenize s)) namespace --name--))
 
 
 (defmacro eye-loop [fps]
@@ -75,22 +77,32 @@
   ; so when everything explodes, we can
   ; always restore the last (hopefully) working vision
   (setv stack ["" code])
+  (setv namespace {"box_draw" nil})
+
+  (defn eval-code [code]
+    (log.info "evaluating code")
+    (eval-str (+ "(import [tools [*]])"
+                 "(require pineal.dsl)"
+                 "(defn box-draw []"
+                 code
+                 ")")
+              namespace))
 
   (defn load [code]
     (log.info (% "loading: %s" name))
+    (eval-code code)
     (.append stack code))
 
   (defn draw []
-    (try
-      (do
-        (eval-str (+ "(import [tools [*]])\n"
-                     "(require pineal.dsl)\n\n"
-                     (last stack)))
-        :working)
-      (except [e Exception]
-        (log.error (+ name " " (str e)))
-        (.pop stack)
-        :broken)))
+    (if-not (get namespace "box_draw")
+      (eval-code (last stack)))
+    ((get namespace "box_draw")))
 
   (fn [&optional code]
-    (if code (load code) (draw))))
+    (try
+      (if code (load code) (draw))
+      (except [e Exception]
+        (log.error (+ name " " (str e)))
+        (when stack
+          (.pop stack)
+          (eval-code (last stack)))))))
