@@ -1,5 +1,5 @@
 import hy
 from misc import *
-from coloring import *
+from colors import *
 from primitives import *
 from effects import *
