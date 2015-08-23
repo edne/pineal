@@ -96,7 +96,8 @@
   (defn draw []
     (if-not (get namespace "box_draw")
       (eval-code (last stack)))
-    ((get namespace "box_draw")))
+    ((get namespace "box_draw"))
+    :working)
 
   (fn [&optional code]
     (try
@@ -105,4 +106,5 @@
         (log.error (+ name " " (str e)))
         (when stack
           (.pop stack)
-          (eval-code (last stack)))))))
+          (eval-code (last stack)))
+        :broken))))
