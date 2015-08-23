@@ -10,15 +10,15 @@
         (draw my-layer))
 
     (fx [(scale (amp 4))]
-        (pwired 4 (rgb  0 1 1))
+        (pwired 4 "c")
         (psolid 4 (rgba 0 0 0 0.1)))
 
     (fx [(scale (bass 2))]
-        (pwired 4 (rgb  0 1 0))
+        (pwired 4 "g")
         (psolid 4 (rgba 0 0 0 0.1)))
 
     (fx [(scale (high 4))]
-        (pwired 4 (rgb  1 1 1))
+        (pwired 4 "w")
         (psolid 4 (rgba 0 0 0 0.1))))
 
 (draw my-layer)
