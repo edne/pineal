@@ -42,3 +42,24 @@ def rgb(r, g, b):
 
 def rgba(r, g, b, a):
     return [r, g, b, a]
+
+
+def from_palette(pal, index):
+    "A palette is a list of [r, g, b, a] lists"
+    if index > 1:
+        index = index % 1
+    index = index * (len(pal) - 1)
+
+    from math import floor, ceil
+    i0 = int(floor(index))
+    i1 = int(ceil(index))
+
+    c0 = pal[i0]
+    c1 = pal[i1]
+    v = index - i0
+
+    out = [0]*4
+    for i in range(4):
+        out[i] = v*c0[i] + (1-v)*c1[i]
+
+    return out

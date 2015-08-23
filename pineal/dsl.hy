@@ -1,4 +1,4 @@
-(defmacro/g! osc-source [name path]
+(defmacro osc-source [name path]
   `(defn ~name [&rest args]
      (import [pineal.nerve [get-source]])
 
@@ -7,12 +7,27 @@
      (setv add
        (if (cdr args) (get args 1) 0))
 
-     (setv ~g!source
+     (setv source
        (get-source ~path))
 
      (+ add
         (* mult
-          (~g!source)))))
+          (source)))))
+
+
+(defmacro palette [name &rest pal]
+  `(defn ~name [index &optional alpha]
+     (setv pal [~@pal])
+     (if (and
+           (= (len pal) 1)
+           (string? (car pal)))
+       (setv pal (-> pal car list)))
+
+     (setv out (from_palette (list (map color pal)) 
+                             index))
+     (if-not (nil? alpha)
+       (+ (slice out 0 3) [alpha])
+       out)))
 
 
 (defmacro fx [efs &rest body]
