@@ -82,6 +82,12 @@ def new_output_window(*args, **kwargs):
     @window.event
     def on_draw():
         output_draw(window)
+
+    @window.event
+    def on_key_press(symbol, modifiers):
+        if symbol == pyglet.window.key.ESCAPE:
+            return pyglet.event.EVENT_HANDLED
+
     return window
 
 
