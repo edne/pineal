@@ -6,6 +6,6 @@ test:
 
 
 style:
-	pep8 --exclude thirdparty .
+	flake8 --exclude thirdparty,tests,tools/__init__.py .
 	! grep -r --include \*.hy  '.\{61\}'
 	cloc --force-lang=clojure,hy --exclude-dir=thirdparty .
