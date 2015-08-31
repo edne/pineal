@@ -1,5 +1,6 @@
 #!/usr/bin/env hy
 (require pineal.core)
+(import time)
 
 
 (defmain [args]
@@ -8,7 +9,8 @@
   (start-pineal)
 
   (try
-    (while true nil)
+    (while true
+      (time.sleep 1))
     (catch [KeyboardInterrupt] nil))
 
   (stop-pineal))
