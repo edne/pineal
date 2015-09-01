@@ -2,25 +2,19 @@
 (osc-source bass "/bass")
 (osc-source high "/high")
 
-(palette grey "bw")
-(palette hsv "rygcbmr")
+(palette grey "kw")
+(palette hsv "rgbr")
 
 (stroke-weight 4)
 
 (on my-layer
+    (fx [(scale 4)]
+        (psolid 4 "k"))
 
-    (fx [(scale (amp 4 0.2))]
-        (psolid 4 (hsv (time))))
-
-    (fx [(scale (bass 2))]
-        (psolid 4 "k")
-        (psolid 4 (rgba 0 0 0 0.1)))
-
-    (fx [(scale (high 4))]
-        (psolid 4 "w"))
-
-    (fx [(scale (amp 1 0.5))
-         (rotate (/ pi 4))]
-        (draw my-layer)))
+    (fx [(scale (bass 4 0.0))]
+        (psolid 4 (grey 0 0.1))
+        (pwired 4 (hsv (time 0.1)))
+        )
+    )
 
 (draw my-layer)
