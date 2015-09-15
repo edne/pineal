@@ -60,6 +60,6 @@ def from_palette(pal, index):
 
     out = [0]*4
     for i in range(4):
-        out[i] = v*c0[i] + (1-v)*c1[i]
+        out[i] = v*c1[i] + (1-v)*c0[i]
 
     return out
