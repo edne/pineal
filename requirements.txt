@@ -1,5 +1,6 @@
 hy
 pyglet
 watchdog
+jack-client==0.3.0
+numpy
 scipy
-jack-client
