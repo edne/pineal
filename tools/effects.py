@@ -36,11 +36,16 @@ def rotate(f,
     pop()
 
 
-def turnaround(f, n):
+def turnaround(f, n, *rs):
+    if not rs:
+        rs = [0.0]
+
     for i in range(n):
         push()
         angle = 2.0 * pi * i / n
         gl.glRotatef(angle * 180 / pi,
                      0, 0, 1)
-        f()
+        for r in rs:
+            gl.glTranslatef(r, 0.0, 0.0)
+            f()
         pop()
