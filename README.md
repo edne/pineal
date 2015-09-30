@@ -43,8 +43,14 @@ Example
 
 Instructions
 ------------
+**WARNING**: pineal require [Jack](http://www.jackaudio.org/) up and running, so
+install and confugure it before everything else
+* If you want to use pineal to "hear" audio from your pc, setup jack to create
+  _monitor_ input ports
 * Play your music
-* Run `./pineal.hy`
+* Run `./run.hy` and connect pineal to the input source using
+  [qjackctl](http://qjackctl.sourceforge.net/),
+  [claudia](http://kxstudio.linuxaudio.org/Applications:Claudia) or something else
 * Edit a `.hy` file in the `visions` folder or create a new one
 * Every time you save output is updated
 * Have fun!
@@ -56,6 +62,8 @@ Make sure you are using Python 2, and run:
 ```
       $ pip install -r requirements.txt
 ```
+If you have troubles installing scipy from pip you can use the one from your
+distribution repositories
 
 
 License
