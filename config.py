@@ -1,3 +1,4 @@
+file_name = "visions/test.hy"
 LOG_LEVEL = "debug"
 
 
@@ -12,4 +13,5 @@ OSC_EAR = ('localhost', 1422)
 
 
 # Size of the rendering window
+# RENDER_SIZE = (1280, 1280)
 RENDER_SIZE = (800, 800)
