@@ -48,10 +48,11 @@ install and confugure it before everything else
 * If you want to use pineal to "hear" audio from your pc, setup jack to create
   _monitor_ input ports
 * Play your music
-* Run `./run.hy` and connect pineal to the input source using
+* Create a file where write your visuals
+* Run `./run.hy yourfile.hy` and connect pineal to the input source using
   [qjackctl](http://qjackctl.sourceforge.net/),
   [claudia](http://kxstudio.linuxaudio.org/Applications:Claudia) or something else
-* Edit a `.hy` file in the `visions` folder or create a new one
+* Edit your file
 * Every time you save output is updated
 * Have fun!
 

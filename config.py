@@ -1,4 +1,4 @@
-file_name = "visions/test.hy"
+file_name = "sample.hy"
 LOG_LEVEL = "debug"
 
 

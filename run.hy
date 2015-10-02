@@ -3,7 +3,7 @@
 (import time)
 
 
-(defmain [args]
+(defmain [&rest args]
   "Run program parts as threads,
   and wait KeyboardInterrupt"
   (start-pineal)

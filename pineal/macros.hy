@@ -1,10 +1,11 @@
 (defmacro get-config []
   `(do
      (import [config])
-     (import sys)
-     (let [[args sys.argv]]
-       ; TODO parse arguments with getopt
-       )
+     (import [sys [argv]])
+     ; TODO parse arguments with getopt
+     (when (= 2 (len argv))
+       (setv config.file-name (get argv 1)))
+
      config))
 
 
@@ -14,9 +15,9 @@
      (let [[conf (get-config)]
            [numeric-level
 
-            (getattr logging
-                     (.upper (. conf LOG-LEVEL))
-                     None)]]
+             (getattr logging
+                      (.upper (. conf LOG-LEVEL))
+                      None)]]
 
        (unless
          (isinstance numeric-level
@@ -31,9 +32,9 @@
 
 (defmacro runner [name args &rest body]
   (with-gensyms [inner
-                 stopped
-                 classname
-                 running-body]
+                  stopped
+                  classname
+                  running-body]
 
     `(defn ~name []
        (defn ~inner ~args
@@ -51,12 +52,12 @@
 
          (defclass ~classname [Thread]
            [[run
-             (fn [self]
-               ~@body)]
+              (fn [self]
+                ~@body)]
 
             [stop
-             (fn [self]
-               (setv (car ~stopped) true))]])
+              (fn [self]
+                (setv (car ~stopped) true))]])
 
          (~classname))
        (setv conf (get-config))
