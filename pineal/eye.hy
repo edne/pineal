@@ -34,33 +34,17 @@
 
 (runner eye-runner [conf log]
         "
-        Handles and draws the different visions
-
-        Recives from Coder:
-        * `/eye/code    [filename code]`
-        * `/eye/delete  [filename]` (not yet implemented)
-        * `/eye/move    [oldname newname]`
-
-        Recives from Ear:
-        * `/eye/audio/[cmd]  [value]`
+        Handles and draws the vision
         "
         (log.info "starting eye.hy")
 
-        (setv visions {})
-
-        (setv renderer (new-renderer visions
-                                     conf.RENDER-SIZE))
-        (new-master renderer)
-        (new-overview renderer)
-
-        (nerve-cb! "/eye/code"
-                   (fn [path args]
-                     (setv [name code] args)
-                     (if (in name (visions.keys))
-                       ((get visions name) code)
-                       (assoc visions
-                         name
-                         (new-vision name code)))))
+        (let [[vision   (new-vision "")]
+              [renderer (new-renderer vision
+                                      conf.RENDER-SIZE)]]
+          (new-master   renderer)
+          (new-overview renderer)
+          (nerve-cb! "/eye/code"
+                     (fn [path [code]] (vision code))))
 
         (setv nerve-stop (nerve-start))
 
@@ -70,8 +54,8 @@
         (nerve-stop))
 
 
-(defn new-vision [name code]
-  (setv log (new-logger))  ; TODO pass name
+(defn new-vision [code]
+  (setv log (new-logger))
 
   ; stack here the loaded codes,
   ; so when everything explodes, we can
@@ -82,14 +66,14 @@
   (defn eval-code [code]
     (log.info "evaluating code")
     (eval-str (+ "(import [tools [*]])"
-                 "(require pineal.dsl)"
-                 "(defn box-draw []"
-                 code
-                 ")")
+                "(require pineal.dsl)"
+                "(defn box-draw []"
+                code
+                ")")
               namespace))
 
   (defn load [code]
-    (log.info (% "loading: %s" name))
+    (log.info "loading vision")
     (eval-code code)
     (.append stack code))
 
@@ -103,7 +87,7 @@
     (try
       (if code (load code) (draw))
       (except [e Exception]
-        (log.error (+ name " " (str e)))
+        (log.error (str e))
         (when stack
           (.pop stack)
           (eval-code (last stack)))

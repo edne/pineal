@@ -42,12 +42,12 @@
       (abspath file-name)))
 
   (osc-send "/eye/code"
-            [file-name (get-code)])
+            [(get-code)])
 
   (defclass Handler [FileSystemEventHandler]
     [[on-modified
        (fn [self event]
          (when (valid? event.src-path)
            (osc-send "/eye/code"
-                     [file-name (get-code)])))]])
+                     [(get-code)])))]])
   (Handler))

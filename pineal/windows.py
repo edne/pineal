@@ -7,7 +7,7 @@ def new_window(*args, **kwargs):
     return window
 
 
-def new_renderer(visions, size):
+def new_renderer(vision, size):
     """
     Offscreen windows where render stuff
     """
@@ -17,7 +17,7 @@ def new_renderer(visions, size):
                         height=H,
                         visible=0)
 
-    window.visions = visions
+    window.vision = vision
 
     gl.glEnable(gl.GL_BLEND)
     gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA)
@@ -51,10 +51,10 @@ def new_renderer(visions, size):
                      0, 0, 0,
                      0, 1, 0)
 
-        for vision in window.visions.values():
-            gl.glMatrixMode(gl.GL_MODELVIEW)
-            gl.glLoadIdentity()
-            vision()
+        # for vision in window.visions.values():
+        gl.glMatrixMode(gl.GL_MODELVIEW)
+        gl.glLoadIdentity()
+        window.vision()
 
         buf = pyglet.image.get_buffer_manager().get_color_buffer()
         rawimage = buf.get_image_data()
