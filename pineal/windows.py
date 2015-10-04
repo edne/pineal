@@ -41,8 +41,8 @@ def new_renderer(vision, size):
         gl.glLoadIdentity()
         (w, h) = window.get_size()
         gl.glScalef(
-            float(min(w, h))/w,
-            -float(min(w, h))/h,
+            float(min(w, h)) / w,
+            -float(min(w, h)) / h,
             1
         )
 
@@ -70,8 +70,8 @@ def output_draw(window):
 
     window.clear()
     if texture:
-        texture.blit(-(side-w)/2,
-                     -(side-h)/2,
+        texture.blit(-(side - w) / 2,
+                     -(side - h) / 2,
                      0,
                      side, side)
 
