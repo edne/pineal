@@ -79,4 +79,5 @@ This project is heavily in development. You can use it, I use it in "production"
 syntax (it's getting even more functional) and new features that randomly appear
 or disappear.
 
-In case of doubt you can look at `visions/test.hy`, it should always work.
+In case of doubt you can look at `sample.hy` or the `examples/` folder, they
+should always work.
