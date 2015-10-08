@@ -1,4 +1,4 @@
-hy
+hy==0.11.0
 pyglet
 watchdog
 jack-client==0.3.0
