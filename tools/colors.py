@@ -44,8 +44,9 @@ def rgba(r, g, b, a):
     return [r, g, b, a]
 
 
-def from_palette(pal, index):
+def from_palette(pal_, index):
     "A palette is a list of [r, g, b, a] lists"
+    pal = list(pal_)
     if index > 1:
         index = index % 1
     index = index * (len(pal) - 1)

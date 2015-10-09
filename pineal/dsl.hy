@@ -13,20 +13,14 @@
   `(defn ~name [&rest args]
      (import [pineal.nerve [get-source]])
 
-     (setv mult
-       (if args (car args) 1))
-     (setv add
-       (if (cdr args) (get args 1) 0))
+     (let [[mult (if args       (car args)   1)]
+           [add  (if (cdr args) (get args 1) 0)]
+           [src  (get-source ~path)]]
 
-     (setv source
-       (get-source ~path))
-
-     (+ add
-       (* mult
-         (source)))))
+       (->> (src) (* mult) (+ add)))))
 
 
-(defmacro palette [name &rest pal]
+(defmacro palette [name pal]
   "
   Create a color palette
   (palette my-palette colors)
@@ -36,18 +30,13 @@
   (palette hsv \"rgbr\")
   (hsv 0.33 1)  ; green, full alpha
   "
-  `(defn ~name [index &optional alpha]
-     (setv pal [~@pal])
-     (if (and
-           (= (len pal) 1)
-           (string? (car pal)))
-       (setv pal (-> pal car list)))
-
-     (setv out (from_palette (list (map color pal)) 
-                             index))
-     (if-not (nil? alpha)
-       (+ (slice out 0 3) [alpha])
-       out)))
+  `(defn ~name [index &optional in-alpha]
+     (let [[[r g b a]
+            (from-palette (map color ~pal) 
+                          index)]]
+       (if (nil? in-alpha)
+         [r g b a]
+         [r g b in-alpha]))))
 
 
 (defmacro fx [efs &rest body]
@@ -62,18 +51,19 @@
       (draw my-layer)
       (pwired 3 (grey 0.5)))
   "
-  (setv ef (car efs))
-  (if (cdr efs)
+  (defn unroll [ef efs]
     `(fx [~ef]
-         (fx [~@(cdr efs)]
-             ~@body))
-    ; else:
-    (let [[name (car ef)]
-          [args (list
-                  (cdr ef))]]
-      `(apply ~name
-         (+ [(fn [] ~@body)]
-           ~args)))))
+         (fx [~@efs]
+             ~@body)))
+
+  (if (cdr efs)
+    (unroll (car efs)
+            (cdr efs))
+    (let [[ef (car efs)]
+          [name (car ef)]
+          [args (cdr ef)]]
+      `(~name (fn [] ~@body)
+              ~@args))))
 
 
 (defmacro draw [name]
