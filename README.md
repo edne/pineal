@@ -59,9 +59,13 @@ install and confugure it before everything else
 
 Dependencies
 ------------
-Make sure you are using Python 2, and run:
+Make sure you are using Python 2, and install:
 ```
-      $ pip install -r requirements.txt
+    hy==0.11.0
+    pyglet
+    watchdog
+    jack-client==0.3.0
+    scipy
 ```
 If you have troubles installing scipy from pip you can use the one from your
 distribution repositories
