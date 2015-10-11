@@ -1,9 +1,0 @@
-========
-Tutorial
-========
-
-.. TODO
-..
-..  - Everithing
-
-Welcome to the Pineal tutorial!

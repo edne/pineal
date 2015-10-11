@@ -56,13 +56,20 @@ Primitives
 
 psolid
 ------
+Draw a solid regular polygon
+
+.. code-block:: clj
+
+    (psolid 4 "b")  ; a blue square
+
 
 pwired
 ------
+Draw juste the border of a regular polygon
 
-image
------
-Is it still supported?
+.. code-block:: clj
+
+    (psolid 3 "g")  ; a green triangle
 
 
 Effects
@@ -89,15 +96,43 @@ Example:
 
 translate
 ---------
+.. code-block:: clj
+
+    (translate x)
+    (translate x y)
+    (translate x y z)
+
 
 scale
 -----
+.. code-block:: clj
+
+    (scale ratio)
+    (scale x y)
+    (scale x y z)
+
 
 rotate
 ------
+.. code-block:: clj
+
+    (rotate angle)
+    (rotate angle x y z)
+
+Where `x y z` are the rotation axis, if omitted `0 0 1`
 
 turnaround
 ----------
+By now the only "complex" effect, redraws the content `n` times rotating and
+performing optionals translations. In order to dispose the image at the vertexes
+of a regular polygon
+
+.. code-block:: clj
+
+    (turnaround n)
+    (turnaround n r)
+    (turnaround n r1 r2)
+    (turnaround n r1 r2 r3 ...)
 
 
 Coloring
