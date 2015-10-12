@@ -1,6 +1,6 @@
-==============
-The Pineal DSL
-==============
+=============
+DSL Reference
+=============
 
 .. toctree::
    maxdepth: 2
