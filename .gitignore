@@ -4,6 +4,8 @@ cxfreeze*
 .fuse_hidden*
 *.swp
 
+docs/_*/*
+
 *.py[cod]
 
 # C extensions
