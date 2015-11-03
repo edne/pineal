@@ -1,7 +1,7 @@
 Pineal
 ======
 
-![random150215](http://i.imgur.com/dGbEcQi.png)
+![screenshot](http://i.imgur.com/ysTixoj.png)
 
 An engine for graphic live-coding on an audio stream, something between
 [Fluxus](http://www.pawfal.org/fluxus/) and [Processing](https://processing.org/),
@@ -39,6 +39,10 @@ Example
 
 (draw my-layer)
 ```
+
+Screenshots
+-----------
+[Some screenshots](http://imgur.com/gallery/4Rd7E)
 
 
 Instructions
