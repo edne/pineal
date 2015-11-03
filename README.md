@@ -71,6 +71,11 @@ If you have troubles installing scipy from pip you can use the one from your
 distribution repositories
 
 
+Documentation
+-------------
+References are avaiable on [Readthedocs](http://pineal.readthedocs.org/en/latest/)
+
+
 License
 -------
 This project is released under the terms of [GNU AGPL](http://www.gnu.org/licenses/agpl-3.0.html), see [LICENSE](LICENSE) file for details
