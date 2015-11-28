@@ -17,8 +17,6 @@ def new_renderer(vision, size):
                         height=H,
                         visible=0)
 
-    window.vision = vision
-
     gl.glEnable(gl.GL_BLEND)
     gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA)
 
@@ -28,9 +26,6 @@ def new_renderer(vision, size):
     gl.glHint(gl.GL_POLYGON_SMOOTH_HINT, gl.GL_NICEST)
 
     window.texture = None
-
-    # pyglet.clock.schedule_interval(window.update, 1.0/128.0)
-    # pyglet.clock.set_fps_limit(30)
 
     @window.event
     def on_draw():
@@ -51,10 +46,9 @@ def new_renderer(vision, size):
                      0, 0, 0,
                      0, 1, 0)
 
-        # for vision in window.visions.values():
         gl.glMatrixMode(gl.GL_MODELVIEW)
         gl.glLoadIdentity()
-        window.vision()
+        vision()
 
         buf = pyglet.image.get_buffer_manager().get_color_buffer()
         rawimage = buf.get_image_data()
