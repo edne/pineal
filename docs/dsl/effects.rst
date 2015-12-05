@@ -4,7 +4,7 @@ Effects
 
 fx
 --
-Apply an effect chain
+Apply an effect chain, from the inner one to the outer
 
 .. code-block:: clj
 
@@ -19,6 +19,8 @@ Example:
 
         (draw my-layer)
         (pwired 3 (grey 0.5)))
+
+Here the drawings are first rotated, then scaled.
 
 
 translate
