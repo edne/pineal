@@ -1,5 +1,5 @@
 (import
-  [pineal [conf]]
+  [config :as conf]
   [liblo])
 
 (require pineal.macros)

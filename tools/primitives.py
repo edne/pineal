@@ -41,10 +41,9 @@ def image(name):
 
 def on_layer(f, name):
     from pineal.framebuffer import Framebuffer
-    from pineal import conf
 
     if name not in layer_memo:
-        layer_memo[name] = Framebuffer(*conf.RENDER_SIZE)
+        layer_memo[name] = Framebuffer(800, 800)
 
     with layer_memo[name]:
         f()

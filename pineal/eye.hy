@@ -1,11 +1,5 @@
 (require pineal.macros)
 
-; update impure config
-(let [[conf (get-config)]]
-  (import [pineal [conf :as impure-conf]])
-  (setv impure-conf.RENDER-SIZE conf.RENDER-SIZE)
-  (setv impure-conf.OSC-EYE     conf.OSC-EYE))
-
 (import
   [pineal.windows [new-renderer new-master new-overview]]
   [pineal.nerve [nerve-cb! nerve-start]])
@@ -40,7 +34,7 @@
 
         (let [[vision   (new-vision "")]
               [renderer (new-renderer vision
-                                      conf.RENDER-SIZE)]]
+                                      [800 800])]]
           (new-master   renderer)
           (new-overview renderer)
           (nerve-cb! "/eye/code"
