@@ -5,7 +5,7 @@
   [time [sleep]]
   [watchdog.observers [Observer]]
   [watchdog.events [FileSystemEventHandler]]
-  [pineal.osc [osc-sender]])
+  [liblo])
 
 (require pineal.macros)
 
@@ -16,11 +16,30 @@
         "
         (log.info "starting coder.hy")
 
+        (defn new-handler [file-name]
+          (defn get-code []
+            (with [[f (open file-name)]]
+              (.read f)))
+
+          (defn valid? [path]
+            (= (abspath path)
+              (abspath file-name)))
+
+          (liblo.send conf.OSC_EYE
+                      "/eye/code" (, (str "s") (get-code)))
+
+          (defclass Handler [FileSystemEventHandler]
+            [[on-modified
+               (fn [self event]
+                 (when (valid? event.src-path)
+                   (liblo.send conf.OSC_EYE
+                               "/eye/code" (, (str "s") (get-code)))))]])
+          (Handler))
+
         (let [[observer (Observer)]
               [file-name conf.file-name]]
           (.schedule observer
-                     (new-handler file-name
-                                  (osc-sender conf.OSC_EYE))
+                     (new-handler file-name)
                      (-> file-name
                        abspath path-split first) false)
           (.start observer)
@@ -30,24 +49,3 @@
 
           (.stop observer)
           (.join observer)))
-
-
-(defn new-handler [file-name osc-send]
-  (defn get-code []
-    (with [[f (open file-name)]]
-      (.read f)))
-
-  (defn valid? [path]
-    (= (abspath path)
-      (abspath file-name)))
-
-  (osc-send "/eye/code"
-            [(get-code)])
-
-  (defclass Handler [FileSystemEventHandler]
-    [[on-modified
-       (fn [self event]
-         (when (valid? event.src-path)
-           (osc-send "/eye/code"
-                     [(get-code)])))]])
-  (Handler))

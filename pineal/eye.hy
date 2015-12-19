@@ -46,12 +46,11 @@
           (nerve-cb! "/eye/code"
                      (fn [path [code]] (vision code))))
 
-        (setv nerve-stop (nerve-start))
+        (nerve-start)
 
         (eye-loop 120)
 
-        (log.info "stopping eye.hy")
-        (nerve-stop))
+        (log.info "stopping eye.hy"))
 
 
 (defn new-vision [code]

@@ -3,7 +3,7 @@
   [pineal.audio [hear]]
   [numpy :as np]
   [scipy.signal [iirfilter lfilter]]
-  [pineal.osc [osc-sender]])
+  [liblo])
 
 
 (require pineal.macros)
@@ -12,7 +12,6 @@
 (runner ear-runner [conf log]
         (log.info "starting ear.hy")
 
-        (setv osc-send (osc-sender conf.OSC_EYE))
         (setv out-dict {})
 
         (defn hz [f]
@@ -63,7 +62,8 @@
            (fn []
              (running
                (for [(, key val) (.items out-dict)]
-                 (osc-send key val))
+                 (liblo.send conf.OSC_EYE
+                             key (, (str "d") val)))
                (sleep (/ 1 60))))
 
            "jack_client" "Pineal"

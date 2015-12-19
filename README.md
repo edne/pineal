@@ -66,6 +66,7 @@ Dependencies
 Make sure you are using Python 2, and install:
 ```
     hy==0.11.0
+    pyliblo
     pyglet
     watchdog
     jack-client==0.3.0

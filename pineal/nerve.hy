@@ -1,12 +1,26 @@
 (import
   [pineal [conf]]
-  [pineal.osc [osc-receiver
-               osc-sender]])
+  [liblo])
+
+(require pineal.macros)
+
 
 (def nerve-cbs {})  ; visible from eye
 
-(setv nerve-start (osc-receiver conf.OSC_EYE
-                                nerve-cbs))
+
+(defn osc-receiver []
+
+  (defn callback [path args tags]
+    (for [k (.keys nerve-cbs)]
+      (if (.startswith path k)
+        ((get nerve-cbs k) path args))))
+
+  (setv server (liblo.ServerThread (second conf.OSC-EYE)))
+  (.add-method server nil nil callback)
+
+  server.start)
+
+(setv nerve-start (osc-receiver))
 
 (defn nerve-cb! [key cb]
   (assoc nerve-cbs key cb))
