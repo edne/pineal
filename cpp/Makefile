@@ -1,21 +1,40 @@
 .PHONY: all clean test
 .DEFAULT_GOAL = all
 
+SFML=-lsfml-graphics
+LIBLO=-llo
+LIBS=$(SFML) $(LIBLO)
+
+CC=g++
+LD=g++
+
+CFLAGS=-fPIC -Wall -std=c++11 -Iinclude -I/usr/include/python2.7
+LDFLAGS=$(LIBS) -shared
+
+NAME=pineal
+
+SRC_FILES=$(wildcard src/*.cpp) src/wrap.cpp
+OBJ_FILES=$(patsubst src/%.cpp, obj/%.o, $(SRC_FILES))
+
+
 all: clean test
 
 clean:
-	rm *.o       || true
-	rm *_wrap.*  || true
-	rm *.so      || true
-	rm *.pyc     || true
-	rm pineal.py || true
+	rm src/wrap.cpp        || true
+	rm $(OBJ_FILES)        || true
+	rm $(NAME)/_$(NAME).so || true
+	rm $(NAME)/__init__.py || true
 
-test: _pineal.so test.py
+test: $(NAME)/_$(NAME).so test.py
 	python test.py
 
-_pineal.so: pineal.i pineal.cpp
-	swig -c++ -python pineal.i
-	g++ -fPIC -c pineal.cpp
-	g++ -fPIC -c pineal_wrap.cxx -I/usr/include/python2.7
-	g++ -shared pineal.o pineal_wrap.o -o _pineal.so
+src/wrap.cpp: $(NAME).i
+	swig -module $(NAME) -c++ -python $<
+	mv $(NAME)_wrap.cxx src/wrap.cpp
+	mv $(NAME).py $(NAME)/__init__.py
 
+obj/%.o: src/%.cpp
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(NAME)/_$(NAME).so: $(OBJ_FILES)
+	$(LD) $(LDFLAGS) $(OBJ_FILES) -o $@

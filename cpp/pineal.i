@@ -1,4 +1,3 @@
-%module pineal
 %{
 #include "pineal.h"
 %}
