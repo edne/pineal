@@ -1,0 +1,3 @@
+import pineal
+
+pineal.hello()
