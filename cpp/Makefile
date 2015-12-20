@@ -29,7 +29,7 @@ test: $(NAME)/_$(NAME).so test.py
 	python test.py
 
 src/wrap.cpp: $(NAME).i
-	swig -module $(NAME) -c++ -python $<
+	swig -Wall -Iinclude -module $(NAME) -c++ -python $<
 	mv $(NAME)_wrap.cxx src/wrap.cpp
 	mv $(NAME).py $(NAME)/__init__.py
 

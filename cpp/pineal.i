@@ -2,4 +2,5 @@
 #include "pineal.h"
 %}
 
-void hello();
+%include "std_string.i"
+%include "pineal.h"
