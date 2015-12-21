@@ -6,14 +6,13 @@ class Entity {
 };
 
 
-class Window {
+class Window : Entity {
     public:
-        Window(const char*);
-        bool is_open();
         void draw();
+        bool is_open();
+        static Window* memo(const char*);
 
     private:
+        Window(const char*);
         sf::RenderWindow sf_window;
 };
-
-void window(const char*);

@@ -1,19 +1,13 @@
 from __future__ import print_function
-
-def test_class():
-    import pineal
-
-    win = pineal.Window("asd")
-
-    while win.is_open():
-        win.draw()
+import pineal
 
 
 def test_memo():
-    from pineal import window
+    "Test memoizing"
+    window = pineal.Window.memo
 
-    while True:
-        window("asd")
+    while window("asd").is_open():
+        window("asd").draw()
 
 
 if __name__ == "__main__":

@@ -26,18 +26,17 @@ void Window :: draw() {
     sf_window.display();
 }
 
-
-std::map <const char*, Window*> win_map;
-
-void window(const char* name) {
+Window*  Window :: memo(const char* name) {
+    static std::map <const char*, Window*> memory;
     Window *w;
 
-    if (win_map.count(name) == 0) {
+    if (memory.count(name) == 0) {
         w = new Window(name);
-        win_map[name] = w;
+        memory[name] = w;
     }
     else
-        w = win_map[name];
+        w = memory[name];
 
-    w->draw();
+    return w;
 }
+
