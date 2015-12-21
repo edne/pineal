@@ -1,6 +1,22 @@
 #include <SFML/Graphics.hpp>
 #include <pineal.h>
 
+template<class T, typename K>
+T* memorize(K name) {
+    // I can not use templates in SWIG interfaces
+    static std::map <K, T*> memory;
+    T *e;
+
+    if (memory.count(name) == 0) {
+        e = new T(name);
+        memory[name] = e;
+    }
+    else
+        e = memory[name];
+
+    return e;
+}
+
 
 Window :: Window(const char* name) {
     sf_window.create(sf::VideoMode(800, 600), name);
@@ -26,17 +42,7 @@ void Window :: draw() {
     sf_window.display();
 }
 
-Window*  Window :: memo(const char* name) {
-    static std::map <const char*, Window*> memory;
-    Window *w;
-
-    if (memory.count(name) == 0) {
-        w = new Window(name);
-        memory[name] = w;
-    }
-    else
-        w = memory[name];
-
-    return w;
+Window* Window :: memo(const char* name) {
+    return memorize<Window>(name);
 }
 

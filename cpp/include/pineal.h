@@ -8,11 +8,11 @@ class Entity {
 
 class Window : Entity {
     public:
+        Window(const char*);
         void draw();
         bool is_open();
         static Window* memo(const char*);
 
     private:
-        Window(const char*);
         sf::RenderWindow sf_window;
 };

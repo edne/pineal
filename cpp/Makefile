@@ -17,7 +17,9 @@ SRC_FILES=$(wildcard src/*.cpp) src/wrap.cpp
 OBJ_FILES=$(patsubst src/%.cpp, obj/%.o, $(SRC_FILES))
 
 
-all: clean test
+all:
+	make clean
+	make test
 
 clean:
 	rm src/wrap.cpp        || true
