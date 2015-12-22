@@ -16,7 +16,8 @@ def test_child():
     polygon = pineal.Polygon.memo
 
     while window("asd").is_open():
-        window("asd").display(polygon(4))
+        window("asd").set_child(polygon(4))
+        window("asd").display()
 
 
 if __name__ == "__main__":
