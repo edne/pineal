@@ -35,7 +35,7 @@ void Window::display(Polygon* child) {
 
     sf_window.clear(sf::Color::Black);
 
-    child->draw(this);
+    sf_window.draw(child->draw());
 
     sf_window.display();
 }
@@ -50,8 +50,8 @@ Polygon::Polygon(int n) {
     sf_polygon.setPointCount(n);
 }
 
-void Polygon::draw(Window* surface) {
-    surface->get_target()->draw(sf_polygon);
+sf::CircleShape Polygon::draw() {
+    return sf_polygon;
 }
 
 Polygon* Polygon::memo(int n) {

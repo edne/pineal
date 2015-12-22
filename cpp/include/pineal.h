@@ -9,7 +9,6 @@ class Window {
         void display(Polygon*);
         bool is_open();
         static Window* memo(const char*);
-        sf::RenderTarget* get_target() {return &sf_window;};
 
     private:
         sf::RenderWindow sf_window;
@@ -18,7 +17,7 @@ class Window {
 class Polygon {
     public:
         Polygon(int);
-        void draw(Window*);
+        sf::CircleShape draw();
         static Polygon* memo(int);
 
    private:
