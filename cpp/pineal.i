@@ -1,6 +1,6 @@
 %{
-#include "pineal.h"
+#include "pineal.hpp"
 %}
 
 %include "std_string.i"
-%include "pineal.h"
+%include "pineal.hpp"

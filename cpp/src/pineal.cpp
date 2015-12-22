@@ -1,6 +1,6 @@
-#include <memory>
 #include <SFML/Graphics.hpp>
-#include <pineal.h>
+#include <pineal.hpp>
+#include <memory>
 
 using namespace std;
 
@@ -14,6 +14,14 @@ T* memorize(K name) {
         memory[name] = unique_ptr<T>(new T(name));
     }
     return memory[name].get();
+}
+
+
+void Drawable::draw(sf::RenderTarget* target) {
+}
+
+void Surface::set_child(Drawable* new_child) {
+    child = new_child;
 }
 
 
