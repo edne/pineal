@@ -7,8 +7,17 @@ def test_memo():
     window = pineal.Window.memo
 
     while window("asd").is_open():
-        window("asd").draw()
+        window("asd").display()
+
+
+def test_child():
+    "Test  child drawing"
+    window = pineal.Window.memo
+    polygon = pineal.Polygon.memo
+
+    while window("asd").is_open():
+        window("asd").display(polygon(4))
 
 
 if __name__ == "__main__":
-    test_memo()
+    test_child()

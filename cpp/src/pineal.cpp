@@ -25,7 +25,7 @@ bool Window::is_open() {
     return sf_window.isOpen();
 }
 
-void Window::draw() {
+void Window::display(Polygon* child) {
     sf::Event event;
 
     while (sf_window.pollEvent(event)) {
@@ -35,8 +35,7 @@ void Window::draw() {
 
     sf_window.clear(sf::Color::Black);
 
-    // draw everything here...
-    // window.draw(...);
+    child->draw(this);
 
     sf_window.display();
 }
@@ -45,3 +44,16 @@ Window* Window::memo(const char* name) {
     return memorize<Window>(name);
 }
 
+
+Polygon::Polygon(int n) {
+    sf_polygon = sf::CircleShape(100);
+    sf_polygon.setPointCount(n);
+}
+
+void Polygon::draw(Window* surface) {
+    surface->get_target()->draw(sf_polygon);
+}
+
+Polygon* Polygon::memo(int n) {
+    return memorize<Polygon>(n);
+}
