@@ -10,13 +10,16 @@ class Entity {
 
 class Drawable : public Entity {
     public:
+        virtual ~Drawable();
         virtual void draw(sf::RenderTarget*);
 };
 
 class Surface : public Entity {
     public:
         void set_child(Drawable* _child);
-        Drawable* child;  // TODO visible only from subclasses
+
+    protected:
+        Drawable* child;
 };
 
 

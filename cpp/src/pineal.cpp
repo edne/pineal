@@ -17,6 +17,9 @@ T* memorize(K name) {
 }
 
 
+Drawable::~Drawable() {
+}
+
 void Drawable::draw(sf::RenderTarget* target) {
 }
 
