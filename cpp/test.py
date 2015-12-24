@@ -22,11 +22,15 @@ def test_child():
 def test_color():
     "Test coloring"
     window = pineal.Window.memo
-    polygon = pineal.Polygon
-
+    polygon = pineal.Polygon.memo
     while window("asd").is_open():
-        window("asd").render(polygon(4).fill(0, 1, 1, 1))
+        p = polygon(4)
+        p.fill(0, 1, 1, 1)
+        p.stroke(0, 1, 0, 1)
+        p.line(10)
 
+        w = window("asd")
+        w.render(p)
 
 
 if __name__ == "__main__":

@@ -17,7 +17,14 @@ class Drawable : public Entity {
 class Shape : public Drawable {
     public:
         virtual ~Shape();
-        //virtual Shape* fill(double r, double g, double b, double a) = 0;
+        void fill(double r, double g, double b, double a);
+        void stroke(double r, double g, double b, double a);
+        void line(double t);
+        virtual void draw(sf::RenderTarget* target);
+
+    protected:
+        sf::Color sf_fill, sf_stroke;
+        double thickness;
 };
 
 class Surface : public Entity {
@@ -29,12 +36,11 @@ class Surface : public Entity {
 class Polygon : public Shape {
     public:
         Polygon(int);
+        static Polygon* memo(int n);
         void draw(sf::RenderTarget*);
-        Shape* fill(double r, double g, double b, double a);
 
     protected:
-        sf::CircleShape sf_shape;  // TODO use sf::Shape in Shape
-        sf::Color sf_fill;
+        sf::CircleShape sf_shape;
 };
 
 class Window : public Surface {

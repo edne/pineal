@@ -25,6 +25,20 @@ void Drawable::draw(sf::RenderTarget* target) {}
 
 // Shape
 Shape::~Shape() {}
+
+void Shape::fill(double r, double g, double b, double a) {
+    sf_fill = sf::Color(r*255, g*255, b*255, a*255);
+}
+
+void Shape::stroke(double r, double g, double b, double a) {
+    sf_stroke = sf::Color(r*255, g*255, b*255, a*255);
+}
+
+void Shape::line(double t) {
+    thickness = t;
+}
+
+void Shape::draw(sf::RenderTarget* target) {}
 //
 
 // Surface
@@ -38,16 +52,18 @@ Polygon::Polygon(int n) {
     sf_shape = sf::CircleShape(100);
     sf_shape.setPointCount(n);
     fill(1, 1, 1, 1);
+    stroke(0, 0, 0, 0);
+    line(0);
 }
 
-// TODO move to Shape::fill()
-Shape* Polygon::fill(double r, double g, double b, double a) {
-    sf_fill = sf::Color(r*255, g*255, b*255, a*255);
-    return new Polygon(*this);
+Polygon* Polygon::memo(int n) {
+    return memorize<Polygon>(n);
 }
 
 void Polygon::draw(sf::RenderTarget* target) {
     sf_shape.setFillColor(sf_fill);
+    sf_shape.setOutlineThickness(thickness);
+    sf_shape.setOutlineColor(sf_stroke);
     target->draw(sf_shape);
 }
 //
