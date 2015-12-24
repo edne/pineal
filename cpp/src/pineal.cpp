@@ -17,17 +17,42 @@ T* memorize(K name) {
 }
 
 
-Drawable::~Drawable() {
+// Drawable
+Drawable::~Drawable() {}
+
+void Drawable::draw(sf::RenderTarget* target) {}
+//
+
+// Shape
+Shape::~Shape() {}
+//
+
+// Surface
+Surface::~Surface() {}
+
+void Surface::render(Drawable* child) {}
+//
+
+// Polygon
+Polygon::Polygon(int n) {
+    sf_shape = sf::CircleShape(100);
+    sf_shape.setPointCount(n);
+    fill(1, 1, 1, 1);
 }
 
-void Drawable::draw(sf::RenderTarget* target) {
+// TODO move to Shape::fill()
+Shape* Polygon::fill(double r, double g, double b, double a) {
+    sf_fill = sf::Color(r*255, g*255, b*255, a*255);
+    return new Polygon(*this);
 }
 
-void Surface::set_child(Drawable* new_child) {
-    child = new_child;
+void Polygon::draw(sf::RenderTarget* target) {
+    sf_shape.setFillColor(sf_fill);
+    target->draw(sf_shape);
 }
+//
 
-
+// Window
 Window::Window(const char* name) {
     sf_window.create(sf::VideoMode(800, 600), name);
 }
@@ -36,7 +61,7 @@ bool Window::is_open() {
     return sf_window.isOpen();
 }
 
-void Window::display() {
+void Window::render(Drawable* child) {
     sf::Event event;
 
     while (sf_window.pollEvent(event)) {
@@ -54,17 +79,5 @@ void Window::display() {
 Window* Window::memo(const char* name) {
     return memorize<Window>(name);
 }
+//
 
-
-Polygon::Polygon(int n) {
-    sf_polygon = sf::CircleShape(100);
-    sf_polygon.setPointCount(n);
-}
-
-void Polygon::draw(sf::RenderTarget* target) {
-    target->draw(sf_polygon);
-}
-
-Polygon* Polygon::memo(int n) {
-    return memorize<Polygon>(n);
-}

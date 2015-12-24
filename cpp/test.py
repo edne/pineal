@@ -13,12 +13,21 @@ def test_memo():
 def test_child():
     "Test  child drawing"
     window = pineal.Window.memo
-    polygon = pineal.Polygon.memo
+    polygon = pineal.Polygon
 
     while window("asd").is_open():
-        window("asd").set_child(polygon(4))
-        window("asd").display()
+        window("asd").render(polygon(4))
+
+
+def test_color():
+    "Test coloring"
+    window = pineal.Window.memo
+    polygon = pineal.Polygon
+
+    while window("asd").is_open():
+        window("asd").render(polygon(4).fill(0, 1, 1, 1))
+
 
 
 if __name__ == "__main__":
-    test_child()
+    test_color()

@@ -2,11 +2,11 @@
 
 class Entity;
 class Drawable;
+class Shape;
 class Surface;
 
 
-class Entity {
-};
+class Entity {};
 
 class Drawable : public Entity {
     public:
@@ -14,32 +14,36 @@ class Drawable : public Entity {
         virtual void draw(sf::RenderTarget*);
 };
 
-class Surface : public Entity {
+class Shape : public Drawable {
     public:
-        void set_child(Drawable* _child);
-
-    protected:
-        Drawable* child;
+        virtual ~Shape();
+        //virtual Shape* fill(double r, double g, double b, double a) = 0;
 };
 
+class Surface : public Entity {
+    public:
+        virtual ~Surface();
+        virtual void render(Drawable* child);
+};
+
+class Polygon : public Shape {
+    public:
+        Polygon(int);
+        void draw(sf::RenderTarget*);
+        Shape* fill(double r, double g, double b, double a);
+
+    protected:
+        sf::CircleShape sf_shape;  // TODO use sf::Shape in Shape
+        sf::Color sf_fill;
+};
 
 class Window : public Surface {
     public:
         Window(const char* name);
-        void display();
+        void render(Drawable* child);
         bool is_open();
         static Window* memo(const char* name);
 
     private:
         sf::RenderWindow sf_window;
-};
-
-class Polygon : public Drawable {
-    public:
-        Polygon(int);
-        void draw(sf::RenderTarget*);
-        static Polygon* memo(int);
-
-   private:
-        sf::CircleShape sf_polygon;
 };
