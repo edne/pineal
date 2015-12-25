@@ -17,6 +17,21 @@ T* memorize(K name) {
 }
 
 
+// Color
+Color::Color(double r, double g, double b, double a)
+    : r(r), g(g), b(b), a(a) {}
+
+Color::Color(double r, double g, double b)
+    : Color(r, g, b, 1) {}
+
+Color::Color(double x, double a)
+    : Color(x, x, x, a) {}
+
+Color::Color(double x)
+    : Color(x, x, x, 1) {}
+//
+
+
 // Drawable
 Drawable::~Drawable() {}
 
@@ -26,12 +41,12 @@ void Drawable::draw(sf::RenderTarget* target) {}
 // Shape
 Shape::~Shape() {}
 
-void Shape::fill(double r, double g, double b, double a) {
-    sf_fill = sf::Color(r*255, g*255, b*255, a*255);
+void Shape::fill(Color c) {
+    sf_fill = sf::Color(c.r*255, c.g*255, c.b*255, c.a*255);
 }
 
-void Shape::stroke(double r, double g, double b, double a) {
-    sf_stroke = sf::Color(r*255, g*255, b*255, a*255);
+void Shape::stroke(Color c) {
+    sf_stroke = sf::Color(c.r*255, c.g*255, c.b*255, c.a*255);
 }
 
 void Shape::line(double t) {
@@ -51,13 +66,9 @@ void Surface::render(Drawable* child) {}
 Polygon::Polygon(int n) {
     sf_shape = sf::CircleShape(100);
     sf_shape.setPointCount(n);
-    fill(1, 1, 1, 1);
-    stroke(0, 0, 0, 0);
+    fill(Color(1));
+    stroke(Color(0));
     line(0);
-}
-
-Polygon* Polygon::memo(int n) {
-    return memorize<Polygon>(n);
 }
 
 void Polygon::draw(sf::RenderTarget* target) {

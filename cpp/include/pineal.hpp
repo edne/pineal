@@ -8,6 +8,16 @@ class Surface;
 
 class Entity {};
 
+class Color {
+    public:
+        Color(double r, double g, double b, double a);
+        Color(double r, double g, double b);
+        Color(double x, double a);
+        Color(double x);
+
+        double r, g, b, a;
+};
+
 class Drawable : public Entity {
     public:
         virtual ~Drawable();
@@ -16,11 +26,12 @@ class Drawable : public Entity {
 
 class Shape : public Drawable {
     public:
-        virtual ~Shape();
-        void fill(double r, double g, double b, double a);
-        void stroke(double r, double g, double b, double a);
+        void fill(Color c);
+        void stroke(Color c);
         void line(double t);
+
         virtual void draw(sf::RenderTarget* target);
+        virtual ~Shape();
 
     protected:
         sf::Color sf_fill, sf_stroke;
@@ -29,15 +40,15 @@ class Shape : public Drawable {
 
 class Surface : public Entity {
     public:
-        virtual ~Surface();
         virtual void render(Drawable* child);
+        virtual ~Surface();
 };
 
 class Polygon : public Shape {
     public:
         Polygon(int);
-        static Polygon* memo(int n);
         void draw(sf::RenderTarget*);
+        //static Polygon* memo(int n);
 
     protected:
         sf::CircleShape sf_shape;
