@@ -1,4 +1,4 @@
-.PHONY: all clean test
+.PHONY: all clean build test
 .DEFAULT_GOAL = all
 
 SFML=-lsfml-graphics
@@ -19,7 +19,7 @@ OBJ_FILES=$(patsubst src/%.cpp, obj/%.o, $(SRC_FILES))
 
 all:
 	make clean
-	make test
+	make build
 
 clean:
 	rm src/wrap.cpp        || true
@@ -27,7 +27,9 @@ clean:
 	rm $(NAME)/_$(NAME).so || true
 	rm $(NAME)/__init__.py || true
 
-test: $(NAME)/_$(NAME).so test.py
+build: $(NAME)/_$(NAME).so
+
+test: build test.py
 	python test.py
 
 src/wrap.cpp: $(NAME).i
