@@ -20,6 +20,7 @@ OBJ_FILES=$(patsubst src/%.cpp, obj/%.o, $(SRC_FILES))
 all:
 	make clean
 	make build
+	python test.py
 
 clean:
 	rm src/wrap.cpp        || true

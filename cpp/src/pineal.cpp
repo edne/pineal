@@ -64,8 +64,11 @@ void Surface::render(Drawable* child) {}
 
 // Polygon
 Polygon::Polygon(int n) {
-    sf_shape = sf::CircleShape(100);
+    sf_shape = sf::CircleShape(1);
     sf_shape.setPointCount(n);
+    sf_shape.setPosition(-1, -1);
+    //sf_shape.setOrigin(0, 0);
+    //sf_shape.rotate(30);
     fill(Color(1));
     stroke(Color(0));
     line(0);
@@ -95,6 +98,15 @@ void Window::render(Drawable* child) {
         if (event.type == sf::Event::Closed)
             sf_window.close();
     }
+
+    sf::View view;
+    sf::Vector2<unsigned int> size = sf_window.getSize();
+    double w = size.x,
+           h = size.y;
+    view.setCenter(0, 0);
+    view.setSize(2, 2 * h/w);
+
+    sf_window.setView(view);
 
     sf_window.clear(sf::Color::Black);
 

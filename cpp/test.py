@@ -28,7 +28,7 @@ def test_color():
         p = polygon(4)
         p.fill(color(0, 1, 1))
         p.stroke(color(0, 1, 0))
-        p.line(10)
+        p.line(0.05)
 
         w = window("asd")
         w.render(p)
