@@ -24,31 +24,25 @@ class Drawable : public Entity {
         virtual void draw(sf::RenderTarget*);
 };
 
-class Shape : public Drawable {
-    public:
-        void fill(Color c);
-        void stroke(Color c);
-        void line(double t);
-
-        virtual void draw(sf::RenderTarget* target);
-        virtual ~Shape();
-
-    protected:
-        sf::Color sf_fill, sf_stroke;
-        double thickness;
-};
-
 class Surface : public Entity {
     public:
         virtual void render(Drawable* child);
         virtual ~Surface();
 };
 
-class Polygon : public Shape {
+class Polygon : public Drawable {
     public:
         Polygon(int);
+
+        void fill(Color c);
+        void stroke(Color c);
+        void line(double t);
+        void position(double x, double y);
+        void rotate(double t);
+        void scale(double x, double y);
+        void scale(double r);
+
         void draw(sf::RenderTarget*);
-        //static Polygon* memo(int n);
 
     protected:
         sf::CircleShape sf_shape;

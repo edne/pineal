@@ -39,21 +39,6 @@ void Drawable::draw(sf::RenderTarget* target) {}
 //
 
 // Shape
-Shape::~Shape() {}
-
-void Shape::fill(Color c) {
-    sf_fill = sf::Color(c.r*255, c.g*255, c.b*255, c.a*255);
-}
-
-void Shape::stroke(Color c) {
-    sf_stroke = sf::Color(c.r*255, c.g*255, c.b*255, c.a*255);
-}
-
-void Shape::line(double t) {
-    thickness = t;
-}
-
-void Shape::draw(sf::RenderTarget* target) {}
 //
 
 // Surface
@@ -64,21 +49,48 @@ void Surface::render(Drawable* child) {}
 
 // Polygon
 Polygon::Polygon(int n) {
-    sf_shape = sf::CircleShape(1);
+    double r = 1;
+    sf_shape = sf::CircleShape(r);
     sf_shape.setPointCount(n);
-    sf_shape.setPosition(-1, -1);
-    //sf_shape.setOrigin(0, 0);
-    //sf_shape.rotate(30);
+
+    sf_shape.setOrigin(r, r);
+
     fill(Color(1));
     stroke(Color(0));
     line(0);
 }
 
-void Polygon::draw(sf::RenderTarget* target) {
-    sf_shape.setFillColor(sf_fill);
+void Polygon::fill(Color c) {
+    sf_shape.setFillColor(sf::Color(c.r*255, c.g*255, c.b*255, c.a*255));
+}
+
+void Polygon::stroke(Color c) {
+    sf_shape.setOutlineColor(sf::Color(c.r*255, c.g*255, c.b*255, c.a*255));
+}
+
+void Polygon::line(double thickness) {
     sf_shape.setOutlineThickness(thickness);
-    sf_shape.setOutlineColor(sf_stroke);
+}
+
+void Polygon::draw(sf::RenderTarget* target) {
     target->draw(sf_shape);
+}
+
+void Polygon::position(double x, double y) {
+    sf_shape.setPosition(x, y);
+}
+
+void Polygon::rotate(double t) {
+    static const double pi = 3.141592654;
+    sf_shape.rotate(180 * t/pi);
+}
+
+void Polygon::scale(double x, double y) {
+    sf_shape.scale(x, y);
+}
+
+void Polygon::scale(double r) {
+    sf_shape.scale(r, r);
 }
 //
 
