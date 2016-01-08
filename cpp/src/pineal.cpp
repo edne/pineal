@@ -54,43 +54,39 @@ Polygon::Polygon(int n) {
     sf_shape.setPointCount(n);
 
     sf_shape.setOrigin(r, r);
-
-    fill(Color(1));
-    stroke(Color(0));
-    line(0);
 }
 
-void Polygon::fill(Color c) {
-    sf_shape.setFillColor(sf::Color(c.r*255, c.g*255, c.b*255, c.a*255));
+void Polygon::dispatch(string key, Color c) {
+    if (!key.compare("fill"))
+        sf_shape.setFillColor(sf::Color(c.r*255, c.g*255, c.b*255, c.a*255));
+
+    if (!key.compare("stroke"))
+        sf_shape.setOutlineColor(sf::Color(c.r*255, c.g*255, c.b*255, c.a*255));
 }
 
-void Polygon::stroke(Color c) {
-    sf_shape.setOutlineColor(sf::Color(c.r*255, c.g*255, c.b*255, c.a*255));
+void Polygon::dispatch(string key, double x) {
+    static const double pi = 3.141592654;
+
+    if (!key.compare("line"))
+        sf_shape.setOutlineThickness(x);
+
+    if (!key.compare("rotate"))
+        sf_shape.rotate(180 * x/pi);
+
+    if (!key.compare("scale"))
+        sf_shape.scale(x, x);
 }
 
-void Polygon::line(double thickness) {
-    sf_shape.setOutlineThickness(thickness);
+void Polygon::dispatch(string key, double x, double y) {
+    if (!key.compare("translate"))
+        sf_shape.setPosition(x, y);
+
+    if (!key.compare("scale"))
+        sf_shape.scale(x, y);
 }
 
 void Polygon::draw(sf::RenderTarget* target) {
     target->draw(sf_shape);
-}
-
-void Polygon::position(double x, double y) {
-    sf_shape.setPosition(x, y);
-}
-
-void Polygon::rotate(double t) {
-    static const double pi = 3.141592654;
-    sf_shape.rotate(180 * t/pi);
-}
-
-void Polygon::scale(double x, double y) {
-    sf_shape.scale(x, y);
-}
-
-void Polygon::scale(double r) {
-    sf_shape.scale(r, r);
 }
 //
 

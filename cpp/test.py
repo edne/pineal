@@ -8,17 +8,20 @@ def test_all():
     window = pineal.Window.memo
     polygon = pineal.Polygon
     color = pineal.Color
-    while window("asd").is_open():
+
+
+    w = window("asd")
+    while w.is_open():
         p = polygon(4)
-        p.fill(color(0.5, 0.5, 0.5))
-        p.stroke(color(0, 1, 0))
-        p.line(0.05)
 
-        p.rotate(pi/4)
-        p.position(0.5, 0)
-        p.scale(0.2)
+        p.dispatch("fill", color(0.5, 0.5, 0.5))
+        p.dispatch("stroke", color(0, 1, 0))
+        p.dispatch("line", 0.05)
 
-        w = window("asd")
+        p.dispatch("rotate", pi/4)
+        p.dispatch("translate", 0.5, 0)
+        p.dispatch("scale", 0.2)
+
         w.render(p)
 
 

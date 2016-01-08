@@ -34,13 +34,9 @@ class Polygon : public Drawable {
     public:
         Polygon(int);
 
-        void fill(Color c);
-        void stroke(Color c);
-        void line(double t);
-        void position(double x, double y);
-        void rotate(double t);
-        void scale(double x, double y);
-        void scale(double r);
+        void dispatch(std::string key, Color c);
+        void dispatch(std::string key, double x);
+        void dispatch(std::string key, double x, double y);
 
         void draw(sf::RenderTarget*);
 
