@@ -14,15 +14,21 @@ def test_all():
     while w.is_open():
         p = polygon(4)
 
-        p.dispatch("fill", color(0.5, 0.5, 0.5))
-        p.dispatch("stroke", color(0, 1, 0))
-        p.dispatch("line", 0.05)
+        p.attribute("fill", color(0.5, 0.5, 0.5))
+        p.attribute("stroke", color(0, 1, 0))
+        p.attribute("line", 0.05)
 
-        p.dispatch("rotate", pi/4)
-        p.dispatch("translate", 0.5, 0)
-        p.dispatch("scale", 0.2)
+        p.attribute("rotate", pi/4)
+        p.attribute("translate", 0.5, 0)
+        p.attribute("scale", 0.2)
 
-        w.render(p)
+        q = polygon(8)
+
+        g = pineal.Group()
+        g.add(q)
+        g.add(p)
+
+        w.render(g)
 
 
 if __name__ == "__main__":
