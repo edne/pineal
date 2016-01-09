@@ -18,6 +18,21 @@ T* memorize(K name) {
 }
 
 // Group
+void Group::attribute(string key, Color c) {
+    for(Drawable *e : elements)
+        e->attribute(key, c);
+}
+
+void Group::attribute(string key, double x) {
+    for(Drawable *e : elements)
+        e->attribute(key, x);
+}
+
+void Group::attribute(string key, double x, double y) {
+    for(Drawable *e : elements)
+        e->attribute(key, x, y);
+}
+
 void Group::add(Drawable* d) {
     elements.push_back(d);
 };

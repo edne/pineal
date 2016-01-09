@@ -24,7 +24,10 @@ class Color {
 
 class Entity {
     public:
-        virtual void attribute(std::string key, ...) {};
+        virtual void attribute(std::string key, Color c) {};
+        virtual void attribute(std::string key, double x) {};
+        virtual void attribute(std::string key, double x, double y) {};
+
         virtual ~Entity() {};
 };
 
@@ -43,6 +46,10 @@ class Surface : public Entity {
 class Group : public Drawable {
     public:
         Group() {};
+
+        virtual void attribute(std::string key, Color c);
+        virtual void attribute(std::string key, double x);
+        virtual void attribute(std::string key, double x, double y);
 
         void add(Drawable* d);
         void draw(sf::RenderTarget* target);
