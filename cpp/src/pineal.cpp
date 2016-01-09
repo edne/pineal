@@ -54,10 +54,16 @@ Polygon::Polygon(int n) {
 
 void Polygon::attribute(string key, Color c) {
     if (!key.compare("fill"))
-        return sf_shape.setFillColor(sf::Color(c.r*255, c.g*255, c.b*255, c.a*255));
+        return sf_shape.setFillColor(sf::Color(c.r()*255,
+                                               c.g()*255,
+                                               c.b()*255,
+                                               c.a()*255));
 
     if (!key.compare("stroke"))
-        return sf_shape.setOutlineColor(sf::Color(c.r*255, c.g*255, c.b*255, c.a*255));
+        return sf_shape.setOutlineColor(sf::Color(c.r()*255,
+                                                  c.g()*255,
+                                                  c.b()*255,
+                                                  c.a()*255));
 }
 
 void Polygon::attribute(string key, double x) {

@@ -6,20 +6,50 @@ class Shape;
 class Surface;
 
 
-class Color {
+class Signal {
+    public:
+        Signal(double x, double y, double z, double w)
+            : xs{x, y, z, w} {};
+
+        Signal(double x, double y, double z)
+            : xs{x, y, z, 0} {};
+
+        Signal(double x, double y)
+            : xs{x, y, 0, 0} {};
+
+        Signal(double x)
+            : xs{x, 0, 0, 0} {};
+
+        Signal()
+            : xs{0, 0, 0, 0} {};
+
+        double x() { return xs[0]; }
+        double y() { return xs[1]; }
+        double z() { return xs[2]; }
+        double w() { return xs[3]; }
+
+    private:
+        double xs[4];
+};
+
+class Color : public Signal {
     public:
         Color(double r, double g, double b, double a)
-            : r(r), g(g), b(b), a(a) {};
+            : Signal(r, g, b, a) {};
 
         Color(double r, double g, double b)
-            : Color(r, g, b, 1) {};
+            : Signal(r, g, b, 1) {};
 
         Color(double x, double a)
-            : Color(x, x, x, a) {};
+            : Signal(x, x, x, a) {};
 
-        Color(double x): Color(x, x, x, 1) {};
+        Color(double x)
+            : Signal(x, x, x, 1) {};
 
-        double r, g, b, a;
+        double r() { return x(); }
+        double g() { return y(); }
+        double b() { return z(); }
+        double a() { return w(); }
 };
 
 class Entity {
