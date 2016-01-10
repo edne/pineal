@@ -35,5 +35,15 @@
        (.render w g))))
 
 
-(defmacro polygon [n]
-  `(pineal.Polygon ~n))
+(defmacro polygon [n &rest attributes]
+  "
+  Regular polygon with `n` sides
+  "
+  `(do
+     (setv e (pineal.Polygon ~n))
+     (for [attr [~@attributes]]
+       (let [[name   (-> attr first str)]
+             [values (rest attr)]
+             [s      (apply pineal.Signal values)]]
+         (.attribute e name s)))
+     e))
