@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 
 class Entity;
+class Signal;
 class Drawable;
 class Shape;
 class Surface;
@@ -9,27 +10,30 @@ class Surface;
 class Signal {
     public:
         Signal(double x, double y, double z, double w)
-            : xs{x, y, z, w} {};
+            : xs{x, y, z, w}, n_(4) {};
 
         Signal(double x, double y, double z)
-            : xs{x, y, z, 0} {};
+            : xs{x, y, z, 0}, n_(3) {};
 
         Signal(double x, double y)
-            : xs{x, y, 0, 0} {};
+            : xs{x, y, 0, 0}, n_(2) {};
 
         Signal(double x)
-            : xs{x, 0, 0, 0} {};
+            : xs{x, 0, 0, 0}, n_(1) {};
 
         Signal()
-            : xs{0, 0, 0, 0} {};
+            : xs{0, 0, 0, 0} , n_(0){};
 
         double x() { return xs[0]; }
         double y() { return xs[1]; }
         double z() { return xs[2]; }
         double w() { return xs[3]; }
 
+        int n() { return n_; }
+
     private:
         double xs[4];
+        int n_;
 };
 
 class Color : public Signal {
@@ -54,10 +58,7 @@ class Color : public Signal {
 
 class Entity {
     public:
-        virtual void attribute(std::string key, Color c) {};
-        virtual void attribute(std::string key, double x) {};
-        virtual void attribute(std::string key, double x, double y) {};
-
+        virtual void attribute(std::string key, Signal s) {};
         virtual ~Entity() {};
 };
 
@@ -76,12 +77,9 @@ class Surface : public Entity {
 class Group : public Drawable {
     public:
         Group() {};
-
-        virtual void attribute(std::string key, Color c);
-        virtual void attribute(std::string key, double x);
-        virtual void attribute(std::string key, double x, double y);
-
         void add(Drawable* d);
+
+        void attribute(std::string key, Signal s);
         void draw(sf::RenderTarget* target);
 
     private:
@@ -92,10 +90,7 @@ class Polygon : public Drawable {
     public:
         Polygon(int);
 
-        void attribute(std::string key, Color c);
-        void attribute(std::string key, double x);
-        void attribute(std::string key, double x, double y);
-
+        void attribute(std::string key, Signal s);
         void draw(sf::RenderTarget* target);
 
     protected:

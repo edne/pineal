@@ -8,6 +8,7 @@ def test_all():
     window = pineal.Window.memo
     polygon = pineal.Polygon
     color = pineal.Color
+    signal = pineal.Signal
 
 
     w = window("asd")
@@ -19,16 +20,16 @@ def test_all():
         g.add(q)
         g.add(p)
 
-        g.attribute("line", 0.05)
-        g.attribute("fill", color(0.5, 0.5, 0.5))
+        g.attribute("line", signal(0.05))
+        g.attribute("fill", color(0.5))
         g.attribute("stroke", color(0, 1, 0))
 
-        g.attribute("fill", color(0.0, 0.5, 0.5))
-        p.attribute("rotate", pi/4)
-        p.attribute("translate", 0.5, 0)
-        p.attribute("scale", 0.2)
+        p.attribute("fill", color(0.0, 0.5, 0.5))
+        p.attribute("rotate", signal(pi/4))
+        p.attribute("translate", signal(0.5, 0))
+        p.attribute("scale", signal(0.2))
 
-        q.attribute("scale", 0.5)
+        q.attribute("scale", signal(0.5))
         q.attribute("stroke", color(0, 1, 1))
 
         w.render(g)

@@ -18,19 +18,9 @@ T* memorize(K name) {
 }
 
 // Group
-void Group::attribute(string key, Color c) {
+void Group::attribute(string key, Signal s) {
     for(Drawable *e : elements)
-        e->attribute(key, c);
-}
-
-void Group::attribute(string key, double x) {
-    for(Drawable *e : elements)
-        e->attribute(key, x);
-}
-
-void Group::attribute(string key, double x, double y) {
-    for(Drawable *e : elements)
-        e->attribute(key, x, y);
+        e->attribute(key, s);
 }
 
 void Group::add(Drawable* d) {
@@ -52,39 +42,43 @@ Polygon::Polygon(int n) {
     sf_shape.setOrigin(r, r);
 }
 
-void Polygon::attribute(string key, Color c) {
-    if (!key.compare("fill"))
-        return sf_shape.setFillColor(sf::Color(c.r()*255,
-                                               c.g()*255,
-                                               c.b()*255,
-                                               c.a()*255));
+void Polygon::attribute(string key, Signal s) {
 
-    if (!key.compare("stroke"))
-        return sf_shape.setOutlineColor(sf::Color(c.r()*255,
-                                                  c.g()*255,
-                                                  c.b()*255,
-                                                  c.a()*255));
-}
+    if (s.n() == 1) {
+        static const double pi = 3.141592654;
 
-void Polygon::attribute(string key, double x) {
-    static const double pi = 3.141592654;
+        if (!key.compare("line"))
+            return sf_shape.setOutlineThickness(s.x());
 
-    if (!key.compare("line"))
-        return sf_shape.setOutlineThickness(x);
+        if (!key.compare("rotate"))
+            return sf_shape.rotate(180 *s.x()/pi);
 
-    if (!key.compare("rotate"))
-        return sf_shape.rotate(180 * x/pi);
+        if (!key.compare("scale"))
+            return sf_shape.scale(s.x(), s.x());
+    }
 
-    if (!key.compare("scale"))
-        return sf_shape.scale(x, x);
-}
+    if (s.n() == 2) {
+        if (!key.compare("translate"))
+            return sf_shape.setPosition(s.x(), s.y());
 
-void Polygon::attribute(string key, double x, double y) {
-    if (!key.compare("translate"))
-        return sf_shape.setPosition(x, y);
+        if (!key.compare("scale"))
+            return sf_shape.scale(s.x(), s.y());
+    }
 
-    if (!key.compare("scale"))
-        return sf_shape.scale(x, y);
+    if (s.n() == 4) {
+        Color c(s.x(), s.y(), s.z(), s.w());
+        if (!key.compare("fill"))
+            return sf_shape.setFillColor(sf::Color(c.r()*255,
+                                                   c.g()*255,
+                                                   c.b()*255,
+                                                   c.a()*255));
+
+        if (!key.compare("stroke"))
+            return sf_shape.setOutlineColor(sf::Color(c.r()*255,
+                                                      c.g()*255,
+                                                      c.b()*255,
+                                                      c.a()*255));
+    }
 }
 
 void Polygon::draw(sf::RenderTarget* target) {
@@ -129,4 +123,3 @@ Window* Window::memo(const char* name) {
     return memorize<Window>(name);
 }
 //
-
