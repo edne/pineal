@@ -25,12 +25,14 @@
   `(do
      (setv w (-> '~name
                str pineal.Window.memo))
-     (setv g (pineal.Group))
 
-     (for [e [~@body]]
-       (.add g e))
+     (when (.is-open w)
+       (setv g (pineal.Group))
 
-     (.render w g)))
+       (for [e [~@body]]
+         (.add g e))
+
+       (.render w g))))
 
 
 (defmacro polygon [n]
