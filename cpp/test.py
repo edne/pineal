@@ -1,9 +1,11 @@
 from __future__ import print_function
-from math import pi
-import pineal
 
 
-def test_all():
+def test_python():
+    "Test Python APIs"
+    from math import pi
+    import pineal
+
     "Test hopefully everything"
     window = pineal.Window.memo
     polygon = pineal.Polygon
@@ -35,5 +37,12 @@ def test_all():
         w.render(g)
 
 
+def test_lisp():
+    "Test DSL"
+    import hy
+    import test_lisp
+
+
 if __name__ == "__main__":
-    test_all()
+    # test_python()
+    test_lisp()
