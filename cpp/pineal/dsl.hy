@@ -27,12 +27,27 @@
                        str pineal.Window.memo))
 
      (when (.is-open ~g!window)
-       (setv ~g!group (pineal.Group))
+       (.render ~g!window
+                (group [~@body])))))
 
-       (for [e [~@body]]
-         (.add ~g!group e))
 
-       (.render ~g!window ~g!group))))
+(defmacro/g! group [entities &rest attributes]
+  "
+  Group of drawable entities
+  forward attributes
+  "
+  (setv entities* [])
+  (for [entity entities]
+    (.append entities* (+ (slice entity 0 2)
+                         (list attributes)
+                         (slice entity 2))))
+  `(do
+     (setv ~g!group (pineal.Group))
+
+     (for [e [~@entities*]]
+       (.add ~g!group e))
+
+     ~g!group))
 
 
 (defmacro/g! polygon [n &rest attributes]
@@ -44,6 +59,6 @@
      (for [attr [~@attributes]]
        (let [[name   (-> attr first str)]
              [values (rest attr)]
-             [s      (apply pineal.Signal values)]]
-         (.attribute ~g!entity name s)))
+             [signal (apply pineal.Signal values)]]
+         (.attribute ~g!entity name signal)))
      ~g!entity))
