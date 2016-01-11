@@ -7,4 +7,10 @@
                    ["fill" 0 1 1 1]
                    ["rotate" (/ pi 4)]
                    ["translate" 0.5 0]
+                   ["scale" 0.2])
+
+          (polygon 8
+                   ["fill" 0 1 0 1]
+                   ["rotate" (/ pi 4)]
+                   ["translate" -0.5 0]
                    ["scale" 0.2])))

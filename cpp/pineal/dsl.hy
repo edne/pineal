@@ -14,7 +14,7 @@
        nil)))
 
 
-(defmacro window [name &rest body]
+(defmacro/g! window [name &rest body]
   "
   Create and update a window called `name`
   the body should be a sequence of drawable entities
@@ -23,27 +23,27 @@
           (group ...))
   "
   `(do
-     (setv w (-> '~name
-               str pineal.Window.memo))
+     (setv ~g!window (-> '~name
+                       str pineal.Window.memo))
 
-     (when (.is-open w)
-       (setv g (pineal.Group))
+     (when (.is-open ~g!window)
+       (setv ~g!group (pineal.Group))
 
        (for [e [~@body]]
-         (.add g e))
+         (.add ~g!group e))
 
-       (.render w g))))
+       (.render ~g!window ~g!group))))
 
 
-(defmacro polygon [n &rest attributes]
+(defmacro/g! polygon [n &rest attributes]
   "
   Regular polygon with `n` sides
   "
   `(do
-     (setv e (pineal.Polygon ~n))
+     (setv ~g!entity (pineal.Polygon ~n))
      (for [attr [~@attributes]]
        (let [[name   (-> attr first str)]
              [values (rest attr)]
              [s      (apply pineal.Signal values)]]
-         (.attribute e name s)))
-     e))
+         (.attribute ~g!entity name s)))
+     ~g!entity))
