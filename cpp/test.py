@@ -27,11 +27,11 @@ def test_python():
         g.attribute("stroke", color(0, 1, 0))
 
         p.attribute("fill", color(0, 1, 1))
-        p.attribute("rotate", signal(pi/4))
-        p.attribute("translate", signal(0.5, 0))
-        p.attribute("scale", signal(0.5))
+        p.attribute("rotation", signal(pi/4))
+        p.attribute("position", signal(0.5, 0))
+        p.attribute("radius", signal(0.5))
 
-        q.attribute("scale", signal(0.2))
+        q.attribute("radius", signal(0.2))
         q.attribute("stroke", color(0, 0, 1))
 
         w.render(g)

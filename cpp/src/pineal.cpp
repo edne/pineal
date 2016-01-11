@@ -42,43 +42,36 @@ Polygon::Polygon(int n) {
     sf_shape.setOrigin(r, r);
 }
 
+#define check_attribute(__n, __name) \
+    if (s.n() == __n && !key.compare(__name))
+
 void Polygon::attribute(string key, Signal s) {
+    static const double pi = 3.141592654;
+    Color c(s.x(), s.y(), s.z(), s.w());
 
-    if (s.n() == 1) {
-        static const double pi = 3.141592654;
+    check_attribute(1, "line")
+        return sf_shape.setOutlineThickness(s.x());
 
-        if (!key.compare("line"))
-            return sf_shape.setOutlineThickness(s.x());
+    check_attribute(1, "rotation")
+        return sf_shape.rotate(180 *s.x()/pi);
 
-        if (!key.compare("rotate"))
-            return sf_shape.rotate(180 *s.x()/pi);
+    check_attribute(1, "radius")
+        return sf_shape.scale(s.x(), s.x());
 
-        if (!key.compare("scale"))
-            return sf_shape.scale(s.x(), s.x());
-    }
+    check_attribute(2, "position")
+        return sf_shape.setPosition(s.x(), s.y());
 
-    if (s.n() == 2) {
-        if (!key.compare("translate"))
-            return sf_shape.setPosition(s.x(), s.y());
+    check_attribute(4, "fill")
+        return sf_shape.setFillColor(sf::Color(c.r()*255,
+                                               c.g()*255,
+                                               c.b()*255,
+                                               c.a()*255));
 
-        if (!key.compare("scale"))
-            return sf_shape.scale(s.x(), s.y());
-    }
-
-    if (s.n() == 4) {
-        Color c(s.x(), s.y(), s.z(), s.w());
-        if (!key.compare("fill"))
-            return sf_shape.setFillColor(sf::Color(c.r()*255,
-                                                   c.g()*255,
-                                                   c.b()*255,
-                                                   c.a()*255));
-
-        if (!key.compare("stroke"))
-            return sf_shape.setOutlineColor(sf::Color(c.r()*255,
-                                                      c.g()*255,
-                                                      c.b()*255,
-                                                      c.a()*255));
-    }
+    check_attribute(4, "stroke")
+        return sf_shape.setOutlineColor(sf::Color(c.r()*255,
+                                                  c.g()*255,
+                                                  c.b()*255,
+                                                  c.a()*255));
 }
 
 void Polygon::draw(sf::RenderTarget* target) {

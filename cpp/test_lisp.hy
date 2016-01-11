@@ -6,12 +6,12 @@
           (group
             [(polygon 4
                       ["fill" (color 0 1 1)]
-                      ["rotate" (/ pi 4)]
-                      ["translate" 0.5 0]
-                      ["scale" 0.5])
+                      ["rotation" (/ pi 4)]
+                      ["position" 0.5 0]
+                      ["radius" 0.5])
 
              (polygon 8
-                      ["scale" 0.2]
+                      ["radius" 0.2]
                       ["stroke" (color 0 0 1)])]
 
             ["line" 0.05]
