@@ -24,6 +24,9 @@ class Signal {
         Signal()
             : xs{0, 0, 0, 0} , n_(0){};
 
+        Signal(Signal* s)
+        : xs{s->x(), s->y(), s->z(), s->w()}, n_(s->n()) {};
+
         double x() { return xs[0]; }
         double y() { return xs[1]; }
         double z() { return xs[2]; }

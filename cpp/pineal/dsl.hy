@@ -14,6 +14,17 @@
        nil)))
 
 
+(defmacro color [&rest values]
+  "
+  Color signal (4d)
+  r g b a -> r g b a
+  r g b   -> r g b 1
+  x a     -> x x x a
+  x       -> x x x 1
+  "
+  `(pineal.Color ~@values))
+
+
 (defmacro/g! window [name &rest body]
   "
   Create and update a window called `name`
