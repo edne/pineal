@@ -61,8 +61,13 @@ class Color : public Signal {
 
 class Entity {
     public:
-        virtual void attribute(std::string key, Signal s) {};
+        void attribute(std::string key, Signal s);
+        void apply_all_attributes();
+        virtual void apply_attribute(std::string key, Signal s) {};
         virtual ~Entity() {};
+
+    protected:
+        std::map<std::string, Signal> attributes;
 };
 
 class Drawable : public Entity {
@@ -82,7 +87,7 @@ class Group : public Drawable {
         Group() {};
         void add(Drawable* d);
 
-        virtual void attribute(std::string key, Signal s);
+        virtual void apply_attribute(std::string key, Signal s);
         virtual void draw(sf::RenderTarget* target, sf::RenderStates states);
 
     protected:
@@ -90,7 +95,7 @@ class Group : public Drawable {
 };
 
 class Transform : public Group {
-    void attribute(std::string key, Signal s);
+    void apply_attribute(std::string key, Signal s);
     void draw(sf::RenderTarget* target, sf::RenderStates states);
 
     private:
@@ -101,7 +106,7 @@ class Polygon : public Drawable {
     public:
         Polygon(int);
 
-        void attribute(std::string key, Signal s);
+        void apply_attribute(std::string key, Signal s);
         void draw(sf::RenderTarget* target, sf::RenderStates states);
 
     protected:

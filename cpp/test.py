@@ -54,5 +54,5 @@ def test_lisp():
 
 
 if __name__ == "__main__":
-    test_python()
-    # test_lisp()
+    # test_python()
+    test_lisp()

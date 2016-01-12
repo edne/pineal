@@ -21,10 +21,22 @@ T* memorize(K name) {
     return memory[name].get();
 }
 
+// Entity
+void Entity::attribute(std::string key, Signal s) {
+    attributes[key] = s;
+};
+
+void Entity::apply_all_attributes() {
+    for (const auto& p : attributes) {
+        apply_attribute(p.first, p.second);
+    }
+}
+//
+
 // Group
-void Group::attribute(string key, Signal s) {
-    for(Drawable *e : elements)
-        e->attribute(key, s);
+void Group::apply_attribute(string key, Signal s) {
+    for (Drawable *e : elements)
+        e->apply_attribute(key, s);
 }
 
 void Group::add(Drawable* d) {
@@ -32,13 +44,14 @@ void Group::add(Drawable* d) {
 };
 
 void Group::draw(sf::RenderTarget* target, sf::RenderStates states) {
-    for(Drawable *e : elements)
+    apply_all_attributes();
+    for (Drawable *e : elements)
         e->draw(target, states);
 };
 //
 
-// Transformation
-void Transform::attribute(string key, Signal s) {
+// Transf*ormation
+void Transform::apply_attribute(string key, Signal s) {
     check_attribute(2, "translate") {
         sf_transform.translate(s.x(), s.y());
         return;
@@ -59,14 +72,16 @@ void Transform::attribute(string key, Signal s) {
         return;
     }
 
-    for(Drawable *e : elements)
-        e->attribute(key, s);
+    for (Drawable *e : elements)
+        e->apply_attribute(key, s);
 }
 
 void Transform::draw(sf::RenderTarget* target, sf::RenderStates states) {
+    apply_all_attributes();
+
     states.transform *= sf_transform;
 
-    for(Drawable *e : elements) {
+    for (Drawable *e : elements) {
         e->draw(target, states);
     }
 };
@@ -81,7 +96,7 @@ Polygon::Polygon(int n) {
     sf_shape.setOrigin(r, r);
 }
 
-void Polygon::attribute(string key, Signal s) {
+void Polygon::apply_attribute(string key, Signal s) {
     Color c(s.x(), s.y(), s.z(), s.w());
 
     check_attribute(1, "line")
@@ -110,6 +125,7 @@ void Polygon::attribute(string key, Signal s) {
 }
 
 void Polygon::draw(sf::RenderTarget* target, sf::RenderStates states) {
+    apply_all_attributes();
     target->draw(sf_shape, states);
 }
 //
