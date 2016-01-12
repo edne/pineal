@@ -67,7 +67,7 @@ class Entity {
 
 class Drawable : public Entity {
     public:
-        virtual void draw(sf::RenderTarget* target) {};
+        virtual void draw(sf::RenderTarget* target, sf::RenderStates states) {};
         virtual ~Drawable() {};
 };
 
@@ -82,11 +82,19 @@ class Group : public Drawable {
         Group() {};
         void add(Drawable* d);
 
-        void attribute(std::string key, Signal s);
-        void draw(sf::RenderTarget* target);
+        virtual void attribute(std::string key, Signal s);
+        virtual void draw(sf::RenderTarget* target, sf::RenderStates states);
+
+    protected:
+        std::vector<Drawable*> elements;
+};
+
+class Transform : public Group {
+    void attribute(std::string key, Signal s);
+    void draw(sf::RenderTarget* target, sf::RenderStates states);
 
     private:
-        std::vector<Drawable*> elements;
+        sf::Transform sf_transform;
 };
 
 class Polygon : public Drawable {
@@ -94,7 +102,7 @@ class Polygon : public Drawable {
         Polygon(int);
 
         void attribute(std::string key, Signal s);
-        void draw(sf::RenderTarget* target);
+        void draw(sf::RenderTarget* target, sf::RenderStates states);
 
     protected:
         sf::CircleShape sf_shape;

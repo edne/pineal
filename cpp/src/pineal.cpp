@@ -2,8 +2,12 @@
 #include <pineal.hpp>
 #include <memory>
 #include <iostream>
+static const double pi = 3.141592654;
 
 using namespace std;
+
+#define check_attribute(__n, __name) \
+    if (s.n() == __n && !key.compare(__name))
 
 
 template<class T, typename K>
@@ -27,9 +31,44 @@ void Group::add(Drawable* d) {
     elements.push_back(d);
 };
 
-void Group::draw(sf::RenderTarget* target) {
+void Group::draw(sf::RenderTarget* target, sf::RenderStates states) {
     for(Drawable *e : elements)
-        e->draw(target);
+        e->draw(target, states);
+};
+//
+
+// Transformation
+void Transform::attribute(string key, Signal s) {
+    check_attribute(2, "translate") {
+        sf_transform.translate(s.x(), s.y());
+        return;
+    }
+
+    check_attribute(1, "rotate") {
+        sf_transform.rotate(180 * s.x() / pi);
+        return;
+    }
+
+    check_attribute(1, "scale") {
+        sf_transform.scale(s.x(), s.x());
+        return;
+    }
+
+    check_attribute(2, "scale") {
+        sf_transform.scale(s.x(), s.y());
+        return;
+    }
+
+    for(Drawable *e : elements)
+        e->attribute(key, s);
+}
+
+void Transform::draw(sf::RenderTarget* target, sf::RenderStates states) {
+    states.transform *= sf_transform;
+
+    for(Drawable *e : elements) {
+        e->draw(target, states);
+    }
 };
 //
 
@@ -42,18 +81,14 @@ Polygon::Polygon(int n) {
     sf_shape.setOrigin(r, r);
 }
 
-#define check_attribute(__n, __name) \
-    if (s.n() == __n && !key.compare(__name))
-
 void Polygon::attribute(string key, Signal s) {
-    static const double pi = 3.141592654;
     Color c(s.x(), s.y(), s.z(), s.w());
 
     check_attribute(1, "line")
         return sf_shape.setOutlineThickness(s.x());
 
     check_attribute(1, "rotation")
-        return sf_shape.rotate(180 *s.x()/pi);
+        return sf_shape.rotate(180 * s.x()/pi);
 
     check_attribute(1, "radius")
         return sf_shape.scale(s.x(), s.x());
@@ -74,8 +109,8 @@ void Polygon::attribute(string key, Signal s) {
                                                   c.a()*255));
 }
 
-void Polygon::draw(sf::RenderTarget* target) {
-    target->draw(sf_shape);
+void Polygon::draw(sf::RenderTarget* target, sf::RenderStates states) {
+    target->draw(sf_shape, states);
 }
 //
 
@@ -107,7 +142,7 @@ void Window::render(Drawable* child) {
 
     sf_window.clear(sf::Color::Black);
 
-    child->draw(&sf_window);
+    child->draw(&sf_window, sf::RenderStates());
 
     sf_window.display();
 }

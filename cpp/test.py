@@ -15,26 +15,36 @@ def test_python():
 
     w = window("asd")
     while w.is_open():
-        p = polygon(4)
-        q = polygon(8)
+        p1 = polygon(4)
+        p2 = polygon(8)
+        p3 = polygon(3)
 
         g = pineal.Group()
-        g.add(p)
-        g.add(q)
+        g.add(p1)
+        g.add(p2)
+
+        t = pineal.Transform()
+        t.add(g)
+        t.add(p3)
+
+        t.attribute("rotate", signal(pi/6))
 
         g.attribute("line", signal(0.05))
         g.attribute("fill", color(0.5))
         g.attribute("stroke", color(0, 1, 0))
 
-        p.attribute("fill", color(0, 1, 1))
-        p.attribute("rotation", signal(pi/4))
-        p.attribute("position", signal(0.5, 0))
-        p.attribute("radius", signal(0.5))
+        p1.attribute("fill", color(0, 1, 1))
+        p1.attribute("rotation", signal(pi/4))
+        p1.attribute("position", signal(0.5, 0))
+        p1.attribute("radius", signal(0.5))
 
-        q.attribute("radius", signal(0.2))
-        q.attribute("stroke", color(0, 0, 1))
+        p2.attribute("radius", signal(0.2))
+        p2.attribute("stroke", color(0, 0, 1))
 
-        w.render(g)
+        p3.attribute("radius", signal(0.1))
+        p3.attribute("position", signal(0, 0.1))
+
+        w.render(t)
 
 
 def test_lisp():
@@ -44,5 +54,5 @@ def test_lisp():
 
 
 if __name__ == "__main__":
-    # test_python()
-    test_lisp()
+    test_python()
+    # test_lisp()
