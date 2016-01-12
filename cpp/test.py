@@ -6,7 +6,6 @@ def test_python():
     from math import pi
     import pineal
 
-    "Test hopefully everything"
     window = pineal.Window.memo
     polygon = pineal.Polygon
     color = pineal.Color
