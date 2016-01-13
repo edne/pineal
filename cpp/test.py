@@ -43,7 +43,10 @@ def test_python():
         p3.attribute("radius", signal(0.1))
         p3.attribute("position", signal(0, 0.1))
 
-        w.render(t)
+        l = pineal.Layer()
+        l.render(t)
+
+        w.render(l)
 
 
 def test_lisp():
@@ -53,5 +56,5 @@ def test_lisp():
 
 
 if __name__ == "__main__":
-    # test_python()
-    test_lisp()
+    test_python()
+    # test_lisp()

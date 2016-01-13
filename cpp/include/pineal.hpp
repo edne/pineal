@@ -1,11 +1,5 @@
 #include <SFML/Graphics.hpp>
 
-class Entity;
-class Signal;
-class Drawable;
-class Shape;
-class Surface;
-
 
 class Signal {
     public:
@@ -76,12 +70,6 @@ class Drawable : public Entity {
         virtual ~Drawable() {};
 };
 
-class Surface : public Entity {
-    public:
-        virtual void render(Drawable* child) {};
-        virtual ~Surface() {};
-};
-
 class Group : public Drawable {
     public:
         Group() {};
@@ -113,7 +101,18 @@ class Polygon : public Drawable {
         sf::CircleShape sf_shape;
 };
 
-class Window : public Surface {
+class Layer : public Drawable {
+    public:
+        Layer();
+        void render(Drawable* child);
+        void draw(sf::RenderTarget* target, sf::RenderStates states);
+
+    private:
+        sf::RenderTexture render_texture;
+        double w, h;
+};
+
+class Window : public Entity {
     public:
         Window(const char* name);
         void render(Drawable* child);
@@ -121,5 +120,5 @@ class Window : public Surface {
         static Window* memo(const char* name);
 
     private:
-        sf::RenderWindow sf_window;
+        sf::RenderWindow render_window;
 };

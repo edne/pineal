@@ -130,37 +130,66 @@ void Polygon::draw(sf::RenderTarget* target, sf::RenderStates states) {
 }
 //
 
+// Layer
+Layer::Layer() : w(2000), h(2000){
+    render_texture.create(w, h);
+}
+
+void Layer::render(Drawable* child) {
+    sf::View view;
+    view.setCenter(0, 0);
+    view.setSize(2, 2);
+
+    render_texture.setView(view);
+    render_texture.clear();
+    child->draw(&render_texture, sf::RenderStates());
+    render_texture.display();
+}
+
+void Layer::draw(sf::RenderTarget* target, sf::RenderStates states) {
+    const sf::Texture& texture = render_texture.getTexture();
+    sf::Sprite sprite(texture);
+
+    apply_all_attributes();
+    sprite.scale(2.0 / w, 2.0 / h);
+    sprite.setPosition(-1, -1);
+    target->draw(sprite, states);
+}
+//
+
 // Window
 Window::Window(const char* name) {
-    sf_window.create(sf::VideoMode(800, 600), name);
+    render_window.create(sf::VideoMode(800, 600), name);
 }
 
 bool Window::is_open() {
-    return sf_window.isOpen();
+    return render_window.isOpen();
 }
 
 void Window::render(Drawable* child) {
     sf::Event event;
 
-    while (sf_window.pollEvent(event)) {
+    while (render_window.pollEvent(event)) {
         if (event.type == sf::Event::Closed)
-            sf_window.close();
+            render_window.close();
     }
 
     sf::View view;
-    sf::Vector2<unsigned int> size = sf_window.getSize();
+    sf::Vector2<unsigned int> size = render_window.getSize();
     double w = size.x,
            h = size.y;
     view.setCenter(0, 0);
     view.setSize(2, 2 * h/w);
 
-    sf_window.setView(view);
+    Layer layer;
 
-    sf_window.clear(sf::Color::Black);
+    layer.render(child);
 
-    child->draw(&sf_window, sf::RenderStates());
+    render_window.clear(sf::Color::Black);
+    render_window.setView(view);
 
-    sf_window.display();
+    layer.draw(&render_window, sf::RenderStates());
+    render_window.display();
 }
 
 Window* Window::memo(const char* name) {
