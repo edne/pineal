@@ -77,6 +77,7 @@ void Transform::apply_attribute(string key, Signal s) {
 }
 
 void Transform::draw(sf::RenderTarget* target, sf::RenderStates states) {
+    sf_transform = sf::Transform();
     apply_all_attributes();
 
     states.transform *= sf_transform;
@@ -103,10 +104,10 @@ void Polygon::apply_attribute(string key, Signal s) {
         return sf_shape.setOutlineThickness(s.x());
 
     check_attribute(1, "rotation")
-        return sf_shape.rotate(180 * s.x()/pi);
+        return sf_shape.setRotation(180 * s.x()/pi);
 
     check_attribute(1, "radius")
-        return sf_shape.scale(s.x(), s.x());
+        return sf_shape.setScale(s.x(), s.x());
 
     check_attribute(2, "position")
         return sf_shape.setPosition(s.x(), s.y());
