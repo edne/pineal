@@ -104,10 +104,10 @@ class Polygon : public Drawable {
 class Layer : public Drawable {
     public:
         Layer();
-        Layer(const char* name);
+        Layer(std::string name);
         void render(Drawable* child);
         void draw(sf::RenderTarget* target, sf::RenderStates states);
-        static Layer* memo(const char* name);
+        static Layer* memo(std::string name);
 
     private:
         sf::RenderTexture render_texture;
@@ -116,10 +116,10 @@ class Layer : public Drawable {
 
 class Window : public Entity {
     public:
-        Window(const char* name);
+        Window(std::string name);
         void render(Drawable* child);
         bool is_open();
-        static Window* memo(const char* name);
+        static Window* memo(std::string name);
 
     private:
         sf::RenderWindow render_window;

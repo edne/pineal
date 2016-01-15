@@ -27,5 +27,5 @@
 
            ["rotate" (/ pi 6)]))
 
-  (window asd
+  (window main-window
           (layer lv1)))

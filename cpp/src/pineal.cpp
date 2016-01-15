@@ -5,6 +5,7 @@
 static const double pi = 3.141592654;
 
 using namespace std;
+//using namespace std::__cxx11;
 
 #define check_attribute(__n, __name) \
     if (s.n() == __n && !key.compare(__name))
@@ -22,7 +23,7 @@ T* memorize(K name) {
 }
 
 // Entity
-void Entity::attribute(std::string key, Signal s) {
+void Entity::attribute(string key, Signal s) {
     attributes[key] = s;
 };
 
@@ -136,7 +137,7 @@ Layer::Layer() : w(2000), h(2000){
     render_texture.create(w, h);
 }
 
-Layer::Layer(const char* name) : w(2000), h(2000){
+Layer::Layer(string name) : w(2000), h(2000){
     render_texture.create(w, h);
 }
 
@@ -161,13 +162,13 @@ void Layer::draw(sf::RenderTarget* target, sf::RenderStates states) {
     target->draw(sprite, states);
 }
 
-Layer* Layer::memo(const char* name) {
+Layer* Layer::memo(string name) {
     return memorize<Layer>(name);
 }
 //
 
 // Window
-Window::Window(const char* name) {
+Window::Window(string name) {
     render_window.create(sf::VideoMode(800, 600), name);
 }
 
@@ -201,7 +202,7 @@ void Window::render(Drawable* child) {
     render_window.display();
 }
 
-Window* Window::memo(const char* name) {
+Window* Window::memo(string name) {
     return memorize<Window>(name);
 }
 //
