@@ -136,6 +136,10 @@ Layer::Layer() : w(2000), h(2000){
     render_texture.create(w, h);
 }
 
+Layer::Layer(const char* name) : w(2000), h(2000){
+    render_texture.create(w, h);
+}
+
 void Layer::render(Drawable* child) {
     sf::View view;
     view.setCenter(0, 0);
@@ -155,6 +159,10 @@ void Layer::draw(sf::RenderTarget* target, sf::RenderStates states) {
     sprite.scale(2.0 / w, 2.0 / h);
     sprite.setPosition(-1, -1);
     target->draw(sprite, states);
+}
+
+Layer* Layer::memo(const char* name) {
+    return memorize<Layer>(name);
 }
 //
 

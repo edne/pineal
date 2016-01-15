@@ -104,8 +104,10 @@ class Polygon : public Drawable {
 class Layer : public Drawable {
     public:
         Layer();
+        Layer(const char* name);
         void render(Drawable* child);
         void draw(sf::RenderTarget* target, sf::RenderStates states);
+        static Layer* memo(const char* name);
 
     private:
         sf::RenderTexture render_texture;

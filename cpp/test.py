@@ -6,14 +6,11 @@ def test_python():
     from math import pi
     import pineal
 
-    window = pineal.Window.memo
     polygon = pineal.Polygon
     color = pineal.Color
     signal = pineal.Signal
 
-
-    w = window("asd")
-    while w.is_open():
+    while True:
         p1 = polygon(4)
         p2 = polygon(8)
         p3 = polygon(3)
@@ -43,10 +40,12 @@ def test_python():
         p3.attribute("radius", signal(0.1))
         p3.attribute("position", signal(0, 0.1))
 
-        l = pineal.Layer()
+        l = pineal.Layer.memo("lv1")
         l.render(t)
 
-        w.render(l)
+        w = pineal.Window.memo("asd")
+        if w.is_open():
+            w.render(pineal.Layer.memo("lv1"))
 
 
 def test_lisp():
@@ -56,5 +55,5 @@ def test_lisp():
 
 
 if __name__ == "__main__":
-    test_python()
-    # test_lisp()
+    # test_python()
+    test_lisp()
