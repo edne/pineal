@@ -51,7 +51,7 @@ void Group::draw(sf::RenderTarget* target, sf::RenderStates states) {
 };
 //
 
-// Transf*ormation
+// Transformation
 void Transform::apply_attribute(string key, Signal s) {
     check_attribute(2, "translate") {
         sf_transform.translate(s.x(), s.y());

@@ -4,7 +4,7 @@
 
 
 (loop
-  (layer lv1
+  (layer "render"
          (transform
            [(group
               [(polygon 4
@@ -27,5 +27,8 @@
 
            ["rotate" (/ pi 6)]))
 
-  (window main-window
-          (layer lv1)))
+  (window "master"
+          (layer "render"))
+
+  (window "overwiew"
+          (layer "render")))
