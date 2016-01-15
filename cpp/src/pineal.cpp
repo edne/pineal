@@ -133,12 +133,17 @@ void Polygon::draw(sf::RenderTarget* target, sf::RenderStates states) {
 //
 
 // Layer
-Layer::Layer() : w(2000), h(2000){
+Layer::Layer() : w(2000), h(2000) {
+    sf_shape = sf::ConvexShape(4);
     render_texture.create(w, h);
+
+    sf_shape.setPoint(0, sf::Vector2f(-1, -1));
+    sf_shape.setPoint(1, sf::Vector2f(1, -1));
+    sf_shape.setPoint(2, sf::Vector2f(1, 1));
+    sf_shape.setPoint(3, sf::Vector2f(-1, 1));
 }
 
-Layer::Layer(string name) : w(2000), h(2000){
-    render_texture.create(w, h);
+Layer::Layer(string name) : Layer() {
 }
 
 void Layer::render(Drawable* child) {
@@ -148,18 +153,34 @@ void Layer::render(Drawable* child) {
 
     render_texture.setView(view);
     render_texture.clear();
+    render_texture.setSmooth(true);
     child->draw(&render_texture, sf::RenderStates());
     render_texture.display();
 }
 
+void Layer::apply_attribute(string key, Signal s) {
+    check_attribute(2, "p0")
+        return sf_shape.setPoint(0, sf::Vector2f(s.x(), s.y()));
+
+    check_attribute(2, "p1")
+        return sf_shape.setPoint(1, sf::Vector2f(s.x(), s.y()));
+
+    check_attribute(2, "p2")
+        return sf_shape.setPoint(2, sf::Vector2f(s.x(), s.y()));
+
+    check_attribute(2, "p3")
+        return sf_shape.setPoint(3, sf::Vector2f(s.x(), s.y()));
+}
+
+
 void Layer::draw(sf::RenderTarget* target, sf::RenderStates states) {
+    apply_all_attributes();
+
     const sf::Texture& texture = render_texture.getTexture();
     sf::Sprite sprite(texture);
 
-    apply_all_attributes();
-    sprite.scale(2.0 / w, 2.0 / h);
-    sprite.setPosition(-1, -1);
-    target->draw(sprite, states);
+    sf_shape.setTexture(&texture);
+    target->draw(sf_shape, states);
 }
 
 Layer* Layer::memo(string name) {

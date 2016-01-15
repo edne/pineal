@@ -106,10 +106,12 @@ class Layer : public Drawable {
         Layer();
         Layer(std::string name);
         void render(Drawable* child);
+        void apply_attribute(std::string key, Signal s);
         void draw(sf::RenderTarget* target, sf::RenderStates states);
         static Layer* memo(std::string name);
 
     private:
+        sf::ConvexShape sf_shape;
         sf::RenderTexture render_texture;
         double w, h;
 };

@@ -28,7 +28,7 @@
            ["rotate" (/ pi 6)]))
 
   (window "master"
-          (layer "render"))
+          (draw "render"))
 
   (window "overwiew"
-          (layer "render")))
+          (draw "render")))

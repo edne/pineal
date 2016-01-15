@@ -54,18 +54,25 @@
 (defmacro/g! layer [name &rest body]
   "
   Offscreen drawing
+  draw on an layer
 
   Example:
-  (layer name
-         something ...)  ;; draw on texture
-
-  (layer name)           ;; draw the texture
+  (layer layer-1
+         something ...)
   "
-  (setv l `(-> '~name
-             str pineal.Layer.memo))
-  (if body
-    `(.render ~l (group [~@body]))
-    l))
+  `(.render (-> '~name
+              str pineal.Layer.memo)
+            (group [~@body])))
+
+(defmacro/g! draw [name &rest attributes]
+  "
+  Draw a layer
+  "
+  `(do
+     (setv ~g!layer (-> '~name
+                      str pineal.Layer.memo))
+     (set-attributes ~g!layer ~@attributes)
+     ~g!layer))
 
 (defmacro set-attributes [entity &rest attributes]
   "
