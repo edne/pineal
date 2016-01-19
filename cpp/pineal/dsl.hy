@@ -1,19 +1,15 @@
 (defmacro loop [&rest body]
   "
   Outermost s-expression
-  the body is executed every frame
+  executed every frame
 
   Example:
   (loop
     (window ...))
   "
-  `(try
-     (do
-       (import pineal)
-       (while true 
-         ~@body))
-     (catch [KeyboardInterrupt]
-       nil)))
+  `(defn loop []
+     (import pineal)
+     ~@body))
 
 
 (defmacro color [&rest values]

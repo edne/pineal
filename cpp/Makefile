@@ -1,4 +1,4 @@
-.PHONY: all clean build test
+.PHONY: all run clean build test
 .DEFAULT_GOAL = all
 
 SFML=-lsfml-graphics
@@ -20,7 +20,10 @@ OBJ_FILES=$(patsubst src/%.cpp, obj/%.o, $(SRC_FILES))
 all:
 	make clean
 	make build
-	python test.py
+	python test/test.py
+
+run:
+	./pineal-run.py test/test_lisp.hy
 
 clean:
 	rm src/wrap.cpp        || true

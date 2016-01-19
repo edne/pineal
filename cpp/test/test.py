@@ -51,7 +51,12 @@ def test_python():
 def test_lisp():
     "Test DSL"
     import hy
-    import test_lisp
+    from test_lisp import loop
+    try:
+        while True:
+            loop()
+    except KeyboardInterrupt:
+        pass
 
 
 if __name__ == "__main__":
