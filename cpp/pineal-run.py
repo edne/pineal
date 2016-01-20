@@ -1,22 +1,39 @@
 #!/usr/bin/env python
 from __future__ import print_function
 import os
+from time import sleep
 from sys import argv
 
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
 import hy
-from pineal.utils import hy_eval_string
+from pineal.hy_utils import run_hy_code
 
 
-def watch(file_name):
-    "Return a watchdog observer"
+def update_file(file_name, ns, history):
+    "Update running code, saving in the history"
+    print("Updating file")  # TODO logging
+
+    with open(file_name) as f:
+        code = f.read()
+
+    history.append(code)
+    try:
+        run_hy_code(code, ns)
+    except e:
+        print(e)
+        history.pop()  # TODO test and debug this
+
+
+def watch_file(file_name, action, *args, **kwargs):
+    "Return a watchdog observer, it will call the action callback"
 
     def on_modified(event):
         "File-changed event"
+        print("File changed")  # TODO logging
         if event.src_path == file_name:
-            print("changed")
+            action(file_name, *args, **kwargs)
 
     handler = FileSystemEventHandler()
     handler.on_modified = on_modified
@@ -33,20 +50,19 @@ def main(file_name):
     "Main function"
 
     ns = {}  # namespace
+    history = []  # handle old versions of code
 
-    with open(file_name) as f:
-        hy_eval_string(f.read(), ns)
+    update_file(file_name, ns, history)
 
-    from time import sleep
-    observer = watch(file_name)
+    watcher = watch_file(file_name, update_file, ns, history)
     try:
         while True:
             ns["loop"]()
             sleep(1.0/120)
     except KeyboardInterrupt:
-        observer.stop()
+        watcher.stop()
 
-    observer.join()
+    watcher.join()
 
 if __name__ == "__main__":
     if argv[1:]:
