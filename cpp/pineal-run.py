@@ -3,27 +3,41 @@ from __future__ import print_function
 import os
 from time import sleep
 from sys import argv
-
+import logging
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
 import hy
 from pineal.hy_utils import run_hy_code
 
+logger = logging.getLogger("pineal-run")
+logger.setLevel(logging.INFO)
+logger.addHandler(logging.StreamHandler())
+
+
+def run_code(ns, history):
+    "Run last code in the history, if available"
+    if history:
+        try:
+            run_hy_code(history[-1], ns)
+        except Exception as e:
+            logger.info("Error evaluating code")
+            logger.error(e)
+            history.pop()
+            run_code(ns, history)
+    else:
+        logger.error("Empty history, there is no valid code")
+
 
 def update_file(file_name, ns, history):
     "Update running code, saving in the history"
-    print("Updating file")  # TODO logging
+    logger.info("Updating file")
 
     with open(file_name) as f:
         code = f.read()
 
     history.append(code)
-    try:
-        run_hy_code(code, ns)
-    except e:
-        print(e)
-        history.pop()  # TODO test and debug this
+    run_code(ns, history)
 
 
 def watch_file(file_name, action, *args, **kwargs):
@@ -31,7 +45,7 @@ def watch_file(file_name, action, *args, **kwargs):
 
     def on_modified(event):
         "File-changed event"
-        print("File changed")  # TODO logging
+        logger.info(file_name, " changed")
         if event.src_path == file_name:
             action(file_name, *args, **kwargs)
 
@@ -57,7 +71,12 @@ def main(file_name):
     watcher = watch_file(file_name, update_file, ns, history)
     try:
         while True:
-            ns["loop"]()
+            try:
+                ns["loop"]()
+            except Exception as e:
+                logger.error(e)
+                history.pop()
+                run_code(ns, history)
             sleep(1.0/120)
     except KeyboardInterrupt:
         watcher.stop()
