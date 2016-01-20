@@ -23,6 +23,8 @@ all:
 	python test/test.py
 
 run:
+	make clean
+	make build
 	./pineal-run.py test/test_lisp.hy
 
 clean:
