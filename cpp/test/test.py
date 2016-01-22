@@ -64,6 +64,7 @@ def test_dsl():
 
 
 def test_watcher():
+    "Test the file watching util"
     from pineal.utils import watch_file
 
     with open("temp_file", "w") as f:

@@ -41,8 +41,11 @@ def load(file_name):
     update_file()
     watcher = watch_file(file_name, update_file)
 
-    class Vision:
-        def loop(self):
+    class Vision(object):
+        "Represent a dsl file and wrap the watcher"
+
+        @staticmethod
+        def loop():
             "Main iteration, handel errors"
             try:
                 return ns["loop"]()
@@ -51,11 +54,13 @@ def load(file_name):
                 history.pop()
                 eval_code()
 
-        def stop(self):
+        @staticmethod
+        def stop():
             "Ask watcher to stop"
             watcher.stop()
 
-        def join(self):
+        @staticmethod
+        def join():
             "Join watcher thread"
             watcher.join()
 
