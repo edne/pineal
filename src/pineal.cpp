@@ -25,7 +25,7 @@ T* memorize(K name) {
 // Entity
 void Entity::attribute(string key, Signal s) {
     attributes[key] = s;
-};
+}
 
 void Entity::apply_all_attributes() {
     for (const auto& p : attributes) {
@@ -42,13 +42,13 @@ void Group::apply_attribute(string key, Signal s) {
 
 void Group::add(Drawable* d) {
     elements.push_back(d);
-};
+}
 
 void Group::draw(sf::RenderTarget* target, sf::RenderStates states) {
     apply_all_attributes();
     for (Drawable *e : elements)
         e->draw(target, states);
-};
+}
 //
 
 // Transformation
@@ -86,7 +86,7 @@ void Transform::draw(sf::RenderTarget* target, sf::RenderStates states) {
     for (Drawable *e : elements) {
         e->draw(target, states);
     }
-};
+}
 //
 
 // Polygon

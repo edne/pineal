@@ -8,6 +8,7 @@ LIBS=$(SFML) $(LIBLO)
 CC=g++
 LD=g++
 
+WARN=-Wall -Wextra -Wpedantic -Wno-unused-parameter
 CFLAGS=-fPIC -Wall -std=c++11 -Iinclude -I/usr/include/python2.7
 LDFLAGS=$(LIBS) -shared
 
@@ -41,7 +42,7 @@ test:
 	nosetests -v
 
 src/wrap.cpp: $(NAME).i
-	swig -Wall -Iinclude -module $(NAME) -c++ -python $<
+	swig -Wall -Wextra -Iinclude -module $(NAME) -c++ -python $<
 	mv $(NAME)_wrap.cxx src/wrap.cpp
 	mv $(NAME).py $(NAME)/__init__.py
 
