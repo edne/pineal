@@ -1,88 +1,160 @@
-(defmacro osc-source [name path]
+(defmacro loop [&rest body]
   "
-  Define a function returning the latest value of an osc
-  signal
-  (osc-source name osc-path)
-  (name mult add)
+  Outermost s-expression
+  executed every frame
 
   Example:
-  (osc-source amp \"/amp\")
-  and then:
-  (amp 2 0.5)  ; -> (value of /amp) * 2 + 0.5
+  (loop
+    (window ...))
   "
-  `(defn ~name [&rest args]
-     (import [pineal.nerve [get-source]])
-
-     (let [[mult (if args       (car args)   1)]
-           [add  (if (cdr args) (get args 1) 0)]
-           [src  (get-source ~path)]]
-
-       (->> (src) (* mult) (+ add)))))
+  `(defn loop []
+     (import pineal)
+     ~@body))
 
 
-(defmacro palette [name pal]
+(defmacro color [&rest values]
   "
-  Create a color palette
-  (palette my-palette colors)
-  (my-palette index alpha)  ; index is in [0 1]
+  Generate a color
+  return a 4d signal
+
+  r g b a -> r g b a
+  r g b   -> r g b 1
+  x a     -> x x x a
+  x       -> x x x 1
 
   Example:
-  (palette hsv \"rgbr\")
-  (hsv 0.33 1)  ; green, full alpha
+  (color 1 0.5)
   "
-  `(defn ~name [index &optional in-alpha]
-     (let [[[r g b a]
-            (from-palette (map color ~pal) 
-                          index)]]
-       (if (nil? in-alpha)
-         [r g b a]
-         [r g b in-alpha]))))
+  `(pineal.Color ~@values))
 
 
-(defmacro fx [efs &rest body]
+(defmacro/g! window [name &rest body]
   "
-  Apply an effect chain
-  (fx [effects] drawings)
+  Create and update a window called `name`
+  the body should be a sequence of drawable entities
 
   Example:
-  (fx [(scale 0.5)
-       (rotate (/ pi 6))]
-
-      (draw my-layer)
-      (pwired 3 (grey 0.5)))
+  (window main-window
+          (polygon ...)
+          (group ...)
+          ...)
   "
-  (defn unroll [ef efs]
-    `(fx [~ef]
-         (fx [~@efs]
-             ~@body)))
+  `(do
+     (setv ~g!window (-> '~name
+                       str pineal.Window.memo))
 
-  (if (cdr efs)
-    (unroll (car efs)
-            (cdr efs))
-    (let [[ef (car efs)]
-          [name (car ef)]
-          [args (cdr ef)]]
-      `(~name (fn [] ~@body)
-              ~@args))))
+     (when (.is-open ~g!window)
+       (.render ~g!window
+                (group [~@body])))))
 
-
-(defmacro draw [name]
+(defmacro/g! layer [name &rest body]
   "
-  Draw a layer, layers are defined with `on`
-  (draw my-layer)
-  "
-  `(draw-layer (str '~name)))
-
-
-(defmacro on [name &rest body]
-  "
-  Define a layer and draw stuff on it
+  Offscreen drawing
+  draw on an layer
 
   Example:
-  (on my-layer
-      (fx [(scale 0.9)]
-          (draw my-other-layer)
-          (pwired 4 (grey 0.5))))
+  (layer layer-1
+         something ...)
   "
-  `(fx [(on-layer (str '~name))]
-       ~@body))
+  `(.render (-> '~name
+              str pineal.Layer.memo)
+            (group [~@body])))
+
+(defmacro/g! draw [name &rest attributes]
+  "
+  Draw a layer
+  "
+  `(do
+     (setv ~g!layer (-> '~name
+                      str pineal.Layer.memo))
+     (set-attributes ~g!layer ~@attributes)
+     ~g!layer))
+
+(defmacro set-attributes [entity &rest attributes]
+  "
+  Set entity attributes
+  internal
+  "
+  `(for [attr [~@attributes]]
+     (let [[name   (-> attr first str)]
+           [values (rest attr)]
+           [signal (apply pineal.Signal values)]]
+       (.attribute ~entity name signal))))
+
+
+(defmacro/g! group [entities &rest attributes]
+  "
+  Group of drawable entities
+  forward attributes, innermost ones are setted after
+
+  Example:
+  (group [(polygon ...)
+          (group ...)
+          ...]
+
+         [\"fill\" 1 0 1]
+         [...])
+  "
+  `(do
+     (setv ~g!group (pineal.Group))
+     (setv ~g!entities [~@entities])
+
+     (for [e ~g!entities]
+       (.add ~g!group e))
+
+     (set-attributes ~g!group ~@attributes)
+
+     ~g!group))
+
+
+(defmacro/g! transform [entities &rest attributes]
+  "
+  Apply transformation to enitites
+  unmatched attributes are forwarded just like a group
+
+  Attributes:
+  - [translate x y]
+  - [rotate rad]
+  - [scale r]
+  - [scale x y]
+
+  Example:
+  (transform [(polygon ...)
+              (group ...)]
+
+             [\"scale\" 0.5]
+             [\"transate 0 1\"])
+  "
+  `(do
+     (setv ~g!transform (pineal.Transform))
+     (setv ~g!entities [~@entities])
+
+     (for [e ~g!entities]
+       (.add ~g!transform e))
+
+     (set-attributes ~g!transform ~@attributes)
+
+     ~g!transform))
+
+
+(defmacro/g! polygon [n &rest attributes]
+  "
+  Regular polygon with `n` sides
+
+  Attributes:
+  - [line w] stroke width
+  - [rotation rad]
+  - [radius r]
+  - [position x y z]
+  - [fill color]
+  - [stroke color]
+
+  Example:
+  (polygon 4
+           [\"radius\" 2]
+           [\"stroke\" (color 0.5 0 0)])
+  "
+  `(do
+     (setv ~g!entity (pineal.Polygon ~n))
+     (set-attributes ~g!entity ~@attributes)
+     ~g!entity))

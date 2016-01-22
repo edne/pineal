@@ -18,11 +18,13 @@ OBJ_FILES=$(patsubst src/%.cpp, obj/%.o, $(SRC_FILES))
 
 
 all:
+	mkdir obj  || true
 	make clean
 	make build
 	make test
 
 run:
+	mkdir obj  || true
 	make clean
 	make build
 	./pineal-run.py test/test_lisp.hy
