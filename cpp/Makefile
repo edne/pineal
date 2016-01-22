@@ -20,7 +20,7 @@ OBJ_FILES=$(patsubst src/%.cpp, obj/%.o, $(SRC_FILES))
 all:
 	make clean
 	make build
-	python test/test.py
+	make test
 
 run:
 	make clean
@@ -35,8 +35,8 @@ clean:
 
 build: $(NAME)/_$(NAME).so
 
-test: build test.py
-	python test.py
+test:
+	nosetests -v
 
 src/wrap.cpp: $(NAME).i
 	swig -Wall -Iinclude -module $(NAME) -c++ -python $<

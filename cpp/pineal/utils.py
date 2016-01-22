@@ -8,7 +8,7 @@ def watch_file(file_name, action, *args, **kwargs):
 
     def on_modified(event):
         "File-changed event"
-        if event.src_path == file_name:
+        if os.path.samefile(event.src_path, file_name):
             action(*args, **kwargs)
 
     handler = FileSystemEventHandler()
@@ -16,6 +16,9 @@ def watch_file(file_name, action, *args, **kwargs):
     observer = Observer()
 
     base_path = os.path.split(file_name)[0]
+    if not base_path:
+        base_path = "."
+
     observer.schedule(handler, path=base_path)
     observer.start()
 

@@ -2,7 +2,7 @@ import logging
 import hy
 
 from pineal.utils import watch_file
-from pineal.hy_utils import run_hy_code
+from pineal.hy_utils import eval_hy_code
 
 
 def load(file_name):
@@ -14,16 +14,17 @@ def load(file_name):
     ns = {}  # execution namespace
     history = []  # history of file changes
 
-    def run_code():
+    def eval_code():
         "Run last code in the history, if available"
         if history:
             try:
-                run_hy_code(history[-1], ns)
+                logger.debug("Running:\n{}".format(history[-1]))
+                eval_hy_code(history[-1], ns)
             except Exception as e:
                 logger.info("Error evaluating code")
                 logger.error(e)
                 history.pop()
-                run_code()
+                eval_code()
         else:
             logger.error("Empty history, there is no valid code")
 
@@ -35,7 +36,7 @@ def load(file_name):
             code = f.read()
 
         history.append(code)
-        run_code()
+        eval_code()
 
     update_file()
     watcher = watch_file(file_name, update_file)
@@ -44,11 +45,11 @@ def load(file_name):
         def loop(self):
             "Main iteration, handel errors"
             try:
-                ns["loop"]()
+                return ns["loop"]()
             except Exception as e:
                 logger.error(e)
                 history.pop()
-                run_code()
+                eval_code()
 
         def stop(self):
             "Ask watcher to stop"

@@ -1,7 +1,9 @@
 from __future__ import print_function
+import os
+from time import time, sleep
 
 
-def test_python():
+def _test_python():
     "Test Python APIs"
     from math import pi
     import pineal
@@ -10,7 +12,8 @@ def test_python():
     color = pineal.Color
     signal = pineal.Signal
 
-    while True:
+    start_time = time()
+    while time() < start_time + 1:
         p1 = polygon(4)
         p2 = polygon(8)
         p3 = polygon(3)
@@ -46,19 +49,64 @@ def test_python():
         w = pineal.Window.memo("asd")
         if w.is_open():
             w.render(pineal.Layer.memo("lv1"))
+    # TODO close window
 
 
-def test_lisp():
+def test_dsl():
     "Test DSL"
     import hy
     from test_lisp import loop
-    try:
-        while True:
-            loop()
-    except KeyboardInterrupt:
-        pass
+
+    start_time = time()
+    while time() < start_time + 1:
+        loop()
+    # TODO close window
 
 
-if __name__ == "__main__":
-    # test_python()
-    test_lisp()
+def test_watcher():
+    from pineal.utils import watch_file
+
+    with open("temp_file", "w") as f:
+        f.write("before")
+
+    status = ["a"]
+
+    def action():
+        status[0] = "b"
+
+    watcher = watch_file("temp_file", action)
+
+    with open("temp_file", "w") as f:
+        f.write("after")
+
+    sleep(1)
+    assert status[0] == "b"
+
+    watcher.stop()
+    watcher.join()
+
+    os.remove("temp_file")
+
+
+def test_vision():
+    "Test loading and changeing of a vision"
+    from pineal.visions import load
+
+    with open("temp.hy", "w") as f:
+        f.write("(defn loop [] (+ 1 1))")
+
+    v = load("temp.hy")
+
+    sleep(1)
+    assert v.loop() == 2
+
+    with open("temp.hy", "w") as f:
+        f.write("(defn loop [] (+ 1 2))")
+
+    sleep(1)
+    assert v.loop() == 3
+
+    v.stop()
+    v.join()
+
+    os.remove("temp.hy")
