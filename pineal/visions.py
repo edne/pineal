@@ -30,7 +30,7 @@ def load(file_name):
 
     def update_file():
         "Update running code, saving in the history"
-        logger.info("Updating file")
+        logger.info("Updating %s" % file_name)
 
         with open(file_name) as f:
             code = f.read()
