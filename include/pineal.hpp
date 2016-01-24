@@ -73,8 +73,10 @@ class Drawable : public Entity {
 class Group : public Drawable {
     public:
         Group() {};
-        void add(Drawable* d);
+        Group(std::string name);
+        static Group* memo(std::string name);
 
+        void add(Drawable* d);
         virtual void apply_attribute(std::string key, Signal s);
         virtual void draw(sf::RenderTarget* target, sf::RenderStates states);
 
@@ -98,10 +100,11 @@ class Layer : public Drawable {
     public:
         Layer();
         Layer(std::string name);
+        static Layer* memo(std::string name);
+
         void render(Drawable* child);
         void apply_attribute(std::string key, Signal s);
         void draw(sf::RenderTarget* target, sf::RenderStates states);
-        static Layer* memo(std::string name);
 
     private:
         sf::ConvexShape sf_shape;
@@ -112,9 +115,10 @@ class Layer : public Drawable {
 class Window : public Entity {
     public:
         Window(std::string name);
+        static Window* memo(std::string name);
+
         void render(Drawable* child);
         bool is_open();
-        static Window* memo(std::string name);
 
     private:
         sf::RenderWindow render_window;

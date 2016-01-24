@@ -1,6 +1,10 @@
 (require pineal.dsl)
 (import [math [pi]])
 
+(alias tri
+       (polygon 3
+                ["radius" 0.1]
+                ["position" 0 0.1]))
 
 (loop
   (layer "render"
@@ -20,9 +24,8 @@
               ["fill" (color 0.5)]
               ["stroke" (color 0 1 0)])
 
-            (polygon 3
-                     ["radius" 0.1]
-                     ["position" 0 0.1]) ]
+            (tri)
+            ]
 
            ["rotate" (/ pi 6)]))
 

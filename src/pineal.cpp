@@ -38,8 +38,15 @@ void Entity::apply_all_attributes() {
 void Group::add(Drawable* d) {
     elements.push_back(d);
 }
+Group::Group(string name) : Group() {
+}
 
 void Group::apply_attribute(string key, Signal s) {
+    check_attribute(1, "translate") {
+        sf_transform.translate(s.x(), 0);
+        return;
+    }
+
     check_attribute(2, "translate") {
         sf_transform.translate(s.x(), s.y());
         return;
@@ -73,6 +80,10 @@ void Group::draw(sf::RenderTarget* target, sf::RenderStates states) {
     for (Drawable *e : elements) {
         e->draw(target, states);
     }
+}
+
+Group* Group::memo(string name) {
+    return memorize<Group>(name);
 }
 //
 

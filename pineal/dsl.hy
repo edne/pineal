@@ -47,6 +47,7 @@
        (.render ~g!window
                 (group [~@body])))))
 
+
 (defmacro/g! layer [name &rest body]
   "
   Offscreen drawing
@@ -60,6 +61,7 @@
               str pineal.Layer.memo)
             (group [~@body])))
 
+
 (defmacro/g! draw [name &rest attributes]
   "
   Draw a layer
@@ -69,6 +71,7 @@
                       str pineal.Layer.memo))
      (set-attributes ~g!layer ~@attributes)
      ~g!layer))
+
 
 (defmacro set-attributes [entity &rest attributes]
   "
@@ -109,6 +112,37 @@
        (.add ~g!group e))
 
      (set-attributes ~g!group ~@attributes)
+
+     ~g!group))
+
+
+(defmacro/g! alias [name body &rest attributes]
+  "
+  Alias to an entity
+
+  Example:
+  (alias red-square
+         (polygon 4
+                  [\"fill\" 1 0 0]))
+
+  And then:
+  (red-square)
+  "
+  ;; TODO (red-square r x)
+  `(do
+     (import pineal)
+     (setv ~g!group (-> '~name
+                      str pineal.Group.memo))
+
+     (setv ~g!entity ~body)
+     (.add ~g!group ~g!entity)
+
+     (set-attributes ~g!group ~@attributes)
+
+     (defn ~name []
+       (setv ~g!inner-group (-> '~name
+                              str pineal.Group.memo))
+       ~g!inner-group)
 
      ~g!group))
 
