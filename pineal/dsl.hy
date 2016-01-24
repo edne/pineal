@@ -100,7 +100,7 @@
      ~g!group))
 
 
-(defmacro/g! alias [name body]
+(defmacro/g! alias [name &rest body]
   "
   Alias to an entity
 
@@ -114,7 +114,7 @@
   "
   `(do
      ;; avoid improper *Group -> Group casts
-     (setv ~g!entity ~body)
+     (setv ~g!entity (group [~@body]))
      (defn ~name [&rest args]
        ~g!entity)))
 
