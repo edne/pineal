@@ -114,7 +114,7 @@
      ~g!group))
 
 
-(defmacro/g! alias [name body &rest attributes]
+(defmacro/g! alias [name body]
   "
   Alias to an entity
 
@@ -125,33 +125,12 @@
 
   And then:
   (red-square)
-  (red-square 0.5)  ;; scaled by 0.5
   "
-  ;; TODO (red-square r x)
   `(do
-     (import pineal)
-     (setv ~g!group (-> '~name
-                      str pineal.Group.memo))
-
+     ;; avoid improper *Group -> Group casts
      (setv ~g!entity ~body)
-     (.add ~g!group ~g!entity)
-
-     (set-attributes ~g!group ~@attributes)
-
      (defn ~name [&rest args]
-       ;; get group from memo
-       (setv ~g!inner-group (-> '~name
-                              str pineal.Group.memo))
-
-       (setv ~g!mult (if args           (first args)  1))
-       (setv ~g!add  (if (slice args 1) (second args) 0))
-
-       ;; group to apply transformations
-       (group [~g!inner-group]
-              ["scale"     ~g!mult]
-              ["translate" ~g!add]))
-
-     ~g!group))
+       ~g!entity)))
 
 
 (defmacro/g! polygon [n &rest attributes]

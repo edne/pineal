@@ -74,7 +74,6 @@ class Group : public Drawable {
     public:
         Group() {};
         Group(std::string name);
-        static Group* memo(std::string name);
 
         void add(Drawable* d);
         virtual void apply_attribute(std::string key, Signal s);

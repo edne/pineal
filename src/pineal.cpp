@@ -81,10 +81,6 @@ void Group::draw(sf::RenderTarget* target, sf::RenderStates states) {
         e->draw(target, states);
     }
 }
-
-Group* Group::memo(string name) {
-    return memorize<Group>(name);
-}
 //
 
 

@@ -1,9 +1,13 @@
 (require pineal.dsl)
 (import [math [pi]])
 
-(alias triangle (polygon 3))
 
 (loop
+  (alias triangle (polygon 3
+                           ["fill" (color 0 0 0 0)]
+                           ["stroke" (color 1 1 0)]
+                           ["line" 0.05]
+                           ["radius" 0.5]))
   (layer render
          (group
            [(group
@@ -21,7 +25,7 @@
               ["fill" (color 0.5)]
               ["stroke" (color 0 1 0)])
 
-            (triangle 0.1)]
+            (triangle)]
 
            ["rotate" (/ pi 6)]))
 
