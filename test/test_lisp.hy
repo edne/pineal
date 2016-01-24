@@ -4,7 +4,7 @@
 (alias triangle (polygon 3))
 
 (loop
-  (layer "render"
+  (layer render
          (group
            [(group
               [(polygon 4
@@ -26,7 +26,7 @@
            ["rotate" (/ pi 6)]))
 
   (window "master"
-          (draw "render"))
+          (render))
 
   (window "overwiew"
-          (draw "render")))
+          (render)))

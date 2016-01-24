@@ -56,21 +56,19 @@
   Example:
   (layer layer-1
          something ...)
-  "
-  `(.render (-> '~name
-              str pineal.Layer.memo)
-            (group [~@body])))
 
-
-(defmacro/g! draw [name &rest attributes]
-  "
-  Draw a layer
+  And then:
+  (layer-1)
   "
   `(do
-     (setv ~g!layer (-> '~name
-                      str pineal.Layer.memo))
-     (set-attributes ~g!layer ~@attributes)
-     ~g!layer))
+     (.render (-> '~name
+                str pineal.Layer.memo)
+              (group [~@body]))
+
+     (defn ~name []
+       (setv ~g!layer (-> '~name
+                        str pineal.Layer.memo))
+       ~g!layer)))
 
 
 (defmacro set-attributes [entity &rest attributes]
