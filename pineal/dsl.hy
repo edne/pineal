@@ -101,7 +101,7 @@
           (group ...)]
 
          [\"scale\" 0.5]
-         [\"transate 0 1\"]
+         [\"translate 0 1\"]
          [\"fill\" 1 0 1])
   "
   `(do
@@ -127,6 +127,7 @@
 
   And then:
   (red-square)
+  (red-square 0.5)  ;; scaled by 0.5
   "
   ;; TODO (red-square r x)
   `(do
@@ -139,10 +140,18 @@
 
      (set-attributes ~g!group ~@attributes)
 
-     (defn ~name []
+     (defn ~name [&rest args]
+       ;; get group from memo
        (setv ~g!inner-group (-> '~name
                               str pineal.Group.memo))
-       ~g!inner-group)
+
+       (setv ~g!mult (if args           (first args)  1))
+       (setv ~g!add  (if (slice args 1) (second args) 0))
+
+       ;; group to apply transformations
+       (group [~g!inner-group]
+              ["scale"     ~g!mult]
+              ["translate" ~g!add]))
 
      ~g!group))
 
