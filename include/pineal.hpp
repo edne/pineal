@@ -80,13 +80,6 @@ class Group : public Drawable {
 
     protected:
         std::vector<Drawable*> elements;
-};
-
-class Transform : public Group {
-    void apply_attribute(std::string key, Signal s);
-    void draw(sf::RenderTarget* target, sf::RenderStates states);
-
-    private:
         sf::Transform sf_transform;
 };
 

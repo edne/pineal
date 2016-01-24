@@ -84,16 +84,22 @@
 
 (defmacro/g! group [entities &rest attributes]
   "
-  Group of drawable entities
-  forward attributes, innermost ones are setted after
+  Group of drawable entities and apply transformation
+  unmatched attributes are forwarded
+
+  Attributes:
+  - [translate x y]
+  - [rotate rad]
+  - [scale r]
+  - [scale x y]
 
   Example:
   (group [(polygon ...)
-          (group ...)
-          ...]
+          (group ...)]
 
-         [\"fill\" 1 0 1]
-         [...])
+         [\"scale\" 0.5]
+         [\"transate 0 1\"]
+         [\"fill\" 1 0 1])
   "
   `(do
      (setv ~g!group (pineal.Group))
@@ -105,36 +111,6 @@
      (set-attributes ~g!group ~@attributes)
 
      ~g!group))
-
-
-(defmacro/g! transform [entities &rest attributes]
-  "
-  Apply transformation to enitites
-  unmatched attributes are forwarded just like a group
-
-  Attributes:
-  - [translate x y]
-  - [rotate rad]
-  - [scale r]
-  - [scale x y]
-
-  Example:
-  (transform [(polygon ...)
-              (group ...)]
-
-             [\"scale\" 0.5]
-             [\"transate 0 1\"])
-  "
-  `(do
-     (setv ~g!transform (pineal.Transform))
-     (setv ~g!entities [~@entities])
-
-     (for [e ~g!entities]
-       (.add ~g!transform e))
-
-     (set-attributes ~g!transform ~@attributes)
-
-     ~g!transform))
 
 
 (defmacro/g! polygon [n &rest attributes]

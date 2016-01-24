@@ -35,24 +35,11 @@ void Entity::apply_all_attributes() {
 //
 
 // Group
-void Group::apply_attribute(string key, Signal s) {
-    for (Drawable *e : elements)
-        e->apply_attribute(key, s);
-}
-
 void Group::add(Drawable* d) {
     elements.push_back(d);
 }
 
-void Group::draw(sf::RenderTarget* target, sf::RenderStates states) {
-    apply_all_attributes();
-    for (Drawable *e : elements)
-        e->draw(target, states);
-}
-//
-
-// Transformation
-void Transform::apply_attribute(string key, Signal s) {
+void Group::apply_attribute(string key, Signal s) {
     check_attribute(2, "translate") {
         sf_transform.translate(s.x(), s.y());
         return;
@@ -77,7 +64,7 @@ void Transform::apply_attribute(string key, Signal s) {
         e->apply_attribute(key, s);
 }
 
-void Transform::draw(sf::RenderTarget* target, sf::RenderStates states) {
+void Group::draw(sf::RenderTarget* target, sf::RenderStates states) {
     sf_transform = sf::Transform();
     apply_all_attributes();
 
@@ -88,6 +75,7 @@ void Transform::draw(sf::RenderTarget* target, sf::RenderStates states) {
     }
 }
 //
+
 
 // Polygon
 Polygon::Polygon(int n) {

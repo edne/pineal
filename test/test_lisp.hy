@@ -4,7 +4,7 @@
 
 (loop
   (layer "render"
-         (transform
+         (group
            [(group
               [(polygon 4
                         ["fill" (color 0 1 1)]

@@ -22,7 +22,7 @@ def _test_python():
         g.add(p1)
         g.add(p2)
 
-        t = pineal.Transform()
+        t = pineal.Group()
         t.add(g)
         t.add(p3)
 
