@@ -62,11 +62,12 @@
   Set entity attributes
   internal
   "
-  `(for [attr [~@attributes]]
-     (let [[name   (-> attr first str)]
-           [values (rest attr)]
-           [signal (apply pineal.Signal values)]]
-       (.attribute ~entity name signal))))
+  (when attributes
+    `(let [[name   (str '~(first attributes))]
+           [value  ~(second attributes)]
+           [signal (apply pineal.Signal (flatten [value]))]]
+       (.attribute ~entity name signal)
+       (set-attributes ~entity ~@(slice attributes 2)))))
 
 
 (defmacro/g! group [entities &rest attributes]
@@ -84,9 +85,9 @@
   (group [(polygon ...)
           (group ...)]
 
-         [\"scale\" 0.5]
-         [\"translate 0 1\"]
-         [\"fill\" 1 0 1])
+         scale     0.5
+         translate [0 1]
+         fill      (color 1 0 1))
   "
   `(do
      (setv ~g!group (pineal.Group))
@@ -107,7 +108,7 @@
   Example:
   (alias red-square
          (polygon 4
-                  [\"fill\" 1 0 0]))
+                  fill (color 1 0 0)))
 
   And then:
   (red-square)
@@ -133,8 +134,8 @@
 
   Example:
   (polygon 4
-           [\"radius\" 2]
-           [\"stroke\" (color 0.5 0 0)])
+           radius 2
+           stroke (color 0.5 0 0))
   "
   `(do
      (setv ~g!entity (pineal.Polygon ~n))
