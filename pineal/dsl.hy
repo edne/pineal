@@ -1,17 +1,3 @@
-(defmacro loop [&rest body]
-  "
-  Outermost s-expression
-  executed every frame
-
-  Example:
-  (loop
-    (window ...))
-  "
-  `(defn loop []
-     (import pineal)
-     ~@body))
-
-
 (defmacro color [&rest values]
   "
   Generate a color
