@@ -14,20 +14,20 @@
   `(pineal.Color ~@values))
 
 
-(defmacro set-attributes [entity &rest attributes]
+(defmacro set-attrs [entity &rest attrs]
   "
   Set entity attributes
   internal
   "
-  (when attributes
-    `(let [[name   (str '~(first attributes))]
-           [value  ~(second attributes)]
+  (when attrs
+    `(let [[name   (str '~(first attrs))]
+           [value  ~(second attrs)]
            [signal (apply pineal.Signal (flatten [value]))]]
        (.attribute ~entity name signal)
-       (set-attributes ~entity ~@(slice attributes 2)))))
+       (set-attrs ~entity ~@(slice attrs 2)))))
 
 
-(defn attrs-from-args [args]
+(defn args:attrs [args]
   "
   Split args from attributes, using the : separator
   return the [args attrs] tuple
@@ -38,51 +38,6 @@
           [args*       (take i args)]]
       [args* attrs])
     [args []]))
-
-
-(defmacro/g! window [name &rest args]
-  "
-  Create and update a window called `name`
-  the body should be a sequence of drawable entities
-
-  Example:
-  (window main-window
-          (polygon ...)
-          (group ...)
-          ...)
-  "
-  (setv [body attrs] (attrs-from-args args))
-  `(do
-     (setv ~g!window (-> '~name
-                       str pineal.Window.memo))
-
-     (when (.is-open ~g!window)
-       (.render ~g!window
-                (group ~@body : ~@attrs)))))
-
-
-(defmacro/g! layer [name &rest args]
-  "
-  Offscreen drawing
-  draw on an layer
-
-  Example:
-  (layer layer-1
-         something ...)
-
-  And then:
-  (layer-1)
-  "
-  (setv [body attrs] (attrs-from-args args))
-  `(do
-     (.render (-> '~name
-                str pineal.Layer.memo)
-              (group ~@body : ~@attrs))
-
-     (defn ~name []
-       (setv ~g!layer (-> '~name
-                        str pineal.Layer.memo))
-       ~g!layer)))
 
 
 (defmacro/g! group [&rest args]
@@ -104,7 +59,7 @@
          translate [0 1]
          fill      (color 1 0 1))
   "
-  (setv [body attrs] (attrs-from-args args))
+  (setv [body attrs] (args:attrs args))
   `(do
      (setv ~g!group (pineal.Group))
      (setv ~g!entities [~@body])
@@ -112,9 +67,68 @@
      (for [e ~g!entities]
        (.add ~g!group e))
 
-     (set-attributes ~g!group ~@attrs)
+     (set-attrs ~g!group ~@attrs)
 
      ~g!group))
+
+
+(defmacro/g! window [name &rest args]
+  "
+  Create and update a window called `name`
+  the body should be a sequence of drawable entities
+
+  Example:
+  (window main-window
+          (polygon ...)
+          (group ...)
+          ...)
+  "
+  (setv [body attrs] (args:attrs args))
+  `(do
+     (setv ~g!window (-> '~name
+                       str pineal.Window.memo))
+
+     (when (.is-open ~g!window)
+       (.render ~g!window
+                (group ~@body : ~@attrs)))))
+
+
+(defmacro/g! make-callable [entity name]
+  "
+  Make a named entity callable
+  internal
+  "
+  `(defn ~name [&rest args]
+     (setv ~g!mult (if args           (first args)  1))
+     (setv ~g!add  (if (slice args 1) (second args) 0))
+
+     ;; group to apply transformations
+     (group  ~entity
+             :
+             scale     ~g!mult
+             translate ~g!add)))
+
+
+(defmacro/g! layer [name &rest args]
+  "
+  Offscreen drawing
+  draw on an layer
+
+  Example:
+  (layer layer-1
+         something ...)
+
+  And then:
+  (layer-1)
+  (layer-1 scale offset)
+  "
+  (setv [body attrs] (args:attrs args))
+  `(do
+     (setv ~g!layer (-> '~name str pineal.Layer.memo))
+     (.render ~g!layer
+              (group ~@body : ~@attrs))
+
+     (make-callable ~g!layer ~name)))
 
 
 (defmacro/g! alias [name &rest args]
@@ -129,12 +143,12 @@
 
   And then:
   (red-square)
+  (red-square scale offset)
   "
-  (setv [body attrs] (attrs-from-args args))
+  (setv [body attrs] (args:attrs args))
   `(do
      (setv ~g!entity (group ~@body : ~@attrs))
-     (defn ~name [&rest args]
-       ~g!entity)))
+     (make-callable ~g!entity ~name)))
 
 
 (defmacro/g! polygon [n &rest args]
@@ -155,8 +169,8 @@
            radius 2
            stroke (color 0.5 0 0))
   "
-  (setv [args* attrs] (attrs-from-args args))
+  (setv [args* attrs] (args:attrs args))
   `(do
      (setv ~g!entity (pineal.Polygon ~n))
-     (set-attributes ~g!entity ~@attrs)
+     (set-attrs ~g!entity ~@attrs)
      ~g!entity))

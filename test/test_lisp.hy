@@ -2,18 +2,18 @@
        (polygon 3
                 :
                 fill   (color 0 0 0 0)
-                stroke (color 1 1 0)
-                line   0.05
+                stroke (color 0 1 1)
+                line   0.02
                 radius 0.5))
 
 (alias g1
        (polygon 4
                 :
-                fill     (color 0 1 1)
+                fill     (color 0 1 1 0)
                 rotation (/ pi 4)
-                position [0.5 0.1]
+                position [0.1 0.05]
                 radius   0.5)
-       (polygon 8
+       (polygon 3
                 :
                 radius 0.2
                 stroke (color 0 0 1))
@@ -22,10 +22,11 @@
 
 (layer render
        (group
-         (g1)
+         (g1 0.7)
+         (triangle)
          :
-         line   0.05
-         fill   (color 0.5)
+         line   0.03
+         fill   (color 1)
          stroke (color 0 1 0)
          rotate (/ pi 6)))
 
