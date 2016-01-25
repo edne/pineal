@@ -58,7 +58,7 @@
 
      (when (.is-open ~g!window)
        (.render ~g!window
-                (group ~@body : ~@args)))))
+                (group ~@body : ~@attrs)))))
 
 
 (defmacro/g! layer [name &rest args]
