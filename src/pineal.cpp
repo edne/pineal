@@ -200,14 +200,10 @@ void Window::render(Drawable* child) {
     view.setCenter(0, 0);
     view.setSize(2, 2 * h/w);
 
-    Layer layer;
-
-    layer.render(child);
-
     render_window.clear(sf::Color::Black);
     render_window.setView(view);
 
-    layer.draw(&render_window, sf::RenderStates());
+    child->draw(&render_window, sf::RenderStates());
     render_window.display();
 }
 
