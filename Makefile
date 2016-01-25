@@ -28,7 +28,7 @@ run:
 	mkdir obj  || true
 	make clean
 	make build
-	./pineal-run.py test/test_lisp.hy
+	./pineal-run.py test/test.pn
 
 clean:
 	rm src/wrap.cpp        || true

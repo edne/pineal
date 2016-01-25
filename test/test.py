@@ -7,7 +7,7 @@ def test_dsl():
     "Test DSL"
     from pineal.visions import load
 
-    v = load("test/test_lisp.hy")
+    v = load("test/test.pn")
 
     start_time = time()
     while time() < start_time + 1:
@@ -45,15 +45,15 @@ def test_vision():
     "Test loading and changeing of a vision"
     from pineal.visions import load
 
-    with open("temp.hy", "w") as f:
+    with open("temp.pn", "w") as f:
         f.write("(+ 1 1)")
 
-    v = load("temp.hy")
+    v = load("temp.pn")
 
     sleep(1)
     assert v.loop() == 2
 
-    with open("temp.hy", "w") as f:
+    with open("temp.pn", "w") as f:
         f.write("(+ 1 2)")
 
     sleep(1)
@@ -62,4 +62,4 @@ def test_vision():
     v.stop()
     v.join()
 
-    os.remove("temp.hy")
+    os.remove("temp.pn")
