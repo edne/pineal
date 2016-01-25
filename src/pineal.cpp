@@ -7,8 +7,11 @@ static const double pi = 3.141592654;
 using namespace std;
 //using namespace std::__cxx11;
 
-#define check_attribute(__n, __name) \
-    if (s.n() == __n && !key.compare(__name))
+#define check_attribute(__n, __name, __code) \
+    if (s.n() == __n && !key.compare(__name)) { \
+        __code; \
+        return; \
+    }
 
 
 template<class T, typename K>
@@ -42,30 +45,20 @@ Group::Group(string name) : Group() {
 }
 
 void Group::apply_attribute(string key, Signal s) {
-    check_attribute(1, "translate") {
-        sf_transform.translate(s.x(), 0);
-        return;
-    }
+    check_attribute(1, "translate",
+                    sf_transform.translate(s.x(), 0));
 
-    check_attribute(2, "translate") {
-        sf_transform.translate(s.x(), s.y());
-        return;
-    }
+    check_attribute(2, "translate",
+                    sf_transform.translate(s.x(), s.y()));
 
-    check_attribute(1, "rotate") {
-        sf_transform.rotate(180 * s.x() / pi);
-        return;
-    }
+    check_attribute(1, "rotate",
+                    sf_transform.rotate(180 * s.x() / pi));
 
-    check_attribute(1, "scale") {
-        sf_transform.scale(s.x(), s.x());
-        return;
-    }
+    check_attribute(1, "scale",
+                    sf_transform.scale(s.x(), s.x()));
 
-    check_attribute(2, "scale") {
-        sf_transform.scale(s.x(), s.y());
-        return;
-    }
+    check_attribute(2, "scale",
+                    sf_transform.scale(s.x(), s.y()));
 
     for (Drawable *e : elements)
         e->apply_attribute(key, s);
@@ -96,29 +89,29 @@ Polygon::Polygon(int n) {
 void Polygon::apply_attribute(string key, Signal s) {
     Color c(s.x(), s.y(), s.z(), s.w());
 
-    check_attribute(1, "line")
-        return sf_shape.setOutlineThickness(s.x());
+    check_attribute(1, "line",
+                    sf_shape.setOutlineThickness(s.x()));
 
-    check_attribute(1, "rotation")
-        return sf_shape.setRotation(180 * s.x()/pi);
+    check_attribute(1, "rotation",
+                    sf_shape.setRotation(180 * s.x()/pi));
 
-    check_attribute(1, "radius")
-        return sf_shape.setScale(s.x(), s.x());
+    check_attribute(1, "radius",
+                    sf_shape.setScale(s.x(), s.x()));
 
-    check_attribute(2, "position")
-        return sf_shape.setPosition(s.x(), s.y());
+    check_attribute(2, "position",
+                    sf_shape.setPosition(s.x(), s.y()));
 
-    check_attribute(4, "fill")
-        return sf_shape.setFillColor(sf::Color(c.r()*255,
-                                               c.g()*255,
-                                               c.b()*255,
-                                               c.a()*255));
+    check_attribute(4, "fill",
+                    sf_shape.setFillColor(sf::Color(c.r()*255,
+                                                    c.g()*255,
+                                                    c.b()*255,
+                                                    c.a()*255)));
 
-    check_attribute(4, "stroke")
-        return sf_shape.setOutlineColor(sf::Color(c.r()*255,
-                                                  c.g()*255,
-                                                  c.b()*255,
-                                                  c.a()*255));
+    check_attribute(4, "stroke",
+                    sf_shape.setOutlineColor(sf::Color(c.r()*255,
+                                                       c.g()*255,
+                                                       c.b()*255,
+                                                       c.a()*255)));
 }
 
 void Polygon::draw(sf::RenderTarget* target, sf::RenderStates states) {
@@ -154,17 +147,17 @@ void Layer::render(Drawable* child) {
 }
 
 void Layer::apply_attribute(string key, Signal s) {
-    check_attribute(2, "p0")
-        return sf_shape.setPoint(0, sf::Vector2f(s.x(), s.y()));
+    check_attribute(2, "p0",
+                    sf_shape.setPoint(0, sf::Vector2f(s.x(), s.y())));
 
-    check_attribute(2, "p1")
-        return sf_shape.setPoint(1, sf::Vector2f(s.x(), s.y()));
+    check_attribute(2, "p1",
+                    sf_shape.setPoint(1, sf::Vector2f(s.x(), s.y())));
 
-    check_attribute(2, "p2")
-        return sf_shape.setPoint(2, sf::Vector2f(s.x(), s.y()));
+    check_attribute(2, "p2",
+                    sf_shape.setPoint(2, sf::Vector2f(s.x(), s.y())));
 
-    check_attribute(2, "p3")
-        return sf_shape.setPoint(3, sf::Vector2f(s.x(), s.y()));
+    check_attribute(2, "p3",
+                    sf_shape.setPoint(3, sf::Vector2f(s.x(), s.y())));
 }
 
 
