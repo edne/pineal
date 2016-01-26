@@ -5,7 +5,7 @@ syntax keyword pinealPrimitive polygon group layer window
 syntax keyword pinealAttribute translate rotate scale
 syntax keyword pinealAttribute line rotation radius position fill stroke
 syntax keyword pinealFunction  color
-syntax keyword pinealKeyword   alias
+syntax keyword pinealKeyword   alias draw
 
 
 syntax match pinealBraces "\v[{}\()\[\]]"

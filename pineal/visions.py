@@ -35,12 +35,7 @@ def load(file_name):
         with open(file_name) as f:
             code = f.read()
 
-        code = """(import pineal)
-                  (require pineal.dsl)
-                  (import [math [*]])
-
-                  (defn loop [] %s)
-                  """ % code
+        code = "(require pineal.dsl) (loop [] {})".format(code)
 
         history.append(code)
         eval_code()

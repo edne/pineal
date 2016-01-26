@@ -25,7 +25,7 @@
        (group (g1 1)
               (g1 0.8)
               (g1 0.7)
-              (triangle)
+              (draw render : scale 0.8)
               :
               line   0.03
               fill   (color 1)
@@ -33,5 +33,5 @@
               rotate (/ pi 6)))
 
 
-(window master   (render))
-(window overwiew (render))
+(window master   (draw render))
+(window overwiew (draw render))

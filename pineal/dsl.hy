@@ -1,3 +1,12 @@
+(defmacro loop [&rest body]
+  `(do
+     (import pineal)
+     (import [math [*]])
+
+     (defn loop []
+       ~@body)))
+
+
 (defmacro color [&rest values]
   "
   Generate a color
@@ -117,18 +126,23 @@
   Example:
   (layer layer-1
          something ...)
-
-  And then:
-  (layer-1)
-  (layer-1 scale offset)
   "
   (setv [body attrs] (args:attrs args))
   `(do
      (setv ~g!layer (-> '~name str pineal.Layer.memo))
      (.render ~g!layer
-              (group ~@body : ~@attrs))
+              (group ~@body : ~@attrs))))
 
-     (make-callable ~g!layer ~name)))
+
+(defmacro/g! draw [name &rest args]
+  "
+  Draw a layer
+  take tranformation attributes like a group
+  "
+  (setv [args* attrs] (args:attrs args))
+  `(do
+     (setv ~g!layer (-> '~name str pineal.Layer.memo))
+     (group ~g!layer : ~@attrs)))
 
 
 (defmacro/g! alias [name &rest args]
