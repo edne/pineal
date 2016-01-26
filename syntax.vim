@@ -8,8 +8,10 @@ syntax keyword pinealFunction  color
 syntax keyword pinealKeyword   alias
 
 
-syntax match pinealSplit  "\v:"
 syntax match pinealBraces "\v[{}\()\[\]]"
+syntax match pinealSplit  "\v:"
+
+syntax match pinealComment ";.*$"
 
 syntax match pinealNumber "\v<\d+>"
 syntax match pinealNumber "\v<\d+\.\d+>"
@@ -38,6 +40,7 @@ highlight link pinealAttribute Identifier
 highlight link pinealFunction  Function
 highlight link pinealBraces    Delimiter
 highlight link pinealSplit     Keyword
+highlight link pinealComment   Comment
 
 highlight link pinealNumber    Number
 highlight link pinealOperator  Operator
