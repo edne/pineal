@@ -3,7 +3,7 @@
      (import pineal)
      (import [math [*]])
 
-     (defn loop []
+     (defn --loop-- []
        ~@body)))
 
 
@@ -21,6 +21,21 @@
   (color 1 0.5)
   "
   `(pineal.Color ~@values))
+
+
+(defmacro/g! osc [name path]
+  `(do
+     (assoc --values-- (str '~name) 0.0)
+
+     (defn ~g!callback [path args]
+       (setv [value] args)
+       (assoc --values-- (str '~name) value))
+
+     (.add-method --server--
+                  (str '~path) "f" ~g!callback)
+
+     (defn ~name []
+       (get --values-- (str '~name)))))
 
 
 (defmacro set-attrs [entity &rest attrs]

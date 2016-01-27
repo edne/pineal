@@ -1,4 +1,5 @@
 import logging
+import liblo
 import hy
 
 from pineal.utils import watch_file
@@ -13,6 +14,11 @@ def load(file_name):
 
     ns = {}  # execution namespace
     history = []  # history of file changes
+
+    server = liblo.ServerThread(7172)
+    server.start()
+    ns["__server__"] = server
+    ns["__values__"] = {}
 
     def eval_code():
         "Run last code in the history, if available"
@@ -50,7 +56,7 @@ def load(file_name):
         def loop():
             "Main iteration, handel errors"
             try:
-                return ns["loop"]()
+                return ns["__loop__"]()
             except Exception as e:
                 logger.error(e)
                 history.pop()
@@ -60,6 +66,7 @@ def load(file_name):
         def stop():
             "Ask watcher to stop"
             watcher.stop()
+            server.stop()
 
         @staticmethod
         def join():
