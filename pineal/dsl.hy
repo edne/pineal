@@ -28,19 +28,20 @@
      (defn ~g!callback [path args]
        (setv [value] args)
 
-       (setv ~g!signal (-> '~name
+       (setv ~g!signal (-> '~path
                          str pineal.Signal.memo))
-       (.set-x ~g!signal value)
-       (setv ~g!value value)
-       (assoc --values-- (str '~name) value))
+       (.set-x ~g!signal value))
 
      (.add-method --server--
                   (str '~path) "f" ~g!callback)
 
-     (defn ~name []
-       (setv ~g!signal (-> '~name
+     (defn ~name [&rest args]
+       (setv ~g!mult (if args           (first args)  1))
+       (setv ~g!add  (if (slice args 1) (second args) 0))
+
+       (setv ~g!signal (-> '~path
                          str pineal.Signal.memo))
-       (.x ~g!signal))))
+       (-> (.x ~g!signal) (* ~g!mult) (+ ~g!add)))))
 
 
 (defmacro set-attrs [entity &rest attrs]

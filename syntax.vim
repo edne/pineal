@@ -1,16 +1,18 @@
 " Just a sketch
 " (suggested Jellybeans colorscheme)
 
+set filetype=scheme  " to enable paredit
+
 syntax keyword pinealPrimitive polygon group layer window
 syntax keyword pinealAttribute translate rotate scale
 syntax keyword pinealAttribute line rotation radius position fill stroke
 syntax keyword pinealFunction  color
-syntax keyword pinealKeyword   alias draw
+syntax keyword pinealKeyword   osc alias draw
 
 
-syntax match pinealBraces "\v[{}\()\[\]]"
-syntax match pinealSplit  "\v:"
-
+syntax match pinealBraces  "\v[{}\()\[\]]"
+syntax match pinealSplit   "\v:"
+syntax match pinealPath    "\v/\w*"
 syntax match pinealComment ";.*$"
 
 syntax match pinealNumber "\v<\d+>"
@@ -21,9 +23,9 @@ syntax match pinealNumber "\v<0b[01]+>"
 syntax match pinealNumber "\v<0o\o+>"
 
 syntax match pinealOperator "\v\*"
-syntax match pinealOperator "\v/"
 syntax match pinealOperator "\v\+"
 syntax match pinealOperator "\v-"
+"syntax match pinealOperator "\v/"
 syntax match pinealOperator "\v\?"
 syntax match pinealOperator "\v\*\="
 syntax match pinealOperator "\v/\="
@@ -40,6 +42,7 @@ highlight link pinealAttribute Identifier
 highlight link pinealFunction  Function
 highlight link pinealBraces    Delimiter
 highlight link pinealSplit     Keyword
+highlight link pinealPath      String
 highlight link pinealComment   Comment
 
 highlight link pinealNumber    Number
