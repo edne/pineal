@@ -18,7 +18,6 @@ def load(file_name):
     server = liblo.ServerThread(7172)
     server.start()
     ns["__server__"] = server
-    ns["__values__"] = {}
 
     def eval_code():
         "Run last code in the history, if available"

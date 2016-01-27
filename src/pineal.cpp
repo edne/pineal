@@ -25,6 +25,12 @@ T* memorize(K name) {
     return memory[name].get();
 }
 
+// Signal
+Signal* Signal::memo(string name) {
+    return memorize<Signal>(name);
+}
+//
+
 // Entity
 void Entity::attribute(string key, Signal s) {
     attributes[key] = s;

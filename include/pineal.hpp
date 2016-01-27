@@ -21,6 +21,15 @@ class Signal {
         Signal(Signal* s)
         : xs{s->x(), s->y(), s->z(), s->w()}, n_(s->n()) {};
 
+        Signal(std::string name) : Signal() {};
+
+        static Signal* memo(std::string name);
+
+        void set_x(double x) { xs[0] = x; }
+        void set_y(double y) { xs[1] = y; }
+        void set_z(double z) { xs[2] = z; }
+        void set_w(double w) { xs[3] = w; }
+
         double x() { return xs[0]; }
         double y() { return xs[1]; }
         double z() { return xs[2]; }

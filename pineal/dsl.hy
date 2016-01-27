@@ -25,17 +25,22 @@
 
 (defmacro/g! osc [name path]
   `(do
-     (assoc --values-- (str '~name) 0.0)
-
      (defn ~g!callback [path args]
        (setv [value] args)
+
+       (setv ~g!signal (-> '~name
+                         str pineal.Signal.memo))
+       (.set-x ~g!signal value)
+       (setv ~g!value value)
        (assoc --values-- (str '~name) value))
 
      (.add-method --server--
                   (str '~path) "f" ~g!callback)
 
      (defn ~name []
-       (get --values-- (str '~name)))))
+       (setv ~g!signal (-> '~name
+                         str pineal.Signal.memo))
+       (.x ~g!signal))))
 
 
 (defmacro set-attrs [entity &rest attrs]
