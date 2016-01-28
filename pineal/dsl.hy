@@ -23,14 +23,14 @@
   `(pineal.Color ~@values))
 
 
-(defmacro/g! osc [name path]
+(defmacro/g! osc-value [name path]
   `(do
      (defn ~g!callback [path args]
-       (setv [value] args)
+       (setv [~g!value] args)
 
        (setv ~g!signal (-> '~path
                          str pineal.Signal.memo))
-       (.set-x ~g!signal value))
+       (.set-x ~g!signal ~g!value))
 
      (.add-method --server--
                   (str '~path) "f" ~g!callback)
@@ -42,6 +42,12 @@
        (setv ~g!signal (-> '~path
                          str pineal.Signal.memo))
        (-> (.x ~g!signal) (* ~g!mult) (+ ~g!add)))))
+
+
+(defmacro/g! osc-send [value path]
+  `(do
+     (import liblo)
+     (liblo.send --target-- (str '~path) ~value)))
 
 
 (defmacro set-attrs [entity &rest attrs]

@@ -1,12 +1,17 @@
-(osc val /tri/line)
+(osc-value tri-line /tri/line)
+(osc-value quad-line /quad/line)
+
+(osc-send 0.01 /quad/line)
 
 (alias triangle
        (polygon 3
                 :
-                fill   (color 0 0 0 0)
+                fill   (color 0 1 0 0)
                 stroke (color 0 1 1)
-                line   (val 0.5)
+                line   (tri-line 0.5)
                 radius 0.5))
+
+(alias square (polygon 4))
 
 (alias g1
        (polygon 4
@@ -17,24 +22,25 @@
                 radius   0.5)
        (polygon 3
                 :
-                radius 0.2
-                line   0.5
-                fill   (color 0 1 1 0.5)
+                radius 0.5
+                line   0.05
+                fill   (color 0 1 1 0.1)
                 stroke (color 0 0 1))
        (triangle))
 
+(alias g2
+       (group
+         (square)
+         :
+         depth  100
+         scale  0.9
+         translate 0.0
+         line     (quad-line)
+         fill     (color 0 1 1 0.1)
+         stroke (color 1 1 1)
+         rotate (/ pi 6)))
 
-(layer render
-       (group (g1 1)
-              (g1 0.8)
-              (g1 0.7)
-              (draw render : scale 0.8)
-              :
-              line   0.03
-              fill   (color 1)
-              stroke (color 0 1 0)
-              rotate (/ pi 6)))
 
 
-(window master   (draw render))
-(window overwiew (draw render))
+(window master (g2))
+;(window overwiew (g2))

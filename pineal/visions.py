@@ -19,6 +19,9 @@ def load(file_name):
     server.start()
     ns["__server__"] = server
 
+    target = liblo.Address(7172)
+    ns["__target__"] = target
+
     def eval_code():
         "Run last code in the history, if available"
         if history:
@@ -65,7 +68,6 @@ def load(file_name):
         def stop():
             "Ask watcher to stop"
             watcher.stop()
-            server.stop()
 
         @staticmethod
         def join():
