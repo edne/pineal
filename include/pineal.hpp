@@ -81,7 +81,7 @@ class Drawable : public Entity {
 
 class Group : public Drawable {
     public:
-        Group() {};
+        Group() : depth(1) {};
         Group(std::string name);
 
         void add(Drawable* d);
@@ -91,6 +91,7 @@ class Group : public Drawable {
     protected:
         std::vector<Drawable*> elements;
         sf::Transform sf_transform;
+        int depth;
 };
 
 class Polygon : public Drawable {

@@ -51,6 +51,9 @@ Group::Group(string name) : Group() {
 }
 
 void Group::apply_attribute(string key, Signal s) {
+    check_attribute(1, "depth",
+                    depth = s.x());
+
     check_attribute(1, "translate",
                     sf_transform.translate(s.x(), 0));
 
@@ -74,10 +77,12 @@ void Group::draw(sf::RenderTarget* target, sf::RenderStates states) {
     sf_transform = sf::Transform();
     apply_all_attributes();
 
-    states.transform *= sf_transform;
+    for (int i = 0; i < depth; i++) {
+        states.transform *= sf_transform;
 
-    for (Drawable *e : elements) {
-        e->draw(target, states);
+        for (Drawable *e : elements) {
+            e->draw(target, states);
+        }
     }
 }
 //
