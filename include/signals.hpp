@@ -20,8 +20,6 @@ class Signal {
 
         Signal(std::string name) : Signal() {};
 
-        static Signal* memo(std::string name);
-
         void set_x(double x) { xs[0] = x; }
         void set_y(double y) { xs[1] = y; }
         void set_z(double z) { xs[2] = z; }

@@ -1,7 +1,7 @@
 (osc-value tri-line /tri/line)
 (osc-value quad-line /quad/line)
 
-(osc-send 0.01 /quad/line)
+;(osc-send 0.01 /quad/line)
 
 (alias triangle
        (polygon 3

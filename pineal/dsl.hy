@@ -24,24 +24,19 @@
 
 
 (defmacro/g! osc-value [name path]
-  `(do
-     (defn ~g!callback [path args]
-       (setv [~g!value] args)
+  `(defn ~name [&rest args]
+     (setv ~g!mult (if args           (first args)  1))
+     (setv ~g!add  (if (slice args 1) (second args) 0))
 
-       (setv ~g!signal (-> '~path
-                         str pineal.Signal.memo))
-       (.set-x ~g!signal ~g!value))
+     ;; TODO handle multidimensional messages
+     (setv ~g!value (first (.get --osc--
+                                 (str '~path) [0.0])))
+     (setv ~g!value
+       (try (float ~g!value)
+         (catch [] 0.0)))
 
-     (.add-method --server--
-                  (str '~path) "f" ~g!callback)
-
-     (defn ~name [&rest args]
-       (setv ~g!mult (if args           (first args)  1))
-       (setv ~g!add  (if (slice args 1) (second args) 0))
-
-       (setv ~g!signal (-> '~path
-                         str pineal.Signal.memo))
-       (-> (.x ~g!signal) (* ~g!mult) (+ ~g!add)))))
+     (-> ~g!value
+       (* ~g!mult) (+ ~g!add))))
 
 
 (defmacro/g! osc-send [value path]
