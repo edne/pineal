@@ -17,6 +17,7 @@ def load(file_name):
 
     server = liblo.ServerThread(7172)
     server.start()
+    ns["__server__"] = server
     ns["__osc__"] = {}
 
     def callback(path, msg):

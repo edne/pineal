@@ -35,7 +35,7 @@
          depth  100
          scale  0.9
          translate 0.0
-         line     0.1
+         line     (quad-line)
          fill     (color 0 1 1 0.1)
          stroke (color 1 1 1)
          rotate (/ pi 6)))
