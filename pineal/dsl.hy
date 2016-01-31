@@ -20,7 +20,14 @@
   Example:
   (color 1 0.5)
   "
-  `(pineal.Color ~@values))
+  `(let [[xs [~@values]]
+         [l  (len xs)]]
+     (cond
+       [(= l 1) (let [[[x]        xs]] [x x x 1])]
+       [(= l 2) (let [[[x a]      xs]] [x x x a])]
+       [(= l 3) (let [[[r g b]    xs]] [r g b 1])]
+       [(= l 4) (let [[[r g b  a] xs]] [r g b a])]
+       [true [0 0 0 0]])))
 
 
 (defmacro/g! osc-value [name path]

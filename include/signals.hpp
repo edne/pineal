@@ -36,23 +36,3 @@ class Signal {
         double xs[4];
         int n_;
 };
-
-class Color : public Signal {
-    public:
-        Color(double r, double g, double b, double a)
-            : Signal(r, g, b, a) {};
-
-        Color(double r, double g, double b)
-            : Signal(r, g, b, 1) {};
-
-        Color(double x, double a)
-            : Signal(x, x, x, a) {};
-
-        Color(double x)
-            : Signal(x, x, x, 1) {};
-
-        double r() { return x(); }
-        double g() { return y(); }
-        double b() { return z(); }
-        double a() { return w(); }
-};

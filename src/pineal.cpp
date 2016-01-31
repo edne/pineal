@@ -92,8 +92,6 @@ Polygon::Polygon(int n) {
 }
 
 void Polygon::apply_attribute(string key, Signal s) {
-    Color c(s.x(), s.y(), s.z(), s.w());
-
     check_attribute(1, "line",
                     sf_shape.setOutlineThickness(s.x()));
 
@@ -107,16 +105,16 @@ void Polygon::apply_attribute(string key, Signal s) {
                     sf_shape.setPosition(s.x(), s.y()));
 
     check_attribute(4, "fill",
-                    sf_shape.setFillColor(sf::Color(c.r()*255,
-                                                    c.g()*255,
-                                                    c.b()*255,
-                                                    c.a()*255)));
+                    sf_shape.setFillColor(sf::Color(s.x()*255,
+                                                    s.y()*255,
+                                                    s.z()*255,
+                                                    s.w()*255)));
 
     check_attribute(4, "stroke",
-                    sf_shape.setOutlineColor(sf::Color(c.r()*255,
-                                                       c.g()*255,
-                                                       c.b()*255,
-                                                       c.a()*255)));
+                    sf_shape.setOutlineColor(sf::Color(s.x()*255,
+                                                       s.y()*255,
+                                                       s.z()*255,
+                                                       s.w()*255)));
 }
 
 void Polygon::draw(sf::RenderTarget* target, sf::RenderStates states) {
