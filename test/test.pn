@@ -40,7 +40,8 @@
          stroke (color 1 1 1)
          rotate (/ pi 6)))
 
+(layer layer-1 (g2))
 
 
-(window master (g2))
+(window master (draw layer-1))
 ;(window overwiew (g2))

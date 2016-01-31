@@ -21,7 +21,6 @@ class Drawable : public Entity {
 class Group : public Drawable {
     public:
         Group() : depth(1) {};
-        Group(std::string name);
 
         void add(Drawable* d);
         virtual void apply_attribute(std::string key, Signal s);
@@ -48,7 +47,6 @@ class Layer : public Drawable {
     public:
         Layer();
         Layer(std::string name);
-        static Layer* memo(std::string name);
 
         void render(Drawable* child);
         void apply_attribute(std::string key, Signal s);
@@ -63,11 +61,20 @@ class Layer : public Drawable {
 class Window : public Entity {
     public:
         Window(std::string name);
-        static Window* memo(std::string name);
-
         void render(Drawable* child);
-        bool is_open();
 
     private:
         sf::RenderWindow render_window;
 };
+
+Window*  window(std::string name);
+Layer*   layer(std::string name);
+Polygon  polygon(int n);
+Group    group();
+
+void render(Window* w, Drawable* child);
+void render(Layer*  l, Drawable* child);
+
+void add(Group *g, Drawable* d);
+
+void attribute(Entity *e, std::string key, Signal s);

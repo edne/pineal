@@ -41,8 +41,6 @@ void Entity::apply_all_attributes() {
 void Group::add(Drawable* d) {
     elements.push_back(d);
 }
-Group::Group(string name) : Group() {
-}
 
 void Group::apply_attribute(string key, Signal s) {
     check_attribute(1, "depth",
@@ -173,10 +171,6 @@ void Layer::draw(sf::RenderTarget* target, sf::RenderStates states) {
     sf_shape.setTexture(&texture);
     target->draw(sf_shape, states);
 }
-
-Layer* Layer::memo(string name) {
-    return memorize<Layer>(name);
-}
 //
 
 // Window
@@ -184,11 +178,10 @@ Window::Window(string name) {
     render_window.create(sf::VideoMode(800, 600), name);
 }
 
-bool Window::is_open() {
-    return render_window.isOpen();
-}
-
 void Window::render(Drawable* child) {
+    if (!render_window.isOpen())
+        return;
+
     sf::Event event;
 
     while (render_window.pollEvent(event)) {
@@ -209,8 +202,36 @@ void Window::render(Drawable* child) {
     child->draw(&render_window, sf::RenderStates());
     render_window.display();
 }
+//
 
-Window* Window::memo(string name) {
+Window* window(std::string name) {
     return memorize<Window>(name);
 }
-//
+
+Layer* layer(std::string name) {
+    return memorize<Layer>(name);
+}
+
+Polygon polygon(int n) {
+    return Polygon(n);
+}
+
+Group group() {
+    return Group();
+}
+
+void render(Window* w, Drawable* child) {
+    w->render(child);
+}
+
+void render(Layer* l, Drawable* child) {
+    l->render(child);
+}
+
+void add(Group *g, Drawable* d) {
+    g->add(d);
+}
+
+void attribute(Entity *e, std::string key, Signal s) {
+    e->attribute(key, s);
+}

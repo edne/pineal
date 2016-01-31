@@ -61,7 +61,7 @@
     `(let [[name   (str '~(first attrs))]
            [value  ~(second attrs)]
            [signal (apply core.Signal (flatten [value]))]]
-       (.attribute ~entity name signal)
+       (core.attribute ~entity name signal)
        (set-attrs ~entity ~@(slice attrs 2)))))
 
 
@@ -99,11 +99,11 @@
   "
   (setv [body attrs] (args:attrs args))
   `(do
-     (setv ~g!group (core.Group))
+     (setv ~g!group (core.group))
      (setv ~g!entities [~@body])
 
      (for [e ~g!entities]
-       (.add ~g!group e))
+       (core.add ~g!group e))
 
      (set-attrs ~g!group ~@attrs)
 
@@ -124,11 +124,10 @@
   (setv [body attrs] (args:attrs args))
   `(do
      (setv ~g!window (-> '~name
-                       str core.Window.memo))
+                       str core.window))
 
-     (when (.is-open ~g!window)
-       (.render ~g!window
-                (group ~@body : ~@attrs)))))
+     (core.render ~g!window
+                  (group ~@body : ~@attrs))))
 
 
 (defmacro/g! make-callable [entity name]
@@ -158,9 +157,9 @@
   "
   (setv [body attrs] (args:attrs args))
   `(do
-     (setv ~g!layer (-> '~name str core.Layer.memo))
-     (.render ~g!layer
-              (group ~@body : ~@attrs))))
+     (setv ~g!layer (-> '~name str core.layer))
+     (core.render ~g!layer
+                  (group ~@body : ~@attrs))))
 
 
 (defmacro/g! draw [name &rest args]
@@ -170,7 +169,7 @@
   "
   (setv [args* attrs] (args:attrs args))
   `(do
-     (setv ~g!layer (-> '~name str core.Layer.memo))
+     (setv ~g!layer (-> '~name str core.layer))
      (group ~g!layer : ~@attrs)))
 
 
@@ -214,6 +213,6 @@
   "
   (setv [args* attrs] (args:attrs args))
   `(do
-     (setv ~g!entity (core.Polygon ~n))
+     (setv ~g!entity (core.polygon ~n))
      (set-attrs ~g!entity ~@attrs)
      ~g!entity))
