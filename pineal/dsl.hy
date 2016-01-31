@@ -1,6 +1,6 @@
 (defmacro loop [&rest body]
   `(do
-     (import pineal)
+     (import [pineal.core :as core])
      (import [math [*]])
 
      (defn --loop-- []
@@ -60,7 +60,7 @@
   (when attrs
     `(let [[name   (str '~(first attrs))]
            [value  ~(second attrs)]
-           [signal (apply pineal.Signal (flatten [value]))]]
+           [signal (apply core.Signal (flatten [value]))]]
        (.attribute ~entity name signal)
        (set-attrs ~entity ~@(slice attrs 2)))))
 
@@ -99,7 +99,7 @@
   "
   (setv [body attrs] (args:attrs args))
   `(do
-     (setv ~g!group (pineal.Group))
+     (setv ~g!group (core.Group))
      (setv ~g!entities [~@body])
 
      (for [e ~g!entities]
@@ -124,7 +124,7 @@
   (setv [body attrs] (args:attrs args))
   `(do
      (setv ~g!window (-> '~name
-                       str pineal.Window.memo))
+                       str core.Window.memo))
 
      (when (.is-open ~g!window)
        (.render ~g!window
@@ -158,7 +158,7 @@
   "
   (setv [body attrs] (args:attrs args))
   `(do
-     (setv ~g!layer (-> '~name str pineal.Layer.memo))
+     (setv ~g!layer (-> '~name str core.Layer.memo))
      (.render ~g!layer
               (group ~@body : ~@attrs))))
 
@@ -170,7 +170,7 @@
   "
   (setv [args* attrs] (args:attrs args))
   `(do
-     (setv ~g!layer (-> '~name str pineal.Layer.memo))
+     (setv ~g!layer (-> '~name str core.Layer.memo))
      (group ~g!layer : ~@attrs)))
 
 
@@ -214,6 +214,6 @@
   "
   (setv [args* attrs] (args:attrs args))
   `(do
-     (setv ~g!entity (pineal.Polygon ~n))
+     (setv ~g!entity (core.Polygon ~n))
      (set-attrs ~g!entity ~@attrs)
      ~g!entity))

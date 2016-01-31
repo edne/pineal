@@ -34,7 +34,7 @@ clean:
 	rm src/wrap.cpp        || true
 	rm $(OBJ_FILES)        || true
 	rm $(NAME)/_$(NAME).so || true
-	rm $(NAME)/__init__.py || true
+	rm $(NAME)/core.py     || true
 
 build: $(NAME)/_$(NAME).so
 
@@ -44,7 +44,7 @@ test:
 src/wrap.cpp: $(NAME).i
 	swig -Wall -Wextra -Iinclude -module $(NAME) -c++ -python $<
 	mv $(NAME)_wrap.cxx src/wrap.cpp
-	mv $(NAME).py $(NAME)/__init__.py
+	mv $(NAME).py $(NAME)/core.py
 
 obj/%.o: src/%.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
