@@ -37,48 +37,6 @@ void Entity::apply_all_attributes() {
 }
 //
 
-// Group
-void Group::add(Drawable* d) {
-    elements.push_back(d);
-}
-
-void Group::apply_attribute(string key, Signal s) {
-    check_attribute(1, "depth",
-                    depth = s.x());
-
-    check_attribute(1, "translate",
-                    sf_transform.translate(s.x(), 0));
-
-    check_attribute(2, "translate",
-                    sf_transform.translate(s.x(), s.y()));
-
-    check_attribute(1, "rotate",
-                    sf_transform.rotate(180 * s.x() / pi));
-
-    check_attribute(1, "scale",
-                    sf_transform.scale(s.x(), s.x()));
-
-    check_attribute(2, "scale",
-                    sf_transform.scale(s.x(), s.y()));
-
-    for (Drawable *e : elements)
-        e->apply_attribute(key, s);
-}
-
-void Group::draw(sf::RenderTarget* target, sf::RenderStates states) {
-    sf_transform = sf::Transform();
-    apply_all_attributes();
-
-    for (int i = 0; i < depth; i++) {
-        states.transform *= sf_transform;
-
-        for (Drawable *e : elements) {
-            e->draw(target, states);
-        }
-    }
-}
-//
-
 
 // Polygon
 Polygon::Polygon(int n) {
@@ -216,21 +174,12 @@ Polygon polygon(int n) {
     return Polygon(n);
 }
 
-Group group() {
-    return Group();
-}
-
 void render(Window* w, Drawable* child) {
     w->render(child);
 }
 
 void render(Layer* l, Drawable* child) {
     l->render(child);
-}
-
-Group add(Group g, Drawable* d) {
-    g.add(d);
-    return g;
 }
 
 void attribute(Entity *e, std::string key, Signal s) {

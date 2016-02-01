@@ -78,39 +78,7 @@
     [args []]))
 
 
-(defmacro/g! group [&rest args]
-  "
-  Group of drawable entities and apply transformation
-  unmatched attributes are forwarded
-
-  Attributes:
-  - [translate x y]
-  - [rotate rad]
-  - [scale r]
-  - [scale x y]
-
-  Example:
-  (group (polygon ...)
-         (group ...)
-         :
-         scale     0.5
-         translate [0 1]
-         fill      (color 1 0 1))
-  "
-  (setv [body attrs] (args:attrs args))
-  `(do
-     (setv ~g!group (core.group))
-     (setv ~g!entities [~@body])
-
-     (for [e ~g!entities]
-       (setv ~g!group (core.add ~g!group e)))
-
-     (set-attrs ~g!group ~@attrs)
-
-     ~g!group))
-
-
-(defmacro/g! window [name &rest args]
+(defmacro/g! window [name body]
   "
   Create and update a window called `name`
   the body should be a sequence of drawable entities
@@ -118,35 +86,17 @@
   Example:
   (window main-window
           (polygon ...)
-          (group ...)
           ...)
   "
-  (setv [body attrs] (args:attrs args))
   `(do
      (setv ~g!window (-> '~name
                        str core.window))
 
      (core.render ~g!window
-                  (group ~@body : ~@attrs))))
+                  ~body)))
 
 
-(defmacro/g! make-callable [entity name]
-  "
-  Make a named entity callable
-  internal
-  "
-  `(defn ~name [&rest args]
-     (setv ~g!mult (if args           (first args)  1))
-     (setv ~g!add  (if (slice args 1) (second args) 0))
-
-     ;; group to apply transformations
-     (group  ~entity
-             :
-             scale     ~g!mult
-             translate ~g!add)))
-
-
-(defmacro/g! layer [name &rest args]
+(defmacro/g! layer [name body]
   "
   Offscreen drawing
   draw on an layer
@@ -155,25 +105,22 @@
   (layer layer-1
          something ...)
   "
-  (setv [body attrs] (args:attrs args))
   `(do
      (setv ~g!layer (-> '~name str core.layer))
      (core.render ~g!layer
-                  (group ~@body : ~@attrs))))
+                  ~body)))
 
 
-(defmacro/g! draw [name &rest args]
+(defmacro/g! draw [name]
   "
   Draw a layer
-  take tranformation attributes like a group
   "
-  (setv [args* attrs] (args:attrs args))
   `(do
      (setv ~g!layer (-> '~name str core.layer))
-     (group ~g!layer : ~@attrs)))
+     ~g!layer))
 
 
-(defmacro/g! alias [name &rest args]
+(defmacro/g! alias [name body]
   "
   Alias to an entity
 
@@ -185,12 +132,15 @@
 
   And then:
   (red-square)
-  (red-square scale offset)
   "
-  (setv [body attrs] (args:attrs args))
   `(do
-     (setv ~g!entity (group ~@body : ~@attrs))
-     (make-callable ~g!entity ~name)))
+     (setv ~g!entity ~body)
+
+     (defn ~name [&rest args]
+       (setv ~g!mult (if args           (first args)  1))
+       (setv ~g!add  (if (slice args 1) (second args) 0))
+
+       ~g!entity)))
 
 
 (defmacro/g! polygon [n &rest args]
