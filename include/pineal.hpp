@@ -1,18 +1,8 @@
 #include <SFML/Graphics.hpp>
 #include <signals.hpp>
 
-class Entity {
-    public:
-        void attribute(std::string key, Signal s);
-        void apply_all_attributes();
-        virtual void apply_attribute(std::string key, Signal s) {};
-        virtual ~Entity() {};
 
-    protected:
-        std::map<std::string, Signal> attributes;
-};
-
-class Drawable : public Entity {
+class Drawable {
     public:
         virtual void draw(sf::RenderTarget* target, sf::RenderStates states) {};
         virtual ~Drawable() {};
@@ -23,11 +13,14 @@ class Polygon : public Drawable {
     public:
         Polygon(int);
 
+        void attribute(std::string key, Signal s);
+        void apply_all_attributes();
         void apply_attribute(std::string key, Signal s);
         void draw(sf::RenderTarget* target, sf::RenderStates states);
 
     protected:
         sf::CircleShape sf_shape;
+        std::map<std::string, Signal> attributes;
 };
 
 class Layer : public Drawable {
@@ -36,7 +29,6 @@ class Layer : public Drawable {
         Layer(std::string name);
 
         void render(Drawable* child);
-        void apply_attribute(std::string key, Signal s);
         void draw(sf::RenderTarget* target, sf::RenderStates states);
 
     private:
@@ -45,7 +37,7 @@ class Layer : public Drawable {
         double w, h;
 };
 
-class Window : public Entity {
+class Window {
     public:
         Window(std::string name);
         void render(Drawable* child);
@@ -61,4 +53,4 @@ Polygon  polygon(int n);
 void render(Window* w, Drawable* child);
 void render(Layer*  l, Drawable* child);
 
-void attribute(Entity *e, std::string key, Signal s);
+void attribute(Polygon *p, std::string key, Signal s);

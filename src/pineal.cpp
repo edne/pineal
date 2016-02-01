@@ -25,18 +25,6 @@ T* memorize(K name) {
     return memory[name].get();
 }
 
-// Entity
-void Entity::attribute(string key, Signal s) {
-    attributes[key] = s;
-}
-
-void Entity::apply_all_attributes() {
-    for (const auto& p : attributes) {
-        apply_attribute(p.first, p.second);
-    }
-}
-//
-
 
 // Polygon
 Polygon::Polygon(int n) {
@@ -45,6 +33,16 @@ Polygon::Polygon(int n) {
     sf_shape.setPointCount(n);
 
     sf_shape.setOrigin(r, r);
+}
+
+void Polygon::attribute(string key, Signal s) {
+    attributes[key] = s;
+}
+
+void Polygon::apply_all_attributes() {
+    for (const auto& p : attributes) {
+        apply_attribute(p.first, p.second);
+    }
 }
 
 void Polygon::apply_attribute(string key, Signal s) {
@@ -105,24 +103,8 @@ void Layer::render(Drawable* child) {
     render_texture.display();
 }
 
-void Layer::apply_attribute(string key, Signal s) {
-    check_attribute(2, "p0",
-                    sf_shape.setPoint(0, sf::Vector2f(s.x(), s.y())));
-
-    check_attribute(2, "p1",
-                    sf_shape.setPoint(1, sf::Vector2f(s.x(), s.y())));
-
-    check_attribute(2, "p2",
-                    sf_shape.setPoint(2, sf::Vector2f(s.x(), s.y())));
-
-    check_attribute(2, "p3",
-                    sf_shape.setPoint(3, sf::Vector2f(s.x(), s.y())));
-}
-
 
 void Layer::draw(sf::RenderTarget* target, sf::RenderStates states) {
-    apply_all_attributes();
-
     const sf::Texture& texture = render_texture.getTexture();
     sf::Sprite sprite(texture);
 
@@ -182,6 +164,6 @@ void render(Layer* l, Drawable* child) {
     l->render(child);
 }
 
-void attribute(Entity *e, std::string key, Signal s) {
-    e->attribute(key, s);
+void attribute(Polygon *p, std::string key, Signal s) {
+    p->attribute(key, s);
 }
