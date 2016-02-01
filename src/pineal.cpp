@@ -228,8 +228,9 @@ void render(Layer* l, Drawable* child) {
     l->render(child);
 }
 
-void add(Group *g, Drawable* d) {
-    g->add(d);
+Group add(Group g, Drawable* d) {
+    g.add(d);
+    return g;
 }
 
 void attribute(Entity *e, std::string key, Signal s) {

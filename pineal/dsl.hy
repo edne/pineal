@@ -103,7 +103,7 @@
      (setv ~g!entities [~@body])
 
      (for [e ~g!entities]
-       (core.add ~g!group e))
+       (setv ~g!group (core.add ~g!group e)))
 
      (set-attrs ~g!group ~@attrs)
 

@@ -75,6 +75,6 @@ Group    group();
 void render(Window* w, Drawable* child);
 void render(Layer*  l, Drawable* child);
 
-void add(Group *g, Drawable* d);
+Group add(Group g, Drawable* d);
 
 void attribute(Entity *e, std::string key, Signal s);
