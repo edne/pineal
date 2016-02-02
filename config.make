@@ -37,7 +37,7 @@
 #
 #   Note: Leave a leading space when adding list items with the += operator
 ################################################################################
-# PROJECT_EXTERNAL_SOURCE_PATHS = 
+PROJECT_EXTERNAL_SOURCE_PATHS = /usr/include/python2.7
 
 ################################################################################
 # PROJECT EXCLUSIONS
@@ -76,7 +76,7 @@
 # add a runtime path to search for those shared libraries, since they aren't 
 # incorporated directly into the final executable application binary.
 ################################################################################
-# PROJECT_LDFLAGS=-Wl,-rpath=./libs
+PROJECT_LDFLAGS=-Wl,-rpath=./libs,-lboost_python,-L/usr/lib/python2.7/config,-lpython2.7
 
 ################################################################################
 # PROJECT DEFINES
