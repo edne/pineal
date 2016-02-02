@@ -31,13 +31,9 @@ void ofApp::setup(){
         exec( "dsl_ns = {}", ns );
         exec( "dsl_history = []", ns );
 
-        // TODO move in a file (maybe)
-        exec( "eval_hy_code('(import [core [*]])', dsl_ns)", ns );
-
-        // TODO require macros from dsl.hy
-
         // TODO take code from OSC
-        exec( "dsl_history.append('(background 0.2)')", ns );
+        exec( "dsl_history.append('(import [core [*]])(defn --draw-- [] (background 0.2))')", ns );
+        exec( "eval_hy_code(dsl_history[-1], dsl_ns)", ns );
 
     } catch( error_already_set ) {
         PyErr_Print();
@@ -52,7 +48,7 @@ void ofApp::update(){
 void ofApp::draw(){
     try {
         // TODO check history
-        exec( "eval_hy_code(dsl_history[-1], dsl_ns)", ns );
+        exec( "dsl_ns['__draw__']()", ns );
     } catch( error_already_set ) {
         PyErr_Print();
     }
