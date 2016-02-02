@@ -11,6 +11,15 @@
 
 using namespace boost::python;
 
+void background(double x){
+    ofBackground( x * 255 );
+}
+
+BOOST_PYTHON_MODULE(core)
+{
+    def( "background", &background );
+}
+
 object ns;
 
 //--------------------------------------------------------------
@@ -25,8 +34,7 @@ void ofApp::setup(){
         ns = import( "__main__" ).attr( "__dict__" );
 
         ns["__builtins__"] = import( PYTHON_BUILTINS );
-
-        exec( "print 'from Python'", ns );
+        PyImport_AppendInittab("core", &initcore);
 
         exec( "from py.visions import load", ns );
         exec( "vision = load('data/test.pn')", ns );
@@ -57,7 +65,7 @@ void ofApp::keyReleased(int key){
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseMoved(int x, int y ){
+void ofApp::mouseMoved(int x, int y){
 
 }
 

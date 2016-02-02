@@ -49,7 +49,7 @@ def load(file_name):
         with open(file_name) as f:
             code = f.read()
 
-        # code = "(require py.dsl) (loop [] {})".format(code)
+        code = "(require py.dsl) (loop [] {})".format(code)
 
         history.append(code)
         eval_code()
