@@ -1,14 +1,6 @@
 #include "ofApp.h"
 #include <boost/python.hpp>
 
-#if PY_VERSION_HEX >= 0x03000000
-#  define MODULE_INIT_FN(name) BOOST_PP_CAT(PyInit_, name)
-#  define PYTHON_BUILTINS "builtins"
-#else
-#  define MODULE_INIT_FN(name) BOOST_PP_CAT(init, name)
-#  define PYTHON_BUILTINS "__builtin__"
-#endif
-
 using namespace boost::python;
 
 void background(double x){
@@ -30,14 +22,22 @@ void ofApp::setup(){
     try {
         Py_Initialize();
         PySys_SetArgv( argc, argv );
+        PyImport_AppendInittab( "core", &initcore );
 
         ns = import( "__main__" ).attr( "__dict__" );
 
-        ns["__builtins__"] = import( PYTHON_BUILTINS );
-        PyImport_AppendInittab("core", &initcore);
+        exec( "import hy", ns );
+        exec( "from py.hy_utils import eval_hy_code", ns );
+        exec( "dsl_ns = {}", ns );
+        exec( "dsl_history = []", ns );
 
-        exec( "from py.visions import load", ns );
-        exec( "vision = load('data/test.pn')", ns );
+        // TODO move in a file (maybe)
+        exec( "eval_hy_code('(import [core [*]])', dsl_ns)", ns );
+
+        // TODO require macros from dsl.hy
+
+        // TODO take code from OSC
+        exec( "dsl_history.append('(background 0.2)')", ns );
 
     } catch( error_already_set ) {
         PyErr_Print();
@@ -46,12 +46,16 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    exec( "vision.loop()", ns );
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-
+    try {
+        // TODO check history
+        exec( "eval_hy_code(dsl_history[-1], dsl_ns)", ns );
+    } catch( error_already_set ) {
+        PyErr_Print();
+    }
 }
 
 //--------------------------------------------------------------
