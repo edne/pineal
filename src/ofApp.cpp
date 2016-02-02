@@ -1,24 +1,36 @@
 #include "ofApp.h"
 #include <boost/python.hpp>
 
+#if PY_VERSION_HEX >= 0x03000000
+#  define MODULE_INIT_FN(name) BOOST_PP_CAT(PyInit_, name)
+#  define PYTHON_BUILTINS "builtins"
+#else
+#  define MODULE_INIT_FN(name) BOOST_PP_CAT(init, name)
+#  define PYTHON_BUILTINS "__builtin__"
+#endif
+
+using namespace boost::python;
+
+object ns;
+
 //--------------------------------------------------------------
 void ofApp::setup(){
-    using namespace boost::python;
 
-    ofLog() << "setup";
+    ofLog() << "Running setup()";
 
     try {
         Py_Initialize();
+        PySys_SetArgv( argc, argv );
 
-        object main_module((
-             handle<>(borrowed(PyImport_AddModule("__main__")))));
+        ns = import( "__main__" ).attr( "__dict__" );
 
-        object main_namespace = main_module.attr("__dict__");
+        ns["__builtins__"] = import( PYTHON_BUILTINS );
 
-        handle<> ignored(( PyRun_String( "print \"Running Python\"",
-                                         Py_file_input,
-                                         main_namespace.ptr(),
-                                         main_namespace.ptr() ) ));
+        exec( "print 'from Python'", ns );
+
+        exec( "from py.visions import load", ns );
+        exec( "vision = load('data/test.pn')", ns );
+
     } catch( error_already_set ) {
         PyErr_Print();
     }
@@ -26,7 +38,7 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
+    exec( "vision.loop()", ns );
 }
 
 //--------------------------------------------------------------

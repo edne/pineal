@@ -52,6 +52,7 @@ nosetests.xml
 
 /bin/*
 !/bin/data/
+!/bin/py/
 
 #########
 # general

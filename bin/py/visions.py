@@ -2,8 +2,8 @@ import logging
 import liblo
 import hy
 
-from pineal.utils import watch_file
-from pineal.hy_utils import eval_hy_code
+from py.utils import watch_file
+from py.hy_utils import eval_hy_code
 
 
 def load(file_name):
@@ -49,7 +49,7 @@ def load(file_name):
         with open(file_name) as f:
             code = f.read()
 
-        code = "(require pineal.dsl) (loop [] {})".format(code)
+        # code = "(require py.dsl) (loop [] {})".format(code)
 
         history.append(code)
         eval_code()
