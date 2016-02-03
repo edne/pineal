@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "ofLog.h"
+#include "ofxOsc.h"
 
 class ofApp : public ofBaseApp{
 
@@ -24,4 +25,6 @@ class ofApp : public ofBaseApp{
 
         int argc;
         char **argv;
+
+		ofxOscReceiver oscReceiver;
 };

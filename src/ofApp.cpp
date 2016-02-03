@@ -19,6 +19,8 @@ void ofApp::setup(){
 
     ofLog() << "Running setup()";
 
+	oscReceiver.setup(7172);
+
     try {
         Py_Initialize();
         PySys_SetArgv( argc, argv );
@@ -42,6 +44,16 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
+    while(oscReceiver.hasWaitingMessages()){
+		// get the next message
+		ofxOscMessage m;
+		oscReceiver.getNextMessage(m);
+
+        if(m.getAddress() == "/code"){
+            string code = m.getArgAsString(0);
+            ofLog() << "/code " << code;
+		}
+    }
 }
 
 //--------------------------------------------------------------
