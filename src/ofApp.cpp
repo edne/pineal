@@ -47,12 +47,17 @@ namespace dsl{
 	void update(string code){
 		ofLog() << code;
 
-		history.push_back("(import [core [*]])(defn --draw-- [] " + code + ")");
-		safeEval(history.back());
+		history.push_back(code);
+		safeEval("(import [core [*]])(defn --draw-- []" + history.back() + ")");
 	}
 
 	void draw(){
 		safeEval("(--draw--)");
+
+		stringstream text;
+		text << "FPS: " << ofToString(ofGetFrameRate()) << "\n\n";
+		text << history.back();
+		ofDrawBitmapString(text.str().c_str(), 10, 20);
 	}
 }
 
