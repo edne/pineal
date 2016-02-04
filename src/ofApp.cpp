@@ -17,14 +17,16 @@ namespace dsl{
 	py::object evalHyCode;
 	list<string> history;
 
-	void run_code(string code){
+	void safeEval(string code){
 		try{
 			evalHyCode(code, nameSpace);
 		}catch(py::error_already_set){
 			// TODO: better logging, ofLog() or show on window
 			PyErr_Print();
+
+			history.pop_back();  // the broken one
+			safeEval(history.back());  // assuming that the fist code is valid
 		}
-		history.push_back(code);
 	}
 
 	void setup(int argc, char ** argv){
@@ -45,23 +47,12 @@ namespace dsl{
 	void update(string code){
 		ofLog() << code;
 
-		code = "(import [core [*]])(defn --draw-- [] " + code + ")";
-		run_code(code);
+		history.push_back("(import [core [*]])(defn --draw-- [] " + code + ")");
+		safeEval(history.back());
 	}
 
 	void draw(){
-		try{
-			evalHyCode("(--draw--)", nameSpace);
-		}catch(py::error_already_set){
-			// TODO: better logging, ofLog() or show on window
-			PyErr_Print();
-			history.pop_back();  // the broken one
-
-			// TODO: should not be necessary, but better to check history size
-			string code = history.back();
-			history.pop_back();
-			run_code(code);
-		}
+		safeEval("(--draw--)");
 	}
 }
 
