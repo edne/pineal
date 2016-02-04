@@ -1,43 +1,52 @@
 #include "ofApp.h"
 #include <boost/python.hpp>
 
-namespace py = boost::python;
 
-void background(double x) {
-    ofBackground(x * 255);
+namespace dsl {
+    namespace py = boost::python;
+
+    void background(double x) {
+        ofBackground(x * 255);
+    }
+
+    BOOST_PYTHON_MODULE(core) {
+        py::def("background", &background);
+    }
+
+    py::dict ns;
+    py::object eval_hy_code;
+    py::list history;
+
+    void setup(int argc, char **argv) {
+        try {
+            Py_Initialize();
+            PySys_SetArgv(argc, argv);
+            PyImport_AppendInittab("core", &initcore);
+
+            py::import("hy");
+            eval_hy_code = py::import("py.hy_utils").attr("eval_hy_code");
+
+            history.append("(import [core [*]])(defn --draw-- [] (background 0.2))");
+            eval_hy_code(history.pop(), ns);
+
+        } catch (py::error_already_set) {
+            PyErr_Print();
+        }
+    }
+
+    void draw() {
+        try {
+            eval_hy_code("(--draw--)", ns);
+        } catch (py::error_already_set) {
+            PyErr_Print();
+        }
+    }
 }
-
-BOOST_PYTHON_MODULE(core) {
-    py::def("background", &background);
-}
-
-py::object ns;
 
 void ofApp::setup() {
-
     ofLog() << "Running setup()";
-
 	oscReceiver.setup(7172);
-
-    try {
-        Py_Initialize();
-        PySys_SetArgv(argc, argv);
-        PyImport_AppendInittab("core", &initcore);
-
-        ns = py::import("__main__").attr("__dict__");
-
-        py::exec("import hy", ns);
-        py::exec("from py.hy_utils import eval_hy_code", ns);
-        py::exec("dsl_ns = {}", ns);
-        py::exec("dsl_history = []", ns);
-
-        // TODO take code from OSC
-        py::exec("dsl_history.append('(import [core [*]])(defn --draw-- [] (background 0.2))')", ns);
-        py::exec("eval_hy_code(dsl_history[-1], dsl_ns)", ns);
-
-    } catch(py::error_already_set) {
-        PyErr_Print();
-    }
+    dsl::setup(argc, argv);
 }
 
 void ofApp::update() {
@@ -54,12 +63,7 @@ void ofApp::update() {
 }
 
 void ofApp::draw() {
-    try {
-        // TODO check history
-        py::exec("dsl_ns['__draw__']()", ns);
-    } catch (py::error_already_set) {
-        PyErr_Print();
-    }
+    dsl::draw();
 }
 
 void ofApp::keyPressed(int key) {}
