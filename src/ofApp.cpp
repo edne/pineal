@@ -15,7 +15,7 @@ namespace dsl{
 
 	py::dict nameSpace;
 	py::object evalHyCode;
-	py::list history;
+	// py::list history;  // TODO: replace it with a vector
 
 	void setup(int argc, char ** argv){
 		try{
@@ -26,12 +26,25 @@ namespace dsl{
 			py::import("hy");
 			evalHyCode = py::import("py.hy_utils").attr("eval_hy_code");
 
-			history.append("(import [core [*]])(defn --draw-- [] (background 0.2))");
-			evalHyCode(history.pop(), nameSpace);
+			update("");
 
 		}catch(py::error_already_set){
 			PyErr_Print();
 		}
+	}
+
+	void update(string code){
+		ofLog() << "dsl: update";
+		ofLog() << code;
+		code = "(import [core [*]])(defn --draw-- [] " + code + ")";
+		ofLog() << code;
+
+		try{
+			evalHyCode(code, nameSpace);
+		}catch(py::error_already_set){
+			PyErr_Print();
+		}
+		// history.append(code);
 	}
 
 	void draw(){
@@ -39,10 +52,12 @@ namespace dsl{
 			evalHyCode("(--draw--)", nameSpace);
 		}catch(py::error_already_set){
 			PyErr_Print();
+
+			// history.pop();  // the broken one
+			// string code = history.pop();
+			// update(code);
 		}
 	}
-
-	// TODO: update(code)
 }
 
 void ofApp::setup(){
@@ -59,7 +74,8 @@ void ofApp::update(){
 
 		if(m.getAddress() == "/code"){
 			string code = m.getArgAsString(0);
-			ofLog() << "/code " << code;
+			ofLog() << "ofApp" << "/code " << code;
+			dsl::update(code);
 		}
 	}
 }

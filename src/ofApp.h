@@ -4,6 +4,12 @@
 #include "ofLog.h"
 #include "ofxOsc.h"
 
+namespace dsl{
+	void setup(int argc, char ** argv);
+	void update(string code);
+	void draw();
+}
+
 class ofApp : public ofBaseApp{
 
 	public:
