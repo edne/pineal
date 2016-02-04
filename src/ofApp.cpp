@@ -15,7 +15,17 @@ namespace dsl{
 
 	py::dict nameSpace;
 	py::object evalHyCode;
-	// py::list history;  // TODO: replace it with a vector
+	list<string> history;
+
+	void run_code(string code){
+		try{
+			evalHyCode(code, nameSpace);
+		}catch(py::error_already_set){
+			// TODO: better logging, ofLog() or show on window
+			PyErr_Print();
+		}
+		history.push_back(code);
+	}
 
 	void setup(int argc, char ** argv){
 		try{
@@ -25,7 +35,6 @@ namespace dsl{
 
 			py::import("hy");
 			evalHyCode = py::import("py.hy_utils").attr("eval_hy_code");
-
 			update("");
 
 		}catch(py::error_already_set){
@@ -34,28 +43,24 @@ namespace dsl{
 	}
 
 	void update(string code){
-		ofLog() << "dsl: update";
-		ofLog() << code;
-		code = "(import [core [*]])(defn --draw-- [] " + code + ")";
 		ofLog() << code;
 
-		try{
-			evalHyCode(code, nameSpace);
-		}catch(py::error_already_set){
-			PyErr_Print();
-		}
-		// history.append(code);
+		code = "(import [core [*]])(defn --draw-- [] " + code + ")";
+		run_code(code);
 	}
 
 	void draw(){
 		try{
 			evalHyCode("(--draw--)", nameSpace);
 		}catch(py::error_already_set){
+			// TODO: better logging, ofLog() or show on window
 			PyErr_Print();
+			history.pop_back();  // the broken one
 
-			// history.pop();  // the broken one
-			// string code = history.pop();
-			// update(code);
+			// TODO: should not be necessary, but better to check history size
+			string code = history.back();
+			history.pop_back();
+			run_code(code);
 		}
 	}
 }
