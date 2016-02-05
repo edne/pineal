@@ -17,10 +17,17 @@ namespace dsl{
 	py::object hyDraw;
 	list<string> history;
 
-	void handleError(){
-		// TODO: better logging, ofLog() or show on window
-		PyErr_Print();
+	void logError(){
+		PyObject * ptype, * pvalue, * ptraceback;
+		PyErr_Fetch(&ptype, &pvalue, &ptraceback);
+		string errorMessage = PyString_AsString(pvalue);
 
+		ofLog() << "Error:\n" << errorMessage << "\n";  // TODO: change error level
+		// PyErr_Print();
+	}
+
+	void handleError(){
+		logError();
 		ofLog() << "Popping away:\n" << history.back() << "\n";
 		history.pop_back();  // the broken one
 
