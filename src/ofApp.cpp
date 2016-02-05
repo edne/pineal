@@ -13,19 +13,23 @@ namespace dsl{
 		py::def("background", &background);
 	}
 
-	py::dict nameSpace;
 	py::object evalHyCode;
+	py::object hyDraw;
 	list<string> history;
 
-	void safeEval(string code){
-		try{
-			evalHyCode(code, nameSpace);
-		}catch(py::error_already_set){
-			// TODO: better logging, ofLog() or show on window
-			PyErr_Print();
+	void handleError(){
+		// TODO: better logging, ofLog() or show on window
+		PyErr_Print();
 
-			history.pop_back();  // the broken one
-			safeEval(history.back());  // assuming that the fist code is valid
+		ofLog() << "Popping away:\n" << history.back() << "\n";
+		history.pop_back();  // the broken one
+
+		if(history.empty()){
+			update("");
+		}else{
+			string code = history.back();
+			history.pop_back();  // the good one
+			update(code);
 		}
 	}
 
@@ -45,14 +49,25 @@ namespace dsl{
 	}
 
 	void update(string code){
-		ofLog() << code;
+		ofLog() << "Updating:\n" << code << "\n";
 
 		history.push_back(code);
-		safeEval("(import [core [*]])(defn --draw-- []" + history.back() + ")");
+		try{
+			py::dict nameSpace;  // do I really need a "global" namespace?
+			hyDraw = evalHyCode("(import [core [*]])(defn --draw-- []"
+					            + history.back() + ") --draw--",
+					            nameSpace);
+		}catch(py::error_already_set){
+			handleError();
+		}
 	}
 
 	void draw(){
-		safeEval("(--draw--)");
+		try{
+			hyDraw();
+		}catch(py::error_already_set){
+			handleError();
+		}
 
 		stringstream text;
 		text << "FPS: " << ofToString(ofGetFrameRate()) << "\n\n";
@@ -75,7 +90,7 @@ void ofApp::update(){
 
 		if(m.getAddress() == "/code"){
 			string code = m.getArgAsString(0);
-			ofLog() << "ofApp" << "/code " << code;
+			ofLog() << "OSC mesage:\n" << "/code" << "\n" << code << "\n";
 			dsl::update(code);
 		}
 	}
