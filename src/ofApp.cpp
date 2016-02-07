@@ -13,32 +13,7 @@ namespace dsl{
 		py::def("background", &background);
 	}
 
-	py::object evalHyCode;
-	py::object hyDraw;
-	list<string> history;
-
-	void logError(){
-		PyObject * ptype, * pvalue, * ptraceback;
-		PyErr_Fetch(&ptype, &pvalue, &ptraceback);
-		string errorMessage = PyString_AsString(pvalue);
-
-		ofLog() << "Error:\n" << errorMessage << "\n";  // TODO: change error level
-		// PyErr_Print();
-	}
-
-	void handleError(){
-		logError();
-		ofLog() << "Popping away:\n" << history.back() << "\n";
-		history.pop_back();  // the broken one
-
-		if(history.empty()){
-			update("");
-		}else{
-			string code = history.back();
-			history.pop_back();  // the good one
-			update(code);
-		}
-	}
+    py::object vision;
 
 	void setup(int argc, char ** argv){
 		try{
@@ -47,8 +22,7 @@ namespace dsl{
 			PyImport_AppendInittab("core", &initcore);
 
 			py::import("hy");
-			evalHyCode = py::import("py.hy_utils").attr("eval_hy_code");
-			update("");
+            vision = py::import("py.vision").attr("Vision")();
 
 		}catch(py::error_already_set){
 			PyErr_Print();
@@ -56,30 +30,21 @@ namespace dsl{
 	}
 
 	void update(string code){
-		ofLog() << "Updating:\n" << code << "\n";
-
-		history.push_back(code);
 		try{
-			py::dict nameSpace;  // do I really need a "global" namespace?
-			hyDraw = evalHyCode("(import [core [*]])(defn --draw-- []"
-					            + history.back() + ") --draw--",
-					            nameSpace);
+            ofLog() << "Updating:\n" << code << "\n";
+            vision.attr("update")(code);
 		}catch(py::error_already_set){
-			handleError();
+			PyErr_Print();
 		}
 	}
 
 	void draw(){
 		try{
-			hyDraw();
+            vision.attr("draw")();
+            ofDrawBitmapString("FPS: " + ofToString(ofGetFrameRate()), 10, 20);
 		}catch(py::error_already_set){
-			handleError();
+			PyErr_Print();
 		}
-
-		stringstream text;
-		text << "FPS: " << ofToString(ofGetFrameRate()) << "\n\n";
-		text << history.back();
-		ofDrawBitmapString(text.str().c_str(), 10, 20);
 	}
 }
 
