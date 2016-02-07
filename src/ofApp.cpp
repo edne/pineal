@@ -5,11 +5,16 @@
 namespace dsl{
 	namespace py = boost::python;
 
+    void log(string s){
+        ofLog() << s;
+    }
+
 	void background(double x){
 		ofBackground(x * 255);
 	}
 
 	BOOST_PYTHON_MODULE(core){
+		py::def("log", &log);
 		py::def("background", &background);
 	}
 
