@@ -73,6 +73,7 @@ def main():
             send(addr, path, f.read())
 
     watcher = watch_file(file_name, callback)
+    callback()
     try:
         while True:
             sleep(0.1)
