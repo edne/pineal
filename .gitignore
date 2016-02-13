@@ -50,7 +50,8 @@ nosetests.xml
 # but not the data folder
 ###########################
 
-/bin/*
+/bin/pineal
+/bin/libs
 !/bin/data/
 !/bin/py/
 
