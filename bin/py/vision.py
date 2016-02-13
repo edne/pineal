@@ -4,7 +4,10 @@ from py.hy_utils import eval_hy_code
 
 
 class Vision(object):
-    template = "(import [core [*]])(defn --draw-- [] {})"
+    template = """
+    (import core)
+    (defn --draw-- [] {})
+    """
 
     def __init__(self):
         self.history = []

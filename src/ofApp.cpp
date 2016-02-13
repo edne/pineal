@@ -9,8 +9,8 @@ namespace dsl{
         ofLog() << s;
     }
 
-	void background(double x){
-		ofBackground(x * 255);
+	void background(double r, double g, double b){
+		ofBackground(r * 255, g * 255, b * 255);
 	}
 
 	BOOST_PYTHON_MODULE(core){
