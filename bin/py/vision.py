@@ -1,11 +1,11 @@
-from core import log
+from core import of_log
 from py.utils import hy_eval_code
 
 
 class Vision(object):
     template = """
-    (import core)
     (require py.dsl)
+    (--header--)
     (defn --draw-- [] {})
     """
 
@@ -33,7 +33,7 @@ class Vision(object):
 
     def handle_error(self, error):
         if repr(error) != self.last_error:
-            log(repr(error))
+            of_log(repr(error))
             self.last_error = repr(error)
         if len(self.history) >= 2:
             self.history.pop()  # the broken one

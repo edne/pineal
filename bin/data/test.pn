@@ -1,10 +1,11 @@
-(import [time [time]])
-(import [math [sin ]])
-
 (alias bg       background)
 (alias black-bg bg 0 0 0)
-(alias white-bg bg 1 1 1)
 
-(if (pos? (sin (* 8 (time))))
-  (white-bg)
-  (black-bg))
+(def r (-> (time)
+         (* 4) (sin) (+ 1)))
+
+(black-bg)
+
+(-@> (cube 1)
+     (scale r)
+     (color 0 1 0))
