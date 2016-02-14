@@ -26,7 +26,6 @@ namespace dsl{
 			PySys_SetArgv(argc, argv);
 			PyImport_AppendInittab("core", &initcore);
 
-			py::import("hy");
             vision = py::import("py.vision").attr("Vision")();
 
 		}catch(py::error_already_set){

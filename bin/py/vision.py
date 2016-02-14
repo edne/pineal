@@ -1,11 +1,11 @@
-import hy
 from core import log
-from py.hy_utils import eval_hy_code
+from py.utils import hy_eval_code
 
 
 class Vision(object):
     template = """
     (import core)
+    (require py.dsl)
     (defn --draw-- [] {})
     """
 
@@ -17,7 +17,9 @@ class Vision(object):
     def update(self, code):
         code = self.template.format(code)
         try:
-            draw_function = eval_hy_code(code, {})
+            ns = {}
+            hy_eval_code(code, ns)
+            draw_function = ns["__draw__"]
             self.history.append(draw_function)
         except Exception, e:
             self.handle_error(e)

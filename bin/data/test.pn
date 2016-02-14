@@ -1,6 +1,10 @@
 (import [time [time]])
-(import [math [sin]])
+(import [math [sin ]])
 
-(def bg (+ 0.5 (* 0.5 (sin (* 4 (time))))))
+(alias bg       background)
+(alias black-bg bg 0 0 0)
+(alias white-bg bg 1 1 1)
 
-(core.background bg bg bg)
+(if (pos? (sin (* 8 (time))))
+  (white-bg)
+  (black-bg))
