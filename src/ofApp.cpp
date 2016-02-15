@@ -24,18 +24,48 @@ namespace dsl{
 		ofPopMatrix();
 	}
 
-	ofColor current_color(255);
+	ofColor status_color;
 	void color(py::object f, double r, double g, double b){
-		ofColor old_color = current_color,
-		        new_color = ofColor(r * 255, g * 255, b * 255);
+		ofColor old_color = status_color;
+		ofColor new_color = ofColor(r * 255, g * 255, b * 255);
 
-		current_color = new_color;
-		ofSetColor(current_color);
+		status_color = new_color;
+		ofSetColor(status_color);
 
 		f();
 
-		current_color = old_color;
-		ofSetColor(current_color);
+		status_color = old_color;
+		ofSetColor(status_color);
+	}
+
+	bool status_fill = true;
+	void _fill(py::object f, bool status){
+		bool old_fill = status_fill;
+		bool new_fill = status;
+
+		status_fill = new_fill;
+		if(status_fill){
+			ofFill();
+		}else{
+			ofNoFill();
+		}
+
+		f();
+
+		status_fill = old_fill;
+		if(status_fill){
+			ofFill();
+		}else{
+			ofNoFill();
+		}
+	}
+
+	void fill(py::object f){
+		_fill(f, true);
+	}
+
+	void no_fill(py::object f){
+		_fill(f, false);
 	}
 
 	BOOST_PYTHON_MODULE(core){
@@ -44,6 +74,8 @@ namespace dsl{
 		py::def("cube", &cube);
 		py::def("scale", &scale);
 		py::def("color", &color);
+		py::def("fill", &fill);
+		py::def("no_fill", &no_fill);
 	}
 
 	py::object vision;
@@ -59,8 +91,14 @@ namespace dsl{
 
 			ofSetVerticalSync(true);
 			ofEnableDepthTest();
+
 			camera.setDistance(1);
 			camera.setNearClip(0.01);
+
+			ofSetColor(255);
+			ofFill();
+			ofSetLineWidth(1);
+
 		}catch(py::error_already_set){
 			PyErr_Print();
 		}
@@ -78,12 +116,7 @@ namespace dsl{
 	void draw(){
 		try{
 			camera.begin();
-
-			ofNoFill();
-			ofSetLineWidth(1);
-
 			vision.attr("draw")();
-
 			camera.end();
 
 			string fps = "FPS: " + ofToString(ofGetFrameRate());
