@@ -4,11 +4,18 @@
 #include "ofLog.h"
 #include "ofxOsc.h"
 
-namespace dsl{
-	void setup(int argc, char ** argv);
-	void update(string code);
-	void draw();
-}
+#include <boost/python.hpp>
+namespace py = boost::python;
+
+class pnEmbed{
+	public:
+		void setup(int argc, char ** argv);
+		void update(string code);
+		void draw();
+	private:
+		py::object vision;
+		ofEasyCam camera;
+};
 
 class ofApp : public ofBaseApp{
 
@@ -32,5 +39,6 @@ class ofApp : public ofBaseApp{
 		int argc;
 		char ** argv;
 
+		pnEmbed embed;
 		ofxOscReceiver oscReceiver;
 };
