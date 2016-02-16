@@ -1,19 +1,11 @@
+==========
 Primitives
 ==========
 
-psolid
-------
-Draw a solid regular polygon
+cube
+-----
+Draw a cube, tatke the "radius"
 
 .. code-block:: clj
 
-    (psolid 4 "b")  ; a blue square
-
-
-pwired
-------
-Draw juste the border of a regular polygon
-
-.. code-block:: clj
-
-    (psolid 3 "g")  ; a green triangle
+    (cube 1)  ; a cube with side 2x2

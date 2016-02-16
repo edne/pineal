@@ -1,38 +1,50 @@
 ========
 Coloring
 ========
-Defaults colors are represented by single-letter string, here the definition:
 
-.. code-block:: python
+background
+----------
+Color the background
 
-    default_colors = {
-        "r": [1, 0, 0],  # red
-        "g": [0, 1, 0],  # green
-        "b": [0, 0, 1],  # blue
+.. code-block:: clj
 
-        "y": [1, 1, 0],  # yellow
-        "c": [0, 1, 1],  # cyan
-        "m": [1, 0, 1],  # magenta
-
-        "w": [1, 1, 1],  # white
-        "k": [0, 0, 0],  # black
-    }
-
-or composed with palettes
+    (background r g b)
 
 
-palette
+color
+-----
+Apply a color
+
+.. code-block:: clj
+
+    (color r g b)
+
+Example, a blue cube:
+
+.. code-block:: clj
+
+    (-@> (cube 1)
+         (color 0 0 1))
+
+
+fill
+----
+Fill with color (default)
+
+.. code-block:: clj
+
+    (-@> (cube 1)
+         (fill)
+         (color 0 0 1))
+
+
+no-fill
 -------
-Create a color palette
+Draw only the lines
+
 
 .. code-block:: clj
 
-    (palette my-palette colors)
-    (my-palette index alpha)  ; index is in [0 1]
-
-Example:
-
-.. code-block:: clj
-
-    (palette hsv "rgbr")
-    (hsv 0.33 1)  ; green, full alpha
+    (-@> (cube 1)
+         (no-fill)
+         (color 0 0 1))
