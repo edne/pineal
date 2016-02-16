@@ -1,14 +1,20 @@
 (alias bg       background)
 (alias black-bg bg 0 0 0)
 
-(def r (-> (time)
-         (* 4) (sin) (* 0.2) (+ 0)))
+(def r (-> (time 4)
+         (sin) (* 0.2) (+ 0)))
+
+(value rot (% (time 4) 2pi))
 
 (black-bg)
 
-(-@> (cube 1)
-     ;(translate 1)
+(-@> (@ (-@> (cube 1)
+             (rotate-x (rot)))
+        (-@> (cube 1)
+             (rotate-x (rot -1)))
+        (-@> (cube 1)
+             (rotate-y (rot)))
+        (-@> (cube 1)
+             (rotate-y (rot -1))))
      (no-fill)
-     (rotate-x (% (time) (* 2 pi)))
-     ;(scale r r)
      (color 0 1 0))
