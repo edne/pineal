@@ -23,6 +23,14 @@ void ofApp::update(){
 
 void ofApp::draw(){
 	embed.draw();
+
+	ofFbo fbo = embed.getBuffer();
+	fbo.draw(0, 0);
+
+	string fps = "FPS: " + ofToString(ofGetFrameRate());
+	ofSetColor(255);
+	ofDrawBitmapString(fps, 10, 20);
+
 }
 
 void ofApp::keyPressed(int key){}

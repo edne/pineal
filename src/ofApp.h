@@ -12,9 +12,11 @@ class pnEmbed{
 		void setup(int argc, char ** argv);
 		void update(string code);
 		void draw();
+		ofFbo getBuffer();
 	private:
 		py::object vision;
 		ofEasyCam camera;
+		ofFbo fbo;
 };
 
 class ofApp : public ofBaseApp{

@@ -177,6 +177,11 @@ void pnEmbed::setup(int argc, char ** argv){
 		camera.setDistance(1);
 		camera.setNearClip(0.01);
 
+		fbo.allocate(1000, 1000, GL_RGBA);
+		fbo.begin();
+		ofClear(255,255,255, 0);
+		fbo.end();
+
 		ofSetColor(255);
 		ofFill();
 		ofSetLineWidth(1);
@@ -196,15 +201,17 @@ void pnEmbed::update(string code){
 }
 
 void pnEmbed::draw(){
+	fbo.begin();
+	camera.begin();
 	try{
-		camera.begin();
 		vision.attr("draw")();
-		camera.end();
-
-		string fps = "FPS: " + ofToString(ofGetFrameRate());
-		ofSetColor(255);
-		ofDrawBitmapString(fps, 10, 20);
 	}catch(py::error_already_set){
 		PyErr_Print();
 	}
+	camera.end();
+	fbo.end();
+}
+
+ofFbo pnEmbed::getBuffer(){
+	return fbo;
 }

@@ -10,8 +10,8 @@
 
 (-@> (cube 1)
      (no-fill)
-     (turn-z 3)
-     (turn-x 5))
+     (turn-z 1)
+     (turn-x 1))
 
 '(-@> (@ (-@> (cube 1)
               (rotate-x (rot)))
