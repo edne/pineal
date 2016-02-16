@@ -67,6 +67,33 @@ namespace dsl{
 		ofPopMatrix();
 	}
 
+	void turn_x(py::object f, int n){
+		ofPushMatrix();
+		for(int i=0; i<n; i++){
+			f();
+			ofRotateX(360.0 / n);
+		}
+		ofPopMatrix();
+	}
+
+	void turn_y(py::object f, int n){
+		ofPushMatrix();
+		for(int i=0; i<n; i++){
+			f();
+			ofRotateY(360.0 / n);
+		}
+		ofPopMatrix();
+	}
+
+	void turn_z(py::object f, int n){
+		ofPushMatrix();
+		for(int i=0; i<n; i++){
+			f();
+			ofRotateZ(360.0 / n);
+		}
+		ofPopMatrix();
+	}
+
 	void color(py::object f, double r, double g, double b){
 		ofColor old_color = status_color;
 		ofColor new_color = ofColor(r * 255, g * 255, b * 255);
@@ -125,6 +152,10 @@ namespace dsl{
 		py::def("rotate_x", &rotate_x);
 		py::def("rotate_y", &rotate_y);
 		py::def("rotate_z", &rotate_z);
+
+		py::def("turn_x", &turn_x);
+		py::def("turn_y", &turn_y);
+		py::def("turn_z", &turn_z);
 
 		py::def("color", &color);
 		py::def("fill", &fill);
