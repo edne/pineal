@@ -5,7 +5,7 @@ void ofApp::setup(){
 	ofSetEscapeQuitsApp(false);
 	oscReceiver.setup(7172);
 	embed = pnEmbed();
-	embed.setup(ofGetWindowWidth(), argc, argv);
+	embed.setup(ofGetScreenWidth(), argc, argv);
 }
 
 void ofApp::update(){
