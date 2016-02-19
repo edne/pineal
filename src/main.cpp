@@ -1,12 +1,16 @@
 #include "ofMain.h"
 #include "ofApp.h"
+#include "ofAppGLFWWindow.h"
+
 
 int main(int argc, char ** argv){
-	ofSetupOpenGL(1024, 768, OF_WINDOW);
+	auto mainApp = make_shared<ofApp>();
+	mainApp->argc = argc;
+	mainApp->argv = argv;
 
-	ofApp * app = new ofApp();
-	app->argc = argc;
-	app->argv = argv;
+	ofGLWindowSettings settings;
+	auto mainWindow = ofCreateWindow(settings);
 
-	ofRunApp(app);
+	ofRunApp(mainWindow, mainApp);
+	ofRunMainLoop();
 }

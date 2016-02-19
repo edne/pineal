@@ -4,7 +4,7 @@ void ofApp::setup(){
 	ofLog() << "Running setup()";
 	oscReceiver.setup(7172);
 	embed = pnEmbed();
-	embed.setup(argc, argv);
+	embed.setup(ofGetWindowWidth(), argc, argv);
 }
 
 void ofApp::update(){
@@ -25,7 +25,10 @@ void ofApp::draw(){
 	embed.draw();
 
 	ofFbo fbo = embed.getBuffer();
-	fbo.draw(0, 0);
+
+	int w = ofGetWindowWidth();
+	int h = ofGetWindowHeight();
+	fbo.draw(0, -(w - h) / 2, w, w);
 
 	string fps = "FPS: " + ofToString(ofGetFrameRate());
 	ofSetColor(255);

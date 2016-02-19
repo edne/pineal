@@ -9,7 +9,7 @@ namespace py = boost::python;
 
 class pnEmbed{
 	public:
-		void setup(int argc, char ** argv);
+		void setup(int size, int argc, char ** argv);
 		void update(string code);
 		void draw();
 		ofFbo getBuffer();

@@ -163,7 +163,7 @@ namespace dsl{
 	}
 }
 
-void pnEmbed::setup(int argc, char ** argv){
+void pnEmbed::setup(int size, int argc, char ** argv){
 	try{
 		Py_Initialize();
 		PySys_SetArgv(argc, argv);
@@ -177,7 +177,7 @@ void pnEmbed::setup(int argc, char ** argv){
 		camera.setDistance(1);
 		camera.setNearClip(0.01);
 
-		fbo.allocate(1000, 1000, GL_RGBA);
+		fbo.allocate(size, size, GL_RGBA);
 		fbo.begin();
 		ofClear(255,255,255, 0);
 		fbo.end();
