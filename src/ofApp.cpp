@@ -2,6 +2,7 @@
 
 void ofApp::setup(){
 	ofLog() << "Running setup()";
+	ofSetEscapeQuitsApp(false);
 	oscReceiver.setup(7172);
 	embed = pnEmbed();
 	embed.setup(ofGetWindowWidth(), argc, argv);
