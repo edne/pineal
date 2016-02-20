@@ -1,5 +1,5 @@
 (alias bg       background)
-(alias black-bg bg 0 0 0)
+(alias black-bg bg 0 0 0 1)
 
 (def r (-> (time 4)
          (sin) (* 0.2) (+ 0)))
@@ -8,8 +8,11 @@
 
 (black-bg)
 
-(-@> (cube 1)
+(-@> (@ (background 1 1 1 0)
+        (cube 0.1))
      (no-fill)
+     (line-width 4)
+     (color 1 1 1 0.8)
      (turn-z 1)
      (turn-x 1)
      (on-layer (str "asd")))
@@ -27,4 +30,4 @@
 
       (turn 30)
       (no-fill)
-      (color 0 1 0))
+      (color 0 1 0 1))

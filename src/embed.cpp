@@ -6,6 +6,7 @@ namespace dsl{
     unordered_map<string, shared_ptr<ofFbo>> layers;
 
 	ofColor status_color;
+    double status_line_width = 1;
 	bool status_fill = true;
 
     void new_layer(string name){
@@ -26,7 +27,6 @@ namespace dsl{
             new_layer(name);
         }
         layers[name]->begin();
-		ofClear(255,255,255, 0);
         camera.begin();
         f();
         camera.end();
@@ -44,8 +44,8 @@ namespace dsl{
 		ofLog() << s;
 	}
 
-	void background(double r, double g, double b){
-		ofBackground(r * 255, g * 255, b * 255);
+	void background(double r, double g, double b, double a){
+		ofBackground(r * 255, g * 255, b * 255, a * 255);
 	}
 
 	void cube(double r){
@@ -130,9 +130,9 @@ namespace dsl{
 		ofPopMatrix();
 	}
 
-	void color(py::object f, double r, double g, double b){
+	void color(py::object f, double r, double g, double b, double a){
 		ofColor old_color = status_color;
-		ofColor new_color = ofColor(r * 255, g * 255, b * 255);
+		ofColor new_color = ofColor(r * 255, g * 255, b * 255, a * 255);
 
 		status_color = new_color;
 		ofSetColor(status_color);
@@ -172,6 +172,18 @@ namespace dsl{
 		_fill(f, false);
 	}
 
+	void line_width(py::object f, double new_width){
+		double old_width = status_line_width;
+
+		status_line_width = new_width;
+		ofSetLineWidth(status_line_width);
+
+		f();
+
+        status_line_width = old_width;
+		ofSetLineWidth(status_line_width);
+	}
+
 	BOOST_PYTHON_MODULE(core){
 		py::def("on_layer", &on_layer);
 		py::def("draw_layer", &draw_layer);
@@ -197,6 +209,7 @@ namespace dsl{
 		py::def("turn_z", &turn_z);
 
 		py::def("color", &color);
+		py::def("line_width", &line_width);
 		py::def("fill", &fill);
 		py::def("no_fill", &no_fill);
 	}
