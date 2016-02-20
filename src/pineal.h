@@ -21,6 +21,7 @@ class Embed{
 		char ** argv;
 
 		py::object vision;
+        ofEasyCam camera;
 };
 
 class Renderer : public ofBaseApp{

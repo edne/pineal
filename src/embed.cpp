@@ -2,7 +2,6 @@
 
 namespace dsl{
     int size;
-    ofEasyCam camera;
     unordered_map<string, shared_ptr<ofFbo>> layers;
 
 	ofColor status_color;
@@ -26,6 +25,10 @@ namespace dsl{
         if(layers.find(name) == layers.end()){
             new_layer(name);
         }
+        ofEasyCam camera;
+        camera.setDistance(1);
+        camera.setNearClip(0.01);
+
         layers[name]->begin();
         camera.begin();
         f();
@@ -233,8 +236,8 @@ void Embed::setup(){
 		ofSetVerticalSync(true);
 		ofEnableDepthTest();
 
-        dsl::camera.setDistance(1);
-        dsl::camera.setNearClip(0.01);
+        camera.setDistance(1);
+        camera.setNearClip(0.01);
 
         dsl::size = size;
         dsl::new_layer("master");
@@ -259,7 +262,11 @@ void Embed::update(string code){
 
 void Embed::draw(){
 	try{
-        dsl::on_layer(vision.attr("draw"), "master");
+        dsl::layers["master"]->begin();
+        camera.begin();
+        vision.attr("draw")();
+        camera.end();
+        dsl::layers["master"]->end();
 	}catch(py::error_already_set){
 		PyErr_Print();
 	}
