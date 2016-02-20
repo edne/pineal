@@ -1,8 +1,44 @@
 #include "pineal.h"
 
 namespace dsl{
+    int size;
+    ofEasyCam camera;
+    unordered_map<string, shared_ptr<ofFbo>> layers;
+
 	ofColor status_color;
 	bool status_fill = true;
+
+    void new_layer(string name){
+        if(layers.find(name) != layers.end()){
+            return;
+        }
+        auto fbo = make_shared<ofFbo>();
+
+		fbo->allocate(size, size, GL_RGBA);
+		fbo->begin();
+		ofClear(255,255,255, 0);
+		fbo->end();
+        layers[name] = fbo;
+    }
+
+    void on_layer(py::object f, string name){
+        if(layers.find(name) == layers.end()){
+            new_layer(name);
+        }
+        layers[name]->begin();
+		ofClear(255,255,255, 0);
+        camera.begin();
+        f();
+        camera.end();
+        layers[name]->end();
+    }
+
+    void draw_layer(string name){
+        if(layers.find(name) == layers.end()){
+            new_layer(name);
+        }
+        layers[name]->getTexture().draw(-1, -1, 2, 2);
+    }
 
 	void of_log(string s){
 		ofLog() << s;
@@ -137,6 +173,9 @@ namespace dsl{
 	}
 
 	BOOST_PYTHON_MODULE(core){
+		py::def("on_layer", &on_layer);
+		py::def("draw_layer", &draw_layer);
+
 		py::def("of_log", &of_log);
 		py::def("background", &background);
 		py::def("cube", &cube);
@@ -181,13 +220,11 @@ void Embed::setup(){
 		ofSetVerticalSync(true);
 		ofEnableDepthTest();
 
-		camera.setDistance(1);
-		camera.setNearClip(0.01);
+        dsl::camera.setDistance(1);
+        dsl::camera.setNearClip(0.01);
 
-		fbo.allocate(size, size, GL_RGBA);
-		fbo.begin();
-		ofClear(255,255,255, 0);
-		fbo.end();
+        dsl::size = size;
+        dsl::new_layer("master");
 
 		ofSetColor(255);
 		ofFill();
@@ -208,17 +245,13 @@ void Embed::update(string code){
 }
 
 void Embed::draw(){
-	fbo.begin();
-	camera.begin();
 	try{
-		vision.attr("draw")();
+        dsl::on_layer(vision.attr("draw"), "master");
 	}catch(py::error_already_set){
 		PyErr_Print();
 	}
-	camera.end();
-	fbo.end();
 }
 
 ofTexture Embed::getBuffer(){
-	return fbo.getTexture();
+	return dsl::layers["master"]->getTexture();
 }

@@ -11,7 +11,10 @@
 (-@> (cube 1)
      (no-fill)
      (turn-z 1)
-     (turn-x 1))
+     (turn-x 1)
+     (on-layer (str "asd")))
+
+(draw-layer (str "asd"))
 
 '(-@> (@ (-@> (cube 1)
               (rotate-x (rot)))
