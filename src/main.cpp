@@ -1,16 +1,14 @@
 #include "ofMain.h"
-#include "ofApp.h"
 #include "ofAppGLFWWindow.h"
+#include "pineal.h"
 
 
 int main(int argc, char ** argv){
-	auto mainApp = make_shared<ofApp>();
-	mainApp->argc = argc;
-	mainApp->argv = argv;
+	auto renderer = make_shared<Renderer>(1366, argc, argv);
 
 	ofGLWindowSettings settings;
 	auto mainWindow = ofCreateWindow(settings);
 
-	ofRunApp(mainWindow, mainApp);
+	ofRunApp(mainWindow, renderer);
 	ofRunMainLoop();
 }

@@ -1,4 +1,4 @@
-#include "ofApp.h"
+#include "pineal.h"
 
 namespace dsl{
 	ofColor status_color;
@@ -163,7 +163,14 @@ namespace dsl{
 	}
 }
 
-void pnEmbed::setup(int size, int argc, char ** argv){
+
+Embed::Embed(int size, int argc, char ** argv){
+    this->size = size;
+    this->argc = argc;
+    this->argv = argv;
+}
+
+void Embed::setup(){
 	try{
 		Py_Initialize();
 		PySys_SetArgv(argc, argv);
@@ -191,7 +198,7 @@ void pnEmbed::setup(int size, int argc, char ** argv){
 	}
 }
 
-void pnEmbed::update(string code){
+void Embed::update(string code){
 	try{
 		ofLog() << "Updating:\n" << code << "\n";
 		vision.attr("update")(code);
@@ -200,7 +207,7 @@ void pnEmbed::update(string code){
 	}
 }
 
-void pnEmbed::draw(){
+void Embed::draw(){
 	fbo.begin();
 	camera.begin();
 	try{
@@ -212,6 +219,6 @@ void pnEmbed::draw(){
 	fbo.end();
 }
 
-ofFbo pnEmbed::getBuffer(){
-	return fbo;
+ofTexture Embed::getBuffer(){
+	return fbo.getTexture();
 }
