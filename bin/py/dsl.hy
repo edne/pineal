@@ -40,3 +40,13 @@
 (defmacro @ [&rest body]
   "Group macro, wrap more actions or entities in a single expression"
   `((fn [] ~@body)))
+
+
+(defmacro on [name &rest body]
+  "Define a layer an draw on it, then call the layer to blit it"
+  `(do
+     (on-layer (fn [] ~@body) (str '~name))
+
+     (defn ~name []
+       "Draw the layer as an image"
+       (draw-layer (str '~name)))))

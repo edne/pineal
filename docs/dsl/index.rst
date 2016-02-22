@@ -61,10 +61,22 @@ to entities.
 --
 Group macro, wrap entities together before using them in `-@>`
 
-Example, two red cubes with differt size:
+Example, two red cubes with different size:
 
 .. code-block:: clj
 
     (-@> (@ (cube 1)
             (cube 0.5))
          (color 1 0 0))
+
+on
+--
+Draw on a layer, then the layer can be used as a drawing primitive
+
+.. code-block:: clj
+
+    (on my-layer (@ (cube 1)
+                    (cube 0.5))
+
+    ; and then:
+    (my-layer)

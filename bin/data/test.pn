@@ -1,23 +1,34 @@
 (alias bg       background)
 (alias black-bg bg 0 0 0 1)
 
-(def r (-> (time 4)
-         (sin) (* 0.2) (+ 0)))
+(def r (-> (time 8)
+         (sin) (* 0.1) (+ 1.5)))
 
 (value rot (% (time 4) 2pi))
 
 (black-bg)
 
-(-@> (@ (background 1 1 1 0)
-        (cube 0.1))
-     (no-fill)
-     (line-width 4)
-     (color 1 1 1 0.8)
-     (turn-z 1)
-     (turn-x 1)
-     (on-layer (str "asd")))
+(on level-1
+    (@ (background 1 1 1 0)
+       (-@> (cube 0.5)
+            (no-fill)
+            (line-width 1)
+            (color 0 1 1 1.0)
+            (turn-x 16)
+            (turn-y 13)
+            (rotate-x (-> (time (/ pi 4)) (% 2pi)))
+            )))
 
-(draw-layer (str "asd"))
+(level-1)
+
+'(-@> (cube 0.8)
+     (no-fill)
+     (color 1 1 1 0.4)
+     (line-width 1)
+     (turn-z 64)
+     (turn-y 16)
+     (rotate-y (-> (time (/ pi 4)) (% 2pi)))
+     )
 
 '(-@> (@ (-@> (cube 1)
               (rotate-x (rot)))
