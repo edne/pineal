@@ -11,30 +11,39 @@ class Vision(object):
 
     def __init__(self):
         self.history = []
+        self.ns = {}
         self.last_error = ""
         self.update("")
 
     def update(self, code):
         code = self.template.format(code)
         try:
-            ns = {}
-            hy_eval_code(code, ns)
-            draw_function = ns["__draw__"]
-            self.history.append(draw_function)
+            hy_eval_code(code, self.ns)
+            self.history.append(code)
         except Exception, e:
             self.handle_error(e)
 
+    def restore(self):
+        if self.history:
+            try:
+                hy_eval_code(self.history[-1], self.ns)
+            except Exception, e:
+                self.handle_error(e)
+
     def draw(self):
-        draw_function = self.history[-1]
         try:
-            draw_function()
+            self.ns["__draw__"]()
         except Exception as e:
-            self.handle_error(e)
+            if self.handle_error(e):
+                self.ns["__draw__"]()
 
     def handle_error(self, error):
         if repr(error) != self.last_error:
             of_log(repr(error))
             self.last_error = repr(error)
-        if len(self.history) >= 2:
+        if self.history:
             self.history.pop()  # the broken one
-            self.update(self.history.pop())
+            self.restore()
+            return True
+        else:
+            return False
