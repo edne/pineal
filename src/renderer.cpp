@@ -1,7 +1,7 @@
 #include "pineal.h"
 
-Renderer::Renderer(int size, int argc, char ** argv){
-	embed = make_shared<Embed>(1366, argc, argv);
+Renderer::Renderer(int argc, char ** argv){
+	embed = make_shared<Embed>(argc, argv);
 }
 
 void Renderer::setup(){

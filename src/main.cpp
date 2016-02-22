@@ -4,7 +4,7 @@
 
 
 int main(int argc, char ** argv){
-	auto renderer = make_shared<Renderer>(1366, argc, argv);
+	auto renderer = make_shared<Renderer>(argc, argv);
 
 	ofGLWindowSettings settings;
 	auto mainWindow = ofCreateWindow(settings);
