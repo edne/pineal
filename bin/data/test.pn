@@ -19,16 +19,19 @@
             (rotate-x (-> (time (/ pi 4)) (% 2pi)))
             )))
 
-(level-1)
+'(level-1)
+
+(-@> (polygon 3 0.25)
+     (line-width 2))
 
 '(-@> (cube 0.8)
-     (no-fill)
-     (color 1 1 1 0.4)
-     (line-width 1)
-     (turn-z 64)
-     (turn-y 16)
-     (rotate-y (-> (time (/ pi 4)) (% 2pi)))
-     )
+      (no-fill)
+      (color 1 1 1 0.4)
+      (line-width 1)
+      (turn-z 64)
+      (turn-y 16)
+      (rotate-y (-> (time (/ pi 4)) (% 2pi)))
+      )
 
 '(-@> (@ (-@> (cube 1)
               (rotate-x (rot)))
