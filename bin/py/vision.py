@@ -1,4 +1,4 @@
-from core import of_log
+from __future__ import print_function
 from py.utils import hy_eval_code
 
 
@@ -39,7 +39,7 @@ class Vision(object):
 
     def handle_error(self, error):
         if repr(error) != self.last_error:
-            of_log(repr(error))
+            print(repr(error))  # TODO: something better
             self.last_error = repr(error)
         if self.history:
             self.history.pop()  # the broken one

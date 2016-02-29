@@ -1,9 +1,5 @@
 #include "pineal.h"
-#include "dsl/core.h"
-
-BOOST_PYTHON_MODULE(core){
-	def_core();
-}
+#include "dsl_wrapper.h"
 
 Embed::Embed(int argc, char ** argv){
 	this->argc = argc;
