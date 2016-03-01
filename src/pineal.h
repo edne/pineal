@@ -4,6 +4,8 @@
 #include "ofLog.h"
 #include "ofxOsc.h"
 
+#define PINEAL(_)
+
 const int BUFFER_SIZE = 1366;
 
 #include <boost/python.hpp>
