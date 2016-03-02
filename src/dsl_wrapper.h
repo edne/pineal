@@ -5,88 +5,13 @@
 #define PINEAL(_)
 
 namespace dsl{
-	namespace primitives{
-		PINEAL("cube")
-		void cube(double r){
-			ofDrawBox(r);
-		}
-
-		PINEAL("polygon")
-		void polygon_n_r(int n, float r){
-			static unordered_map<int, shared_ptr<ofPolyline>> polygons;
-			shared_ptr<ofPolyline> p;
-
-			if(polygons.find(n) == polygons.end()){
-				p = make_shared<ofPolyline>();
-
-				float angle, x, y;
-
-				for(int i = 0; i < n; i++){
-					angle = PI / 2 + i * TWO_PI / n;
-					x = cos(angle);
-					y = sin(angle);
-					p->addVertex(ofPoint(x,y));
-				}
-				p->close();
-
-				polygons[n] = p;
-			}else{
-				p = polygons[n];
-			}
-			ofPushMatrix();
-			ofScale(r, r, r);
-			p->draw();
-			ofPopMatrix();
-		}
-
-		PINEAL("polygon")
-		void polygon_n(int n){
-			polygon_n_r(n, 1);
-		}
-	}
-
-	namespace layers{
-		unordered_map<string, shared_ptr<ofFbo>> layers_map;
-
-		void new_layer(string name){
-			if(layers_map.find(name) != layers_map.end()){
-				return;
-			}
-			auto fbo = make_shared<ofFbo>();
-
-			fbo->allocate(BUFFER_SIZE, BUFFER_SIZE, GL_RGBA);
-			fbo->begin();
-			ofClear(255,255,255, 0);
-			fbo->end();
-			layers_map[name] = fbo;
-		}
-
-		PINEAL("on_layer")
-		void on_layer(py::object f, string name){
-			if(layers_map.find(name) == layers_map.end()){
-				new_layer(name);
-			}
-			ofEasyCam camera;
-			camera.setDistance(1);
-			camera.setNearClip(0.01);
-
-			layers_map[name]->begin();
-			camera.begin();
-			f();
-			camera.end();
-			layers_map[name]->end();
-		}
-
-		PINEAL("draw_layer")
-		void draw_layer(string name){
-			if(layers_map.find(name) == layers_map.end()){
-				new_layer(name);
-			}
-			layers_map[name]->getTexture().draw(-1, -1, 2, 2);
-		}
-	}
-
 	namespace colors{
+		void setup(){
+			ofSetColor(255);
+			ofFill();
+			ofSetLineWidth(1);
+		}
+
 		PINEAL("background")
 		void background(double r, double g, double b, double a){
 			ofBackground(r * 255, g * 255, b * 255, a * 255);
@@ -151,6 +76,87 @@ namespace dsl{
 
 			status_line_width = old_width;
 			ofSetLineWidth(status_line_width);
+		}
+	}
+
+	namespace layers{
+		unordered_map<string, shared_ptr<ofFbo>> layers_map;
+
+		void new_layer(string name){
+			if(layers_map.find(name) != layers_map.end()){
+				return;
+			}
+			auto fbo = make_shared<ofFbo>();
+
+			fbo->allocate(BUFFER_SIZE, BUFFER_SIZE, GL_RGBA);
+			fbo->begin();
+			ofClear(255,255,255, 0);
+			fbo->end();
+			layers_map[name] = fbo;
+		}
+
+		PINEAL("on_layer")
+		void on_layer(py::object f, string name){
+			if(layers_map.find(name) == layers_map.end()){
+				new_layer(name);
+			}
+			ofEasyCam camera;
+			camera.setDistance(1);
+			camera.setNearClip(0.01);
+
+			layers_map[name]->begin();
+			camera.begin();
+			f();
+			camera.end();
+			layers_map[name]->end();
+		}
+
+		PINEAL("draw_layer")
+		void draw_layer(string name){
+			if(layers_map.find(name) == layers_map.end()){
+				new_layer(name);
+			}
+			layers_map[name]->getTexture().draw(-1, -1, 2, 2);
+		}
+	}
+
+	namespace primitives{
+		PINEAL("cube")
+		void cube(double r){
+			ofDrawBox(r);
+		}
+
+		PINEAL("polygon")
+		void polygon_n_r(int n, float r){
+			static unordered_map<int, shared_ptr<ofPolyline>> polygons;
+			shared_ptr<ofPolyline> p;
+
+			if(polygons.find(n) == polygons.end()){
+				p = make_shared<ofPolyline>();
+
+				float angle, x, y;
+
+				for(int i = 0; i < n; i++){
+					angle = PI / 2 + i * TWO_PI / n;
+					x = cos(angle);
+					y = sin(angle);
+					p->addVertex(ofPoint(x,y));
+				}
+				p->close();
+
+				polygons[n] = p;
+			}else{
+				p = polygons[n];
+			}
+			ofPushMatrix();
+			ofScale(r, r, r);
+			p->draw();
+			ofPopMatrix();
+		}
+
+		PINEAL("polygon")
+		void polygon_n(int n){
+			polygon_n_r(n, 1);
 		}
 	}
 
@@ -247,18 +253,18 @@ namespace dsl{
 	}
 
 	BOOST_PYTHON_MODULE(core){
-		py::def("cube", &primitives::cube);
-		py::def("polygon", &primitives::polygon_n_r);
-		py::def("polygon", &primitives::polygon_n);
-
-		py::def("on_layer", &layers::on_layer);
-		py::def("draw_layer", &layers::draw_layer);
-
 		py::def("background", &colors::background);
 		py::def("color", &colors::color);
 		py::def("fill", &colors::fill);
 		py::def("no_fill", &colors::no_fill);
 		py::def("line_width", &colors::line_width);
+
+		py::def("on_layer", &layers::on_layer);
+		py::def("draw_layer", &layers::draw_layer);
+
+		py::def("cube", &primitives::cube);
+		py::def("polygon", &primitives::polygon_n_r);
+		py::def("polygon", &primitives::polygon_n);
 
 		py::def("scale", &transformations::scale_xyz);
 		py::def("scale", &transformations::scale_xy);

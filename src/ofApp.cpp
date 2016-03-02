@@ -26,14 +26,7 @@ void ofApp::setup(){
 	camera.setDistance(1);
 	camera.setNearClip(0.01);
 
-	master.allocate(BUFFER_SIZE, BUFFER_SIZE, GL_RGBA);
-	master.begin();
-	ofClear(255,255,255, 0);
-	master.end();
-
-	ofSetColor(255);
-	ofFill();
-	ofSetLineWidth(1);
+	dsl::colors::setup();
 
 	ofSetEscapeQuitsApp(false);
 	oscReceiver.setup(7172);
@@ -58,7 +51,6 @@ void ofApp::update(){
 }
 
 void ofApp::draw(){
-	master.begin();
 	camera.begin();
 	try{
 		vision.attr("draw")();
@@ -66,13 +58,6 @@ void ofApp::draw(){
 		PyErr_Print();
 	}
 	camera.end();
-	master.end();
-
-	auto texture = master.getTexture();
-
-	int w = ofGetWindowWidth();
-	int h = ofGetWindowHeight();
-	texture.draw(0, -(w - h) / 2, w, w);
 
 	string fps = "FPS: " + ofToString(ofGetFrameRate());
 	ofSetColor(255);

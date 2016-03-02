@@ -1,3 +1,9 @@
+void setup(){
+	ofSetColor(255);
+	ofFill();
+	ofSetLineWidth(1);
+}
+
 PINEAL("background")
 void background(double r, double g, double b, double a){
 	ofBackground(r * 255, g * 255, b * 255, a * 255);
