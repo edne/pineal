@@ -13,7 +13,7 @@ void ofApp::setup(){
 		Py_Initialize();
 		PySys_SetArgv(argc, argv);
 
-		PyImport_AppendInittab("core", &initcore);
+		PyImport_AppendInittab("core", &dsl::initcore);
 
 		vision = py::import("py.vision").attr("Vision")();
 	}catch(py::error_already_set){

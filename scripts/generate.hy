@@ -86,8 +86,8 @@
                    ""
                    "#pragma once"
                    "#define PINEAL(_)"])
-                bodies
-                defines]))
+                (namespace "dsl"
+                           (join-blocks [bodies defines]))]))
 
 (write-file (os.path.join "src" "dsl_wrapper.h")
             code)
