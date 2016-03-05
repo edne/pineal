@@ -30,6 +30,27 @@ void ofApp::setup(){
 
 	ofSetEscapeQuitsApp(false);
 	oscReceiver.setup(7172);
+
+    int nOutputs = 2;
+    int nInputs = 2;
+
+    onset.setup();
+    beat.setup();
+
+    ofAddListener(onset.gotOnset, this, &ofApp::onsetEvent);
+    ofAddListener(beat.gotBeat, this, &ofApp::beatEvent);
+
+    ofSoundStreamSetup(nOutputs, nInputs, this);
+}
+
+void ofApp::exit(){
+    ofSoundStreamStop();
+    ofSoundStreamClose();
+}
+
+void ofApp::audioIn(float * input, int bufferSize, int nChannels){
+    onset.audioIn(input, bufferSize, nChannels);
+    beat.audioIn(input, bufferSize, nChannels);
 }
 
 void ofApp::update(){
@@ -62,4 +83,12 @@ void ofApp::draw(){
 	string fps = "FPS: " + ofToString(ofGetFrameRate());
 	ofSetColor(255);
 	ofDrawBitmapString(fps, 10, 20);
+}
+
+void ofApp::onsetEvent(float & time) {
+	dsl::audio::set_onset();
+}
+
+void ofApp::beatEvent(float & time) {
+	dsl::audio::set_beat();
 }

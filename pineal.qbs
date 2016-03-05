@@ -12,6 +12,12 @@ Project{
         name: { return FileInfo.baseName(path) }
 
         files: [
+            'src/dsl/audio.h',
+            'src/dsl/colors.h',
+            'src/dsl/layers.h',
+            'src/dsl/primitives.h',
+            'src/dsl/transformations.h',
+            'src/dsl_wrapper.h',
             'src/main.cpp',
             'src/ofApp.cpp',
             'src/ofApp.h',
@@ -19,6 +25,7 @@ Project{
 
         of.addons: [
             'ofxOsc',
+            'ofxAubio',
         ]
 
         // additional flags for the project. the of module sets some

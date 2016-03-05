@@ -5,77 +5,43 @@
 #define PINEAL(_)
 
 namespace dsl{
-	namespace colors{
-		void setup(){
-			ofSetColor(255);
-			ofFill();
-			ofSetLineWidth(1);
+	namespace primitives{
+		PINEAL("cube")
+		void cube(double r){
+			ofDrawBox(r);
 		}
 
-		PINEAL("background")
-		void background(double r, double g, double b, double a){
-			ofBackground(r * 255, g * 255, b * 255, a * 255);
-		}
+		PINEAL("polygon")
+		void polygon_n_r(int n, float r){
+			static unordered_map<int, shared_ptr<ofPolyline>> polygons;
+			shared_ptr<ofPolyline> p;
 
-		PINEAL("color")
-		void color(py::object f, double r, double g, double b, double a){
-			static ofColor status_color;
-			ofColor old_color = status_color;
-			ofColor new_color = ofColor(r * 255, g * 255, b * 255, a * 255);
+			if(polygons.find(n) == polygons.end()){
+				p = make_shared<ofPolyline>();
 
-			status_color = new_color;
-			ofSetColor(status_color);
+				float angle, x, y;
 
-			f();
+				for(int i = 0; i < n; i++){
+					angle = PI / 2 + i * TWO_PI / n;
+					x = cos(angle);
+					y = sin(angle);
+					p->addVertex(ofPoint(x,y));
+				}
+				p->close();
 
-			status_color = old_color;
-			ofSetColor(status_color);
-		}
-
-		void fill_status(py::object f, bool status){
-			static bool status_fill = true;
-			bool old_fill = status_fill;
-			bool new_fill = status;
-
-			status_fill = new_fill;
-			if(status_fill){
-				ofFill();
+				polygons[n] = p;
 			}else{
-				ofNoFill();
+				p = polygons[n];
 			}
-
-			f();
-
-			status_fill = old_fill;
-			if(status_fill){
-				ofFill();
-			}else{
-				ofNoFill();
-			}
+			ofPushMatrix();
+			ofScale(r, r, r);
+			p->draw();
+			ofPopMatrix();
 		}
 
-		PINEAL("fill")
-		void fill(py::object f){
-			fill_status(f, true);
-		}
-
-		PINEAL("no_fill")
-		void no_fill(py::object f){
-			fill_status(f, false);
-		}
-
-		PINEAL("line_width")
-		void line_width(py::object f, double new_width){
-			static double status_line_width = 1;
-			double old_width = status_line_width;
-
-			status_line_width = new_width;
-			ofSetLineWidth(status_line_width);
-
-			f();
-
-			status_line_width = old_width;
-			ofSetLineWidth(status_line_width);
+		PINEAL("polygon")
+		void polygon_n(int n){
+			polygon_n_r(n, 1);
 		}
 	}
 
@@ -117,46 +83,6 @@ namespace dsl{
 				new_layer(name);
 			}
 			layers_map[name]->getTexture().draw(-1, -1, 2, 2);
-		}
-	}
-
-	namespace primitives{
-		PINEAL("cube")
-		void cube(double r){
-			ofDrawBox(r);
-		}
-
-		PINEAL("polygon")
-		void polygon_n_r(int n, float r){
-			static unordered_map<int, shared_ptr<ofPolyline>> polygons;
-			shared_ptr<ofPolyline> p;
-
-			if(polygons.find(n) == polygons.end()){
-				p = make_shared<ofPolyline>();
-
-				float angle, x, y;
-
-				for(int i = 0; i < n; i++){
-					angle = PI / 2 + i * TWO_PI / n;
-					x = cos(angle);
-					y = sin(angle);
-					p->addVertex(ofPoint(x,y));
-				}
-				p->close();
-
-				polygons[n] = p;
-			}else{
-				p = polygons[n];
-			}
-			ofPushMatrix();
-			ofScale(r, r, r);
-			p->draw();
-			ofPopMatrix();
-		}
-
-		PINEAL("polygon")
-		void polygon_n(int n){
-			polygon_n_r(n, 1);
 		}
 	}
 
@@ -252,19 +178,115 @@ namespace dsl{
 		}
 	}
 
+	namespace colors{
+		void setup(){
+			ofSetColor(255);
+			ofFill();
+			ofSetLineWidth(1);
+		}
+
+		PINEAL("background")
+		void background(double r, double g, double b, double a){
+			ofBackground(r * 255, g * 255, b * 255, a * 255);
+		}
+
+		PINEAL("color")
+		void color(py::object f, double r, double g, double b, double a){
+			static ofColor status_color;
+			ofColor old_color = status_color;
+			ofColor new_color = ofColor(r * 255, g * 255, b * 255, a * 255);
+
+			status_color = new_color;
+			ofSetColor(status_color);
+
+			f();
+
+			status_color = old_color;
+			ofSetColor(status_color);
+		}
+
+		void fill_status(py::object f, bool status){
+			static bool status_fill = true;
+			bool old_fill = status_fill;
+			bool new_fill = status;
+
+			status_fill = new_fill;
+			if(status_fill){
+				ofFill();
+			}else{
+				ofNoFill();
+			}
+
+			f();
+
+			status_fill = old_fill;
+			if(status_fill){
+				ofFill();
+			}else{
+				ofNoFill();
+			}
+		}
+
+		PINEAL("fill")
+		void fill(py::object f){
+			fill_status(f, true);
+		}
+
+		PINEAL("no_fill")
+		void no_fill(py::object f){
+			fill_status(f, false);
+		}
+
+		PINEAL("line_width")
+		void line_width(py::object f, double new_width){
+			static double status_line_width = 1;
+			double old_width = status_line_width;
+
+			status_line_width = new_width;
+			ofSetLineWidth(status_line_width);
+
+			f();
+
+			status_line_width = old_width;
+			ofSetLineWidth(status_line_width);
+		}
+	}
+
+	namespace audio{
+		bool beat_value = false;
+
+		void set_beat(){
+			beat_value = true;
+		}
+
+		PINEAL("beat")
+		bool beat(){
+			bool value = beat_value;
+			beat_value = false;
+			return value;
+		}
+
+		bool onset_value = false;
+
+		void set_onset(){
+			onset_value = true;
+		}
+
+		PINEAL("onset")
+		bool onset(){
+			bool value = onset_value;
+			onset_value = false;
+			return value;
+		}
+	}
+
 	BOOST_PYTHON_MODULE(core){
-		py::def("background", &colors::background);
-		py::def("color", &colors::color);
-		py::def("fill", &colors::fill);
-		py::def("no_fill", &colors::no_fill);
-		py::def("line_width", &colors::line_width);
-
-		py::def("on_layer", &layers::on_layer);
-		py::def("draw_layer", &layers::draw_layer);
-
 		py::def("cube", &primitives::cube);
 		py::def("polygon", &primitives::polygon_n_r);
 		py::def("polygon", &primitives::polygon_n);
+
+		py::def("on_layer", &layers::on_layer);
+		py::def("draw_layer", &layers::draw_layer);
 
 		py::def("scale", &transformations::scale_xyz);
 		py::def("scale", &transformations::scale_xy);
@@ -278,5 +300,14 @@ namespace dsl{
 		py::def("turn_x", &transformations::turn_x);
 		py::def("turn_y", &transformations::turn_y);
 		py::def("turn_z", &transformations::turn_z);
+
+		py::def("background", &colors::background);
+		py::def("color", &colors::color);
+		py::def("fill", &colors::fill);
+		py::def("no_fill", &colors::no_fill);
+		py::def("line_width", &colors::line_width);
+
+		py::def("beat", &audio::beat);
+		py::def("onset", &audio::onset);
 	}
 }
