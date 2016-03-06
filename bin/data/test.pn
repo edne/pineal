@@ -10,26 +10,27 @@
 
 (on level-1
     (@ (background 1 1 1 0)
-       (-@> (cube 0.5)
+       (-@> (cube 1)
             (no-fill)
             (line-width 1)
             (color 0 1 1 1.0)
-            (turn-x 16)
-            (turn-y 13)
+            (turn-x 6)
+            (turn-y 3)
             (rotate-x (-> (time (/ pi 4)) (% 2pi)))
             )))
 
-(at (beat 4) (level-1))
 
 (-@> (polygon 3 0.25)
      (line-width 2))
 
-(at (onset)
+(at (onset 0.25)
   (-@> (polygon 3 0.25)
        (translate 0.5)
        (color 1 1 1 0.4)
        (turn-z 3)
        (line-width 4)))
+
+(at (beat 4 2) (level-1))
 
 '(-@> (cube 0.8)
       (no-fill)
