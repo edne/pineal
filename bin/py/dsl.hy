@@ -7,7 +7,8 @@
 
      (def 2pi (* 2 pi))
 
-     (value time (--time--))))
+     (value time (--time--))
+     (value amp (rms))))
 
 
 (defmacro alias [name &rest body]

@@ -20,7 +20,7 @@
             )))
 
 
-(-@> (polygon 3 0.25)
+(-@> (polygon 3 (amp 100))
      (line-width 2))
 
 (at (onset 0.25)

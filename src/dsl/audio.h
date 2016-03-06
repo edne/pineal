@@ -6,6 +6,8 @@ float last_beat = 0;
 bool onset_value = false;
 float last_onset = 0;
 
+float rms_value = 0;
+
 void update(){
 	beat_value = false;
 	onset_value = false;
@@ -25,6 +27,10 @@ void set_onset(){
 
 	float actual_time = (float)ofGetSystemTimeMicros() / 1000;
 	last_onset = actual_time;
+}
+
+void set_rms(float value){
+	rms_value = value;
 }
 
 PINEAL("beat")
@@ -62,4 +68,9 @@ bool onset_t(float t){
 PINEAL("onset")
 bool onset(){
 	return onset_value;
+}
+
+PINEAL("rms")
+float rms(){
+	return rms_value;
 }

@@ -261,6 +261,8 @@ namespace dsl{
 		bool onset_value = false;
 		float last_onset = 0;
 
+		float rms_value = 0;
+
 		void update(){
 			beat_value = false;
 			onset_value = false;
@@ -280,6 +282,10 @@ namespace dsl{
 
 			float actual_time = (float)ofGetSystemTimeMicros() / 1000;
 			last_onset = actual_time;
+		}
+
+		void set_rms(float value){
+			rms_value = value;
 		}
 
 		PINEAL("beat")
@@ -318,6 +324,11 @@ namespace dsl{
 		bool onset(){
 			return onset_value;
 		}
+
+		PINEAL("rms")
+		float rms(){
+			return rms_value;
+		}
 	}
 
 	BOOST_PYTHON_MODULE(core){
@@ -352,5 +363,6 @@ namespace dsl{
 		py::def("beat", &audio::beat);
 		py::def("onset", &audio::onset_t);
 		py::def("onset", &audio::onset);
+		py::def("rms", &audio::rms);
 	}
 }
