@@ -212,46 +212,6 @@ namespace dsl{
 		}
 	}
 
-	namespace primitives{
-		PINEAL("cube")
-		void cube(double r){
-			ofDrawBox(r);
-		}
-
-		PINEAL("polygon")
-		void polygon_n_r(int n, float r){
-			static unordered_map<int, shared_ptr<ofPolyline>> polygons;
-			shared_ptr<ofPolyline> p;
-
-			if(polygons.find(n) == polygons.end()){
-				p = make_shared<ofPolyline>();
-
-				float angle, x, y;
-
-				for(int i = 0; i < n; i++){
-					angle = PI / 2 + i * TWO_PI / n;
-					x = cos(angle);
-					y = sin(angle);
-					p->addVertex(ofPoint(x,y));
-				}
-				p->close();
-
-				polygons[n] = p;
-			}else{
-				p = polygons[n];
-			}
-			ofPushMatrix();
-			ofScale(r, r, r);
-			p->draw();
-			ofPopMatrix();
-		}
-
-		PINEAL("polygon")
-		void polygon_n(int n){
-			polygon_n_r(n, 1);
-		}
-	}
-
 	namespace audio{
 		bool beat_value = false;
 		int beat_count = 0;
@@ -332,6 +292,31 @@ namespace dsl{
 		}
 	}
 
+	namespace primitives{
+		PINEAL("cube")
+		void cube(double r){
+			ofDrawBox(r);
+		}
+
+		PINEAL("polygon")
+		void polygon_n_r(int n, float r){
+			ofPushMatrix();
+
+			ofScale(r, r, r);
+			ofRotateZ(90);
+
+			ofSetCircleResolution(n);
+			ofDrawCircle(0, 0, 1);
+
+			ofPopMatrix();
+		}
+
+		PINEAL("polygon")
+		void polygon_n(int n){
+			polygon_n_r(n, 1);
+		}
+	}
+
 	BOOST_PYTHON_MODULE(core){
 		py::def("on_layer", &layers::on_layer);
 		py::def("draw_layer", &layers::draw_layer);
@@ -355,15 +340,15 @@ namespace dsl{
 		py::def("no_fill", &colors::no_fill);
 		py::def("line_width", &colors::line_width);
 
-		py::def("cube", &primitives::cube);
-		py::def("polygon", &primitives::polygon_n_r);
-		py::def("polygon", &primitives::polygon_n);
-
 		py::def("beat", &audio::beat_n_t);
 		py::def("beat", &audio::beat_n);
 		py::def("beat", &audio::beat);
 		py::def("onset", &audio::onset_t);
 		py::def("onset", &audio::onset);
 		py::def("rms", &audio::rms);
+
+		py::def("cube", &primitives::cube);
+		py::def("polygon", &primitives::polygon_n_r);
+		py::def("polygon", &primitives::polygon_n);
 	}
 }
