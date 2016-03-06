@@ -50,21 +50,14 @@ void ofApp::audioIn(float * input, int bufferSize, int nChannels){
     onset.audioIn(input, bufferSize, nChannels);
     beat.audioIn(input, bufferSize, nChannels);
 
-	float rms = 0.0;
-	int counted = 0;
+	ofSoundBuffer inBuf;
+	inBuf.allocate(bufferSize, nChannels);
 
-	for(int i = 0; i < bufferSize; i++){
-		float left = input[i * 2] * 0.5;
-		float right = input[i * 2 + 1] * 0.5;
-
-		rms += left * left;
-		rms += right * right;
-		counted += 2;
+	for(int i = 0; i < bufferSize * nChannels; i++){
+		inBuf[i] = input[i];
 	}
 
-	rms /= (float)counted;
-	rms = sqrt(rms);
-	dsl::audio::set_rms(rms);
+	dsl::audio::set_inBuf(inBuf);
 }
 
 void ofApp::update(){

@@ -6,11 +6,16 @@ float last_beat = 0;
 bool onset_value = false;
 float last_onset = 0;
 
-float rms_value = 0;
+ofSoundBuffer inBuf;
+
 
 void update(){
 	beat_value = false;
 	onset_value = false;
+}
+
+void set_inBuf(ofSoundBuffer in){
+	inBuf = in;
 }
 
 void set_beat(){
@@ -27,10 +32,6 @@ void set_onset(){
 
 	float actual_time = (float)ofGetSystemTimeMicros() / 1000;
 	last_onset = actual_time;
-}
-
-void set_rms(float value){
-	rms_value = value;
 }
 
 PINEAL("beat")
@@ -72,5 +73,5 @@ bool onset(){
 
 PINEAL("rms")
 float rms(){
-	return rms_value;
+	return inBuf.getRMSAmplitude();
 }

@@ -20,21 +20,22 @@
             )))
 
 
-(-@> (polygon 3 (amp 100))
+(-@> (polygon 3 (amp 8))
+     (color 0 1 0 1)
      (line-width 2))
 
-(at (onset 0.25)
-  (-@> (polygon 3 0.25)
-       (translate 0.5)
-       (color 1 1 1 0.4)
-       (turn-z 3)
-       (line-width 4)))
+(at (beat 1 0.1)
+    (-@> (polygon 3 0.25)
+         (translate 0.5)
+         (color 0 1 0 1)
+         (turn-z 3)
+         (line-width 4)))
 
-(at (beat 4 2) (level-1))
+;(at (beat 4 2) (level-1))
 
 '(-@> (cube 0.8)
       (no-fill)
-      (color 1 1 1 0.4)
+      (color 1 1 1 1)
       (line-width 1)
       (turn-z 64)
       (turn-y 16)
