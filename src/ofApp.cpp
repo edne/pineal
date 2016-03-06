@@ -26,8 +26,6 @@ void ofApp::setup(){
 	camera.setDistance(1);
 	camera.setNearClip(0.01);
 
-	dsl::colors::setup();
-
 	ofSetEscapeQuitsApp(false);
 	oscReceiver.setup(7172);
 
@@ -54,12 +52,16 @@ void ofApp::audioIn(float * input, int bufferSize, int nChannels){
 }
 
 void ofApp::update(){
+	dsl::audio::update();
+
 	while(oscReceiver.hasWaitingMessages()){
 		// get the next message
 		ofxOscMessage m;
 		oscReceiver.getNextMessage(m);
 
 		if(m.getAddress() == "/code"){
+			dsl::colors::setup();
+
 			string code = m.getArgAsString(0);
 			ofLog() << "OSC mesage:" << endl << "/code" << endl << code;
 			try{

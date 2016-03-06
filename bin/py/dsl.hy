@@ -50,3 +50,7 @@
      (defn ~name []
        "Draw the layer as an image"
        (draw-layer (str '~name)))))
+
+
+(defmacro at [event &rest body]
+  `(if ~event (@ ~@body)))
