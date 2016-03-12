@@ -8,6 +8,7 @@ DSL Reference
    primitives
    transformations
    coloring
+   audio
 
 
 alias
