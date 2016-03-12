@@ -17,7 +17,10 @@ Apply a color
 
 .. code-block:: clj
 
+    (color r g b a)
     (color r g b)
+    (color grey alpha)
+    (color grey)
 
 Example, a blue cube:
 

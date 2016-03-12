@@ -24,6 +24,21 @@ void color(py::object f, double r, double g, double b, double a){
 	ofSetColor(status_color);
 }
 
+PINEAL("color")
+void color_rgb(py::object f, double r, double g, double b){
+	color(f, r, g, b, 1);
+}
+
+PINEAL("color")
+void color_grey(py::object f, double c){
+	color(f, c, c, c, 1);
+}
+
+PINEAL("color")
+void color_grey_alpha(py::object f, double c, double a){
+	color(f, c, c, c, a);
+}
+
 void fill_status(py::object f, bool status){
 	static bool status_fill = true;
 	bool old_fill = status_fill;

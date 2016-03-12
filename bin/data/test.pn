@@ -22,7 +22,7 @@
 
 (-@> (polygon 3 0.5)
      (fill)
-     (color 0 1 0 0.5)
+     (color 0 1 0)
      (line-width 2))
 
 (at (beat 1 0.1)
