@@ -151,98 +151,6 @@ namespace dsl{
 		}
 	}
 
-	namespace transformations{
-		PINEAL("scale")
-		void scale_xyz(py::object f, double x, double y, double z){
-			ofPushMatrix();
-			ofScale(x, y, z);
-			f();
-			ofPopMatrix();
-		}
-
-		PINEAL("scale")
-		void scale_xy(py::object f, double x, double y){
-			scale_xyz(f, x, y, 1);
-		}
-
-		PINEAL("scale")
-		void scale_r(py::object f, double r){
-			scale_xyz(f, r, r, r);
-		}
-
-		PINEAL("translate")
-		void translate_xyz(py::object f, double x, double y, double z){
-			ofPushMatrix();
-			ofTranslate(x, y, z);
-			f();
-			ofPopMatrix();
-		}
-
-		PINEAL("translate")
-		void translate_xy(py::object f, double x, double y){
-			translate_xyz(f, x, y, 0);
-		}
-
-		PINEAL("translate")
-		void translate_x(py::object f, double x){
-			translate_xyz(f, x, 0, 0);
-		}
-
-		PINEAL("rotate_x")
-		void rotate_x(py::object f, double rad){
-			ofPushMatrix();
-			ofRotateX(180 * rad / PI);
-			f();
-			ofPopMatrix();
-		}
-
-		PINEAL("rotate_y")
-		void rotate_y(py::object f, double rad){
-			ofPushMatrix();
-			ofRotateY(180 * rad / PI);
-			f();
-			ofPopMatrix();
-		}
-
-		PINEAL("rotate_z")
-		void rotate_z(py::object f, double rad){
-			ofPushMatrix();
-			ofRotateZ(180 * rad / PI);
-			f();
-			ofPopMatrix();
-		}
-
-		PINEAL("turn_x")
-		void turn_x(py::object f, int n){
-			ofPushMatrix();
-			for(int i=0; i<n; i++){
-				f();
-				ofRotateX(360.0 / n);
-			}
-			ofPopMatrix();
-		}
-
-		PINEAL("turn_y")
-		void turn_y(py::object f, int n){
-			ofPushMatrix();
-			for(int i=0; i<n; i++){
-				f();
-				ofRotateY(360.0 / n);
-			}
-			ofPopMatrix();
-		}
-
-		PINEAL("turn_z")
-		void turn_z(py::object f, int n){
-			ofPushMatrix();
-			for(int i=0; i<n; i++){
-				f();
-				ofRotateZ(360.0 / n);
-			}
-			ofPopMatrix();
-		}
-	}
-
 	namespace colors{
 		void setup(){
 			ofSetColor(255);
@@ -332,6 +240,105 @@ namespace dsl{
 		}
 	}
 
+	namespace transformations{
+		PINEAL("scale")
+		void scale_xyz(py::object f, double x, double y, double z){
+			ofPushMatrix();
+			ofScale(x, y, z);
+			f();
+			ofPopMatrix();
+		}
+
+		PINEAL("scale")
+		void scale_xy(py::object f, double x, double y){
+			scale_xyz(f, x, y, 1);
+		}
+
+		PINEAL("scale")
+		void scale_r(py::object f, double r){
+			scale_xyz(f, r, r, r);
+		}
+
+		PINEAL("translate")
+		void translate_xyz(py::object f, double x, double y, double z){
+			ofPushMatrix();
+			ofTranslate(x, y, z);
+			f();
+			ofPopMatrix();
+		}
+
+		PINEAL("translate")
+		void translate_xy(py::object f, double x, double y){
+			translate_xyz(f, x, y, 0);
+		}
+
+		PINEAL("translate")
+		void translate_x(py::object f, double x){
+			translate_xyz(f, x, 0, 0);
+		}
+
+		PINEAL("rotate_x")
+		void rotate_x(py::object f, double rad){
+			ofPushMatrix();
+			ofRotateX(180 * rad / PI);
+			f();
+			ofPopMatrix();
+		}
+
+		PINEAL("rotate_y")
+		void rotate_y(py::object f, double rad){
+			ofPushMatrix();
+			ofRotateY(180 * rad / PI);
+			f();
+			ofPopMatrix();
+		}
+
+		PINEAL("rotate_z")
+		void rotate_z(py::object f, double rad){
+			ofPushMatrix();
+			ofRotateZ(180 * rad / PI);
+			f();
+			ofPopMatrix();
+		}
+
+		typedef enum{
+			X, Y, Z
+		}Axis;
+
+		void turn(py::object f, Axis axis, int n){
+			double rot;
+
+			ofPushMatrix();
+			for(int i=0; i<n; i++){
+				f();
+				rot = 360.0 / n;
+				if(axis == X){
+					ofRotateX(rot);
+				}else if(axis == Y){
+					ofRotateY(rot);
+				}else if(axis == Z){
+					ofRotateZ(rot);
+				}
+			}
+			ofPopMatrix();
+		}
+
+		PINEAL("turn_x")
+		void turn_x(py::object f, int n){
+			turn(f, X, n);
+		}
+
+		PINEAL("turn_y")
+		void turn_y(py::object f, int n){
+			turn(f, Y, n);
+		}
+
+		PINEAL("turn_z")
+		void turn_z(py::object f, int n){
+			turn(f, Z, n);
+		}
+	}
+
 	BOOST_PYTHON_MODULE(core){
 		py::def("on_layer", &layers::on_layer);
 		py::def("draw_layer", &layers::draw_layer);
@@ -347,6 +354,15 @@ namespace dsl{
 		py::def("polygon", &primitives::polygon_n_r);
 		py::def("polygon", &primitives::polygon_n);
 
+		py::def("background", &colors::background);
+		py::def("color", &colors::color);
+		py::def("color", &colors::color_rgb);
+		py::def("color", &colors::color_grey);
+		py::def("color", &colors::color_grey_alpha);
+		py::def("fill", &colors::fill);
+		py::def("no_fill", &colors::no_fill);
+		py::def("line_width", &colors::line_width);
+
 		py::def("scale", &transformations::scale_xyz);
 		py::def("scale", &transformations::scale_xy);
 		py::def("scale", &transformations::scale_r);
@@ -359,14 +375,5 @@ namespace dsl{
 		py::def("turn_x", &transformations::turn_x);
 		py::def("turn_y", &transformations::turn_y);
 		py::def("turn_z", &transformations::turn_z);
-
-		py::def("background", &colors::background);
-		py::def("color", &colors::color);
-		py::def("color", &colors::color_rgb);
-		py::def("color", &colors::color_grey);
-		py::def("color", &colors::color_grey_alpha);
-		py::def("fill", &colors::fill);
-		py::def("no_fill", &colors::no_fill);
-		py::def("line_width", &colors::line_width);
 	}
 }

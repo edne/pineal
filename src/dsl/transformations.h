@@ -58,32 +58,39 @@ void rotate_z(py::object f, double rad){
 	ofPopMatrix();
 }
 
-PINEAL("turn_x")
-void turn_x(py::object f, int n){
+typedef enum{
+	X, Y, Z
+}Axis;
+
+void turn(py::object f, Axis axis, int n){
+	double rot;
+
 	ofPushMatrix();
 	for(int i=0; i<n; i++){
 		f();
-		ofRotateX(360.0 / n);
+		rot = 360.0 / n;
+		if(axis == X){
+			ofRotateX(rot);
+		}else if(axis == Y){
+			ofRotateY(rot);
+		}else if(axis == Z){
+			ofRotateZ(rot);
+		}
 	}
 	ofPopMatrix();
+}
+
+PINEAL("turn_x")
+void turn_x(py::object f, int n){
+	turn(f, X, n);
 }
 
 PINEAL("turn_y")
 void turn_y(py::object f, int n){
-	ofPushMatrix();
-	for(int i=0; i<n; i++){
-		f();
-		ofRotateY(360.0 / n);
-	}
-	ofPopMatrix();
+	turn(f, Y, n);
 }
 
 PINEAL("turn_z")
 void turn_z(py::object f, int n){
-	ofPushMatrix();
-	for(int i=0; i<n; i++){
-		f();
-		ofRotateZ(360.0 / n);
-	}
-	ofPopMatrix();
+	turn(f, Z, n);
 }
