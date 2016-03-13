@@ -54,4 +54,5 @@
 
 
 (defmacro at [event &rest body]
+  "Draw something at an event"
   `(if ~event (@ ~@body)))
