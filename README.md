@@ -1,84 +1,62 @@
 Pineal
 ======
 
-![screenshot](http://i.imgur.com/ysTixoj.png)
+![screenshot](http://i.imgur.com/3lBNKan.png)
 
-An engine for graphic live-coding on an audio stream, something between
-[Fluxus](http://www.pawfal.org/fluxus/) and [Processing](https://processing.org/),
-__but in Python!__  
-(ok that's not true, it was in Python, now it is mainly in a
-[pythonic Lisp dialect](http://hylang.org))
+Engine and DSL for graphical live-coding.
+Built on top of [OpenFrameworks](http://openframeworks.cc/) using an embedded
+Python interpreter and the magic metaprogramming powers of [Hy](http://hylang.org).
 
 
 Example
 -------
 
 ```hy
-(osc-source amp  "/amp")
-(osc-source bass "/bass")
-(osc-source high "/high")
+(background 0 0 0)
 
+(-@> (cube 1.8)
+	 (no-fill)
+	 (color 1 1 1)
+	 (line-width 1)
+	 (turn-z 64)
+	 (turn-y 16)
+	 (rotate-y (-> (time 0.5)
+                   (% 2pi))))
 
-(stroke-weight 4)
-
-(on my-layer
-    (fx [(scale (amp 1 1))]
-        (draw my-layer))
-
-    (fx [(scale (amp 4))]
-        (pwired 4 [0 1 1 1])
-        (psolid 4 [0 0 0 0.1]))
-
-    (fx [(scale (bass 2))]
-        (pwired 4 [0 1 0 1])
-        (psolid 4 [0 0 0 0.1]))
-
-    (fx [(scale (high 4))]
-        (pwired 4 [1 1 1 1])
-        (psolid 4 [0 0 0 0.1])))
-
-(draw my-layer)
 ```
-
-Screenshots
------------
-[Some screenshots](http://imgur.com/gallery/4Rd7E)
-
 
 Instructions
 ------------
-**WARNING**: pineal require [Jack](http://www.jackaudio.org/) up and running, so
-install and confugure it before everything else
-* If you want to use pineal to "hear" audio from your pc, setup jack to create
-  _monitor_ input ports
-* Play your music
-* Create a file where write your visuals
-* Run `./run.hy yourfile.hy` and connect pineal to the input source using
-  [qjackctl](http://qjackctl.sourceforge.net/),
-  [claudia](http://kxstudio.linuxaudio.org/Applications:Claudia) or something else
-* Edit your file
-* Every time you save output is updated
-* Have fun!
+
+- Compile and run the application.
+- Send the code via OSC to the path `/code`, port 7172.
+
+The script `scripts/watch.py` automatically sends the content of a file every
+time it is changed:
+
+```
+python scripts/watch.py bin/data/test.pn 7172 /code
+```
 
 
 Dependencies
 ------------
-Make sure you are using Python 2, and install:
+
+- [OpenFrameworks](http://openframeworks.cc/)
+- [OfxAubio](https://github.com/aubio/ofxAubio) plugin for audio analysis, if you
+  are on Linux check [my fork](https://github.com/edne/ofxAubio) (waiting for the
+  pull-request to be accepted).
+- [Hy](http://hylang.org)
+
+To run `watch.py`:
 ```
-    hy==0.11.0
-    pyliblo
-    pyglet
-    watchdog
-    jack-client==0.3.0
-    scipy
+pip install liblo watchdog
 ```
-If you have troubles installing scipy from pip you can use the one from your
-distribution repositories
 
 
 Documentation
 -------------
-References are avaiable on [Readthedocs](http://pineal.readthedocs.org/en/latest/)
+References are available on [Readthedocs](http://pineal.readthedocs.org/en/latest/)
 
 
 License
@@ -88,10 +66,8 @@ This project is released under the terms of [GNU AGPL](http://www.gnu.org/licens
 
 Warning
 -------
-This project is heavily in development. You can use it, I use it in "production"
-(coding at parties). But be prepared to continuous and unexpected changes in
-syntax (it's getting even more functional) and new features that randomly appear
-or disappear.
+This project is **heavily in development**. You can use it, I use it in
+"production" (coding at parties). But be prepared to continuous and unexpected
+changes in syntax (it's getting even more functional) and new features that
+randomly appear or disappear.
 
-In case of doubt you can look at `sample.hy` or the `examples/` folder, they
-should always work.
