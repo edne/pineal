@@ -59,6 +59,29 @@ Documentation
 References are available on [Readthedocs](http://pineal.readthedocs.org/en/latest/)
 
 
+Contributing
+------------
+- Fork.
+- Make a branch with the name of your new feature.
+- Use the [Of code style](https://github.com/openframeworks/openFrameworks/wiki/oF-code-style).
+- Document everything that will be exposed to the final user, adding or editing a
+  `.rst` file in the `docs/` folder.
+- `scripts/test.sh` builds the project, runs it and sends via OSC the code from
+  `bin/data/test.pn` updating it every time the file is changed.
+- Make a pull-request.
+
+
+Internals Overview
+------------------
+If you want to contribute.
+
+The pineal DSL is composed by 2 parts: functions (C++) and macros (Hy).
+The macros are in `bin/py/dsl.hy` and are used to language keywords. The functions
+are in `src/dsl_wrapper.h` **BUT** the file is generated automatically by
+`scripts/generate.hy` using .h files in the `src/dsl/` folder, exposing the
+ones marked with `PINEAL("function_name")`.
+
+
 License
 -------
 This project is released under the terms of [GNU AGPL](http://www.gnu.org/licenses/agpl-3.0.html), see [LICENSE](LICENSE) file for details
