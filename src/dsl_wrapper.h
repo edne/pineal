@@ -5,127 +5,6 @@
 #define PINEAL(_)
 
 namespace dsl{
-	namespace layers{
-		unordered_map<string, shared_ptr<ofFbo>> layers_map;
-
-		void new_layer(string name){
-			if(layers_map.find(name) != layers_map.end()){
-				return;
-			}
-			auto fbo = make_shared<ofFbo>();
-
-			fbo->allocate(BUFFER_SIZE, BUFFER_SIZE, GL_RGBA);
-			fbo->begin();
-			ofClear(255,255,255, 0);
-			fbo->end();
-			layers_map[name] = fbo;
-		}
-
-		PINEAL("on_layer")
-		void on_layer(py::object f, string name){
-			if(layers_map.find(name) == layers_map.end()){
-				new_layer(name);
-			}
-			ofEasyCam camera;
-			camera.setDistance(1);
-			camera.setNearClip(0.01);
-
-			layers_map[name]->begin();
-			camera.begin();
-			f();
-			camera.end();
-			layers_map[name]->end();
-		}
-
-		PINEAL("draw_layer")
-		void draw_layer(string name){
-			if(layers_map.find(name) == layers_map.end()){
-				new_layer(name);
-			}
-			layers_map[name]->getTexture().draw(-1, -1, 2, 2);
-		}
-	}
-
-	namespace audio{
-		bool beat_value = false;
-		int beat_count = 0;
-		float beat_time = 1.0;
-		float last_beat = 0;
-
-		bool onset_value = false;
-		float last_onset = 0;
-
-		ofSoundBuffer inBuf;
-
-
-		void update(){
-			beat_value = false;
-			onset_value = false;
-		}
-
-		void set_inBuf(ofSoundBuffer in){
-			inBuf = in;
-		}
-
-		void set_beat(){
-			beat_value = true;
-			beat_count += 1;
-
-			float actual_time = (float)ofGetSystemTimeMicros() / 1000;
-			beat_time = actual_time - last_beat;
-			last_beat = actual_time;
-		}
-
-		void set_onset(){
-			onset_value = true;
-
-			float actual_time = (float)ofGetSystemTimeMicros() / 1000;
-			last_onset = actual_time;
-		}
-
-		PINEAL("beat")
-		bool beat_n_t(int n, float t){
-			float actual_time = (float)ofGetSystemTimeMicros() / 1000;
-
-			if(beat_count % n == 0 && actual_time - last_beat < beat_time * t){
-				return true;
-			}else{
-				return false;
-			}
-		}
-
-		PINEAL("beat")
-		bool beat_n(int n){
-			return beat_n_t(n, 1.0);
-		}
-
-		PINEAL("beat")
-		bool beat(){
-			return beat_n(1);
-		}
-
-		PINEAL("onset")
-		bool onset_t(float t){
-			float actual_time = (float)ofGetSystemTimeMicros() / 1000;
-
-			if(actual_time - last_onset < beat_time * t){
-				return true;
-			}else{
-				return false;
-			}
-		}
-
-		PINEAL("onset")
-		bool onset(){
-			return onset_value;
-		}
-
-		PINEAL("rms")
-		float rms(){
-			return inBuf.getRMSAmplitude();
-		}
-	}
-
 	namespace primitives{
 		PINEAL("cube")
 		void cube(double r){
@@ -148,95 +27,6 @@ namespace dsl{
 		PINEAL("polygon")
 		void polygon_n(int n){
 			polygon_n_r(n, 1);
-		}
-	}
-
-	namespace colors{
-		void setup(){
-			ofSetColor(255);
-			ofFill();
-			ofSetLineWidth(1);
-		}
-
-		PINEAL("background")
-		void background(double r, double g, double b, double a){
-			ofBackground(r * 255, g * 255, b * 255, a * 255);
-		}
-
-		PINEAL("color")
-		void color(py::object f, double r, double g, double b, double a){
-			static ofColor status_color;
-			ofColor old_color = status_color;
-			ofColor new_color = ofColor(r * 255, g * 255, b * 255, a * 255);
-
-			status_color = new_color;
-			ofSetColor(status_color);
-
-			f();
-
-			status_color = old_color;
-			ofSetColor(status_color);
-		}
-
-		PINEAL("color")
-		void color_rgb(py::object f, double r, double g, double b){
-			color(f, r, g, b, 1);
-		}
-
-		PINEAL("color")
-		void color_grey(py::object f, double c){
-			color(f, c, c, c, 1);
-		}
-
-		PINEAL("color")
-		void color_grey_alpha(py::object f, double c, double a){
-			color(f, c, c, c, a);
-		}
-
-		void fill_status(py::object f, bool status){
-			static bool status_fill = true;
-			bool old_fill = status_fill;
-			bool new_fill = status;
-
-			status_fill = new_fill;
-			if(status_fill){
-				ofFill();
-			}else{
-				ofNoFill();
-			}
-
-			f();
-
-			status_fill = old_fill;
-			if(status_fill){
-				ofFill();
-			}else{
-				ofNoFill();
-			}
-		}
-
-		PINEAL("fill")
-		void fill(py::object f){
-			fill_status(f, true);
-		}
-
-		PINEAL("no_fill")
-		void no_fill(py::object f){
-			fill_status(f, false);
-		}
-
-		PINEAL("line_width")
-		void line_width(py::object f, double new_width){
-			static double status_line_width = 1;
-			double old_width = status_line_width;
-
-			status_line_width = new_width;
-			ofSetLineWidth(status_line_width);
-
-			f();
-
-			status_line_width = old_width;
-			ofSetLineWidth(status_line_width);
 		}
 	}
 
@@ -339,29 +129,220 @@ namespace dsl{
 		}
 	}
 
+	namespace audio{
+		bool beat_value = false;
+		int beat_count = 0;
+		float beat_time = 1.0;
+		float last_beat = 0;
+
+		bool onset_value = false;
+		float last_onset = 0;
+
+		ofSoundBuffer inBuf;
+
+
+		void update(){
+			beat_value = false;
+			onset_value = false;
+		}
+
+		void set_inBuf(ofSoundBuffer in){
+			inBuf = in;
+		}
+
+		void set_beat(){
+			beat_value = true;
+			beat_count += 1;
+
+			float actual_time = (float)ofGetSystemTimeMicros() / 1000;
+			beat_time = actual_time - last_beat;
+			last_beat = actual_time;
+		}
+
+		void set_onset(){
+			onset_value = true;
+
+			float actual_time = (float)ofGetSystemTimeMicros() / 1000;
+			last_onset = actual_time;
+		}
+
+		PINEAL("beat")
+		bool beat_n_t(int n, float t){
+			float actual_time = (float)ofGetSystemTimeMicros() / 1000;
+
+			if(beat_count % n == 0 && actual_time - last_beat < beat_time * t){
+				return true;
+			}else{
+				return false;
+			}
+		}
+
+		PINEAL("beat")
+		bool beat_n(int n){
+			return beat_n_t(n, 1.0);
+		}
+
+		PINEAL("beat")
+		bool beat(){
+			return beat_n(1);
+		}
+
+		PINEAL("onset")
+		bool onset_t(float t){
+			float actual_time = (float)ofGetSystemTimeMicros() / 1000;
+
+			if(actual_time - last_onset < beat_time * t){
+				return true;
+			}else{
+				return false;
+			}
+		}
+
+		PINEAL("onset")
+		bool onset(){
+			return onset_value;
+		}
+
+		PINEAL("rms")
+		float rms(){
+			return inBuf.getRMSAmplitude();
+		}
+	}
+
+	namespace layers{
+		unordered_map<string, shared_ptr<ofFbo>> layers_map;
+
+		void new_layer(string name){
+			if(layers_map.find(name) != layers_map.end()){
+				return;
+			}
+			auto fbo = make_shared<ofFbo>();
+
+			fbo->allocate(BUFFER_SIZE, BUFFER_SIZE, GL_RGBA);
+			fbo->begin();
+			ofClear(255,255,255, 0);
+			fbo->end();
+			layers_map[name] = fbo;
+		}
+
+		PINEAL("on_layer")
+		void on_layer(py::object f, string name){
+			if(layers_map.find(name) == layers_map.end()){
+				new_layer(name);
+			}
+			ofEasyCam camera;
+			camera.setDistance(1);
+			camera.setNearClip(0.01);
+
+			layers_map[name]->begin();
+			camera.begin();
+			f();
+			camera.end();
+			layers_map[name]->end();
+		}
+
+		PINEAL("draw_layer")
+		void draw_layer(string name){
+			if(layers_map.find(name) == layers_map.end()){
+				new_layer(name);
+			}
+			layers_map[name]->getTexture().draw(-1, -1, 2, 2);
+		}
+	}
+
+	namespace colors{
+		void setup(){
+			ofSetColor(255);
+			ofFill();
+			ofSetLineWidth(1);
+		}
+
+		PINEAL("background")
+		void background(double r, double g, double b, double a){
+			ofBackground(r * 255, g * 255, b * 255, a * 255);
+		}
+
+		PINEAL("color")
+		void color(py::object f, double r, double g, double b, double a){
+			static ofColor status_color;
+			ofColor old_color = status_color;
+			ofColor new_color = ofColor(r * 255, g * 255, b * 255, a * 255);
+
+			status_color = new_color;
+			ofSetColor(status_color);
+
+			f();
+
+			status_color = old_color;
+			ofSetColor(status_color);
+		}
+
+		PINEAL("color")
+		void color_rgb(py::object f, double r, double g, double b){
+			color(f, r, g, b, 1);
+		}
+
+		PINEAL("color")
+		void color_grey(py::object f, double c){
+			color(f, c, c, c, 1);
+		}
+
+		PINEAL("color")
+		void color_grey_alpha(py::object f, double c, double a){
+			color(f, c, c, c, a);
+		}
+
+		void fill_status(py::object f, bool status){
+			static bool status_fill = true;
+			bool old_fill = status_fill;
+			bool new_fill = status;
+
+			status_fill = new_fill;
+			if(status_fill){
+				ofFill();
+			}else{
+				ofNoFill();
+			}
+
+			f();
+
+			status_fill = old_fill;
+			if(status_fill){
+				ofFill();
+			}else{
+				ofNoFill();
+			}
+		}
+
+		PINEAL("fill")
+		void fill(py::object f){
+			fill_status(f, true);
+		}
+
+		PINEAL("no_fill")
+		void no_fill(py::object f){
+			fill_status(f, false);
+		}
+
+		PINEAL("line_width")
+		void line_width(py::object f, double new_width){
+			static double status_line_width = 1;
+			double old_width = status_line_width;
+
+			status_line_width = new_width;
+			ofSetLineWidth(status_line_width);
+
+			f();
+
+			status_line_width = old_width;
+			ofSetLineWidth(status_line_width);
+		}
+	}
+
 	BOOST_PYTHON_MODULE(core){
-		py::def("on_layer", &layers::on_layer);
-		py::def("draw_layer", &layers::draw_layer);
-
-		py::def("beat", &audio::beat_n_t);
-		py::def("beat", &audio::beat_n);
-		py::def("beat", &audio::beat);
-		py::def("onset", &audio::onset_t);
-		py::def("onset", &audio::onset);
-		py::def("rms", &audio::rms);
-
 		py::def("cube", &primitives::cube);
 		py::def("polygon", &primitives::polygon_n_r);
 		py::def("polygon", &primitives::polygon_n);
-
-		py::def("background", &colors::background);
-		py::def("color", &colors::color);
-		py::def("color", &colors::color_rgb);
-		py::def("color", &colors::color_grey);
-		py::def("color", &colors::color_grey_alpha);
-		py::def("fill", &colors::fill);
-		py::def("no_fill", &colors::no_fill);
-		py::def("line_width", &colors::line_width);
 
 		py::def("scale", &transformations::scale_xyz);
 		py::def("scale", &transformations::scale_xy);
@@ -375,5 +356,24 @@ namespace dsl{
 		py::def("turn_x", &transformations::turn_x);
 		py::def("turn_y", &transformations::turn_y);
 		py::def("turn_z", &transformations::turn_z);
+
+		py::def("beat", &audio::beat_n_t);
+		py::def("beat", &audio::beat_n);
+		py::def("beat", &audio::beat);
+		py::def("onset", &audio::onset_t);
+		py::def("onset", &audio::onset);
+		py::def("rms", &audio::rms);
+
+		py::def("on_layer", &layers::on_layer);
+		py::def("draw_layer", &layers::draw_layer);
+
+		py::def("background", &colors::background);
+		py::def("color", &colors::color);
+		py::def("color", &colors::color_rgb);
+		py::def("color", &colors::color_grey);
+		py::def("color", &colors::color_grey_alpha);
+		py::def("fill", &colors::fill);
+		py::def("no_fill", &colors::no_fill);
+		py::def("line_width", &colors::line_width);
 	}
 }

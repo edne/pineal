@@ -63,6 +63,8 @@
              {:name name :body body :defines defines}))
     list))
 
+(modules.sort)
+
 (setv bodies
   (join-blocks (map #%(namespace (:name %)
                                  (:body %))
