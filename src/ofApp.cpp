@@ -83,6 +83,9 @@ void ofApp::update(){
 }
 
 void ofApp::draw(){
+	output.allocate(BUFFER_SIZE, BUFFER_SIZE, GL_RGBA);
+	output.begin();
+
 	camera.begin();
 	try{
 		vision.attr("draw")();
@@ -91,15 +94,28 @@ void ofApp::draw(){
 	}
 	camera.end();
 
+	output.end();
+
+	int w = ofGetWidth();
+	int h = ofGetHeight();
+	int side = max(w, h);
+	getTexture().draw((w - side) / 2,
+	                  (h - side) / 2,
+	                  side, side);
+
 	string fps = "FPS: " + ofToString(ofGetFrameRate());
 	ofSetColor(255);
 	ofDrawBitmapString(fps, 10, 20);
 }
 
-void ofApp::onsetEvent(float & time) {
+ofTexture ofApp::getTexture(){
+	return output.getTexture();
+}
+
+void ofApp::onsetEvent(float & time){
 	dsl::audio::set_onset();
 }
 
-void ofApp::beatEvent(float & time) {
+void ofApp::beatEvent(float & time){
 	dsl::audio::set_beat();
 }

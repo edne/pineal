@@ -18,6 +18,8 @@ class ofApp : public ofBaseApp{
         void exit();
 		void draw();
 
+		ofTexture getTexture();
+
         void audioIn(float * input, int bufferSize, int nChannels);
 
         void onsetEvent(float & time);
@@ -26,6 +28,8 @@ class ofApp : public ofBaseApp{
 	private:
 		int argc;
 		char ** argv;
+
+		ofFbo output;
 
 		ofxOscReceiver oscReceiver;
 
