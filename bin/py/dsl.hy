@@ -56,3 +56,16 @@
 (defmacro at [event &rest body]
   "Draw something at an event"
   `(if ~event (@ ~@body)))
+
+
+(defmacro/g! recursion [name max-depth &rest body]
+  "Recursion macro, experimantal"
+  `(do
+     (defn ~g!name [~g!depth]
+       (defn ~name []
+         (~g!name (dec ~g!depth)))
+       (when ~g!depth
+         ~@body))
+
+     (defn ~name []
+       (~g!name ~max-depth))))
