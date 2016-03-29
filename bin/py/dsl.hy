@@ -38,8 +38,15 @@
             ~@(rest tail)))))
 
 
+(defmacro compose [name &rest actions]
+  "Compose actions, cannot be anonymous because the implementation of -@>"
+  `(defn ~name [f]
+     (-@> (f)
+          ~@actions)))
+
+
 (defmacro @ [&rest body]
-  "Group macro, wrap more actions or entities in a single expression"
+  "Group macro, wrap more entities in a single expression"
   `((fn [] ~@body)))
 
 

@@ -11,7 +11,7 @@
 ;(def r (sin (time)))
 (def r 1)
 
-(recursion asd 10
+(recursion asd 7
            (circle r)
            (-@> (asd)
                 (scale 0.7)
@@ -20,8 +20,14 @@
                 (scale 0.3)
                 (translate -0.7)))
 
+
+(compose action
+         (line-width 2)
+         (scale 0.25)
+         (rotate-x -1))
+
 (-@> (asd)
-     (line-width 2)
+     (action)
      (no-fill))
 
 '(on level-1
