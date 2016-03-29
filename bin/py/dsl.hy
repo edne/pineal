@@ -65,14 +65,18 @@
   `(if ~event (@ ~@body)))
 
 
-(defmacro/g! recursion [name max-depth &rest body]
+(defmacro/g! recursion [max-depth entity &rest branches]
   "Recursion macro, experimantal"
   `(do
-     (defn ~g!name [~g!depth]
-       (defn ~name []
-         (~g!name (dec ~g!depth)))
-       (when ~g!depth
-         ~@body))
+     (defn recursion* [depth entity actions]
+       (when depth
+         (entity)
+         (for [a actions]
+           (recursion* (dec depth)
+                       (fn [] (a entity)) actions))))
 
-     (defn ~name []
-       (~g!name ~max-depth))))
+     (recursion* ~max-depth
+                 (fn [] ~entity)
+                 [~@(map (fn [b]
+                           `(fn [f] (~(first b) f ~@(rest b))))
+                      branches)])))
