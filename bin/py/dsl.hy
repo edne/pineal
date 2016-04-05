@@ -6,7 +6,6 @@
      (import [time [time :as --time--]])
 
      (def 2pi (* 2 pi))
-
      (value time (--time--))
      (value amp (rms))))
 
@@ -63,6 +62,10 @@
 (defmacro at [event &rest body]
   "Draw something at an event"
   `(if ~event (@ ~@body)))
+
+
+(defmacro osc [path default]
+  `(osc-value (str '~path) ~default))
 
 
 (defmacro/g! recursion [max-depth entity &rest branches]

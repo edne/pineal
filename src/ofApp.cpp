@@ -67,8 +67,9 @@ void ofApp::update(){
 		// get the next message
 		ofxOscMessage m;
 		oscReceiver.getNextMessage(m);
+        string address = m.getAddress();
 
-		if(m.getAddress() == "/code"){
+		if(address == "/code"){
 			dsl::colors::setup();
 
 			string code = m.getArgAsString(0);
@@ -78,7 +79,9 @@ void ofApp::update(){
 			}catch(py::error_already_set){
 				PyErr_Print();
 			}
-		}
+		}else if(dsl::osc::exists_value(address)){
+            dsl::osc::set_value(address, m.getArgAsFloat(0));
+        }
 	}
 }
 

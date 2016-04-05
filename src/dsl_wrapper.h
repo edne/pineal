@@ -209,6 +209,32 @@ namespace dsl{
 		}
 	}
 
+	namespace osc{
+		unordered_map<string, float> values_map;
+
+		bool exists_value(string name){
+			return values_map.find(name) != values_map.end();
+		}
+
+		void set_value(string name, float x){
+			values_map[name] = x;
+		}
+
+		PINEAL("osc_value")
+		float get_value_with_default(string name, float x){
+			if(!exists_value(name)){
+				set_value(name, x);
+			}
+			return values_map[name];
+		}
+
+		PINEAL("osc_value")
+		float get_value(string name){
+			return get_value_with_default(name, 0.0);
+		}
+
+	}
+
 	namespace layers{
 		unordered_map<string, shared_ptr<ofFbo>> layers_map;
 
@@ -363,6 +389,9 @@ namespace dsl{
 		py::def("onset", &audio::onset_t);
 		py::def("onset", &audio::onset);
 		py::def("rms", &audio::rms);
+
+		py::def("osc_value", &osc::get_value_with_default);
+		py::def("osc_value", &osc::get_value);
 
 		py::def("on_layer", &layers::on_layer);
 		py::def("draw_layer", &layers::draw_layer);
