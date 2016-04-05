@@ -75,7 +75,8 @@
            (recursion* (dec depth)
                        (fn [] (a entity)) actions))))
 
-     (recursion* ~max-depth
+     (recursion* (int (/ (log ~max-depth)
+                        (log ~(len branches))))
                  (fn [] ~entity)
                  [~@(map (fn [b]
                            `(fn [f] (~(first b) f ~@(rest b))))

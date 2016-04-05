@@ -19,7 +19,7 @@
          (scale 0.3)
          (translate -0.7))
 
-(-@> (recursion 7 (circle r)
+(-@> (recursion 100 (circle r)
                 (branch-1)
                 (branch-2))
      (line-width 2)
