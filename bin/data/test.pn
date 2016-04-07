@@ -11,6 +11,8 @@
 ;(def r (sin (time)))
 (def r 1)
 
+((pFunc (fn [] (circle 0.1))))
+
 (-@> (circle 0.4)
      (no-fill))
 

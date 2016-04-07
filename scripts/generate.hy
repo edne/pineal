@@ -79,7 +79,13 @@
              join-rows
              (indent))))
     join-blocks
-    (.format "BOOST_PYTHON_MODULE(core){{\n{}\n}}")))
+    (.format "BOOST_PYTHON_MODULE(core){{
+\tpy::class_<language::pFunc>(\"pFunc\")
+\t    .def(py::init<py::object>())
+\t    .def(\"__call__\", &language::pFunc::__call__)
+\t;
+
+{}}}")))
 
 (setv code
   (join-blocks [(join-rows

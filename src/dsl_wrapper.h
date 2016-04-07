@@ -209,6 +209,27 @@ namespace dsl{
 		}
 	}
 
+	namespace language{
+		class pFunc{
+			public:
+				pFunc(){}
+
+				pFunc(py::object f){
+					lambda = [f](){ f(); };
+				}
+
+				void __call__(){
+					lambda();
+				}
+
+				void operator()(){
+					lambda();
+				}
+
+				function<void(void)> lambda = [](){};
+		};
+	}
+
 	namespace osc{
 		unordered_map<string, float> values_map;
 
@@ -366,6 +387,11 @@ namespace dsl{
 	}
 
 	BOOST_PYTHON_MODULE(core){
+		py::class_<language::pFunc>("pFunc")
+		    .def(py::init<py::object>())
+		    .def("__call__", &language::pFunc::__call__)
+		;
+
 		py::def("cube", &primitives::cube);
 		py::def("polygon", &primitives::polygon_n_r);
 		py::def("polygon", &primitives::polygon_n);
@@ -390,6 +416,8 @@ namespace dsl{
 		py::def("onset", &audio::onset);
 		py::def("rms", &audio::rms);
 
+
+
 		py::def("osc_value", &osc::get_value_with_default);
 		py::def("osc_value", &osc::get_value);
 
@@ -403,6 +431,5 @@ namespace dsl{
 		py::def("color", &colors::color_grey_alpha);
 		py::def("fill", &colors::fill);
 		py::def("no_fill", &colors::no_fill);
-		py::def("line_width", &colors::line_width);
-	}
+		py::def("line_width", &colors::line_width);}
 }
