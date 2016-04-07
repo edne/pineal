@@ -22,6 +22,7 @@ void ofApp::setup(){
 
 	ofSetVerticalSync(true);
 	ofEnableDepthTest();
+    ofEnableSmoothing();
 
 	camera.setDistance(1);
 	camera.setNearClip(0.01);
