@@ -1,5 +1,5 @@
 PINEAL("scale")
-void scale_xyz(py::object f, double x, double y, double z){
+void scale_xyz(pFunc f, double x, double y, double z){
 	ofPushMatrix();
 	ofScale(x, y, z);
 	f();
@@ -7,17 +7,17 @@ void scale_xyz(py::object f, double x, double y, double z){
 }
 
 PINEAL("scale")
-void scale_xy(py::object f, double x, double y){
+void scale_xy(pFunc f, double x, double y){
 	scale_xyz(f, x, y, 1);
 }
 
 PINEAL("scale")
-void scale_r(py::object f, double r){
+void scale_r(pFunc f, double r){
 	scale_xyz(f, r, r, r);
 }
 
 PINEAL("translate")
-void translate_xyz(py::object f, double x, double y, double z){
+void translate_xyz(pFunc f, double x, double y, double z){
 	ofPushMatrix();
 	ofTranslate(x, y, z);
 	f();
@@ -25,17 +25,17 @@ void translate_xyz(py::object f, double x, double y, double z){
 }
 
 PINEAL("translate")
-void translate_xy(py::object f, double x, double y){
+void translate_xy(pFunc f, double x, double y){
 	translate_xyz(f, x, y, 0);
 }
 
 PINEAL("translate")
-void translate_x(py::object f, double x){
+void translate_x(pFunc f, double x){
 	translate_xyz(f, x, 0, 0);
 }
 
 PINEAL("rotate_x")
-void rotate_x(py::object f, double rad){
+void rotate_x(pFunc f, double rad){
 	ofPushMatrix();
 	ofRotateX(180 * rad / PI);
 	f();
@@ -43,7 +43,7 @@ void rotate_x(py::object f, double rad){
 }
 
 PINEAL("rotate_y")
-void rotate_y(py::object f, double rad){
+void rotate_y(pFunc f, double rad){
 	ofPushMatrix();
 	ofRotateY(180 * rad / PI);
 	f();
@@ -51,7 +51,7 @@ void rotate_y(py::object f, double rad){
 }
 
 PINEAL("rotate_z")
-void rotate_z(py::object f, double rad){
+void rotate_z(pFunc f, double rad){
 	ofPushMatrix();
 	ofRotateZ(180 * rad / PI);
 	f();
@@ -62,7 +62,7 @@ typedef enum{
 	X, Y, Z
 }Axis;
 
-void turn(py::object f, Axis axis, int n){
+void turn(pFunc f, Axis axis, int n){
 	double rot;
 
 	ofPushMatrix();
@@ -81,16 +81,16 @@ void turn(py::object f, Axis axis, int n){
 }
 
 PINEAL("turn_x")
-void turn_x(py::object f, int n){
+void turn_x(pFunc f, int n){
 	turn(f, X, n);
 }
 
 PINEAL("turn_y")
-void turn_y(py::object f, int n){
+void turn_y(pFunc f, int n){
 	turn(f, Y, n);
 }
 
 PINEAL("turn_z")
-void turn_z(py::object f, int n){
+void turn_z(pFunc f, int n){
 	turn(f, Z, n);
 }

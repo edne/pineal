@@ -14,7 +14,7 @@ void new_layer(string name){
 }
 
 PINEAL("on_layer")
-void on_layer(py::object f, string name){
+void on_layer(pFunc f, string name){
 	if(layers_map.find(name) == layers_map.end()){
 		new_layer(name);
 	}

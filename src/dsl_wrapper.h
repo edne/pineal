@@ -32,7 +32,7 @@ namespace dsl{
 
 	namespace transformations{
 		PINEAL("scale")
-		void scale_xyz(py::object f, double x, double y, double z){
+		void scale_xyz(pFunc f, double x, double y, double z){
 			ofPushMatrix();
 			ofScale(x, y, z);
 			f();
@@ -40,17 +40,17 @@ namespace dsl{
 		}
 
 		PINEAL("scale")
-		void scale_xy(py::object f, double x, double y){
+		void scale_xy(pFunc f, double x, double y){
 			scale_xyz(f, x, y, 1);
 		}
 
 		PINEAL("scale")
-		void scale_r(py::object f, double r){
+		void scale_r(pFunc f, double r){
 			scale_xyz(f, r, r, r);
 		}
 
 		PINEAL("translate")
-		void translate_xyz(py::object f, double x, double y, double z){
+		void translate_xyz(pFunc f, double x, double y, double z){
 			ofPushMatrix();
 			ofTranslate(x, y, z);
 			f();
@@ -58,17 +58,17 @@ namespace dsl{
 		}
 
 		PINEAL("translate")
-		void translate_xy(py::object f, double x, double y){
+		void translate_xy(pFunc f, double x, double y){
 			translate_xyz(f, x, y, 0);
 		}
 
 		PINEAL("translate")
-		void translate_x(py::object f, double x){
+		void translate_x(pFunc f, double x){
 			translate_xyz(f, x, 0, 0);
 		}
 
 		PINEAL("rotate_x")
-		void rotate_x(py::object f, double rad){
+		void rotate_x(pFunc f, double rad){
 			ofPushMatrix();
 			ofRotateX(180 * rad / PI);
 			f();
@@ -76,7 +76,7 @@ namespace dsl{
 		}
 
 		PINEAL("rotate_y")
-		void rotate_y(py::object f, double rad){
+		void rotate_y(pFunc f, double rad){
 			ofPushMatrix();
 			ofRotateY(180 * rad / PI);
 			f();
@@ -84,7 +84,7 @@ namespace dsl{
 		}
 
 		PINEAL("rotate_z")
-		void rotate_z(py::object f, double rad){
+		void rotate_z(pFunc f, double rad){
 			ofPushMatrix();
 			ofRotateZ(180 * rad / PI);
 			f();
@@ -95,7 +95,7 @@ namespace dsl{
 			X, Y, Z
 		}Axis;
 
-		void turn(py::object f, Axis axis, int n){
+		void turn(pFunc f, Axis axis, int n){
 			double rot;
 
 			ofPushMatrix();
@@ -114,17 +114,17 @@ namespace dsl{
 		}
 
 		PINEAL("turn_x")
-		void turn_x(py::object f, int n){
+		void turn_x(pFunc f, int n){
 			turn(f, X, n);
 		}
 
 		PINEAL("turn_y")
-		void turn_y(py::object f, int n){
+		void turn_y(pFunc f, int n){
 			turn(f, Y, n);
 		}
 
 		PINEAL("turn_z")
-		void turn_z(py::object f, int n){
+		void turn_z(pFunc f, int n){
 			turn(f, Z, n);
 		}
 	}
@@ -209,27 +209,6 @@ namespace dsl{
 		}
 	}
 
-	namespace language{
-		class pFunc{
-			public:
-				pFunc(){}
-
-				pFunc(py::object f){
-					lambda = [f](){ f(); };
-				}
-
-				void __call__(){
-					lambda();
-				}
-
-				void operator()(){
-					lambda();
-				}
-
-				function<void(void)> lambda = [](){};
-		};
-	}
-
 	namespace osc{
 		unordered_map<string, float> values_map;
 
@@ -273,7 +252,7 @@ namespace dsl{
 		}
 
 		PINEAL("on_layer")
-		void on_layer(py::object f, string name){
+		void on_layer(pFunc f, string name){
 			if(layers_map.find(name) == layers_map.end()){
 				new_layer(name);
 			}
@@ -310,7 +289,7 @@ namespace dsl{
 		}
 
 		PINEAL("color")
-		void color(py::object f, double r, double g, double b, double a){
+		void color(pFunc f, double r, double g, double b, double a){
 			static ofColor status_color;
 			ofColor old_color = status_color;
 			ofColor new_color = ofColor(r * 255, g * 255, b * 255, a * 255);
@@ -325,21 +304,21 @@ namespace dsl{
 		}
 
 		PINEAL("color")
-		void color_rgb(py::object f, double r, double g, double b){
+		void color_rgb(pFunc f, double r, double g, double b){
 			color(f, r, g, b, 1);
 		}
 
 		PINEAL("color")
-		void color_grey(py::object f, double c){
+		void color_grey(pFunc f, double c){
 			color(f, c, c, c, 1);
 		}
 
 		PINEAL("color")
-		void color_grey_alpha(py::object f, double c, double a){
+		void color_grey_alpha(pFunc f, double c, double a){
 			color(f, c, c, c, a);
 		}
 
-		void fill_status(py::object f, bool status){
+		void fill_status(pFunc f, bool status){
 			static bool status_fill = true;
 			bool old_fill = status_fill;
 			bool new_fill = status;
@@ -362,17 +341,17 @@ namespace dsl{
 		}
 
 		PINEAL("fill")
-		void fill(py::object f){
+		void fill(pFunc f){
 			fill_status(f, true);
 		}
 
 		PINEAL("no_fill")
-		void no_fill(py::object f){
+		void no_fill(pFunc f){
 			fill_status(f, false);
 		}
 
 		PINEAL("line_width")
-		void line_width(py::object f, double new_width){
+		void line_width(pFunc f, double new_width){
 			static double status_line_width = 1;
 			double old_width = status_line_width;
 
@@ -387,9 +366,9 @@ namespace dsl{
 	}
 
 	BOOST_PYTHON_MODULE(core){
-		py::class_<language::pFunc>("pFunc")
+		py::class_<pFunc>("pFunc")
 		    .def(py::init<py::object>())
-		    .def("__call__", &language::pFunc::__call__)
+		    .def("__call__", &pFunc::__call__)
 		;
 
 		py::def("cube", &primitives::cube);
@@ -415,8 +394,6 @@ namespace dsl{
 		py::def("onset", &audio::onset_t);
 		py::def("onset", &audio::onset);
 		py::def("rms", &audio::rms);
-
-
 
 		py::def("osc_value", &osc::get_value_with_default);
 		py::def("osc_value", &osc::get_value);

@@ -32,7 +32,7 @@
   (if-not tail 
     head
     (let [[next (first tail)]]
-      `(-@> (~(first next) (fn [] ~head)
+      `(-@> (~(first next) (pFunc (fn [] ~head))
                            ~@(rest next))
             ~@(rest tail)))))
 
@@ -46,13 +46,13 @@
 
 (defmacro @ [&rest body]
   "Group macro, wrap more entities in a single expression"
-  `((fn [] ~@body)))
+  `(do ~@body))  ; TODO: compose(pFunc, pFunc)
 
 
 (defmacro on [name &rest body]
   "Define a layer an draw on it, then call the layer to blit it"
   `(do
-     (on-layer (fn [] ~@body) (str '~name))
+     (on-layer (pFunc (fn [] ~@body)) (str '~name))
 
      (defn ~name []
        "Draw the layer as an image"
@@ -76,11 +76,11 @@
          (entity)
          (for [a actions]
            (recursion* (dec depth)
-                       (fn [] (a entity)) actions))))
+                       (pFunc (fn [] (a entity))) actions))))
 
      (recursion* (int (/ (log ~max-depth)
                         (log ~(len branches))))
-                 (fn [] ~entity)
+                 (pFunc (fn [] ~entity))
                  [~@(map (fn [b]
                            `(fn [f] (~(first b) f ~@(rest b))))
                       branches)])))
