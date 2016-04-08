@@ -41,17 +41,17 @@ class ofApp : public ofBaseApp{
 		ofxAubioBeat beat;
 };
 
-class pFunc{
+class pEntity{
 	public:
-		pFunc(){
+		pEntity(){
 			lambda = [](){};
 		}
 
-		pFunc(py::object f){
-			lambda = [f](){ f(); };
+		pEntity(py::object f){
+			lambda = [=](){ f(); };
 		}
 
-		pFunc(function<void(void)> f){
+		pEntity(function<void(void)> f){
 			lambda = f;
 		}
 
@@ -63,5 +63,31 @@ class pFunc{
 			lambda();
 		}
 
+	private:
 		function<void(void)> lambda;
+};
+
+class pAction{
+	public:
+		pAction(){  // by default identity
+			lambda = [](pEntity& e){
+				return e;
+			};
+		}
+
+		pAction(function<pEntity(pEntity&)> a){
+			lambda = a;
+		}
+
+		pEntity __call__(pEntity& e){
+			return lambda(e);
+		}
+
+		pEntity operator()(pEntity& e){
+			return lambda(e);
+		}
+
+
+	private:
+		function<pEntity(pEntity&)> lambda;
 };

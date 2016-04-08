@@ -80,9 +80,13 @@
              (indent))))
     join-blocks
     (.format "BOOST_PYTHON_MODULE(core){{
-\tpy::class_<pFunc>(\"pFunc\")
+\tpy::class_<pEntity>(\"pEntity\")
 \t    .def(py::init<py::object>())
-\t    .def(\"__call__\", &pFunc::__call__)
+\t    .def(\"__call__\", &pEntity::__call__)
+\t;
+
+\tpy::class_<pAction>(\"pAction\")
+\t    .def(\"__call__\", &pAction::__call__)
 \t;
 
 {}}}")))
