@@ -22,7 +22,7 @@ void ofApp::setup(){
 
 	ofSetVerticalSync(true);
 	ofEnableDepthTest();
-    ofEnableSmoothing();
+	ofEnableSmoothing();
 
 	camera.setDistance(1);
 	camera.setNearClip(0.01);
@@ -30,26 +30,26 @@ void ofApp::setup(){
 	ofSetEscapeQuitsApp(false);
 	oscReceiver.setup(7172);
 
-    int nOutputs = 2;
-    int nInputs = 2;
+	int nOutputs = 2;
+	int nInputs = 2;
 
-    onset.setup();
-    beat.setup();
+	onset.setup();
+	beat.setup();
 
-    ofAddListener(onset.gotOnset, this, &ofApp::onsetEvent);
-    ofAddListener(beat.gotBeat, this, &ofApp::beatEvent);
+	ofAddListener(onset.gotOnset, this, &ofApp::onsetEvent);
+	ofAddListener(beat.gotBeat, this, &ofApp::beatEvent);
 
-    ofSoundStreamSetup(nOutputs, nInputs, this);
+	ofSoundStreamSetup(nOutputs, nInputs, this);
 }
 
 void ofApp::exit(){
-    ofSoundStreamStop();
-    ofSoundStreamClose();
+	ofSoundStreamStop();
+	ofSoundStreamClose();
 }
 
 void ofApp::audioIn(float * input, int bufferSize, int nChannels){
-    onset.audioIn(input, bufferSize, nChannels);
-    beat.audioIn(input, bufferSize, nChannels);
+	onset.audioIn(input, bufferSize, nChannels);
+	beat.audioIn(input, bufferSize, nChannels);
 
 	ofSoundBuffer inBuf;
 	inBuf.allocate(bufferSize, nChannels);
@@ -68,7 +68,7 @@ void ofApp::update(){
 		// get the next message
 		ofxOscMessage m;
 		oscReceiver.getNextMessage(m);
-        string address = m.getAddress();
+		string address = m.getAddress();
 
 		if(address == "/code"){
 			dsl::colors::setup();
@@ -81,8 +81,8 @@ void ofApp::update(){
 				PyErr_Print();
 			}
 		}else if(dsl::osc::exists_value(address)){
-            dsl::osc::set_value(address, m.getArgAsFloat(0));
-        }
+			dsl::osc::set_value(address, m.getArgAsFloat(0));
+		}
 	}
 }
 

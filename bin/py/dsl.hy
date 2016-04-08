@@ -70,17 +70,9 @@
 
 (defmacro/g! recursion [max-depth entity &rest branches]
   "Recursion macro, experimantal"
-  `(do
-     (defn recursion* [depth entity actions]
-       (when depth
-         (entity)
-         (for [a actions]
-           (recursion* (dec depth)
-                       (pFunc (fn [] (a entity))) actions))))
-
-     (recursion* (int (/ (log ~max-depth)
-                        (log ~(len branches))))
-                 (pFunc (fn [] ~entity))
-                 [~@(map (fn [b]
-                           `(fn [f] (~(first b) f ~@(rest b))))
-                      branches)])))
+  `(recursion-c (int (/ (log ~max-depth)
+                       (log ~(len branches))))
+                (pFunc (fn [] ~entity))
+                [~@(map (fn [b]
+                          `(fn [f] (~(first b) f ~@(rest b))))
+                     branches)]))

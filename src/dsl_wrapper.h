@@ -127,6 +127,19 @@ namespace dsl{
 		void turn_z(pFunc f, int n){
 			turn(f, Z, n);
 		}
+
+		PINEAL("recursion_c")
+		void recursion(int depth, pFunc entity, py::list& actions){
+			if(depth > 0){
+				entity();
+				for(int i=0; i<py::len(actions); i++){
+					py::object a = actions[i];
+					pFunc applied([&](){ a(entity); });
+
+					recursion(depth - 1, applied, actions);
+				}
+			}
+		}
 	}
 
 	namespace audio{
@@ -387,6 +400,7 @@ namespace dsl{
 		py::def("turn_x", &transformations::turn_x);
 		py::def("turn_y", &transformations::turn_y);
 		py::def("turn_z", &transformations::turn_z);
+		py::def("recursion_c", &transformations::recursion);
 
 		py::def("beat", &audio::beat_n_t);
 		py::def("beat", &audio::beat_n);

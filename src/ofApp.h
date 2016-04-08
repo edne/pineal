@@ -15,15 +15,15 @@ class ofApp : public ofBaseApp{
 		ofApp(int argc, char ** argv);
 		void setup();
 		void update();
-        void exit();
+		void exit();
 		void draw();
 
 		ofTexture getTexture();
 
-        void audioIn(float * input, int bufferSize, int nChannels);
+		void audioIn(float * input, int bufferSize, int nChannels);
 
-        void onsetEvent(float & time);
-        void beatEvent(float & time);
+		void onsetEvent(float & time);
+		void beatEvent(float & time);
 
 	private:
 		int argc;
@@ -37,16 +37,22 @@ class ofApp : public ofBaseApp{
 		ofEasyCam camera;
 		ofFbo master;
 
-        ofxAubioOnset onset;
-        ofxAubioBeat beat;
+		ofxAubioOnset onset;
+		ofxAubioBeat beat;
 };
 
 class pFunc{
 	public:
-		pFunc(){}
+		pFunc(){
+			lambda = [](){};
+		}
 
 		pFunc(py::object f){
 			lambda = [f](){ f(); };
+		}
+
+		pFunc(function<void(void)> f){
+			lambda = f;
 		}
 
 		void __call__(){
@@ -57,5 +63,5 @@ class pFunc{
 			lambda();
 		}
 
-		function<void(void)> lambda = [](){};
+		function<void(void)> lambda;
 };

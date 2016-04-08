@@ -94,3 +94,17 @@ PINEAL("turn_z")
 void turn_z(pFunc f, int n){
 	turn(f, Z, n);
 }
+
+PINEAL("recursion_c")
+void recursion(int depth, pFunc entity, py::list& actions){
+	if(depth > 0){
+		entity();
+
+		for(int i=0; i<py::len(actions); i++){
+			py::object a = actions[i];
+			pFunc applied([&](){ a(entity); });
+
+			recursion(depth - 1, applied, actions);
+		}
+	}
+}
