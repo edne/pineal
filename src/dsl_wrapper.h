@@ -32,7 +32,7 @@ namespace dsl{
 
 	namespace transformations{
 		PINEAL("scale")
-		void scale_xyz(pFunc f, double x, double y, double z){
+		void scale_xyz(pFunc& f, double x, double y, double z){
 			ofPushMatrix();
 			ofScale(x, y, z);
 			f();
@@ -40,17 +40,17 @@ namespace dsl{
 		}
 
 		PINEAL("scale")
-		void scale_xy(pFunc f, double x, double y){
+		void scale_xy(pFunc& f, double x, double y){
 			scale_xyz(f, x, y, 1);
 		}
 
 		PINEAL("scale")
-		void scale_r(pFunc f, double r){
+		void scale_r(pFunc& f, double r){
 			scale_xyz(f, r, r, r);
 		}
 
 		PINEAL("translate")
-		void translate_xyz(pFunc f, double x, double y, double z){
+		void translate_xyz(pFunc& f, double x, double y, double z){
 			ofPushMatrix();
 			ofTranslate(x, y, z);
 			f();
@@ -58,17 +58,17 @@ namespace dsl{
 		}
 
 		PINEAL("translate")
-		void translate_xy(pFunc f, double x, double y){
+		void translate_xy(pFunc& f, double x, double y){
 			translate_xyz(f, x, y, 0);
 		}
 
 		PINEAL("translate")
-		void translate_x(pFunc f, double x){
+		void translate_x(pFunc& f, double x){
 			translate_xyz(f, x, 0, 0);
 		}
 
 		PINEAL("rotate_x")
-		void rotate_x(pFunc f, double rad){
+		void rotate_x(pFunc& f, double rad){
 			ofPushMatrix();
 			ofRotateX(180 * rad / PI);
 			f();
@@ -76,7 +76,7 @@ namespace dsl{
 		}
 
 		PINEAL("rotate_y")
-		void rotate_y(pFunc f, double rad){
+		void rotate_y(pFunc& f, double rad){
 			ofPushMatrix();
 			ofRotateY(180 * rad / PI);
 			f();
@@ -84,7 +84,7 @@ namespace dsl{
 		}
 
 		PINEAL("rotate_z")
-		void rotate_z(pFunc f, double rad){
+		void rotate_z(pFunc& f, double rad){
 			ofPushMatrix();
 			ofRotateZ(180 * rad / PI);
 			f();
@@ -95,7 +95,7 @@ namespace dsl{
 			X, Y, Z
 		}Axis;
 
-		void turn(pFunc f, Axis axis, int n){
+		void turn(pFunc& f, Axis axis, int n){
 			double rot;
 
 			ofPushMatrix();
@@ -114,24 +114,25 @@ namespace dsl{
 		}
 
 		PINEAL("turn_x")
-		void turn_x(pFunc f, int n){
+		void turn_x(pFunc& f, int n){
 			turn(f, X, n);
 		}
 
 		PINEAL("turn_y")
-		void turn_y(pFunc f, int n){
+		void turn_y(pFunc& f, int n){
 			turn(f, Y, n);
 		}
 
 		PINEAL("turn_z")
-		void turn_z(pFunc f, int n){
+		void turn_z(pFunc& f, int n){
 			turn(f, Z, n);
 		}
 
 		PINEAL("recursion_c")
-		void recursion(int depth, pFunc entity, py::list& actions){
+		void recursion(int depth, pFunc& entity, py::list& actions){
 			if(depth > 0){
 				entity();
+
 				for(int i=0; i<py::len(actions); i++){
 					py::object a = actions[i];
 					pFunc applied([&](){ a(entity); });
@@ -265,7 +266,7 @@ namespace dsl{
 		}
 
 		PINEAL("on_layer")
-		void on_layer(pFunc f, string name){
+		void on_layer(pFunc& f, string name){
 			if(layers_map.find(name) == layers_map.end()){
 				new_layer(name);
 			}
@@ -302,7 +303,7 @@ namespace dsl{
 		}
 
 		PINEAL("color")
-		void color(pFunc f, double r, double g, double b, double a){
+		void color(pFunc& f, double r, double g, double b, double a){
 			static ofColor status_color;
 			ofColor old_color = status_color;
 			ofColor new_color = ofColor(r * 255, g * 255, b * 255, a * 255);
@@ -317,21 +318,21 @@ namespace dsl{
 		}
 
 		PINEAL("color")
-		void color_rgb(pFunc f, double r, double g, double b){
+		void color_rgb(pFunc& f, double r, double g, double b){
 			color(f, r, g, b, 1);
 		}
 
 		PINEAL("color")
-		void color_grey(pFunc f, double c){
+		void color_grey(pFunc& f, double c){
 			color(f, c, c, c, 1);
 		}
 
 		PINEAL("color")
-		void color_grey_alpha(pFunc f, double c, double a){
+		void color_grey_alpha(pFunc& f, double c, double a){
 			color(f, c, c, c, a);
 		}
 
-		void fill_status(pFunc f, bool status){
+		void fill_status(pFunc& f, bool status){
 			static bool status_fill = true;
 			bool old_fill = status_fill;
 			bool new_fill = status;
@@ -354,17 +355,17 @@ namespace dsl{
 		}
 
 		PINEAL("fill")
-		void fill(pFunc f){
+		void fill(pFunc& f){
 			fill_status(f, true);
 		}
 
 		PINEAL("no_fill")
-		void no_fill(pFunc f){
+		void no_fill(pFunc& f){
 			fill_status(f, false);
 		}
 
 		PINEAL("line_width")
-		void line_width(pFunc f, double new_width){
+		void line_width(pFunc& f, double new_width){
 			static double status_line_width = 1;
 			double old_width = status_line_width;
 
