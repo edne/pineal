@@ -1,3 +1,15 @@
+PINEAL("scale_")
+pAction scale(double x, double y, double z){
+	return pAction([=](pEntity& e){
+		return pEntity([=](){
+			ofPushMatrix();
+			ofScale(x, y, z);
+			e.draw();
+			ofPopMatrix();
+		});
+	});
+}
+
 PINEAL("scale")
 void scale_xyz(pEntity& f, double x, double y, double z){
 	ofPushMatrix();

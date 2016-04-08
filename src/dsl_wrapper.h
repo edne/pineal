@@ -31,6 +31,18 @@ namespace dsl{
 	}
 
 	namespace transformations{
+		PINEAL("scale_")
+		pAction scale(double x, double y, double z){
+			return pAction([=](pEntity& e){
+				return pEntity([=](){
+					ofPushMatrix();
+					ofScale(x, y, z);
+					e.draw();
+					ofPopMatrix();
+				});
+			});
+		}
+
 		PINEAL("scale")
 		void scale_xyz(pEntity& f, double x, double y, double z){
 			ofPushMatrix();
@@ -385,12 +397,15 @@ namespace dsl{
 		    .def("__call__", &pEntity::__call__)
 		;
 
-		py::class_<pAction>("pAction");
+		py::class_<pAction>("pAction")
+		    .def("__call__", &pAction::__call__)
+		;
 
 		py::def("cube", &primitives::cube);
 		py::def("polygon", &primitives::polygon_n_r);
 		py::def("polygon", &primitives::polygon_n);
 
+		py::def("scale_", &transformations::scale);
 		py::def("scale", &transformations::scale_xyz);
 		py::def("scale", &transformations::scale_xy);
 		py::def("scale", &transformations::scale_r);

@@ -44,50 +44,43 @@ class ofApp : public ofBaseApp{
 class pEntity{
 	public:
 		pEntity(){
-			lambda = [](){};
+			draw = [](){};
 		}
 
 		pEntity(py::object f){
-			lambda = [=](){ f(); };
+			draw = [=](){ f(); };
 		}
 
 		pEntity(function<void(void)> f){
-			lambda = f;
+			draw = f;
 		}
 
 		void __call__(){
-			lambda();
+			draw();
 		}
 
 		void operator()(){
-			lambda();
+			draw();
 		}
 
-	private:
-		function<void(void)> lambda;
+		function<void(void)> draw;
 };
 
 class pAction{
 	public:
 		pAction(){  // by default identity
-			lambda = [](pEntity& e){
+			apply = [](pEntity& e){
 				return e;
 			};
 		}
 
 		pAction(function<pEntity(pEntity&)> a){
-			lambda = a;
+			apply = a;
 		}
 
 		pEntity __call__(pEntity& e){
-			return lambda(e);
+			return apply(e);
 		}
 
-		pEntity operator()(pEntity& e){
-			return lambda(e);
-		}
-
-
-	private:
-		function<pEntity(pEntity&)> lambda;
+		function<pEntity(pEntity&)> apply;
 };
