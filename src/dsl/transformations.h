@@ -98,17 +98,3 @@ PINEAL("turn_z")
 pAction turn_z(int n){
 	return turn(Z, n);
 }
-
-PINEAL("recursion_c")
-void recursion(int depth, pEntity& entity, py::list& actions){
-	if(depth > 0){
-		entity();
-
-		for(int i=0; i<py::len(actions); i++){
-			py::object a = actions[i];
-			pEntity applied([&](){ a(entity); });
-
-			recursion(depth - 1, applied, actions);
-		}
-	}
-}

@@ -34,6 +34,29 @@ namespace dsl{
 		}
 	}
 
+	namespace lang{
+		PINEAL("draw")
+		void draw(pEntity e){
+			e();
+		}
+
+		PINEAL("group_c")
+		pEntity group(py::list l){
+			int n = py::len(l);
+			vector<pEntity> v;
+
+			for(int i = 0; i < n; i++){
+				v.push_back(py::extract<pEntity>(l[i]));
+			}
+
+			return pEntity([n, v](){
+				for(int i = 0; i < n; i++){
+					draw(v[i]);
+				}
+			});
+		}
+	}
+
 	namespace transformations{
 		PINEAL("scale")
 		pAction scale_xyz(double x, double y, double z){
@@ -134,20 +157,6 @@ namespace dsl{
 		PINEAL("turn_z")
 		pAction turn_z(int n){
 			return turn(Z, n);
-		}
-
-		PINEAL("recursion_c")
-		void recursion(int depth, pEntity& entity, py::list& actions){
-			if(depth > 0){
-				entity();
-
-				for(int i=0; i<py::len(actions); i++){
-					py::object a = actions[i];
-					pEntity applied([&](){ a(entity); });
-
-					recursion(depth - 1, applied, actions);
-				}
-			}
 		}
 	}
 
@@ -273,7 +282,7 @@ namespace dsl{
 			layers_map[name] = fbo;
 		}
 
-		PINEAL("on_layer")
+		PINEAL("on_layer_c")
 		void on_layer(pEntity& f, string name){
 			if(layers_map.find(name) == layers_map.end()){
 				new_layer(name);
@@ -289,12 +298,14 @@ namespace dsl{
 			layers_map[name]->end();
 		}
 
-		PINEAL("draw_layer")
-		void draw_layer(string name){
-			if(layers_map.find(name) == layers_map.end()){
-				new_layer(name);
-			}
-			layers_map[name]->getTexture().draw(-1, -1, 2, 2);
+		PINEAL("layer_entity")
+		pEntity layer_entity(string name){
+			return pEntity([name](){
+				if(layers_map.find(name) == layers_map.end()){
+					new_layer(name);
+				}
+				layers_map[name]->getTexture().draw(-1, -1, 2, 2);
+			});
 		}
 	}
 
@@ -387,7 +398,6 @@ namespace dsl{
 	BOOST_PYTHON_MODULE(core){
 		py::class_<pEntity>("pEntity")
 		    .def(py::init<py::object>())
-		    .def("__call__", &pEntity::__call__)
 		;
 
 		py::class_<pAction>("pAction")
@@ -398,6 +408,9 @@ namespace dsl{
 		py::def("polygon", &primitives::polygon_n_r);
 		py::def("polygon", &primitives::polygon_n);
 
+		py::def("draw", &lang::draw);
+		py::def("group_c", &lang::group);
+
 		py::def("scale", &transformations::scale_xyz);
 		py::def("translate", &transformations::translate_xyz);
 		py::def("rotate_x", &transformations::rotate_x);
@@ -406,7 +419,6 @@ namespace dsl{
 		py::def("turn_x", &transformations::turn_x);
 		py::def("turn_y", &transformations::turn_y);
 		py::def("turn_z", &transformations::turn_z);
-		py::def("recursion_c", &transformations::recursion);
 
 		py::def("beat", &audio::beat_n_t);
 		py::def("beat", &audio::beat_n);
@@ -418,8 +430,8 @@ namespace dsl{
 		py::def("osc_value", &osc::get_value_with_default);
 		py::def("osc_value", &osc::get_value);
 
-		py::def("on_layer", &layers::on_layer);
-		py::def("draw_layer", &layers::draw_layer);
+		py::def("on_layer_c", &layers::on_layer);
+		py::def("layer_entity", &layers::layer_entity);
 
 		py::def("background", &colors::background);
 		py::def("color", &colors::color);

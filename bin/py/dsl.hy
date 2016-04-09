@@ -36,42 +36,18 @@
       `(change (~a ~entity)
                ~@actions*))))
 
-(defmacro draw [entity]
-  `(~entity))
-
 (defmacro draw-changes [entity &rest actions]
-  `((change ~entity ~@actions)))
+  `(draw (change ~entity ~@actions)))
 
 
-(defmacro @ [&rest body]
-  "Group macro, wrap more entities in a single expression"
-  `(do ~@body))  ; TODO: group(py::list) C++ function
+(defmacro group [&rest body]
+  `(group-c [~@body]))
 
 
-(defmacro on [name &rest body]
-  "Define a layer an draw on it, then call the layer to blit it"
-  `(do
-     (on-layer (pEntity (fn [] ~@body)) (str '~name))
-
-     (defn ~name []
-       "Draw the layer as an image"
-       (draw-layer (str '~name)))))
-
-
-(defmacro at [event &rest body]
-  "Draw something at an event"
-  `(if ~event (@ ~@body)))
+(defmacro at-event [event &rest body]
+  ; TODO: take and return pEntities
+  `(if ~event (do ~@body)))
 
 
 (defmacro osc [path default]
   `(osc-value (str '~path) ~default))
-
-
-(defmacro/g! recursion [max-depth entity &rest branches]
-  "Recursion macro, experimantal"
-  `(recursion-c (int (/ (log ~max-depth)
-                       (log ~(len branches))))
-                (pEntity (fn [] ~entity))
-                [~@(map (fn [b]
-                          `(fn [f] (~(first b) f ~@(rest b))))
-                     branches)]))

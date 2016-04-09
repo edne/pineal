@@ -82,7 +82,6 @@
     (.format "BOOST_PYTHON_MODULE(core){{
 \tpy::class_<pEntity>(\"pEntity\")
 \t    .def(py::init<py::object>())
-\t    .def(\"__call__\", &pEntity::__call__)
 \t;
 
 \tpy::class_<pAction>(\"pAction\")

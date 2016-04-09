@@ -13,7 +13,7 @@ void new_layer(string name){
 	layers_map[name] = fbo;
 }
 
-PINEAL("on_layer")
+PINEAL("on_layer_c")
 void on_layer(pEntity& f, string name){
 	if(layers_map.find(name) == layers_map.end()){
 		new_layer(name);
@@ -29,10 +29,12 @@ void on_layer(pEntity& f, string name){
 	layers_map[name]->end();
 }
 
-PINEAL("draw_layer")
-void draw_layer(string name){
-	if(layers_map.find(name) == layers_map.end()){
-		new_layer(name);
-	}
-	layers_map[name]->getTexture().draw(-1, -1, 2, 2);
+PINEAL("layer_entity")
+pEntity layer_entity(string name){
+	return pEntity([name](){
+		if(layers_map.find(name) == layers_map.end()){
+			new_layer(name);
+		}
+		layers_map[name]->getTexture().draw(-1, -1, 2, 2);
+	});
 }

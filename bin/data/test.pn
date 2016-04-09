@@ -11,25 +11,13 @@
 ;(def r (sin (time)))
 (def r 1)
 
+;(draw (circle 0.5))
 
-(draw-changes (circle 0.5)
+(draw-changes (group (circle 0.5)
+                     (circle 0.2))
               (scale 0.5 0.5 0.5)
               (no-fill)
               (scale 0.5 1 1))
-
-
-'(on level-1
-     (@ (background 1 1 1 0)
-        (draw-change (cube 1)
-                     (no-fill)
-                     (line-width 1)
-                     (color 0 1 1 1.0)
-                     (turn-x 1)
-                     (turn-y 1)
-                     (rotate-x (-> (time (/ pi 4)) (% 2pi)))
-                     )))
-
-'(level-1)
 
 
 '(draw-changes (polygon 3 0.5)
@@ -37,15 +25,14 @@
                (color 0 1 0 1)
                (line-width 2))
 
-'(at (beat 1 0.5)
-     (draw-changes (polygon 3 0.25)
-                   (no-fill)
-                   (translate 0 0.5 0)
-                   (color 0 1 0 1)
-                   (turn-z 3)
-                   (line-width 2)))
+(at-event (beat 1 0.5)
+          (draw-changes (polygon 3 0.25)
+                        (no-fill)
+                        (translate 0 0.5 0)
+                        (color 0 1 0 1)
+                        (turn-z 3)
+                        (line-width 2)))
 
-;(at (beat 4 2) (level-1))
 
 '(draw-changes (cube 1.8)
                (line-width 2)
