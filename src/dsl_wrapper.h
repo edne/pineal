@@ -55,6 +55,18 @@ namespace dsl{
 				}
 			});
 		}
+
+		PINEAL("change_c")
+		pEntity change(pEntity& entity, py::list actions){
+			for(int i = 0; i < py::len(actions); i++){
+				py::extract<pAction&> extractor(actions[i]);
+				if(extractor.check()){
+					pAction& action = extractor();
+					entity = action(entity);
+				}
+			}
+			return entity;
+		}
 	}
 
 	namespace transformations{
@@ -410,6 +422,7 @@ namespace dsl{
 
 		py::def("draw", &lang::draw);
 		py::def("group_c", &lang::group);
+		py::def("change_c", &lang::change);
 
 		py::def("scale", &transformations::scale_xyz);
 		py::def("translate", &transformations::translate_xyz);

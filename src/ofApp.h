@@ -79,6 +79,10 @@ class pAction{
 			return apply(e);
 		}
 
+		pEntity operator()(pEntity e) const{
+			return apply(e);
+		}
+
 	private:
 		function<pEntity(pEntity&)> apply;
 };

@@ -18,3 +18,15 @@ pEntity group(py::list l){
 		}
 	});
 }
+
+PINEAL("change_c")
+pEntity change(pEntity& entity, py::list actions){
+	for(int i = 0; i < py::len(actions); i++){
+		py::extract<pAction&> extractor(actions[i]);
+		if(extractor.check()){
+			pAction& action = extractor();
+			entity = action(entity);
+		}
+	}
+	return entity;
+}

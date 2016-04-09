@@ -19,6 +19,7 @@
 (defmacro/g! value [name x]
   "Define a function that return the value and optionally takes a scale and a
   offset factor"
+  ; TODO: pValue type, castable to int and callable (returning an other pValue)
   `(defn ~name [&rest g!args]
      (setv [g!mult g!add]
        (cond [(=  (len g!args) 0) [1 0]]
@@ -28,13 +29,8 @@
 
 
 (defmacro change [entity &rest actions]
-  ; TODO: C++ function
-  (if-not actions
-    entity
-    (let [[a (first actions)]
-          [actions* (rest actions)]]
-      `(change (~a ~entity)
-               ~@actions*))))
+  `(change-c ~entity [~@actions]))
+
 
 (defmacro draw-changes [entity &rest actions]
   `(draw (change ~entity ~@actions)))
