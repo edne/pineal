@@ -26,24 +26,26 @@
          [(>= (len g!args) 2) [(first g!args) (second g!args)]]))
      (-> ~x (* g!mult) (+ g!add))))
 
-(defmacro -@> [entity &rest actions]
+
+(defmacro change [entity &rest actions]
+  ; TODO: C++ function
   (if-not actions
-    `(~entity)
+    entity
     (let [[a (first actions)]
           [actions* (rest actions)]]
-      `(-@> (~a ~entity)
-             ~@actions*))))
+      `(change (~a ~entity)
+               ~@actions*))))
 
-(defmacro compose [name &rest actions]
-  "Compose actions, cannot be anonymous because the implementation of -@>"
-  `(defn ~name [f]
-     (-@> (f)
-          ~@actions)))
+(defmacro draw [entity]
+  `(~entity))
+
+(defmacro draw-changes [entity &rest actions]
+  `((change ~entity ~@actions)))
 
 
 (defmacro @ [&rest body]
   "Group macro, wrap more entities in a single expression"
-  `(do ~@body))  ; TODO: combine(pEntity, pEntity)
+  `(do ~@body))  ; TODO: group(py::list) C++ function
 
 
 (defmacro on [name &rest body]
