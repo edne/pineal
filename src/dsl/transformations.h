@@ -4,7 +4,7 @@ pAction scale(double x, double y, double z){
 		return pEntity([=](){
 			ofPushMatrix();
 			ofScale(x, y, z);
-			e.draw();
+			e();
 			ofPopMatrix();
 		});
 	});

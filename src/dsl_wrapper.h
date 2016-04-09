@@ -37,7 +37,7 @@ namespace dsl{
 				return pEntity([=](){
 					ofPushMatrix();
 					ofScale(x, y, z);
-					e.draw();
+					e();
 					ofPopMatrix();
 				});
 			});

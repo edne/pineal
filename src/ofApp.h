@@ -59,10 +59,11 @@ class pEntity{
 			draw();
 		}
 
-		void operator()(){
+		void operator()() const{
 			draw();
 		}
 
+	private:
 		function<void(void)> draw;
 };
 
@@ -82,5 +83,6 @@ class pAction{
 			return apply(e);
 		}
 
+	private:
 		function<pEntity(pEntity&)> apply;
 };
