@@ -7,32 +7,36 @@
 namespace dsl{
 	namespace primitives{
 		PINEAL("cube")
-		void cube(double r){
-			ofDrawBox(r);
+		pEntity cube(double r){
+			return pEntity([=](){
+				ofDrawBox(r);
+			});
 		}
 
 		PINEAL("polygon")
-		void polygon_n_r(int n, float r){
-			ofPushMatrix();
+		pEntity polygon_n_r(int n, float r){
+			return pEntity([=](){
+				ofPushMatrix();
 
-			ofScale(r, r, r);
-			ofRotateZ(90);
+				ofScale(r, r, r);
+				ofRotateZ(90);
 
-			ofSetCircleResolution(n);
-			ofDrawCircle(0, 0, 1);
+				ofSetCircleResolution(n);
+				ofDrawCircle(0, 0, 1);
 
-			ofPopMatrix();
+				ofPopMatrix();
+			});
 		}
 
 		PINEAL("polygon")
-		void polygon_n(int n){
-			polygon_n_r(n, 1);
+		pEntity polygon_n(int n){
+			return polygon_n_r(n, 1);
 		}
 	}
 
 	namespace transformations{
-		PINEAL("scale_")
-		pAction scale(double x, double y, double z){
+		PINEAL("scale")
+		pAction scale_xyz(double x, double y, double z){
 			return pAction([=](pEntity& e){
 				return pEntity([=](){
 					ofPushMatrix();
@@ -43,101 +47,93 @@ namespace dsl{
 			});
 		}
 
-		PINEAL("scale")
-		void scale_xyz(pEntity& f, double x, double y, double z){
-			ofPushMatrix();
-			ofScale(x, y, z);
-			f();
-			ofPopMatrix();
-		}
-
-		PINEAL("scale")
-		void scale_xy(pEntity& f, double x, double y){
-			scale_xyz(f, x, y, 1);
-		}
-
-		PINEAL("scale")
-		void scale_r(pEntity& f, double r){
-			scale_xyz(f, r, r, r);
-		}
-
 		PINEAL("translate")
-		void translate_xyz(pEntity& f, double x, double y, double z){
-			ofPushMatrix();
-			ofTranslate(x, y, z);
-			f();
-			ofPopMatrix();
-		}
-
-		PINEAL("translate")
-		void translate_xy(pEntity& f, double x, double y){
-			translate_xyz(f, x, y, 0);
-		}
-
-		PINEAL("translate")
-		void translate_x(pEntity& f, double x){
-			translate_xyz(f, x, 0, 0);
+		pAction translate_xyz(double x, double y, double z){
+			return pAction([=](pEntity& e){
+				return pEntity([=](){
+					ofPushMatrix();
+					ofTranslate(x, y, z);
+					e();
+					ofPopMatrix();
+				});
+			});
 		}
 
 		PINEAL("rotate_x")
-		void rotate_x(pEntity& f, double rad){
-			ofPushMatrix();
-			ofRotateX(180 * rad / PI);
-			f();
-			ofPopMatrix();
+		pAction rotate_x(double rad){
+			return pAction([=](pEntity& e){
+				return pEntity([=](){
+					ofPushMatrix();
+					ofRotateX(180 * rad / PI);
+					e();
+					ofPopMatrix();
+				});
+			});
 		}
 
 		PINEAL("rotate_y")
-		void rotate_y(pEntity& f, double rad){
-			ofPushMatrix();
-			ofRotateY(180 * rad / PI);
-			f();
-			ofPopMatrix();
+		pAction rotate_y(double rad){
+			return pAction([=](pEntity& e){
+				return pEntity([=](){
+					ofPushMatrix();
+					ofRotateY(180 * rad / PI);
+					e();
+					ofPopMatrix();
+				});
+			});
 		}
 
 		PINEAL("rotate_z")
-		void rotate_z(pEntity& f, double rad){
-			ofPushMatrix();
-			ofRotateZ(180 * rad / PI);
-			f();
-			ofPopMatrix();
+		pAction rotate_z(double rad){
+			return pAction([=](pEntity& e){
+				return pEntity([=](){
+					ofPushMatrix();
+					ofRotateZ(180 * rad / PI);
+					e();
+					ofPopMatrix();
+				});
+			});
 		}
 
 		typedef enum{
 			X, Y, Z
 		}Axis;
 
-		void turn(pEntity& f, Axis axis, int n){
-			double rot;
+		pAction turn(Axis axis, int n){
+			return pAction([=](pEntity& e){
+				return pEntity([=](){
+					double rot;
 
-			ofPushMatrix();
-			for(int i=0; i<n; i++){
-				f();
-				rot = 360.0 / n;
-				if(axis == X){
-					ofRotateX(rot);
-				}else if(axis == Y){
-					ofRotateY(rot);
-				}else if(axis == Z){
-					ofRotateZ(rot);
-				}
-			}
-			ofPopMatrix();
+					ofPushMatrix();
+					for(int i=0; i<n; i++){
+						e();
+						rot = 360.0 / n;
+						if(axis == X){
+							ofRotateX(rot);
+						}else if(axis == Y){
+							ofRotateY(rot);
+						}else if(axis == Z){
+							ofRotateZ(rot);
+						}
+					}
+					ofPopMatrix();
+				});
+			});
 		}
 
 		PINEAL("turn_x")
-		void turn_x(pEntity& f, int n){
-			turn(f, X, n);
+		pAction turn_x(int n){
+			return turn(X, n);
 		}
 
 		PINEAL("turn_y")
-		void turn_y(pEntity& f, int n){
-			turn(f, Y, n);
+		pAction turn_y(int n){
+			return turn(Y, n);
 		}
 
 		PINEAL("turn_z")
-		void turn_z(pEntity& f, int n){
-			turn(f, Z, n);
+		pAction turn_z(int n){
+			return turn(Z, n);
 		}
 
 		PINEAL("recursion_c")
@@ -315,79 +311,76 @@ namespace dsl{
 		}
 
 		PINEAL("color")
-		void color(pEntity& f, double r, double g, double b, double a){
-			static ofColor status_color;
-			ofColor old_color = status_color;
-			ofColor new_color = ofColor(r * 255, g * 255, b * 255, a * 255);
+		pAction color(double r, double g, double b, double a){
+			return pAction([=](pEntity& e){
+				return pEntity([=](){
+					static ofColor status_color;
+					ofColor old_color = status_color;
+					ofColor new_color = ofColor(r * 255, g * 255, b * 255, a * 255);
 
-			status_color = new_color;
-			ofSetColor(status_color);
+					status_color = new_color;
+					ofSetColor(status_color);
 
-			f();
+					e();
 
-			status_color = old_color;
-			ofSetColor(status_color);
+					status_color = old_color;
+					ofSetColor(status_color);
+				});
+			});
 		}
 
-		PINEAL("color")
-		void color_rgb(pEntity& f, double r, double g, double b){
-			color(f, r, g, b, 1);
-		}
+		pAction fill_status(bool status){
+			return pAction([=](pEntity& e){
+				return pEntity([=](){
+					static bool status_fill = true;
+					bool old_fill = status_fill;
+					bool new_fill = status;
 
-		PINEAL("color")
-		void color_grey(pEntity& f, double c){
-			color(f, c, c, c, 1);
-		}
+					status_fill = new_fill;
+					if(status_fill){
+						ofFill();
+					}else{
+						ofNoFill();
+					}
 
-		PINEAL("color")
-		void color_grey_alpha(pEntity& f, double c, double a){
-			color(f, c, c, c, a);
-		}
+					e();
 
-		void fill_status(pEntity& f, bool status){
-			static bool status_fill = true;
-			bool old_fill = status_fill;
-			bool new_fill = status;
-
-			status_fill = new_fill;
-			if(status_fill){
-				ofFill();
-			}else{
-				ofNoFill();
-			}
-
-			f();
-
-			status_fill = old_fill;
-			if(status_fill){
-				ofFill();
-			}else{
-				ofNoFill();
-			}
+					status_fill = old_fill;
+					if(status_fill){
+						ofFill();
+					}else{
+						ofNoFill();
+					}
+				});
+			});
 		}
 
 		PINEAL("fill")
-		void fill(pEntity& f){
-			fill_status(f, true);
+		pAction fill(){
+			return fill_status(true);
 		}
 
 		PINEAL("no_fill")
-		void no_fill(pEntity& f){
-			fill_status(f, false);
+		pAction no_fill(){
+			return fill_status(false);
 		}
 
 		PINEAL("line_width")
-		void line_width(pEntity& f, double new_width){
-			static double status_line_width = 1;
-			double old_width = status_line_width;
+		pAction line_width(double new_width){
+			return pAction([=](pEntity& e){
+				return pEntity([=](){
+					static double status_line_width = 1;
+					double old_width = status_line_width;
 
-			status_line_width = new_width;
-			ofSetLineWidth(status_line_width);
+					status_line_width = new_width;
+					ofSetLineWidth(status_line_width);
 
-			f();
+					e();
 
-			status_line_width = old_width;
-			ofSetLineWidth(status_line_width);
+					status_line_width = old_width;
+					ofSetLineWidth(status_line_width);
+				});
+			});
 		}
 	}
 
@@ -405,13 +398,8 @@ namespace dsl{
 		py::def("polygon", &primitives::polygon_n_r);
 		py::def("polygon", &primitives::polygon_n);
 
-		py::def("scale_", &transformations::scale);
 		py::def("scale", &transformations::scale_xyz);
-		py::def("scale", &transformations::scale_xy);
-		py::def("scale", &transformations::scale_r);
 		py::def("translate", &transformations::translate_xyz);
-		py::def("translate", &transformations::translate_xy);
-		py::def("translate", &transformations::translate_x);
 		py::def("rotate_x", &transformations::rotate_x);
 		py::def("rotate_y", &transformations::rotate_y);
 		py::def("rotate_z", &transformations::rotate_z);
@@ -435,9 +423,6 @@ namespace dsl{
 
 		py::def("background", &colors::background);
 		py::def("color", &colors::color);
-		py::def("color", &colors::color_rgb);
-		py::def("color", &colors::color_grey);
-		py::def("color", &colors::color_grey_alpha);
 		py::def("fill", &colors::fill);
 		py::def("no_fill", &colors::no_fill);
 		py::def("line_width", &colors::line_width);}

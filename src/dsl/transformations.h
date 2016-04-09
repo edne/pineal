@@ -1,5 +1,5 @@
-PINEAL("scale_")
-pAction scale(double x, double y, double z){
+PINEAL("scale")
+pAction scale_xyz(double x, double y, double z){
 	return pAction([=](pEntity& e){
 		return pEntity([=](){
 			ofPushMatrix();
@@ -10,101 +10,93 @@ pAction scale(double x, double y, double z){
 	});
 }
 
-PINEAL("scale")
-void scale_xyz(pEntity& f, double x, double y, double z){
-	ofPushMatrix();
-	ofScale(x, y, z);
-	f();
-	ofPopMatrix();
-}
-
-PINEAL("scale")
-void scale_xy(pEntity& f, double x, double y){
-	scale_xyz(f, x, y, 1);
-}
-
-PINEAL("scale")
-void scale_r(pEntity& f, double r){
-	scale_xyz(f, r, r, r);
-}
-
 PINEAL("translate")
-void translate_xyz(pEntity& f, double x, double y, double z){
-	ofPushMatrix();
-	ofTranslate(x, y, z);
-	f();
-	ofPopMatrix();
-}
-
-PINEAL("translate")
-void translate_xy(pEntity& f, double x, double y){
-	translate_xyz(f, x, y, 0);
-}
-
-PINEAL("translate")
-void translate_x(pEntity& f, double x){
-	translate_xyz(f, x, 0, 0);
+pAction translate_xyz(double x, double y, double z){
+	return pAction([=](pEntity& e){
+		return pEntity([=](){
+			ofPushMatrix();
+			ofTranslate(x, y, z);
+			e();
+			ofPopMatrix();
+		});
+	});
 }
 
 PINEAL("rotate_x")
-void rotate_x(pEntity& f, double rad){
-	ofPushMatrix();
-	ofRotateX(180 * rad / PI);
-	f();
-	ofPopMatrix();
+pAction rotate_x(double rad){
+	return pAction([=](pEntity& e){
+		return pEntity([=](){
+			ofPushMatrix();
+			ofRotateX(180 * rad / PI);
+			e();
+			ofPopMatrix();
+		});
+	});
 }
 
 PINEAL("rotate_y")
-void rotate_y(pEntity& f, double rad){
-	ofPushMatrix();
-	ofRotateY(180 * rad / PI);
-	f();
-	ofPopMatrix();
+pAction rotate_y(double rad){
+	return pAction([=](pEntity& e){
+		return pEntity([=](){
+			ofPushMatrix();
+			ofRotateY(180 * rad / PI);
+			e();
+			ofPopMatrix();
+		});
+	});
 }
 
 PINEAL("rotate_z")
-void rotate_z(pEntity& f, double rad){
-	ofPushMatrix();
-	ofRotateZ(180 * rad / PI);
-	f();
-	ofPopMatrix();
+pAction rotate_z(double rad){
+	return pAction([=](pEntity& e){
+		return pEntity([=](){
+			ofPushMatrix();
+			ofRotateZ(180 * rad / PI);
+			e();
+			ofPopMatrix();
+		});
+	});
 }
 
 typedef enum{
 	X, Y, Z
 }Axis;
 
-void turn(pEntity& f, Axis axis, int n){
-	double rot;
+pAction turn(Axis axis, int n){
+	return pAction([=](pEntity& e){
+		return pEntity([=](){
+			double rot;
 
-	ofPushMatrix();
-	for(int i=0; i<n; i++){
-		f();
-		rot = 360.0 / n;
-		if(axis == X){
-			ofRotateX(rot);
-		}else if(axis == Y){
-			ofRotateY(rot);
-		}else if(axis == Z){
-			ofRotateZ(rot);
-		}
-	}
-	ofPopMatrix();
+			ofPushMatrix();
+			for(int i=0; i<n; i++){
+				e();
+				rot = 360.0 / n;
+				if(axis == X){
+					ofRotateX(rot);
+				}else if(axis == Y){
+					ofRotateY(rot);
+				}else if(axis == Z){
+					ofRotateZ(rot);
+				}
+			}
+			ofPopMatrix();
+		});
+	});
 }
 
 PINEAL("turn_x")
-void turn_x(pEntity& f, int n){
-	turn(f, X, n);
+pAction turn_x(int n){
+	return turn(X, n);
 }
 
 PINEAL("turn_y")
-void turn_y(pEntity& f, int n){
-	turn(f, Y, n);
+pAction turn_y(int n){
+	return turn(Y, n);
 }
 
 PINEAL("turn_z")
-void turn_z(pEntity& f, int n){
-	turn(f, Z, n);
+pAction turn_z(int n){
+	return turn(Z, n);
 }
 
 PINEAL("recursion_c")

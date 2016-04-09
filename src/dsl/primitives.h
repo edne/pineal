@@ -1,22 +1,26 @@
 PINEAL("cube")
-void cube(double r){
-	ofDrawBox(r);
+pEntity cube(double r){
+	return pEntity([=](){
+		ofDrawBox(r);
+	});
 }
 
 PINEAL("polygon")
-void polygon_n_r(int n, float r){
-	ofPushMatrix();
+pEntity polygon_n_r(int n, float r){
+	return pEntity([=](){
+		ofPushMatrix();
 
-	ofScale(r, r, r);
-	ofRotateZ(90);
+		ofScale(r, r, r);
+		ofRotateZ(90);
 
-	ofSetCircleResolution(n);
-	ofDrawCircle(0, 0, 1);
+		ofSetCircleResolution(n);
+		ofDrawCircle(0, 0, 1);
 
-	ofPopMatrix();
+		ofPopMatrix();
+	});
 }
 
 PINEAL("polygon")
-void polygon_n(int n){
-	polygon_n_r(n, 1);
+pEntity polygon_n(int n){
+	return polygon_n_r(n, 1);
 }

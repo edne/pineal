@@ -26,16 +26,13 @@
          [(>= (len g!args) 2) [(first g!args) (second g!args)]]))
      (-> ~x (* g!mult) (+ g!add))))
 
-
-(defmacro -@> [head &rest tail]
-  "Threading wrapping macro, like `->` but wraps the head with a lambda"
-  (if-not tail 
-    head
-    (let [[next (first tail)]]
-      `(-@> (~(first next) (pEntity (fn [] ~head))
-                           ~@(rest next))
-            ~@(rest tail)))))
-
+(defmacro -@> [entity &rest actions]
+  (if-not actions
+    `(~entity)
+    (let [[a (first actions)]
+          [actions* (rest actions)]]
+      `(-@> (~a ~entity)
+             ~@actions*))))
 
 (defmacro compose [name &rest actions]
   "Compose actions, cannot be anonymous because the implementation of -@>"
