@@ -45,5 +45,10 @@
   `(if ~event (do ~@body)))
 
 
+(defmacro at-beat [n dur pos entity]
+  `(at-event (beat ~n ~dur ~pos)
+             (draw ~entity)))
+
+
 (defmacro osc [path default]
   `(osc-value (str '~path) ~default))

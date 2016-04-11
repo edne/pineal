@@ -210,14 +210,19 @@ namespace dsl{
 		}
 
 		PINEAL("beat")
-		bool beat_n_t(int n, float t){
+		bool beat_n_t_p(int n, float t, int position){
 			float actual_time = (float)ofGetSystemTimeMicros() / 1000;
 
-			if(beat_count % n == 0 && actual_time - last_beat < beat_time * t){
+			if(beat_count % n == position && actual_time - last_beat < beat_time * t){
 				return true;
 			}else{
 				return false;
 			}
+		}
+
+		PINEAL("beat")
+		bool beat_n_t(int n, float t){
+			return beat_n_t_p(n, t, 0);
 		}
 
 		PINEAL("beat")
@@ -433,6 +438,7 @@ namespace dsl{
 		py::def("turn_y", &transformations::turn_y);
 		py::def("turn_z", &transformations::turn_z);
 
+		py::def("beat", &audio::beat_n_t_p);
 		py::def("beat", &audio::beat_n_t);
 		py::def("beat", &audio::beat_n);
 		py::def("beat", &audio::beat);
