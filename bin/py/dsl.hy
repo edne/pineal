@@ -31,6 +31,8 @@
 (defmacro change [entity &rest actions]
   `(change-c ~entity [~@actions]))
 
+(defmacro -@> [entity &rest actions]
+  `(change-c ~entity [~@actions]))
 
 (defmacro draw-changes [entity &rest actions]
   `(draw (change ~entity ~@actions)))
