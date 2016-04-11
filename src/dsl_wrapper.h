@@ -209,8 +209,7 @@ namespace dsl{
 			last_onset = actual_time;
 		}
 
-		PINEAL("beat")
-		bool beat_n_t_p(int n, float t, int position){
+		bool beat(int n, float t, int position){
 			float actual_time = (float)ofGetSystemTimeMicros() / 1000;
 
 			if(beat_count % n == position && actual_time - last_beat < beat_time * t){
@@ -220,23 +219,7 @@ namespace dsl{
 			}
 		}
 
-		PINEAL("beat")
-		bool beat_n_t(int n, float t){
-			return beat_n_t_p(n, t, 0);
-		}
-
-		PINEAL("beat")
-		bool beat_n(int n){
-			return beat_n_t(n, 1.0);
-		}
-
-		PINEAL("beat")
-		bool beat(){
-			return beat_n(1);
-		}
-
-		PINEAL("onset")
-		bool onset_t(float t){
+		bool onset(float t){
 			float actual_time = (float)ofGetSystemTimeMicros() / 1000;
 
 			if(actual_time - last_onset < beat_time * t){
@@ -246,14 +229,30 @@ namespace dsl{
 			}
 		}
 
-		PINEAL("onset")
-		bool onset(){
-			return onset_value;
-		}
-
 		PINEAL("rms")
 		float rms(){
 			return inBuf.getRMSAmplitude();
+		}
+
+		PINEAL("at_event")
+		pAction at_event(bool event){
+			return pAction([=](pEntity& e){
+				return pEntity([=](){
+					if(event){
+		                e();
+		            }
+				});
+			});
+		}
+
+		PINEAL("at_beat")
+		pAction at_beat(int n, float t, int position){
+			return at_event(beat(n, t, position));
+		}
+
+		PINEAL("at_onset")
+		pAction at_onset(int n, float t, int position){
+			return at_event(onset(t));
 		}
 	}
 
@@ -438,13 +437,10 @@ namespace dsl{
 		py::def("turn_y", &transformations::turn_y);
 		py::def("turn_z", &transformations::turn_z);
 
-		py::def("beat", &audio::beat_n_t_p);
-		py::def("beat", &audio::beat_n_t);
-		py::def("beat", &audio::beat_n);
-		py::def("beat", &audio::beat);
-		py::def("onset", &audio::onset_t);
-		py::def("onset", &audio::onset);
 		py::def("rms", &audio::rms);
+		py::def("at_event", &audio::at_event);
+		py::def("at_beat", &audio::at_beat);
+		py::def("at_onset", &audio::at_onset);
 
 		py::def("osc_value", &osc::get_value_with_default);
 		py::def("osc_value", &osc::get_value);

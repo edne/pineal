@@ -40,15 +40,5 @@
   `(group-c [~@body]))
 
 
-(defmacro at-event [event &rest body]
-  ; TODO: take and return pEntities
-  `(if ~event (do ~@body)))
-
-
-(defmacro at-beat [n dur pos entity]
-  `(at-event (beat ~n ~dur ~pos)
-             (draw ~entity)))
-
-
 (defmacro osc [path default]
   `(osc-value (str '~path) ~default))
