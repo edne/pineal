@@ -5,89 +5,6 @@
 #define PINEAL(_)
 
 namespace dsl{
-	namespace primitives{
-		PINEAL("cube")
-		pEntity cube(py::list args){
-			float r;
-
-			if(py::len(args) > 0){
-				r = py::extract<float>(args[0]);
-			}else{
-				r = 0.5;
-			}
-
-			return pEntity([=](){
-				ofDrawBox(r);
-			});
-		}
-
-		PINEAL("polygon")
-		pEntity polygon_n_r(py::list args){
-			int n;
-			float r;
-
-			if(py::len(args) > 0){
-				n = py::extract<int>(args[0]);
-			}else{
-				// TODO: Raise Python exception
-				return pEntity();
-			}
-
-			if(py::len(args) > 1){
-				r = py::extract<float>(args[1]);
-			}else{
-				r = 0.5;
-			}
-
-			return pEntity([=](){
-				ofPushMatrix();
-
-				ofScale(r, r, r);
-				ofRotateZ(90);
-
-				ofSetCircleResolution(n);
-				ofDrawCircle(0, 0, 1);
-
-				ofPopMatrix();
-			});
-		}
-	}
-
-	namespace lang{
-		PINEAL("draw")
-		void draw(pEntity e){
-			e();
-		}
-
-		PINEAL("group_c")
-		pEntity group(py::list l){
-			int n = py::len(l);
-			vector<pEntity> v;
-
-			for(int i = 0; i < n; i++){
-				v.push_back(py::extract<pEntity>(l[i]));
-			}
-
-			return pEntity([n, v](){
-				for(int i = 0; i < n; i++){
-					draw(v[i]);
-				}
-			});
-		}
-
-		PINEAL("change_c")
-		pEntity change(pEntity& entity, py::list actions){
-			for(int i = 0; i < py::len(actions); i++){
-				py::extract<pAction&> extractor(actions[i]);
-				if(extractor.check()){
-					pAction& action = extractor();
-					entity = action(entity);
-				}
-			}
-			return entity;
-		}
-	}
-
 	namespace transformations{
 		PINEAL("scale")
 		pAction scale_xyz(double x, double y, double z){
@@ -275,6 +192,104 @@ namespace dsl{
 		}
 	}
 
+	namespace primitives{
+		pEntity change(pEntity& entity, py::list actions){
+			for(int i = 0; i < py::len(actions); i++){
+				py::extract<pAction&> extractor(actions[i]);
+				if(extractor.check()){
+					pAction& action = extractor();
+					entity = action(entity);
+				}
+			}
+			return entity;
+		}
+
+		PINEAL("draw")
+		void draw(pEntity e){
+			e();
+		}
+
+		PINEAL("group")
+		pEntity group(py::list l, py::list actions){
+			int n = py::len(l);
+			vector<pEntity> v;
+
+			for(int i = 0; i < n; i++){
+				v.push_back(py::extract<pEntity>(l[i]));
+			}
+
+			pEntity e([n, v](){
+				for(int i = 0; i < n; i++){
+					draw(v[i]);
+				}
+			});
+
+			if(py::len(actions) > 0){
+				e = change(e, actions);
+			}
+
+			return e;
+		}
+
+		PINEAL("cube")
+		pEntity cube(py::list args, py::list actions){
+			float r;
+
+			if(py::len(args) > 0){
+				r = py::extract<float>(args[0]);
+			}else{
+				r = 0.5;
+			}
+
+			pEntity e([=](){
+				ofDrawBox(r);
+			});
+
+			if(py::len(actions) > 0){
+				e = change(e, actions);
+			}
+
+			return e;
+		}
+
+		PINEAL("polygon")
+		pEntity polygon(py::list args, py::list actions){
+			int n;
+			float r;
+
+			if(py::len(args) > 0){
+				n = py::extract<int>(args[0]);
+			}else{
+				// TODO: Raise Python exception
+				return pEntity();
+			}
+
+			if(py::len(args) > 1){
+				r = py::extract<float>(args[1]);
+			}else{
+				r = 0.5;
+			}
+
+			pEntity e([=](){
+				ofPushMatrix();
+
+				ofScale(r, r, r);
+				ofRotateZ(90);
+
+				ofSetCircleResolution(n);
+				ofDrawCircle(0, 0, 1);
+
+				ofPopMatrix();
+			});
+
+			if(py::len(actions) > 0){
+				e = change(e, actions);
+			}
+
+			return e;
+		}
+	}
+
 	namespace osc{
 		unordered_map<string, float> values_map;
 
@@ -439,13 +454,6 @@ namespace dsl{
 		    .def("__call__", &pAction::__call__)
 		;
 
-		py::def("cube", &primitives::cube);
-		py::def("polygon", &primitives::polygon_n_r);
-
-		py::def("draw", &lang::draw);
-		py::def("group_c", &lang::group);
-		py::def("change_c", &lang::change);
-
 		py::def("scale", &transformations::scale_xyz);
 		py::def("translate", &transformations::translate_xyz);
 		py::def("rotate_x", &transformations::rotate_x);
@@ -459,6 +467,11 @@ namespace dsl{
 		py::def("at_event", &audio::at_event);
 		py::def("at_beat", &audio::at_beat);
 		py::def("at_onset", &audio::at_onset);
+
+		py::def("draw", &primitives::draw);
+		py::def("group", &primitives::group);
+		py::def("cube", &primitives::cube);
+		py::def("polygon", &primitives::polygon);
 
 		py::def("osc_value", &osc::get_value_with_default);
 		py::def("osc_value", &osc::get_value);

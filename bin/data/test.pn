@@ -1,37 +1,33 @@
 (background 0 0 0 1)
 
 
-(draw (-@> (group (-@> (cube [0.5])
-                       (line-width 4)
-                       (turn-z 16)
-                       (color 1 1 1 1)
-                       )
+(draw (group [(cube [0.5] [(line-width 4)
+                           (turn-z 16)
+                           (color 1 1 1 1)])
 
-                  (-@> (cube [(amp 1)])
-                       (at-beat 4 1 0)
-                       (line-width 4)
-                       (translate (amp) 0 0)
-                       (turn-z 16)
-                       )
+              (polygon [4 0.125] [(line-width 4)
+                                  (color 0 1 1 1)])
 
-                  (-@> (cube [(amp 1)])
-                       (at-beat 4 1 1)
-                       (translate (amp) 0 0)
-                       (turn-z 32)
-                       )
+              (cube [(amp 1)] [(at-beat 4 1 0)
+                               (line-width 4)
+                               (translate (amp) 0 0)
+                               (turn-z 16)])
 
-                  (-@> (cube [(amp 2)])
-                       (at-beat 4 1 2)
-                       (translate (amp) 0 0)
-                       (turn-z 16)
-                       )
+              (cube [(amp 1)] [(at-beat 4 1 1)
+                               (translate (amp) 0 0)
+                               (turn-z 32)])
 
-                  (-@> (cube [(amp 1)])
-                       (at-beat 4 1 3)
-                       (translate (amp) 0 0)
-                       (turn-z 64)
-                       ))
-           (line-width 2)
-           (no-fill)
-           (color 1 1 1 (amp 4))
-           ))
+              (cube [(amp 2)] [(at-beat 4 1 2)
+                               (translate (amp) 0 0)
+                               (turn-z 16)])
+
+              (cube [(amp 1)] [(at-beat 4 1 3)
+                               (translate (amp) 0 0)
+                               (turn-z 64)])]
+
+             [(line-width 2)
+              (no-fill)
+              (color 1 1 1 (amp 4))]
+
+             )
+      )

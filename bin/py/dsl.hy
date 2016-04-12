@@ -23,19 +23,5 @@
      (-> ~x (* g!mult) (+ g!add))))
 
 
-(defmacro change [entity &rest actions]
-  `(change-c ~entity [~@actions]))
-
-(defmacro -@> [entity &rest actions]
-  `(change-c ~entity [~@actions]))
-
-(defmacro draw-changes [entity &rest actions]
-  `(draw (change ~entity ~@actions)))
-
-
-(defmacro group [&rest body]
-  `(group-c [~@body]))
-
-
 (defmacro osc [path default]
   `(osc-value (str '~path) ~default))
