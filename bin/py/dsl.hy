@@ -10,19 +10,14 @@
      (value amp (rms))))
 
 
-(defmacro alias [name &rest body]
-  "Define simple macros to replace name and first parameters"
-  `(defmacro ~name [&rest args]
-     `(~@'~body ~@args)))
-
-
 (defmacro/g! value [name x]
   "Define a function that return the value and optionally takes a scale and a
   offset factor"
   ; TODO: pValue type, castable to int and callable (returning an other pValue)
   `(defn ~name [&rest g!args]
      (setv [g!mult g!add]
-       (cond [(=  (len g!args) 0) [1 0]]
+       (cond
+         [(=  (len g!args) 0) [1 0]]
          [(=  (len g!args) 1) [(first g!args) 0]]
          [(>= (len g!args) 2) [(first g!args) (second g!args)]]))
      (-> ~x (* g!mult) (+ g!add))))
