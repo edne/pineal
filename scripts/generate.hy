@@ -60,15 +60,15 @@
                            :c_func  (-> (re.split "[\s\(]+" %) (get -2))})
 
                          list)]]
-             {:name name :body body :defines defines}))
+             {:name name :defines defines}))
     list))
 
 (modules.sort)
 
 (setv bodies
-  (join-blocks (map #%(namespace (:name %)
-                                 (:body %))
-                 modules)))
+  (join-rows (map #%(.format "#include \"dsl/{}.h\""
+                             (:name %))
+               modules)))
 
 (setv defines
   (->> modules
