@@ -69,7 +69,9 @@ namespace transformations{
 				double rot;
 
 				ofPushMatrix();
+                pSymbol::define_symbol("i");
 				for(int i=0; i<n; i++){
+                    pSymbol::update_value("i", i);
 					e();
 					rot = 360.0 / n;
 					if(axis == X){
@@ -80,6 +82,7 @@ namespace transformations{
 						ofRotateZ(rot);
 					}
 				}
+                pSymbol::remove_symbol("i");
 				ofPopMatrix();
 			});
 		});

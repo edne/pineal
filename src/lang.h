@@ -53,6 +53,11 @@ class pAction{
 class pSymbol{
 	public:
 		// at pAction / pEntity creation time
+		pSymbol(){
+			is_literal = true;
+			value = 0.0;
+		}
+
 		pSymbol(float x){
 			is_literal = true;
 			value = x;
@@ -65,13 +70,20 @@ class pSymbol{
 
 		pSymbol(py::list args, int index, float default_value){
 			if(py::len(args) > index){
-				value = py::extract<float>(args[index]);
-				is_literal = true;
+				py::extract<pSymbol&> extractor(args[index]);
 
-				// TODO: handle strings / unicode
+				if(extractor.check()){
+					pSymbol& s = extractor();
+					is_literal = s.is_literal;
+					key = s.key;
+					value = s.value;
+				}else{
+					is_literal = true;
+					value = py::extract<float>(args[index]);
+				}
 			}else{
-				value = default_value;
 				is_literal = true;
+				value = default_value;
 			}
 		}
 		//

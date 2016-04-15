@@ -21,6 +21,10 @@ namespace dsl{
 		    .def("__call__", &pAction::__call__)
 		;
 
+		py::class_<pSymbol>("pSymbol")
+		    .def(py::init<string>())
+		;
+
 		py::def("background", &colors::background);
 		py::def("color", &colors::color);
 		py::def("fill", &colors::fill);

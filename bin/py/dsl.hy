@@ -25,3 +25,7 @@
 
 (defmacro osc [path default]
   `(osc-value (str '~path) ~default))
+
+
+(defmacro symbol [name]
+  `(pSymbol (str '~name)))

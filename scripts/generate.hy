@@ -88,6 +88,10 @@
 \t    .def(\"__call__\", &pAction::__call__)
 \t;
 
+\tpy::class_<pSymbol>(\"pSymbol\")
+\t    .def(py::init<string>())
+\t;
+
 {}}}")))
 
 (setv code
