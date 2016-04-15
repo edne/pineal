@@ -88,7 +88,7 @@
 \t    .def(\"__call__\", &pAction::__call__)
 \t;
 
-\tpy::class_<pSymbol>(\"pSymbol\")
+\tpy::class_<pValue>(\"pValue\")
 \t    .def(py::init<string>())
 \t;
 

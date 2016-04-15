@@ -21,7 +21,7 @@ namespace dsl{
 		    .def("__call__", &pAction::__call__)
 		;
 
-		py::class_<pSymbol>("pSymbol")
+		py::class_<pValue>("pValue")
 		    .def(py::init<string>())
 		;
 

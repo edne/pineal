@@ -50,30 +50,30 @@ class pAction{
 		function<pEntity(pEntity&)> apply;
 };
 
-class pSymbol{
+class pValue{
 	public:
 		// at pAction / pEntity creation time
-		pSymbol(){
+		pValue(){
 			is_literal = true;
 			value = 0.0;
 		}
 
-		pSymbol(float x){
+		pValue(float x){
 			is_literal = true;
 			value = x;
 		}
 
-		pSymbol(string k){
+		pValue(string k){
 			is_literal = false;
 			key = k;
 		}
 
-		pSymbol(py::list args, int index, float default_value){
+		pValue(py::list args, int index, float default_value){
 			if(py::len(args) > index){
-				py::extract<pSymbol&> extractor(args[index]);
+				py::extract<pValue&> extractor(args[index]);
 
 				if(extractor.check()){
-					pSymbol& s = extractor();
+					pValue& s = extractor();
 					is_literal = s.is_literal;
 					key = s.key;
 					value = s.value;

@@ -39,7 +39,7 @@ namespace primitives{
 
 	PINEAL("cube")
 	pEntity cube(py::list args, py::list actions){
-		pSymbol r(args, 0, 0.5);
+		pValue r(args, 0, 0.5);
 
 		pEntity e([=](){
 			ofDrawBox(r());
@@ -54,8 +54,8 @@ namespace primitives{
 
 	PINEAL("polygon")
 	pEntity polygon(py::list args, py::list actions){
-		pSymbol n(args, 0, 4);
-		pSymbol r(args, 1, 0.5);
+		pValue n(args, 0, 4);
+		pValue r(args, 1, 0.5);
 
 		pEntity e([=](){
 			ofPushMatrix();

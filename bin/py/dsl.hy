@@ -28,4 +28,4 @@
 
 
 (defmacro symbol [name]
-  `(pSymbol (str '~name)))
+  `(pValue (str '~name)))
