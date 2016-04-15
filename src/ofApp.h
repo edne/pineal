@@ -10,6 +10,8 @@ const int BUFFER_SIZE = 1366;
 #include <boost/python.hpp>
 namespace py = boost::python;
 
+#include "lang.h"
+
 class ofApp : public ofBaseApp{
 	public:
 		ofApp(int argc, char ** argv);
@@ -39,50 +41,4 @@ class ofApp : public ofBaseApp{
 
 		ofxAubioOnset onset;
 		ofxAubioBeat beat;
-};
-
-class pEntity{
-	public:
-		pEntity(){
-			draw = [](){};
-		}
-
-		pEntity(py::object f){
-			draw = [=](){ f(); };
-		}
-
-		pEntity(function<void(void)> f){
-			draw = f;
-		}
-
-		void operator()() const{
-			draw();
-		}
-
-	private:
-		function<void(void)> draw;
-};
-
-class pAction{
-	public:
-		pAction(){  // by default identity
-			apply = [](pEntity& e){
-				return e;
-			};
-		}
-
-		pAction(function<pEntity(pEntity&)> a){
-			apply = a;
-		}
-
-		pEntity __call__(pEntity& e){
-			return apply(e);
-		}
-
-		pEntity operator()(pEntity e) const{
-			return apply(e);
-		}
-
-	private:
-		function<pEntity(pEntity&)> apply;
 };

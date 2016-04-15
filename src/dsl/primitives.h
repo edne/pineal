@@ -39,16 +39,10 @@ namespace primitives{
 
 	PINEAL("cube")
 	pEntity cube(py::list args, py::list actions){
-		float r;
-
-		if(py::len(args) > 0){
-			r = py::extract<float>(args[0]);
-		}else{
-			r = 0.5;
-		}
+		pSymbol r(args, 0, 0.5);
 
 		pEntity e([=](){
-			ofDrawBox(r);
+			ofDrawBox(r());
 		});
 
 		if(py::len(actions) > 0){
@@ -60,29 +54,16 @@ namespace primitives{
 
 	PINEAL("polygon")
 	pEntity polygon(py::list args, py::list actions){
-		int n;
-		float r;
-
-		if(py::len(args) > 0){
-			n = py::extract<int>(args[0]);
-		}else{
-			// TODO: Raise Python exception
-			return pEntity();
-		}
-
-		if(py::len(args) > 1){
-			r = py::extract<float>(args[1]);
-		}else{
-			r = 0.5;
-		}
+		pSymbol n(args, 0, 4);
+		pSymbol r(args, 1, 0.5);
 
 		pEntity e([=](){
 			ofPushMatrix();
 
-			ofScale(r, r, r);
+			ofScale(r(), r(), r());
 			ofRotateZ(90);
 
-			ofSetCircleResolution(n);
+			ofSetCircleResolution(n());
 			ofDrawCircle(0, 0, 1);
 
 			ofPopMatrix();
