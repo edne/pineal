@@ -68,7 +68,11 @@ class pValue{
 			key = k;
 		}
 
-		pValue(py::list args, int index, float default_value){
+		pValue(py::list args, int index, float default_value) :
+			pValue(args, index, pValue(default_value)){
+		}
+
+		pValue(py::list args, int index, pValue default_value){
 			if(py::len(args) > index){
 				py::extract<pValue&> extractor(args[index]);
 
@@ -82,8 +86,9 @@ class pValue{
 					value = py::extract<float>(args[index]);
 				}
 			}else{
-				is_literal = true;
-				value = default_value;
+				is_literal = default_value.is_literal;
+				value = default_value.value;
+				key = default_value.key;
 			}
 		}
 		//

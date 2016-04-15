@@ -47,8 +47,8 @@ namespace dsl{
 		py::def("at_beat", &audio::at_beat);
 		py::def("at_onset", &audio::at_onset);
 
-		py::def("scale", &transformations::scale_xyz);
-		py::def("translate", &transformations::translate_xyz);
+		py::def("scale", &transformations::scale);
+		py::def("translate", &transformations::translate);
 		py::def("rotate_x", &transformations::rotate_x);
 		py::def("rotate_y", &transformations::rotate_y);
 		py::def("rotate_z", &transformations::rotate_z);

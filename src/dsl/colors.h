@@ -11,12 +11,26 @@ namespace colors{
 	}
 
 	PINEAL("color")
-	pAction color(double r, double g, double b, double a){
+	pAction color(py::list args){
+		pValue r, g, b, a;
+
+		if(py::len(args) <= 2){
+			r = pValue(args, 0, 1.0);
+			g = pValue(r);
+			b = pValue(r);
+			a = pValue(args, 1, 1.0);
+		}else{
+			r = pValue(args, 0, 1.0);
+			g = pValue(args, 1, 1.0);
+			b = pValue(args, 2, 1.0);
+			a = pValue(args, 3, 1.0);
+		}
+
 		return pAction([=](pEntity& e){
 			return pEntity([=](){
 				static ofColor status_color;
 				ofColor old_color = status_color;
-				ofColor new_color = ofColor(r * 255, g * 255, b * 255, a * 255);
+				ofColor new_color = ofColor(r() * 255, g() * 255, b() * 255, a() * 255);
 
 				status_color = new_color;
 				ofSetColor(status_color);

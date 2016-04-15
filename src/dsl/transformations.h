@@ -1,10 +1,14 @@
 namespace transformations{
 	PINEAL("scale")
-	pAction scale_xyz(double x, double y, double z){
+	pAction scale(py::list args){
+        pValue x(args, 0, 1.0);
+        pValue y(args, 1, x);
+        pValue z(args, 2, 1.0);
+
 		return pAction([=](pEntity& e){
 			return pEntity([=](){
 				ofPushMatrix();
-				ofScale(x, y, z);
+				ofScale(x(), y(), z());
 				e();
 				ofPopMatrix();
 			});
@@ -12,11 +16,15 @@ namespace transformations{
 	}
 
 	PINEAL("translate")
-	pAction translate_xyz(double x, double y, double z){
+	pAction translate(py::list args){
+        pValue x(args, 0, 0.0);
+        pValue y(args, 1, 0.0);
+        pValue z(args, 2, 0.0);
+
 		return pAction([=](pEntity& e){
 			return pEntity([=](){
 				ofPushMatrix();
-				ofTranslate(x, y, z);
+				ofTranslate(x(), y(), z());
 				e();
 				ofPopMatrix();
 			});
