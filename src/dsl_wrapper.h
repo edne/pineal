@@ -22,7 +22,10 @@ namespace dsl{
 		;
 
 		py::class_<pValue>("pValue")
-		    .def(py::init<string>())
+		    .def(py::init<float>())
+		    .def("__call__", &pValue::__call__0)
+		    .def("__call__", &pValue::__call__1)
+		    .def("__call__", &pValue::__call__2)
 		;
 
 		py::def("background", &colors::background);

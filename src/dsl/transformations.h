@@ -84,9 +84,7 @@ namespace transformations{
 				double rot;
 
 				ofPushMatrix();
-                pValue::define_symbol("i");
 				for(int i=0; i<n; i++){
-                    pValue::update_value("i", i);
 					e();
 					rot = 360.0 / n;
 					if(axis == X){
@@ -97,7 +95,6 @@ namespace transformations{
 						ofRotateZ(rot);
 					}
 				}
-                pValue::remove_symbol("i");
 				ofPopMatrix();
 			});
 		});

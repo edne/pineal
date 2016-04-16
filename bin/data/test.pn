@@ -1,15 +1,17 @@
 (background 0 0 0 1)
 
+;(def amp (pValue (rms)))
 
 (draw (group [(cube [] [(line-width 4)
                         (turn-z 16)
-                        ;(hide)
+                        (hide)
                         (color [1])])
 
               (polygon [4] [(scale [0.25])
-                            (line-width 4)
-                            ;(hide)
-                            (color [0 1 1])])
+                             (line-width 4)
+                             (rotate-x (amp 8))
+                             (hide)
+                             (color [0 1 1])])
 
               (cube [(amp 1)] [(at-beat 4 1 0)
                                (line-width 4)
@@ -33,9 +35,3 @@
               (color [1 (amp 4)])]
              )
       )
-
-'(draw (polygon [(symbol i) 0.1] [(line-width 4)
-                                  (translate [0.4])
-                                  (turn-z 16)
-                                  (no-fill)
-                                  (color [0 1 0 1])]))

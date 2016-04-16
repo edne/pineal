@@ -1,8 +1,6 @@
 #include "ofApp.h"
 #include "dsl_wrapper.h"
 
-unordered_map<string, stack<float>> pValue::symbol_table;
-
 ofApp::ofApp(int argc, char ** argv){
 	this->argc = argc;
 	this->argv = argv;

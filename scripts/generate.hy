@@ -89,7 +89,10 @@
 \t;
 
 \tpy::class_<pValue>(\"pValue\")
-\t    .def(py::init<string>())
+\t    .def(py::init<float>())
+\t    .def(\"__call__\", &pValue::__call__0)
+\t    .def(\"__call__\", &pValue::__call__1)
+\t    .def(\"__call__\", &pValue::__call__2)
 \t;
 
 {}}}")))
