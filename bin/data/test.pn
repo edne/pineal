@@ -3,10 +3,12 @@
 
 (draw (group [(cube [] [(line-width 4)
                         (turn-z 16)
+                        ;(hide)
                         (color [1])])
 
               (polygon [4] [(scale [0.25])
                             (line-width 4)
+                            ;(hide)
                             (color [0 1 1])])
 
               (cube [(amp 1)] [(at-beat 4 1 0)

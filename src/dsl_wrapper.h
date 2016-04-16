@@ -8,9 +8,9 @@ namespace dsl{
 	#include "dsl/colors.h"
 	#include "dsl/primitives.h"
 	#include "dsl/osc.h"
+	#include "dsl/transformations.h"
 	#include "dsl/layers.h"
 	#include "dsl/audio.h"
-	#include "dsl/transformations.h"
 
 	BOOST_PYTHON_MODULE(core){
 		py::class_<pEntity>("pEntity")
@@ -39,14 +39,7 @@ namespace dsl{
 		py::def("osc_value", &osc::get_value_with_default);
 		py::def("osc_value", &osc::get_value);
 
-		py::def("on_layer_c", &layers::on_layer);
-		py::def("layer_entity", &layers::layer_entity);
-
-		py::def("rms", &audio::rms);
-		py::def("at_event", &audio::at_event);
-		py::def("at_beat", &audio::at_beat);
-		py::def("at_onset", &audio::at_onset);
-
+		py::def("hide", &transformations::hide);
 		py::def("scale", &transformations::scale);
 		py::def("translate", &transformations::translate);
 		py::def("rotate_x", &transformations::rotate_x);
@@ -54,5 +47,13 @@ namespace dsl{
 		py::def("rotate_z", &transformations::rotate_z);
 		py::def("turn_x", &transformations::turn_x);
 		py::def("turn_y", &transformations::turn_y);
-		py::def("turn_z", &transformations::turn_z);}
+		py::def("turn_z", &transformations::turn_z);
+
+		py::def("on_layer_c", &layers::on_layer);
+		py::def("layer_entity", &layers::layer_entity);
+
+		py::def("rms", &audio::rms);
+		py::def("at_event", &audio::at_event);
+		py::def("at_beat", &audio::at_beat);
+		py::def("at_onset", &audio::at_onset);}
 }

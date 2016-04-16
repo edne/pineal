@@ -1,4 +1,11 @@
 namespace transformations{
+    PINEAL("hide")
+	pAction hide(){
+        return pAction([=](pEntity& e){
+			return pEntity([=](){
+			});
+		});
+	}
 	PINEAL("scale")
 	pAction scale(py::list args){
         pValue x(args, 0, 1.0);
