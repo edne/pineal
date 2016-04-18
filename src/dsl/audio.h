@@ -9,7 +9,6 @@ namespace audio{
 
 	ofSoundBuffer inBuf;
 
-
 	void update(){
 		beat_value = false;
 		onset_value = false;
@@ -72,12 +71,16 @@ namespace audio{
 	}
 
 	PINEAL("at_beat")
-	pAction at_beat(int n, float t, int position){
-		return at_event(beat(n, t, position));
+	pAction at_beat(py::list args){
+        pValue n(args, 0, 1.0);
+        pValue position(args, 1, 0.0);
+        pValue dur(args, 2, 1.0);
+
+		return at_event(beat(n(), dur(), position()));
 	}
 
 	PINEAL("at_onset")
-	pAction at_onset(int n, float t, int position){
-		return at_event(onset(t));
+	pAction at_onset(float dur){
+		return at_event(onset(dur));
 	}
 }
