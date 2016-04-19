@@ -6,7 +6,7 @@ from time import sleep
 import logging
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
-import liblo
+from osc import send
 
 logger = logging.getLogger("watcher.py")
 logger.setLevel(logging.INFO)
@@ -39,23 +39,6 @@ def watch_file(file_name, action, *args, **kwargs):
     observer.start()
 
     return observer
-
-
-def check_address(addr):
-    "If only port is specified send to localhost"
-    splitted = str(addr).split(":")
-    if splitted[1:]:
-        return addr
-    else:
-        return ":".join(["localhost", splitted[0]])
-
-
-def send(addr, path, *msg):
-    """address path message
-    Send message on a given path"""
-    addr = check_address(addr)
-    target = liblo.Address("osc.udp://" + addr + "/")
-    liblo.send(target, path, *msg)
 
 
 def main():

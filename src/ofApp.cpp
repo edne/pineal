@@ -33,6 +33,7 @@ void ofApp::setup(){
 	int nOutputs = 2;
 	int nInputs = 2;
 
+	osc_beat = false;
 	onset.setup();
 	beat.setup();
 
@@ -80,7 +81,16 @@ void ofApp::update(){
 			}catch(py::error_already_set){
 				PyErr_Print();
 			}
-		}else if(dsl::osc::exists_value(address)){
+		}
+		if(address == "/beat/enable"){
+			osc_beat = m.getArgAsBool(0);
+			ofLog() << "Toggled /beat/enable to " << osc_beat;
+		}
+		if(address == "/beat" && osc_beat){
+			dsl::audio::set_beat();
+		}
+		if(dsl::osc::exists_value(address)){
+			// TODO: type check
 			dsl::osc::set_value(address, m.getArgAsFloat(0));
 		}
 	}
@@ -121,5 +131,7 @@ void ofApp::onsetEvent(float & time){
 }
 
 void ofApp::beatEvent(float & time){
-	dsl::audio::set_beat();
+	if(!osc_beat){
+		dsl::audio::set_beat();
+	}
 }
