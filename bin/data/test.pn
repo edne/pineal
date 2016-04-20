@@ -1,58 +1,44 @@
+(defn turn [n rotate-fun]
+  (branch-for [i (range n)]
+              (rotate-fun (-> i (* 2pi) (/ n)))))
+
+
+(defn concentric [n]
+  (branch-for [i (range 1 n)]
+              (scale [(-> 1 (/ i) (- (/ 1 n)))])))
+
+
+(defn concentric-lin [n]
+  (branch-for [i (range 1 n)]
+              (scale [(-> 1 (/ n) (* i))])))
+
+
+(def some-cubes
+  (change (cube)
+          (scale [0.5])
+          (concentric-lin 4)
+          (rotate_y (/ pi 4))
+          (translate [0.2])
+          (turn 4 rotate-y)
+
+          (line-width 4)
+          (no-fill)
+          (color [0 1 0])))
+
+
+(def concentric-squares
+  (change (polygon 4)
+          (concentric 10)
+          (rotate-x (amp 8))
+          (line-width 4)
+          (no-fill)
+          (color [0 1 1])))
+
+
 (background 0 0 0 1)
 
-(def b1
-  (change (cube)
-          (line-width 4)
-          (translate [(amp)])
-          (turn-z 16)
-          ))
-
-(def b2
-  (change (cube)
-          (translate [(amp)])
-          (turn-z 32)
-          ))
-
-(def b3
-  (change (cube)
-          (translate [(amp)])
-          (turn-z 16)
-          ))
-
-(def b4
-  (change (cube)
-          (translate [(amp)])
-          (turn-z 64)
-          ))
-
-(-> (seq 4
-         [0 b1 1]
-         [1 b2 1]
-         [2 b3 1]
-         [3 b4 1]
+(-> (seq 2
+         [0 some-cubes 1]
+         [1 concentric-squares 1]
          )
-
-  (change (line-width 2)
-          (no-fill)
-          (color [1 (amp 4 0.5)]))
-
-  draw)
-
-(-> (group (change (cube)
-                   (scale [0.5 0.5 0.5])
-                   (line-width 4)
-                   (rotate_y (/ pi 4))
-                   (color [1]))
-
-           (change (polygon 4)
-                   (scale [0.25])
-                   (line-width 4)
-                   (rotate-x (amp 8))
-                   (color [0 1 1]))
-           )
-
-  (change (line-width 2)
-          (no-fill)
-          (color [1 (amp 4)]))
-
   draw)

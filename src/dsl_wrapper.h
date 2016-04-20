@@ -34,10 +34,11 @@ namespace dsl{
 		py::def("no_fill", &colors::no_fill);
 		py::def("line_width", &colors::line_width);
 
-		py::def("compose_c", &primitives::compose);
-		py::def("change_c", &primitives::change);
 		py::def("draw", &primitives::draw);
-		py::def("group_c", &primitives::group);
+		py::def("compose_c", &primitives::compose);
+		py::def("branch_c", &primitives::branch);
+		py::def("change_c", &primitives::change);
+		py::def("group_c", &primitives::group_exposed);
 		py::def("cube", &primitives::cube);
 		py::def("polygon", &primitives::polygon);
 
@@ -50,9 +51,6 @@ namespace dsl{
 		py::def("rotate_x", &transformations::rotate_x);
 		py::def("rotate_y", &transformations::rotate_y);
 		py::def("rotate_z", &transformations::rotate_z);
-		py::def("turn_x", &transformations::turn_x);
-		py::def("turn_y", &transformations::turn_y);
-		py::def("turn_z", &transformations::turn_z);
 
 		py::def("on_layer_c", &layers::on_layer);
 		py::def("layer_entity", &layers::layer_entity);

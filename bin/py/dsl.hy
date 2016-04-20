@@ -29,6 +29,17 @@
   `(compose_c [~@actions]))
 
 
+(defmacro branch [&rest actions]
+  `(branch_c [~@actions]))
+
+
+(defmacro branch-for [item-iterator &rest actions]
+  (setv [item iterator] item-iterator)
+  `(branch_c (list (map (fn [~item]
+                          (compose_c [~@actions]))
+                     ~iterator))))
+
+
 (defmacro osc [path default]
   `(osc-value (str '~path) ~default))
 

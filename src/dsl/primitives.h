@@ -1,21 +1,53 @@
 namespace primitives{
-	PINEAL("compose_c")
-	pAction compose(py::list py_actions){
-		int n = 0;
+	PINEAL("draw")
+	void draw(pEntity e){
+		e();
+	}
+
+	pEntity group(vector<pEntity> entities){
+		pEntity e([=](){
+			for(size_t i = 0; i < entities.size(); i++){
+				draw(entities[i]);
+			}
+		});
+
+		return e;
+	}
+
+	vector<pAction> cast_actions_list(py::list py_actions){
 		vector<pAction> actions;
 		for(int i = 0; i < py::len(py_actions); i++){
 			py::extract<pAction&> extractor(py_actions[i]);
 			if(extractor.check()){
-				n += 1;
 				pAction& action = extractor();
 				actions.push_back(action);
 			}
 		}
+		return actions;
+	}
+
+	PINEAL("compose_c")
+	pAction compose(py::list py_actions){
+		vector<pAction> actions = cast_actions_list(py_actions);
+
 		return pAction([=](pEntity& e){
-			for(int i = 0; i < n; i++){
+			for(size_t i = 0; i < actions.size(); i++){
 				e = actions[i](e);
 			}
 			return e;
+		});
+	}
+
+	PINEAL("branch_c")
+	pAction branch(py::list py_actions){
+		vector<pAction> actions = cast_actions_list(py_actions);
+
+		return pAction([=](pEntity& e){
+			vector<pEntity> entities;
+			for(size_t i = 0; i < actions.size(); i++){
+				entities.push_back(actions[i](e));
+			}
+			return group(entities);
 		});
 	}
 
@@ -25,27 +57,16 @@ namespace primitives{
 		return action(entity);
 	}
 
-	PINEAL("draw")
-	void draw(pEntity e){
-		e();
-	}
-
 	PINEAL("group_c")
-	pEntity group(py::list l){
+	pEntity group_exposed(py::list l){
 		int n = py::len(l);
-		vector<pEntity> v;
+		vector<pEntity> entities;
 
 		for(int i = 0; i < n; i++){
-			v.push_back(py::extract<pEntity>(l[i]));
+			entities.push_back(py::extract<pEntity>(l[i]));
 		}
 
-		pEntity e([n, v](){
-			for(int i = 0; i < n; i++){
-				draw(v[i]);
-			}
-		});
-
-		return e;
+		return group(entities);
 	}
 
 	PINEAL("cube")
