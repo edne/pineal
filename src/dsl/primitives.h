@@ -1,13 +1,28 @@
 namespace primitives{
-	pEntity change(pEntity& entity, py::list actions){
-		for(int i = 0; i < py::len(actions); i++){
-			py::extract<pAction&> extractor(actions[i]);
+	PINEAL("compose_c")
+	pAction compose(py::list py_actions){
+		int n = 0;
+		vector<pAction> actions;
+		for(int i = 0; i < py::len(py_actions); i++){
+			py::extract<pAction&> extractor(py_actions[i]);
 			if(extractor.check()){
+				n += 1;
 				pAction& action = extractor();
-				entity = action(entity);
+				actions.push_back(action);
 			}
 		}
-		return entity;
+		return pAction([=](pEntity& e){
+			for(int i = 0; i < n; i++){
+				e = actions[i](e);
+			}
+			return e;
+		});
+	}
+
+	PINEAL("change_c")
+	pEntity change(pEntity& entity, py::list py_actions){
+		pAction action = compose(py_actions);
+		return action(entity);
 	}
 
 	PINEAL("draw")
@@ -15,8 +30,8 @@ namespace primitives{
 		e();
 	}
 
-	PINEAL("group")
-	pEntity group(py::list l, py::list actions){
+	PINEAL("group_c")
+	pEntity group(py::list l){
 		int n = py::len(l);
 		vector<pEntity> v;
 
@@ -30,48 +45,30 @@ namespace primitives{
 			}
 		});
 
-		if(py::len(actions) > 0){
-			e = change(e, actions);
-		}
-
 		return e;
 	}
 
 	PINEAL("cube")
-	pEntity cube(py::list args, py::list actions){
-		pValue r(args, 0, 0.5);
-
+	pEntity cube(){
 		pEntity e([=](){
-			ofDrawBox(r());
+			ofDrawBox(0.5);
 		});
-
-		if(py::len(actions) > 0){
-			e = change(e, actions);
-		}
 
 		return e;
 	}
 
 	PINEAL("polygon")
-	pEntity polygon(py::list args, py::list actions){
-		pValue n(args, 0, 4);
-		pValue r(args, 1, 0.5);
-
+	pEntity polygon(float n){
 		pEntity e([=](){
 			ofPushMatrix();
 
-			ofScale(r(), r(), r());
 			ofRotateZ(90);
 
-			ofSetCircleResolution(n());
+			ofSetCircleResolution(n);
 			ofDrawCircle(0, 0, 1);
 
 			ofPopMatrix();
 		});
-
-		if(py::len(actions) > 0){
-			e = change(e, actions);
-		}
 
 		return e;
 	}

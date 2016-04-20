@@ -17,16 +17,20 @@
      (apply (pValue ~x) g!args)))
 
 
+(defmacro group [&rest entities]
+  `(group_c [~@entities]))
+
+
+(defmacro change [entity &rest actions]
+  `(change_c ~entity [~@actions]))
+
+
+(defmacro compose [&rest actions]
+  `(compose_c [~@actions]))
+
+
 (defmacro osc [path default]
   `(osc-value (str '~path) ~default))
-
-
-(defmacro/g! clip [name entity]
-  `(defn ~name [&rest actions]
-     (setv ~g!entity ~entity)
-     (if actions
-       (group [~g!entity] (list actions))
-       ~g!entity)))
 
 
 (defmacro beat [n entity pos dur]
@@ -35,11 +39,11 @@
 
 (defmacro seq [n &rest args]
   `(do
-    (setv clips [])
+     (setv clips [])
 
-    (for [[pos e dur] [~@args]]
-      (setv a (at-beat [~n pos dur]))
-      (.append clips (group [e] [a])))
+     (for [[pos e dur] [~@args]]
+       (setv a (at-beat [~n pos dur]))
+       (.append clips (change e a)))
 
-    (group clips [])))
- 
+     (group_c clips)))
+

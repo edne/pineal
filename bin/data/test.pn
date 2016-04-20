@@ -1,71 +1,58 @@
 (background 0 0 0 1)
 
+(def b1
+  (change (cube)
+          (line-width 4)
+          (translate [(amp)])
+          (turn-z 16)
+          ))
 
-(clip b1
-      (cube [(amp 1 0.5)] [(line-width 4)
-                           (translate [(amp)])
-                           (turn-z 16)]))
+(def b2
+  (change (cube)
+          (translate [(amp)])
+          (turn-z 32)
+          ))
 
-(clip b2
-      (cube [(amp 1 0.5)] [(translate [(amp)])
-                           (turn-z 32)]))
+(def b3
+  (change (cube)
+          (translate [(amp)])
+          (turn-z 16)
+          ))
 
-(clip b3
-      (cube [(amp 1 0.5)] [(translate [(amp)])
-                           (turn-z 16)]))
+(def b4
+  (change (cube)
+          (translate [(amp)])
+          (turn-z 64)
+          ))
 
-(clip b4
-      (cube [(amp 1 0.5)] [(translate [(amp)])
-                           (turn-z 64)]))
+(-> (seq 4
+         [0 b1 1]
+         [1 b2 1]
+         [2 b3 1]
+         [3 b4 1]
+         )
 
-'(draw (group [
-               (seq 1
-                    [0 (b1) 1]
-                    [1 (b2) 1]
-                    [2 (b3) 1]
-                    [3 (b4) 1]
-                    )
-               ]
+  (change (line-width 2)
+          (no-fill)
+          (color [1 (amp 4 0.5)]))
 
-              [(line-width 2)
-               (no-fill)
-               (hide)
-               (color [1 (amp 4)])]
-              )
-       )
+  draw)
 
-(draw
-  (group [(seq 4
-               [0 (polygon [4] []) 1]
-               [1 (polygon [3] []) 1]
-               [2 (polygon [4] []) 1]
-               [3 (polygon [5] []) 1]
-               )]
-         [(no-fill)]))
+(-> (group (change (cube)
+                   (scale [0.5 0.5 0.5])
+                   (line-width 4)
+                   (rotate_y (/ pi 4))
+                   (color [1]))
 
-'(draw
-   (group [(seq 2
-                [0 (b1) 1]
-                [1 (b2) 1]
-                )]
-          [(line-width 2)
-           (no-fill)
-           ;(hide)
-           (color [1])]))
+           (change (polygon 4)
+                   (scale [0.25])
+                   (line-width 4)
+                   (rotate-x (amp 8))
+                   (color [0 1 1]))
+           )
 
-(draw (group [(cube [] [(line-width 4)
-                        (turn-z 16)
-                        (color [1])])
+  (change (line-width 2)
+          (no-fill)
+          (color [1 (amp 4)]))
 
-              (polygon [4] [(scale [0.25])
-                            (line-width 4)
-                            (rotate-x (amp 8))
-                            (color [0 1 1])])
-              ]
-
-             [(line-width 2)
-              (hide)
-              (no-fill)
-              (color [1 (amp 4)])]
-             )
-      )
+  draw)

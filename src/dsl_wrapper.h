@@ -34,8 +34,10 @@ namespace dsl{
 		py::def("no_fill", &colors::no_fill);
 		py::def("line_width", &colors::line_width);
 
+		py::def("compose_c", &primitives::compose);
+		py::def("change_c", &primitives::change);
 		py::def("draw", &primitives::draw);
-		py::def("group", &primitives::group);
+		py::def("group_c", &primitives::group);
 		py::def("cube", &primitives::cube);
 		py::def("polygon", &primitives::polygon);
 
