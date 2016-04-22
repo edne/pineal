@@ -7,6 +7,7 @@
 namespace dsl{
 	#include "dsl/colors.h"
 	#include "dsl/primitives.h"
+	#include "dsl/keywords.h"
 	#include "dsl/osc.h"
 	#include "dsl/transformations.h"
 	#include "dsl/layers.h"
@@ -34,13 +35,16 @@ namespace dsl{
 		py::def("no_fill", &colors::no_fill);
 		py::def("line_width", &colors::line_width);
 
-		py::def("draw", &primitives::draw);
-		py::def("compose_c", &primitives::compose);
-		py::def("branch_c", &primitives::branch);
-		py::def("change_c", &primitives::change);
-		py::def("group_c", &primitives::group_exposed);
 		py::def("cube", &primitives::cube);
 		py::def("polygon", &primitives::polygon);
+		py::def("text", &primitives::text);
+
+		py::def("draw", &keywords::draw);
+		py::def("compose_c", &keywords::compose);
+		py::def("branch_c", &keywords::branch);
+		py::def("insert", &keywords::insert);
+		py::def("change_c", &keywords::change);
+		py::def("group_c", &keywords::group_exposed);
 
 		py::def("osc_value", &osc::get_value_with_default);
 		py::def("osc_value", &osc::get_value);

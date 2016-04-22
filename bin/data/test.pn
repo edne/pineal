@@ -29,16 +29,45 @@
 (def concentric-squares
   (change (polygon 4)
           (concentric 10)
-          (rotate-x (amp 8))
           (line-width 4)
           (no-fill)
           (color [0 1 1])))
 
 
+
 (background 0 0 0 1)
 
-(-> (seq 2
-         [0 some-cubes 1]
-         [1 concentric-squares 1]
-         )
+(def writing (change (text (str "(pineal)"))
+                     (scale [0.1])))
+
+
+(defn char [c]
+  (change (text (str c))
+          (scale [0.1])))
+
+
+(def writing (change (char "")
+                     (branch-for [[i c] (enumerate "(pineal)")]
+                                 (insert (char c))
+                                 (translate [(* i 0.05)
+                                             0
+                                             (-> (--time--) (* i) (sin))])
+                                 )))
+
+
+(-> writing
+  (change (rotate-y (-> (--time--) (% 2pi) (sin) (* 0.1) (- 0.1)))
+          (translate [(-> (--time--) (* 4) (sin) (* 0.2) (+ 0.4))])
+          (branch (color [1])
+                  (compose (turn 13 rotate-z)
+                           (color [1 0.5])))
+          (rotate-x -1)
+          (scale [0.25])
+          )
   draw)
+
+'(-> (seq 2
+          [0 some-cubes 1]
+          [1 concentric-squares 1]
+          )
+   draw)

@@ -41,6 +41,8 @@ void ofApp::setup(){
 	ofAddListener(beat.gotBeat, this, &ofApp::beatEvent);
 
 	ofSoundStreamSetup(nOutputs, nInputs, this);
+
+	dsl::primitives::font_setup("monaco.ttf");
 }
 
 void ofApp::exit(){
