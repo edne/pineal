@@ -30,7 +30,7 @@ namespace dsl{
 		;
 
 		py::def("background", &colors::background);
-		py::def("color", &colors::color);
+		py::def("color_c", &colors::color);
 		py::def("fill", &colors::fill);
 		py::def("no_fill", &colors::no_fill);
 		py::def("line_width", &colors::line_width);
@@ -50,8 +50,8 @@ namespace dsl{
 		py::def("osc_value", &osc::get_value);
 
 		py::def("hide", &transformations::hide);
-		py::def("scale", &transformations::scale);
-		py::def("translate", &transformations::translate);
+		py::def("scale_c", &transformations::scale);
+		py::def("translate_c", &transformations::translate);
 		py::def("rotate_x", &transformations::rotate_x);
 		py::def("rotate_y", &transformations::rotate_y);
 		py::def("rotate_z", &transformations::rotate_z);

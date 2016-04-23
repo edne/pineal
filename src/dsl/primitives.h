@@ -25,6 +25,7 @@ namespace primitives{
 	}
 
 
+	// TODO font memoizing
 	ofTrueTypeFont font;
 
 	void font_setup(string font_name){

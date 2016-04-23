@@ -7,7 +7,7 @@ namespace transformations{
 		});
 	}
 
-	PINEAL("scale")
+	PINEAL("scale_c")
 	pAction scale(py::list args){
         pValue x(args, 0, 1.0);
         pValue y(args, 1, x);
@@ -23,7 +23,7 @@ namespace transformations{
 		});
 	}
 
-	PINEAL("translate")
+	PINEAL("translate_c")
 	pAction translate(py::list args){
         pValue x(args, 0, 0.0);
         pValue y(args, 1, 0.0);

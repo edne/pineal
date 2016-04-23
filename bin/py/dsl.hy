@@ -17,20 +17,17 @@
      (apply (pValue ~x) g!args)))
 
 
-(defmacro group [&rest entities]
-  `(group_c [~@entities]))
+(defmacro change [entity &rest actions] `(change_c ~entity [~@actions]))
 
+; TODO: (defmacro varadic ...)
+(defmacro group     [&rest xs] `(group_c     [~@xs]))
+(defmacro compose   [&rest xs] `(compose_c   [~@xs]))
+(defmacro branch    [&rest xs] `(branch_c    [~@xs]))
 
-(defmacro change [entity &rest actions]
-  `(change_c ~entity [~@actions]))
+(defmacro color     [&rest xs] `(color_c     [~@xs]))
 
-
-(defmacro compose [&rest actions]
-  `(compose_c [~@actions]))
-
-
-(defmacro branch [&rest actions]
-  `(branch_c [~@actions]))
+(defmacro scale     [&rest xs] `(scale_c     [~@xs]))
+(defmacro translate [&rest xs] `(translate_c [~@xs]))
 
 
 (defmacro branch-for [item-iterator &rest actions]

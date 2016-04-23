@@ -10,7 +10,7 @@ namespace colors{
 		ofBackground(r * 255, g * 255, b * 255, a * 255);
 	}
 
-	PINEAL("color")
+	PINEAL("color_c")
 	pAction color(py::list args){
 		pValue r, g, b, a;
 
