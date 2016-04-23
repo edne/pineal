@@ -88,13 +88,6 @@
 \t    .def(\"__call__\", &pAction::__call__)
 \t;
 
-\tpy::class_<pValue>(\"pValue\")
-\t    .def(py::init<float>())
-\t    .def(\"__call__\", &pValue::__call__0)
-\t    .def(\"__call__\", &pValue::__call__1)
-\t    .def(\"__call__\", &pValue::__call__2)
-\t;
-
 {}}}")))
 
 (setv code

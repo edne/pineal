@@ -22,13 +22,6 @@ namespace dsl{
 		    .def("__call__", &pAction::__call__)
 		;
 
-		py::class_<pValue>("pValue")
-		    .def(py::init<float>())
-		    .def("__call__", &pValue::__call__0)
-		    .def("__call__", &pValue::__call__1)
-		    .def("__call__", &pValue::__call__2)
-		;
-
 		py::def("background", &colors::background);
 		py::def("color_c", &colors::color);
 		py::def("fill", &colors::fill);

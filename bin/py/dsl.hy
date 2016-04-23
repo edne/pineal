@@ -6,15 +6,23 @@
      (import [time [time :as --time--]])
 
      (def 2pi (* 2 pi))
-     (value time (--time--))
-     (value amp (rms))))
+     (value time --time--)
+     (value amp rms)))
 
 
-(defmacro/g! value [name x]
+(defmacro value [name x]
   "Define a function that return the value and optionally takes a scale and a
   offset factor"
-  `(defn ~name [&rest g!args]
-     (apply (pValue ~x) g!args)))
+  `(defn ~name [&rest args]
+     (setv [scale offset] [1 0])
+
+     (when (> (len args) 0)
+       (setv scale (get args 0)))
+
+     (when (> (len args) 1)
+       (setv offset (get args 1)))
+
+     (-> (~x) (* scale) (+ offset))))
 
 
 (defmacro change [entity &rest actions] `(change_c ~entity [~@actions]))

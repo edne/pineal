@@ -83,18 +83,6 @@ class pValue{
 			return value;
 		}
 
-        float __call__0(){
-            return value;
-        }
-
-        float __call__1(float scale){
-            return value * scale;
-        }
-
-        float __call__2(float scale, float offset){
-            return value * scale + offset;
-        }
-
     private:
 		float value;
 };
