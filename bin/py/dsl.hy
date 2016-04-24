@@ -38,6 +38,13 @@
 (defmacro translate [&rest xs] `(translate_c [~@xs]))
 
 
+(defmacro group-for [item-iterator &rest entities]
+  (setv [item iterator] item-iterator)
+  `(group_c (list (map (fn [~item]
+                          (group_c [~@entities]))
+                     ~iterator))))
+
+
 (defmacro branch-for [item-iterator &rest actions]
   (setv [item iterator] item-iterator)
   `(branch_c (list (map (fn [~item]

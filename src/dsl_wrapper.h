@@ -35,7 +35,6 @@ namespace dsl{
 		py::def("draw", &keywords::draw);
 		py::def("compose_c", &keywords::compose);
 		py::def("branch_c", &keywords::branch);
-		py::def("insert", &keywords::insert);
 		py::def("change_c", &keywords::change);
 		py::def("group_c", &keywords::group_exposed);
 

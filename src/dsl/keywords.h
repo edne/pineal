@@ -51,16 +51,6 @@ namespace keywords{
 		});
 	}
 
-	PINEAL("insert")
-	pAction insert(pEntity inserted){
-		return pAction([=](pEntity& e){
-			return pEntity([=](){
-					draw(e);
-					draw(inserted);
-			});
-		});
-	}
-
 	PINEAL("change_c")
 	pEntity change(pEntity& entity, py::list py_actions){
 		pAction action = compose(py_actions);

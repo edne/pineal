@@ -46,14 +46,13 @@
               ))
 
 
-(def writing (change (text font "")
-                     (branch-for [[i c] (enumerate "(pineal)")]
-                                 (insert (change (text font c)
-                                                 (scale 0.1)))
-                                 (translate (* i 0.05)
-                                            0
-                                            (-> (time) (* i) (sin) (* 0.5)))
-                                 )))
+(def writing (group-for [[i c] (enumerate "(pineal)")]
+                        (change (text font c)
+                                (scale 0.1)
+                                (translate (* i 0.05)
+                                           0
+                                           (-> (time) (* i) (sin) (* 0.5)))
+                                )))
 
 
 (-> writing
