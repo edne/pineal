@@ -37,18 +37,19 @@
 
 (background 0 0 0 1)
 
-(def writing (change (text (str "(pineal)"))
-                     (scale 0.1)))
+
+(def font "monaco.ttf")
+
+(draw (change (text font "(pineal)")
+              (scale 0.025)
+              (translate 0.25)
+              ))
 
 
-(defn char [c]
-  (change (text (str c))
-          (scale 0.1)))
-
-
-(def writing (change (char "")
+(def writing (change (text font "")
                      (branch-for [[i c] (enumerate "(pineal)")]
-                                 (insert (char c))
+                                 (insert (change (text font c)
+                                                 (scale 0.1)))
                                  (translate (* i 0.05)
                                             0
                                             (-> (time) (* i) (sin) (* 0.5)))
@@ -56,7 +57,7 @@
 
 
 (-> writing
-  (change (rotate-y (-> (time 2) (% 2pi) (sin) (* 0.1) (- 0.1)))
+  (change (rotate-y  (-> (time 2) (sin) (* 0.1) (- 0.1)))
           (translate (-> (time 4) (sin) (* 0.2) (+ 0.4)))
           (branch (color 1)
                   (compose (turn 13 rotate-z)

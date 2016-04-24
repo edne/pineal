@@ -49,6 +49,10 @@
   `(osc-value (str '~path) ~default))
 
 
+(defmacro text [font s]
+  `(text_c (str ~font) (str ~s)))
+
+
 (defmacro beat [n entity pos dur]
   `(~entity (at-beat [~n ~pos ~dur])))
 

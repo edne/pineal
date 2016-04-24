@@ -26,18 +26,24 @@ namespace primitives{
 
 
 	// TODO font memoizing
-	ofTrueTypeFont font;
+	unordered_map<string, ofTrueTypeFont> fonts_map;
 
-	void font_setup(string font_name){
-		font.load(font_name, 100, true, true, true);
-	}
+	PINEAL("text_c")
+	pEntity text(string font_name, string s){
+		float size = 100;
 
-	PINEAL("text")
-	pEntity text(string s){
+		if(fonts_map.find(font_name) == fonts_map.end()){
+			ofTrueTypeFont font;
+			font.load(font_name, size, true, true, true);
+			fonts_map[font_name] = font;
+		}
+
+		float scale = 1.0 / size;
+
 		pEntity e([=](){
 			ofPushMatrix();
-			ofScale(0.01, 0.01, 0.01);
-			font.drawStringAsShapes(s, - 50, - 50);
+			ofScale(scale, scale, scale);
+			fonts_map[font_name].drawStringAsShapes(s, 0, 0);
 			ofPopMatrix();
 		});
 

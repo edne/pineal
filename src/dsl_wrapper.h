@@ -30,7 +30,7 @@ namespace dsl{
 
 		py::def("cube", &primitives::cube);
 		py::def("polygon", &primitives::polygon);
-		py::def("text", &primitives::text);
+		py::def("text_c", &primitives::text);
 
 		py::def("draw", &keywords::draw);
 		py::def("compose_c", &keywords::compose);

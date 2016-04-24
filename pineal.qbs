@@ -14,18 +14,24 @@ Project{
         files: [
             'src/dsl/audio.h',
             'src/dsl/colors.h',
+            'src/dsl/keywords.h',
             'src/dsl/layers.h',
+            'src/dsl/osc.h',
             'src/dsl/primitives.h',
             'src/dsl/transformations.h',
             'src/dsl_wrapper.h',
+            'src/lang.h',
             'src/main.cpp',
             'src/ofApp.cpp',
             'src/ofApp.h',
+            'src/outApp.cpp',
+            'src/outApp.h',
         ]
 
         of.addons: [
             'ofxOsc',
             'ofxAubio',
+            'ofxVideoRecorder',
         ]
 
         // additional flags for the project. the of module sets some
