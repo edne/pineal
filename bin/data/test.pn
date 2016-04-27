@@ -13,61 +13,87 @@
               (scale (-> 1 (/ n) (* i)))))
 
 
-(def some-cubes
-  (change (cube)
-          (scale 0.5)
-          (concentric-lin 4)
-          (rotate_y (/ pi 4))
-          (translate 0.2)
-          (turn 4 rotate-y)
-
-          (line-width 4)
-          (no-fill)
-          (color 0 1 0)))
-
-
-(def concentric-squares
-  (change (polygon 4)
-          (concentric 10)
-          (line-width 4)
-          (no-fill)
-          (color 0 1 1)))
-
-
-
 (background 0 0 0 1)
 
 
-(def font "monaco.ttf")
+(defn tag-primo []
+  (def font "monaco.ttf")
 
-(draw (change (text font "(pineal)")
-              (scale 0.025)
-              (translate 0.25)
-              ))
-
-
-(def writing (group-for [[i c] (enumerate "(pineal)")]
-                        (change (text font c)
-                                (scale 0.1)
-                                (translate (* i 0.05)
-                                           0
-                                           (-> (time) (* i) (sin) (* 0.5)))
-                                )))
+  (draw (change (text font "(pineal)")
+                (scale 0.025)
+                (translate 0.25)
+                ))
 
 
-(-> writing
-  (change (rotate-y  (-> (time 2) (sin) (* 0.1) (- 0.1)))
-          (translate (-> (time 4) (sin) (* 0.2) (+ 0.4)))
-          (branch (color 1)
-                  (compose (turn 13 rotate-z)
-                           (color 1 0.5)))
-          (rotate-x -1)
-          (scale 0.25)
-          )
-  draw)
+  (def writing (group-for [[i c] (enumerate "(pineal)")]
+                          (change (text font c)
+                                  (scale 0.1)
+                                  (translate (* i 0.05)
+                                             0
+                                             (-> (time) (* i) (sin) (* 0.5)))
+                                  )))
 
-'(-> (seq 2
-          [0 some-cubes 1]
-          [1 concentric-squares 1]
-          )
-   draw)
+
+  (-> writing
+    (change (rotate-y  (-> (time 2) (sin) (* 0.1) (- 0.1)))
+            (translate (-> (time 4) (sin) (* 0.2) (+ 0.4)))
+            (branch (color 1)
+                    (compose (turn 13 rotate-z)
+                             (color 1 0.5)))
+            (rotate-x -1)
+            (scale 0.25)
+            )
+    draw))
+
+(defn beat-test []
+  (def some-cubes
+    (change (cube)
+            (scale 0.5)
+            (concentric-lin 4)
+            (rotate_y (/ pi 4))
+            (translate 0.2)
+            (turn 4 rotate-y)
+
+            (line-width 4)
+            (no-fill)
+            (color 0 1 0)))
+
+  (def concentric-squares
+    (change (polygon 4)
+            (concentric 10)
+            (line-width 4)
+            (no-fill)
+            (color 0 1 1)))
+
+  (-> (seq 2
+           [0 some-cubes 1]
+           [1 concentric-squares 1]
+           )
+    draw))
+
+
+(defn stella-prima []
+  (def x1 0.1)
+  (def y1 (time x1))
+
+  (def stella
+    (change (polygon 4)
+            (scale 0.2)
+            ;(no-fill)
+            (scale 1 0.5)
+            (translate (-> y1 sin (* 1.00) (+ 0.3)))
+            (branch-for [i (range 1 9)]
+                        (rotate-z (-> (/ pi 4) (* i)))
+                        (scale (/ 2 i))
+                        (scale 1 (/ 2 i))
+                        ;(color (% i 2))
+                        (rotate-x (-> y1 (% 2pi)))
+                        (turn 8 rotate-z))
+            (rotate-x -1)
+            (scale 0.4)
+            ))
+
+
+  (draw stella))
+
+(stella-prima)
