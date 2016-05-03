@@ -22,8 +22,11 @@ namespace dsl{
 		    .def("__call__", &pAction::__call__)
 		;
 
+		py::class_<pColor>("pColor");
+
 		py::def("background", &colors::background);
-		py::def("color_c", &colors::color);
+		py::def("rgb_c", &colors::rgb);
+		py::def("color", &colors::color);
 		py::def("fill", &colors::fill);
 		py::def("no_fill", &colors::no_fill);
 		py::def("line_width", &colors::line_width);

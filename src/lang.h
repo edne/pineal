@@ -86,3 +86,8 @@ class pValue{
     private:
 		float value;
 };
+
+class pColor{
+	public:
+		ofColor c;
+};

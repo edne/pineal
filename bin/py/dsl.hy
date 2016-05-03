@@ -32,7 +32,7 @@
 (defmacro compose   [&rest xs] `(compose_c   [~@xs]))
 (defmacro branch    [&rest xs] `(branch_c    [~@xs]))
 
-(defmacro color     [&rest xs] `(color_c     [~@xs]))
+(defmacro rgb       [&rest xs] `(rgb_c       [~@xs]))
 
 (defmacro scale     [&rest xs] `(scale_c     [~@xs]))
 (defmacro translate [&rest xs] `(translate_c [~@xs]))

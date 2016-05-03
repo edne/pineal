@@ -10,8 +10,8 @@ namespace colors{
 		ofBackground(r * 255, g * 255, b * 255, a * 255);
 	}
 
-	PINEAL("color_c")
-	pAction color(py::list args){
+	PINEAL("rgb_c")
+	pColor rgb(py::list args){
 		pValue r, g, b, a;
 
 		if(py::len(args) <= 2){
@@ -26,11 +26,21 @@ namespace colors{
 			a = pValue(args, 3, 1.0);
 		}
 
+		ofColor c(255*r(), 255*g(), 255*b(), 255*a());
+		pColor p;
+		p.c = c;
+		return p;
+	}
+
+	PINEAL("color")
+	pAction color(pColor p){
+		ofColor c = p.c;
+
 		return pAction([=](pEntity& e){
 			return pEntity([=](){
 				static ofColor status_color;
 				ofColor old_color = status_color;
-				ofColor new_color = ofColor(r() * 255, g() * 255, b() * 255, a() * 255);
+				ofColor new_color = ofColor(c.r, c.g, c.b, c.a);
 
 				status_color = new_color;
 				ofSetColor(status_color);

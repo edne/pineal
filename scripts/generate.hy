@@ -88,6 +88,8 @@
 \t    .def(\"__call__\", &pAction::__call__)
 \t;
 
+\tpy::class_<pColor>(\"pColor\");
+
 {}}}")))
 
 (setv code
