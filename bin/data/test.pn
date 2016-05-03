@@ -13,7 +13,7 @@
               (scale (-> 1 (/ n) (* i)))))
 
 
-(background 0 0 0 1)
+(background (rgb 0))
 
 
 (defn tag-primo []

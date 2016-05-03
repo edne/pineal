@@ -6,8 +6,8 @@ namespace colors{
 	}
 
 	PINEAL("background")
-	void background(double r, double g, double b, double a){
-		ofBackground(r * 255, g * 255, b * 255, a * 255);
+	void background(pColor p){
+		ofBackground(p.c);
 	}
 
 	PINEAL("rgb_c")
