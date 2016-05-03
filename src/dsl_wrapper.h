@@ -25,6 +25,7 @@ namespace dsl{
 		py::class_<pColor>("pColor");
 
 		py::def("background", &colors::background);
+		py::def("lerp", &colors::lerp);
 		py::def("rgb_c", &colors::rgb);
 		py::def("color", &colors::color);
 		py::def("fill", &colors::fill);

@@ -10,6 +10,13 @@ namespace colors{
 		ofBackground(p.c);
 	}
 
+	PINEAL("lerp")
+	pColor lerp(float amount, pColor p, pColor q){
+		pColor out;
+		out.c = p.c.getLerped(q.c, amount);
+		return out;
+	}
+
 	PINEAL("rgb_c")
 	pColor rgb(py::list args){
 		pValue r, g, b, a;
