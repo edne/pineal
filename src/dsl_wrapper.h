@@ -26,6 +26,7 @@ namespace dsl{
 
 		py::def("background", &colors::background);
 		py::def("lerp", &colors::lerp);
+		py::def("invert", &colors::invert);
 		py::def("rgb_c", &colors::rgb);
 		py::def("color", &colors::color);
 		py::def("fill", &colors::fill);

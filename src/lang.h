@@ -89,6 +89,13 @@ class pValue{
 
 class pColor{
 	public:
+		pColor(){
+		}
+
+		pColor(ofColor _c){
+			c = _c;
+		}
+
 		// TODO: constructor with ofColor
 		ofColor c;
 };

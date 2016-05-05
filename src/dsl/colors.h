@@ -12,9 +12,12 @@ namespace colors{
 
 	PINEAL("lerp")
 	pColor lerp(float amount, pColor p, pColor q){
-		pColor out;
-		out.c = p.c.getLerped(q.c, amount);
-		return out;
+		return pColor(p.c.getLerped(q.c, amount));
+	}
+
+	PINEAL("invert")
+	pColor invert(pColor in_color){
+		return pColor(in_color.c.getInverted());
 	}
 
 	PINEAL("rgb_c")
@@ -33,10 +36,7 @@ namespace colors{
 			a = pValue(args, 3, 1.0);
 		}
 
-		ofColor c(255*r(), 255*g(), 255*b(), 255*a());
-		pColor p;
-		p.c = c;
-		return p;
+		return pColor(ofColor(255*r(), 255*g(), 255*b(), 255*a()));
 	}
 
 	PINEAL("color")
