@@ -41,8 +41,8 @@
 (defmacro group-for [item-iterator &rest entities]
   (setv [item iterator] item-iterator)
   `(group_c (list (map (fn [~item]
-                          (group_c [~@entities]))
-                     ~iterator))))
+                         (group_c [~@entities]))
+                    ~iterator))))
 
 
 (defmacro branch-for [item-iterator &rest actions]
@@ -52,8 +52,8 @@
                      ~iterator))))
 
 
-(defmacro osc [path default]
-  `(osc-value (str '~path) ~default))
+(defmacro get-osc-f [path default]
+  `(get-osc-f_c (str ~path) ~default))
 
 
 (defmacro text [font s]

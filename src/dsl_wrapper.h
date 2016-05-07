@@ -43,8 +43,8 @@ namespace dsl{
 		py::def("change_c", &keywords::change);
 		py::def("group_c", &keywords::group_exposed);
 
-		py::def("osc_value", &osc::get_value_with_default);
-		py::def("osc_value", &osc::get_value);
+		py::def("get_osc_f_c", &osc::get_osc_f_with_default);
+		py::def("get_osc_f_c", &osc::get_osc_f);
 
 		py::def("hide", &transformations::hide);
 		py::def("scale_c", &transformations::scale);

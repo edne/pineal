@@ -101,4 +101,25 @@
 
   (draw stella))
 
+;(stella-prima)
+
+(defn osc-monitor [path c]
+  (draw (change (polygon 30)
+                (scale (get-osc-f path 0.0))
+                (color c)
+                (line-width 4)
+                (no-fill)
+                )))
+
+(defn monitor [value c]
+  (draw (change (polygon 30)
+                (scale value)
+                (color c)
+                (line-width 4)
+                (no-fill)
+                )))
+
+(osc-monitor "/v1" (rgb 1 0 0))
+(monitor (amp) (rgb 0 1 1))
+
 (stella-prima)
