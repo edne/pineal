@@ -12,7 +12,6 @@ namespace dsl{
 	#include "dsl/transformations.h"
 	#include "dsl/layers.h"
 	#include "dsl/audio.h"
-
 	BOOST_PYTHON_MODULE(core){
 		py::class_<pEntity>("pEntity")
 		    .def(py::init<py::object>())
@@ -59,5 +58,6 @@ namespace dsl{
 		py::def("rms", &audio::rms);
 		py::def("at_event", &audio::at_event);
 		py::def("at_beat", &audio::at_beat);
-		py::def("at_onset", &audio::at_onset);}
+		py::def("at_onset", &audio::at_onset);
+	}
 }
