@@ -46,13 +46,13 @@ def boost_pydef(py_func, c_func):
     return "py::def(\"{}\", &{});".format(py_func, c_func)
 
 
-path = os.path.join("src", "dsl")
+path = os.path.join("_src", "dsl")
 files = [f for f in os.listdir(path) if f.endswith(".h")]
 
 modules = []
 for m in files:
     name = os.path.splitext(m)[0]
-    body = read_file(os.path.join("src", "dsl", m))
+    body = read_file(os.path.join("_src", "dsl", m))
 
     defines = []
     for x in re.findall("PINEAL\(\"\w+\"\)[\s\w]+\(", body, re.M):
@@ -109,7 +109,7 @@ code = "\n\n".join([
 
 
 def main():
-    write_file(os.path.join("src", "dsl_wrapper.h"), code)
+    write_file(os.path.join("_src", "dsl_wrapper.h"), code)
 
 
 if __name__ == "__main__":

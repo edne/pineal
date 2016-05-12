@@ -1,5 +1,33 @@
-#!/bin/sh
+#!/bin/bash
+set -e
 
-scripts/generate.py
-cp -rf src/py bin/
+# load configuration
+source build.cfg
+
+# expand templates in _src/
+mkdir -p _src
+cp -r src/* _src/    # TODO: replace with a call to scripts/preprocess.py
+scripts/generate.py  # deprecated, TODO: replace with templates
+
+# move Python / Hy code in release folder
+mkdir -p bin
+cp -rf _src/py bin/
+
+# confugure OpenFrameworks build system
+projectGenerator -a"ofxOsc, ofxAubio" -o"$OF_PATH" .
+
+rm -f config.make
+echo "PROJECT_EXTERNAL_SOURCE_PATHS = $PY_INCLUDE" >> config.make
+
+# actual code is in _src/
+echo "PROJECT_EXCLUSIONS = \$(PROJECT_ROOT)/src%" >> config.make
+
+echo "PROJECT_LDFLAGS = -lboost_python -L$PY_CONFIG -lpython2.7 -laubio" >> config.make
+echo "PROJECT_CC = -Wall" >> config.make
+
+# build
 make
+
+# cleanup
+rm config.make addons.make *.qbs Makefile
+rm -rf _src
