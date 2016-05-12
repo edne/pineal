@@ -1,9 +1,7 @@
 #!/bin/sh
+set -e
 
-#make run & sleep 2 && python scripts/watch.py bin/data/test.pn 7172 /code
-#exit 0
+scripts/build.sh
 
-if scripts/generate.py && make
-then
-    make run & sleep 2 && python scripts/watch.py bin/data/test.pn 7172 /code
-fi
+make run &
+sleep 2 && python scripts/watch.py bin/data/test.pn 7172 /code
