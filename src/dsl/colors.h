@@ -5,22 +5,22 @@ namespace colors{
 		ofSetLineWidth(1);
 	}
 
-	PINEAL("background")
+    {{ bind("colors", "background", "background") }}
 	void background(pColor p){
 		ofBackground(p.c);
 	}
 
-	PINEAL("lerp")
+    {{ bind("colors", "lerp", "lerp") }}
 	pColor lerp(float amount, pColor p, pColor q){
 		return pColor(p.c.getLerped(q.c, amount));
 	}
 
-	PINEAL("invert")
+    {{ bind("colors", "invert", "invert") }}
 	pColor invert(pColor in_color){
 		return pColor(in_color.c.getInverted());
 	}
 
-	PINEAL("rgb_c")
+    {{ bind("colors", "rgb_c", "rgb") }}
 	pColor rgb(py::list args){
 		pValue r, g, b, a;
 
@@ -39,7 +39,7 @@ namespace colors{
 		return pColor(ofColor(255*r(), 255*g(), 255*b(), 255*a()));
 	}
 
-	PINEAL("color")
+    {{ bind("colors", "color", "color") }}
 	pAction color(pColor p){
 		ofColor c = p.c;
 
@@ -86,17 +86,17 @@ namespace colors{
 		});
 	}
 
-	PINEAL("fill")
+    {{ bind("colors", "fill", "fill") }}
 	pAction fill(){
 		return fill_status(true);
 	}
 
-	PINEAL("no_fill")
+    {{ bind("colors", "no_fill", "no_fill") }}
 	pAction no_fill(){
 		return fill_status(false);
 	}
 
-	PINEAL("line_width")
+    {{ bind("colors", "line_width", "line_width") }}
 	pAction line_width(double new_width){
 		return pAction([=](pEntity& e){
 			return pEntity([=](){

@@ -67,14 +67,14 @@ modules.sort()
 includes = ["#include \"dsl/{}.h\"".format(m["name"])
             for m in modules]
 
-bodies = join_rows(includes)
+bodies = "\n".join(includes)
 
-modules_blocks = [join_rows([boost_pydef(py_func_,
+modules_blocks = ["\n".join([boost_pydef(py_func_,
                                          scope(m["name"], c_func_))
                              for (py_func_, c_func_) in m["defines"]])
                   for m in modules]
 
-modules_blocks = [indent(mb) for mb in modules_blocks]
+modules_blocks = [mb for mb in modules_blocks]
 
 modules_code = "\n\n".join(modules_blocks)
 
@@ -104,7 +104,7 @@ header = "\n".join([
 
 code = "\n\n".join([
     header,
-    namespace("dsl", join_blocks([bodies, defines]))
+    "namespace {}{{\n{}\n}}".format("dsl", "\n\n".join([bodies, defines]))
 ])
 
 

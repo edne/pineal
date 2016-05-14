@@ -5,9 +5,7 @@ set -e
 source build.cfg
 
 # expand templates in _src/
-mkdir -p _src
-cp -r src/* _src/    # TODO: replace with a call to scripts/preprocess.py
-scripts/generate.py  # deprecated, TODO: replace with templates
+scripts/expand.py
 
 # move Python / Hy code in release folder
 mkdir -p bin

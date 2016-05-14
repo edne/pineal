@@ -1,5 +1,5 @@
 namespace keywords{
-	PINEAL("draw")
+    {{ bind("keywords", "draw", "draw") }}
 	void draw(pEntity e){
 		e();
 	}
@@ -26,7 +26,7 @@ namespace keywords{
 		return actions;
 	}
 
-	PINEAL("compose_c")
+    {{ bind("keywords", "compose_c", "compose") }}
 	pAction compose(py::list py_actions){
 		vector<pAction> actions = cast_actions_list(py_actions);
 
@@ -38,7 +38,7 @@ namespace keywords{
 		});
 	}
 
-	PINEAL("branch_c")
+    {{ bind("keywords", "branch_c", "branch") }}
 	pAction branch(py::list py_actions){
 		vector<pAction> actions = cast_actions_list(py_actions);
 
@@ -51,13 +51,13 @@ namespace keywords{
 		});
 	}
 
-	PINEAL("change_c")
+    {{ bind("keywords", "change_c", "change") }}
 	pEntity change(pEntity& entity, py::list py_actions){
 		pAction action = compose(py_actions);
 		return action(entity);
 	}
 
-	PINEAL("group_c")
+    {{ bind("keywords", "group_c", "group_exposed") }}
 	pEntity group_exposed(py::list l){
 		int n = py::len(l);
 		vector<pEntity> entities;

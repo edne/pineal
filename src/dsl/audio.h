@@ -54,12 +54,12 @@ namespace audio{
 		}
 	}
 
-	PINEAL("rms")
+    {{ bind("audio", "rms", "rms") }}
 	float rms(){
 		return inBuf.getRMSAmplitude();
 	}
 
-	PINEAL("at_event")
+    {{ bind("audio", "at_event", "at_event") }}
 	pAction at_event(bool event){
 		return pAction([=](pEntity& e){
 			return pEntity([=](){
@@ -70,7 +70,7 @@ namespace audio{
 		});
 	}
 
-	PINEAL("at_beat")
+    {{ bind("audio", "at_beat", "at_beat") }}
 	pAction at_beat(py::list args){
         pValue n(args, 0, 1.0);
         pValue position(args, 1, 0.0);
@@ -79,7 +79,7 @@ namespace audio{
 		return at_event(beat(n(), dur(), position()));
 	}
 
-	PINEAL("at_onset")
+    {{ bind("audio", "at_onset", "at_onset") }}
 	pAction at_onset(float dur){
 		return at_event(onset(dur));
 	}

@@ -9,7 +9,7 @@ namespace osc{
 		values_map[name] = x;
 	}
 
-	PINEAL("get_osc_f_c")
+    {{ bind("osc", "get_osc_f_c", "get_osc_f_with_default") }}
 	float get_osc_f_with_default(string name, float x){
 		if(!exists_value(name)){
 			set_value(name, x);
@@ -17,7 +17,7 @@ namespace osc{
 		return values_map[name];
 	}
 
-	PINEAL("get_osc_f_c")
+    {{ bind("osc", "get_osc_f_c", "get_osc_f") }}
 	float get_osc_f(string name){
 		return get_osc_f_with_default(name, 0.0);
 	}

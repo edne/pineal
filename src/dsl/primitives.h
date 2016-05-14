@@ -1,5 +1,5 @@
 namespace primitives{
-	PINEAL("cube")
+    {{ bind("primitives", "cube", "cube") }}
 	pEntity cube(){
 		pEntity e([=](){
 			ofDrawBox(0.5);
@@ -8,7 +8,7 @@ namespace primitives{
 		return e;
 	}
 
-	PINEAL("polygon")
+    {{ bind("primitives", "polygon", "polygon") }}
 	pEntity polygon(float n){
 		pEntity e([=](){
 			ofPushMatrix();
@@ -28,7 +28,7 @@ namespace primitives{
 	// TODO font memoizing
 	unordered_map<string, ofTrueTypeFont> fonts_map;
 
-	PINEAL("text_c")
+    {{ bind("primitives", "text_c", "text") }}
 	pEntity text(string font_name, string s){
 		float size = 100;
 

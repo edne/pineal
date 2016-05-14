@@ -14,7 +14,7 @@ namespace layers{
 		layers_map[name] = fbo;
 	}
 
-	PINEAL("on_layer_c")
+    {{ bind("layers", "on_layer_c", "on_layer") }}
 	void on_layer(pEntity& f, string name){
 		if(layers_map.find(name) == layers_map.end()){
 			new_layer(name);
@@ -30,7 +30,7 @@ namespace layers{
 		layers_map[name]->end();
 	}
 
-	PINEAL("layer_entity")
+    {{ bind("layers", "layer_entity", "layer_entity") }}
 	pEntity layer_entity(string name){
 		return pEntity([name](){
 			if(layers_map.find(name) == layers_map.end()){
