@@ -1,26 +1,27 @@
-namespace colors{
+{{ begin_module("colors") }}
+
 	void setup(){
 		ofSetColor(255);
 		ofFill();
 		ofSetLineWidth(1);
 	}
 
-    {{ bind("colors", "background", "background") }}
+	{{ module.bind("background", "background") }}
 	void background(pColor p){
 		ofBackground(p.c);
 	}
 
-    {{ bind("colors", "lerp", "lerp") }}
+	{{ module.bind("lerp", "lerp") }}
 	pColor lerp(float amount, pColor p, pColor q){
 		return pColor(p.c.getLerped(q.c, amount));
 	}
 
-    {{ bind("colors", "invert", "invert") }}
+	{{ module.bind("invert", "invert") }}
 	pColor invert(pColor in_color){
 		return pColor(in_color.c.getInverted());
 	}
 
-    {{ bind("colors", "rgb_c", "rgb") }}
+	{{ module.bind("rgb_c", "rgb") }}
 	pColor rgb(py::list args){
 		pValue r, g, b, a;
 
@@ -39,7 +40,7 @@ namespace colors{
 		return pColor(ofColor(255*r(), 255*g(), 255*b(), 255*a()));
 	}
 
-    {{ bind("colors", "color", "color") }}
+	{{ module.bind("color", "color") }}
 	pAction color(pColor p){
 		ofColor c = p.c;
 
@@ -86,17 +87,17 @@ namespace colors{
 		});
 	}
 
-    {{ bind("colors", "fill", "fill") }}
+	{{ module.bind("fill", "fill") }}
 	pAction fill(){
 		return fill_status(true);
 	}
 
-    {{ bind("colors", "no_fill", "no_fill") }}
+	{{ module.bind("no_fill", "no_fill") }}
 	pAction no_fill(){
 		return fill_status(false);
 	}
 
-    {{ bind("colors", "line_width", "line_width") }}
+	{{ module.bind("line_width", "line_width") }}
 	pAction line_width(double new_width){
 		return pAction([=](pEntity& e){
 			return pEntity([=](){
@@ -113,4 +114,5 @@ namespace colors{
 			});
 		});
 	}
-}
+
+{{ end_module() }}

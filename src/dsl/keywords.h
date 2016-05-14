@@ -1,5 +1,6 @@
-namespace keywords{
-    {{ bind("keywords", "draw", "draw") }}
+{{ begin_module("keywords") }}
+
+	{{ module.bind("draw", "draw") }}
 	void draw(pEntity e){
 		e();
 	}
@@ -26,7 +27,7 @@ namespace keywords{
 		return actions;
 	}
 
-    {{ bind("keywords", "compose_c", "compose") }}
+	{{ module.bind("compose_c", "compose") }}
 	pAction compose(py::list py_actions){
 		vector<pAction> actions = cast_actions_list(py_actions);
 
@@ -38,7 +39,7 @@ namespace keywords{
 		});
 	}
 
-    {{ bind("keywords", "branch_c", "branch") }}
+	{{ module.bind("branch_c", "branch") }}
 	pAction branch(py::list py_actions){
 		vector<pAction> actions = cast_actions_list(py_actions);
 
@@ -51,13 +52,13 @@ namespace keywords{
 		});
 	}
 
-    {{ bind("keywords", "change_c", "change") }}
+	{{ module.bind("change_c", "change") }}
 	pEntity change(pEntity& entity, py::list py_actions){
 		pAction action = compose(py_actions);
 		return action(entity);
 	}
 
-    {{ bind("keywords", "group_c", "group_exposed") }}
+	{{ module.bind("group_c", "group_exposed") }}
 	pEntity group_exposed(py::list l){
 		int n = py::len(l);
 		vector<pEntity> entities;
@@ -68,4 +69,5 @@ namespace keywords{
 
 		return group(entities);
 	}
-}
+
+{{ end_module() }}

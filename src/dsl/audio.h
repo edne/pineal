@@ -1,4 +1,5 @@
-namespace audio{
+{{ begin_module("audio") }}
+
 	bool beat_value = false;
 	int beat_count = 0;
 	float beat_time = 1.0;
@@ -54,12 +55,12 @@ namespace audio{
 		}
 	}
 
-    {{ bind("audio", "rms", "rms") }}
+	{{ module.bind("rms", "rms") }}
 	float rms(){
 		return inBuf.getRMSAmplitude();
 	}
 
-    {{ bind("audio", "at_event", "at_event") }}
+	{{ module.bind("at_event", "at_event") }}
 	pAction at_event(bool event){
 		return pAction([=](pEntity& e){
 			return pEntity([=](){
@@ -70,17 +71,18 @@ namespace audio{
 		});
 	}
 
-    {{ bind("audio", "at_beat", "at_beat") }}
+	{{ module.bind("at_beat", "at_beat") }}
 	pAction at_beat(py::list args){
-        pValue n(args, 0, 1.0);
-        pValue position(args, 1, 0.0);
-        pValue dur(args, 2, 1.0);
+		pValue n(args, 0, 1.0);
+		pValue position(args, 1, 0.0);
+		pValue dur(args, 2, 1.0);
 
 		return at_event(beat(n(), dur(), position()));
 	}
 
-    {{ bind("audio", "at_onset", "at_onset") }}
+	{{ module.bind("at_onset", "at_onset") }}
 	pAction at_onset(float dur){
 		return at_event(onset(dur));
 	}
-}
+
+{{ end_module() }}

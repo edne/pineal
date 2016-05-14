@@ -44,7 +44,7 @@ def navigate(path=[], context={}):
 
 
 def get_modules():
-    "Get name of DSL modules"  # TODO: get just names, not defines
+    "Get name of DSL modules"
     path = os.path.join(SOURCE, "dsl")
     files = [f for f in os.listdir(path) if f.endswith(".h")]
 
@@ -95,12 +95,29 @@ py::def("{{ py_func }}", &{{ name}}::{{ c_func }});{% endfor %}
 def dsl_wrapper():
     "Replace old preprocessor, generate _src/dsl_wrpapper.h"
     modules = get_modules()
+    context = {}
 
-    def bind(m_name, py_func, c_func):
-        modules[m_name].append((py_func, c_func))
+    def bind(name, py_func, c_func):
+        modules[name].append((py_func, c_func))
         return ""
 
-    navigate([], {"bind": bind})
+    def begin_module(name):
+        def new_bind(py_func, c_func):
+            modules[name].append((py_func, c_func))
+            return ""
+        context["module"]["bind"] = new_bind
+        return "namespace {}{{".format(name)
+
+    def end_module():
+        return "}"
+
+    context["module"] = {}
+    context["module"]["bind"] = bind
+
+    context["begin_module"] = begin_module
+    context["end_module"] = end_module
+
+    navigate([], context)
 
     generate_dsl_wrapper(modules)
 

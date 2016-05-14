@@ -1,5 +1,6 @@
-namespace primitives{
-    {{ bind("primitives", "cube", "cube") }}
+{{ begin_module("primitives") }}
+
+	{{ module.bind("cube", "cube") }}
 	pEntity cube(){
 		pEntity e([=](){
 			ofDrawBox(0.5);
@@ -8,7 +9,7 @@ namespace primitives{
 		return e;
 	}
 
-    {{ bind("primitives", "polygon", "polygon") }}
+	{{ module.bind("polygon", "polygon") }}
 	pEntity polygon(float n){
 		pEntity e([=](){
 			ofPushMatrix();
@@ -28,7 +29,7 @@ namespace primitives{
 	// TODO font memoizing
 	unordered_map<string, ofTrueTypeFont> fonts_map;
 
-    {{ bind("primitives", "text_c", "text") }}
+	{{ module.bind("text_c", "text") }}
 	pEntity text(string font_name, string s){
 		float size = 100;
 
@@ -49,4 +50,5 @@ namespace primitives{
 
 		return e;
 	}
-}
+
+{{ end_module() }}

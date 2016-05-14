@@ -1,4 +1,5 @@
-namespace layers{
+{{ begin_module("layers") }}
+
 	unordered_map<string, shared_ptr<ofFbo>> layers_map;
 
 	void new_layer(string name){
@@ -14,7 +15,7 @@ namespace layers{
 		layers_map[name] = fbo;
 	}
 
-    {{ bind("layers", "on_layer_c", "on_layer") }}
+	{{ module.bind("on_layer_c", "on_layer") }}
 	void on_layer(pEntity& f, string name){
 		if(layers_map.find(name) == layers_map.end()){
 			new_layer(name);
@@ -30,7 +31,7 @@ namespace layers{
 		layers_map[name]->end();
 	}
 
-    {{ bind("layers", "layer_entity", "layer_entity") }}
+	{{ module.bind("layer_entity", "layer_entity") }}
 	pEntity layer_entity(string name){
 		return pEntity([name](){
 			if(layers_map.find(name) == layers_map.end()){
@@ -39,4 +40,5 @@ namespace layers{
 			layers_map[name]->getTexture().draw(-1, -1, 2, 2);
 		});
 	}
-}
+
+{{ end_module() }}

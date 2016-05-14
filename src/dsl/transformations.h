@@ -1,17 +1,18 @@
-namespace transformations{
-    {{ bind("transformations", "hide", "hide") }}
+{{ begin_module("transformations") }}
+
+	{{ module.bind("hide", "hide") }}
 	pAction hide(){
-        return pAction([=](pEntity& e){
+		return pAction([=](pEntity& e){
 			return pEntity([=](){
 			});
 		});
 	}
 
-    {{ bind("transformations", "scale_c", "scale") }}
+	{{ module.bind("scale_c", "scale") }}
 	pAction scale(py::list args){
-        pValue x(args, 0, 1.0);
-        pValue y(args, 1, x);
-        pValue z(args, 2, x);
+		pValue x(args, 0, 1.0);
+		pValue y(args, 1, x);
+		pValue z(args, 2, x);
 
 		return pAction([=](pEntity& e){
 			return pEntity([=](){
@@ -23,11 +24,11 @@ namespace transformations{
 		});
 	}
 
-    {{ bind("transformations", "translate_c", "translate") }}
+	{{ module.bind("translate_c", "translate") }}
 	pAction translate(py::list args){
-        pValue x(args, 0, 0.0);
-        pValue y(args, 1, 0.0);
-        pValue z(args, 2, 0.0);
+		pValue x(args, 0, 0.0);
+		pValue y(args, 1, 0.0);
+		pValue z(args, 2, 0.0);
 
 		return pAction([=](pEntity& e){
 			return pEntity([=](){
@@ -39,7 +40,7 @@ namespace transformations{
 		});
 	}
 
-    {{ bind("transformations", "rotate_x", "rotate_x") }}
+	{{ module.bind("rotate_x", "rotate_x") }}
 	pAction rotate_x(double rad){
 		return pAction([=](pEntity& e){
 			return pEntity([=](){
@@ -51,7 +52,7 @@ namespace transformations{
 		});
 	}
 
-    {{ bind("transformations", "rotate_y", "rotate_y") }}
+	{{ module.bind("rotate_y", "rotate_y") }}
 	pAction rotate_y(double rad){
 		return pAction([=](pEntity& e){
 			return pEntity([=](){
@@ -63,7 +64,7 @@ namespace transformations{
 		});
 	}
 
-    {{ bind("transformations", "rotate_z", "rotate_z") }}
+	{{ module.bind("rotate_z", "rotate_z") }}
 	pAction rotate_z(double rad){
 		return pAction([=](pEntity& e){
 			return pEntity([=](){
@@ -74,4 +75,5 @@ namespace transformations{
 			});
 		});
 	}
-}
+
+{{ end_module() }}
