@@ -1,5 +1,5 @@
 #include "ofApp.h"
-#include "dsl_wrapper.h"
+#include "dsl.h"
 
 ofApp::ofApp(int argc, char ** argv){
 	this->argc = argc;
@@ -14,6 +14,9 @@ void ofApp::setup(){
 		PySys_SetArgv(argc, argv);
 
 		PyImport_AppendInittab("core", &dsl::initcore);
+		{% for name in py_modules %}
+			PyImport_AppendInittab("{{ name }}", &dsl::{{ name }}::init{{ name }});
+		{% endfor %}
 
 		vision = py::import("py.vision").attr("Vision")();
 	}catch(py::error_already_set){

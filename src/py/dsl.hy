@@ -2,6 +2,11 @@
   "Things to do outside the --draw-- function"
   '(do
      (import [core [*]])
+
+     {% for name in py_modules %}
+     (import [{{ name }} [*]])
+     {% endfor %}
+
      (import [math [*]])
      (import [time [time :as --time--]])
 

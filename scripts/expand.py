@@ -19,12 +19,6 @@ def write_file(file_name, content):
         f.write(content)
 
 
-def expand(in_code, context={}):
-    "Render code from template"
-    template = Template(in_code)
-    return template.render(context)
-
-
 def navigate(path=[], context={}):
     "Explore file tree expanding each file"
 
@@ -39,7 +33,7 @@ def navigate(path=[], context={}):
             navigate(path + [f], context)
     else:
         in_code = read_file(source)
-        out_code = expand(in_code, context)
+        out_code = Template(in_code).render(context)
         write_file(dest, out_code)
 
 
@@ -48,80 +42,48 @@ def get_modules():
     path = os.path.join(SOURCE, "dsl")
     files = [f for f in os.listdir(path) if f.endswith(".h")]
 
-    modules = {}
-    for m in files:
-        name = os.path.splitext(m)[0]
-        modules[name] = []
+    modules = []
+    for f in files:
+        name = os.path.splitext(f)[0]
+        modules.append(name)
 
     return modules
 
 
-def generate_dsl_wrapper(modules):
-    "Generate dsl_wrapper.h"
-    # TODO:
-    # - generate an (empy) py module for each DSL module and import it in Hy
-    # - move bindingls inside them from core
-
-    code = Template("""
-#pragma once
-#define PINEAL(_)
-
-namespace dsl{
-{% for m_name in modules %}
-#include "dsl/{{ m_name }}.h"{% endfor %}
-
-BOOST_PYTHON_MODULE(core){
-py::class_<pEntity>(\"pEntity\")
-    .def(py::init<py::object>())
-;
-
-py::class_<pAction>(\"pAction\")
-    .def(\"__call__\", &pAction::__call__)
-;
-
-py::class_<pColor>(\"pColor\");
-{% for name, defines in modules.iteritems() %}
-{% for py_func, c_func in defines %}
-py::def("{{ py_func }}", &{{ name}}::{{ c_func }});{% endfor %}
-{% endfor %}
-}
-}""").render({
-        "modules": modules,
-    })
-
-    write_file(os.path.join("_src", "dsl_wrapper.h"), code)
-
-
-def dsl_wrapper():
-    "Replace old preprocessor, generate _src/dsl_wrpapper.h"
+def dsl_bind():
+    "Do the actual bindings"
     modules = get_modules()
     context = {}
-
-    def bind(name, py_func, c_func):
-        modules[name].append((py_func, c_func))
-        return ""
+    context["py_modules"] = modules
+    context["module"] = {}
 
     def begin_module(name):
-        def new_bind(py_func, c_func):
-            modules[name].append((py_func, c_func))
+        context["module"]["bindings"] = []  # list of tuples
+
+        def bind(py_func, c_func):
+            context["module"]["bindings"].append((py_func, c_func))
             return ""
-        context["module"]["bind"] = new_bind
-        return "namespace {}{{".format(name)
 
-    def end_module():
-        return "}"
-
-    context["module"] = {}
-    context["module"]["bind"] = bind
+        context["module"]["bind"] = bind
+        context["module"]["name"] = name
+        return Template("namespace {{ module.name }}{").render(context)
 
     context["begin_module"] = begin_module
+
+    def end_module():
+        return Template("""
+    BOOST_PYTHON_MODULE({{ module.name }}){
+        {% for py_func, c_func in module.bindings %}
+            py::def("{{ py_func }}", &{{ c_func }});
+        {% endfor %}
+    }
+}
+""").render(context)
+
     context["end_module"] = end_module
 
     navigate([], context)
 
-    generate_dsl_wrapper(modules)
-
 
 if __name__ == "__main__":
-    # navigate()
-    dsl_wrapper()
+    dsl_bind()
