@@ -31,7 +31,9 @@ void ofApp::setup(){
 	camera.setNearClip(0.01);
 
 	ofSetEscapeQuitsApp(false);
+
 	oscReceiver.setup(7172);
+	oscSender.setup("localhost", 7173);  // frontend address, TODO: read config
 
 	int nOutputs = 2;
 	int nInputs = 2;
@@ -74,7 +76,7 @@ void ofApp::update(){
 		oscReceiver.getNextMessage(m);
 		string address = m.getAddress();
 
-		if(address == "/code"){
+		if(address == "/run-code"){
 			dsl::colors::setup();
 
 			string code = m.getArgAsString(0);
@@ -84,6 +86,11 @@ void ofApp::update(){
 			}catch(py::error_already_set){
 				PyErr_Print();
 			}
+		}
+		if(address == "/ping"){
+			ofxOscMessage m;
+			m.setAddress("/ack");
+			oscSender.sendMessage(m, false);
 		}
 		if(address == "/beat/enable"){
 			osc_beat = m.getArgAsBool(0);
