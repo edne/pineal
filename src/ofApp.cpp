@@ -18,7 +18,7 @@ void ofApp::setup(){
 			PyImport_AppendInittab("{{ name }}", &dsl::{{ name }}::init{{ name }});
 		{% endfor %}
 
-		vision = py::import("py.vision").attr("Vision")();
+		vision = py::import("libs.vision").attr("Vision")();
 	}catch(py::error_already_set){
 		PyErr_Print();
 	}

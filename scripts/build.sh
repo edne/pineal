@@ -9,7 +9,7 @@ scripts/expand.py
 
 # move Python / Hy code in release folder
 mkdir -p bin
-cp -rf _src/py bin/
+cp -rf _src/libs bin/
 
 # confugure OpenFrameworks build system
 projectGenerator -a"ofxOsc, ofxAubio" -o"$OF_PATH" .

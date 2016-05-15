@@ -1,10 +1,10 @@
 from __future__ import print_function
-from py.utils import hy_eval_code
+from libs.utils import hy_eval_code
 
 
 class Vision(object):
     template = """
-    (require py.dsl)
+    (require libs.dsl)
     (--header--)
     (defn --draw-- [] {})
     """
