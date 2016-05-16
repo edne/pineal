@@ -50,13 +50,56 @@ def check_address(addr):
         return ":".join(["localhost", splitted[0]])
 
 
-def osc_send(addr, path, *msg):
-    "Send message on a given path"
-    logger.info("Sending {0} {1}".format(path, msg))
+class Frontend(object):
+    def __init__(self, server_addr, listen_port):
+        "Init frontend"
+        logger.info("Starting frontend")
+        # TODO: repl.command("command-name", method)
+        self.server_responding = False
+        self.server = liblo.Address("osc.udp://{}/"
+                                    .format(check_address(server_addr)))
+        self.watchers = []
+        self.listener = liblo.ServerThread(listen_port)
+        self.listener.add_method(None, None, self.handle_osc)
+        self.listener.start()
 
-    addr = check_address(addr)
-    target = liblo.Address("osc.udp://" + addr + "/")
-    liblo.send(target, path, *msg)
+    def handle_osc(self, path, msg):
+        "Handle OSC events"
+        if path == "/ack":
+            logger.info("/ack received, sending code")
+            self.server_responding = True
+
+    def send(self, path, *msg):
+        "Send message on a given path"
+        logger.info("Sending {0} {1}".format(path, msg))
+        liblo.send(self.server, path, *msg)
+
+    def wait_server(self):
+        "Send /ping to the server untill /ack response"
+        logger.info("sending /ping messages to the server")
+        while not self.server_responding:
+            self.send("/ping")
+            sleep(1)
+
+    def run_file(self, file_name):
+        "Read a file and send its content to /run-code"
+        with open(file_name) as f:
+            logger.info("Sending content of ", file_name)
+            self.send("/run-code", f.read())
+
+    def watch(self, file_name):
+        "Watch for changes in a file and send it to /run-code each time"
+        w = watch_file(file_name,
+                       lambda: self.run_file(file_name))
+        self.watchers.append(w)
+
+    def exit(self):
+        "Ask the server to exit, stop listening and stop all the watchers"
+        self.send("/exit")
+        self.listener.stop()
+        for w in self.watchers:
+            w.stop()
+            w.join()
 
 
 def main():
@@ -66,42 +109,21 @@ def main():
         print("Usage:", argv[0], "file_to_watch [server_addr] [listen_port]")
         return
 
-    file_name = argv[1]
     server_addr = argv[2] if argv[2:] else "127.0.0.1:7172"
     listen_port = argv[3] if argv[3:] else 7173
     listen_port = int(listen_port)
+    file_name = argv[1]
 
-    def update_code():
-        with open(file_name) as f:
-            logger.info("Sending content")
-            osc_send(server_addr, "/run-code", f.read())
-
-    state = {}
-    state["server-responding"] = False
-
-    def osc_handle(path, msg):
-        if path == "/ack":
-            logger.info("/ack received, sending code")
-            state["server-responding"] = True
-            update_code()
-
-    listener = liblo.ServerThread(listen_port)
-    listener.add_method(None, None, osc_handle)
-    listener.start()
-
-    watcher = watch_file(file_name, update_code)
+    frontend = Frontend(server_addr, listen_port)
+    frontend.watch(file_name)
     try:
-        logger.info("sending /ping messages to the server")
-        while not state["server-responding"]:
-            osc_send(server_addr, "/ping")
-            sleep(1)
+        frontend.wait_server()
+        frontend.run_file(file_name)
         while True:
             sleep(0.1)
     except KeyboardInterrupt:
-        osc_send(server_addr, "/exit")
-        watcher.stop()
-        listener.stop()
-    watcher.join()
+        logger.info("Closed with ^C")
+    frontend.exit()
 
 if __name__ == "__main__":
     main()
