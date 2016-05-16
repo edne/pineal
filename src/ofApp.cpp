@@ -80,7 +80,6 @@ void ofApp::update(){
 			dsl::colors::setup();
 
 			string code = m.getArgAsString(0);
-			ofLog() << "OSC mesage:" << endl << "/code" << endl << code;
 			try{
 				vision.attr("update")(code);
 			}catch(py::error_already_set){
@@ -91,6 +90,9 @@ void ofApp::update(){
 			ofxOscMessage m;
 			m.setAddress("/ack");
 			oscSender.sendMessage(m, false);
+		}
+		if(address == "/exit"){
+			std::exit(0);
 		}
 		if(address == "/beat/enable"){
 			osc_beat = m.getArgAsBool(0);

@@ -98,6 +98,7 @@ def main():
         while True:
             sleep(0.1)
     except KeyboardInterrupt:
+        osc_send(server_addr, "/exit")
         watcher.stop()
         listener.stop()
     watcher.join()
