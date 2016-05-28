@@ -71,7 +71,7 @@ class Frontend(object):
 
     def send(self, path, *msg):
         "Send message on a given path"
-        logger.info("Sending {0} {1}".format(path, msg))
+        logger.info("Sending to {0}".format(path))
         liblo.send(self.server, path, *msg)
 
     def wait_server(self):
@@ -84,7 +84,7 @@ class Frontend(object):
     def run_file(self, file_name):
         "Read a file and send its content to /run-code"
         with open(file_name) as f:
-            logger.info("Sending content of ", file_name)
+            logger.info("Sending content of {}".format(file_name))
             self.send("/run-code", f.read())
 
     def watch(self, file_name):

@@ -1,0 +1,27 @@
+(defn turn [n rotate-fun]
+  (branch-for [i (range n)]
+              (rotate-fun (-> i (* 2pi) (/ n)))))
+
+
+(background (rgb 0))
+
+
+(defn cerchio [n]
+  (change (cube)
+          (scale (amp 1 0.5))
+          (translate (amp) 0 0)
+          (line-width 2)
+          (no-fill)
+          (color (rgb 1 (amp 4 0.01)))
+          (line-width 4)
+          (turn n rotate-z)
+          ))
+
+
+(draw (seq 4
+           [0 (cerchio 16) 1]
+           [1 (cerchio 32) 1]
+           [2 (cerchio 16) 1]
+           [3 (cerchio 64) 1]
+           ))
+
