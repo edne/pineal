@@ -10,6 +10,7 @@ scripts/expand.py
 # move Python / Hy code in release folder
 mkdir -p bin
 cp -rf _src/libs bin/
+cp -f src/client.py bin/  # client.py is not preprocessed
 
 # confugure OpenFrameworks build system
 projectGenerator -a"ofxOsc, ofxAubio" -o"$OF_PATH" .
