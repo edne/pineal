@@ -68,6 +68,8 @@ class Frontend(object):
         if path == "/ack":
             logger.info("/ack received, sending code")
             self.server_responding = True
+        if path == "/error":
+            logger.info("/error received: {}".format(msg[0]))
 
     def send(self, path, *msg):
         "Send message on a given path"

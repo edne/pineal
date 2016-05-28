@@ -10,12 +10,14 @@ class Vision(object):
     """
 
     def __init__(self):
+        "Create new vision"
         self.history = []
         self.ns = {}
         self.last_error = ""
         self.update("")
 
     def update(self, code):
+        "Update with new code"
         code = self.template.format(code)
         try:
             hy_eval_code(code, self.ns)
@@ -24,6 +26,7 @@ class Vision(object):
             self.handle_error(e)
 
     def restore(self):
+        "Restore old working code"
         if self.history:
             try:
                 hy_eval_code(self.history[-1], self.ns)
@@ -31,15 +34,20 @@ class Vision(object):
                 self.handle_error(e)
 
     def draw(self):
+        "Drawing function, if there is an error return False"
         try:
             self.ns["__draw__"]()
+            return True
         except Exception as e:
             if self.handle_error(e):
                 self.ns["__draw__"]()
+            else:
+                self.update("")
+            return False
 
     def handle_error(self, error):
+        "Error handling: try to restore an old code, if fail return False"
         if repr(error) != self.last_error:
-            print(repr(error))  # TODO: something better
             self.last_error = repr(error)
         if self.history:
             self.history.pop()  # the broken one
