@@ -108,6 +108,7 @@ def print_help():
     "Print the help"
     print("Watch a file for changes and send to pineal server")
     print("Usage:")
+    print("      ", argv[0], "run file_to_run")
     print("      ", argv[0], "watch file_to_watch")
 
 
@@ -117,17 +118,32 @@ def main():
         print_help()
         return
 
+    server_addr = os.environ.get("SERVER_ADDR", "127.0.0.1:7172")
+    listen_port = os.environ.get("LISTEN_PORT", 7173)
+    listen_port = int(listen_port)
+    frontend = Frontend(server_addr, listen_port)
+
+    if argv[1] == "run":
+        if len(argv) < 3:
+            print_help()
+            return
+        file_name = argv[2]
+
+        try:
+            frontend.wait_server()
+            frontend.run_file(file_name)
+            while True:
+                sleep(0.1)
+        except KeyboardInterrupt:
+            logger.info("\rClosed with ^C")
+        frontend.exit()
+
     if argv[1] == "watch":
         if len(argv) < 3:
             print_help()
             return
-
-        server_addr = os.environ.get("SERVER_ADDR", "127.0.0.1:7172")
-        listen_port = os.environ.get("LISTEN_PORT", 7173)
-        listen_port = int(listen_port)
         file_name = argv[2]
 
-        frontend = Frontend(server_addr, listen_port)
         frontend.watch(file_name)
         try:
             frontend.wait_server()

@@ -114,14 +114,16 @@ void ofApp::draw(){
 
 	camera.begin();
 	try{
+		ofxOscMessage m;
 		if(!vision.attr("draw")()){
 			const char* error_msg = py::extract<const char*>(vision.attr("last_error"));
-
-			ofxOscMessage m;
-			m.setAddress("/error");
 			m.addStringArg(error_msg);
-			oscSender.sendMessage(m, false);
+			m.setAddress("/status/error");
+		}else{
+			ofxOscMessage m;
+			m.setAddress("/status/working");
 		}
+		oscSender.sendMessage(m, false);
 	}catch(py::error_already_set){
 		PyErr_Print();
 	}
