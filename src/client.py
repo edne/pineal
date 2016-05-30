@@ -51,10 +51,15 @@ def check_address(addr):
 
 
 class Frontend(object):
-    def __init__(self, server_addr, listen_port):
+    def __init__(self):
         "Init frontend"
         logger.info("Starting frontend")
         # TODO: repl.command("command-name", method)
+
+        server_addr = os.environ.get("SERVER_ADDR", "127.0.0.1:7172")
+        listen_port = os.environ.get("LISTEN_PORT", 7173)
+        listen_port = int(listen_port)
+
         self.server_responding = False
         self.server = liblo.Address("osc.udp://{}/"
                                     .format(check_address(server_addr)))
@@ -83,7 +88,7 @@ class Frontend(object):
             self.send("/ping")
             sleep(1)
 
-    def run_file(self, file_name):
+    def run(self, file_name):
         "Read a file and send its content to /run-code"
         with open(file_name) as f:
             logger.info("Sending content of {}".format(file_name))
@@ -92,8 +97,18 @@ class Frontend(object):
     def watch(self, file_name):
         "Watch for changes in a file and send it to /run-code each time"
         w = watch_file(file_name,
-                       lambda: self.run_file(file_name))
+                       lambda: self.run(file_name))
         self.watchers.append(w)
+        self.run(file_name)
+
+    def main_loop(self):
+        "Keep looping"
+        try:
+            while True:
+                sleep(0.1)
+        except KeyboardInterrupt:
+            logger.info("\rClosed with ^C")
+        self.exit()
 
     def exit(self):
         "Ask the server to exit, stop listening and stop all the watchers"
@@ -112,47 +127,32 @@ def print_help():
     print("      ", argv[0], "watch file_to_watch")
 
 
+def get_argument(n):
+    "Get the nth argument, dislay help and close if not present"
+    arguments = argv[1:]
+    if len(arguments) < n+1:
+        print_help()
+        os.exit(1)
+    else:
+        return arguments[n]
+
+
 def main():
     "Main function"
-    if len(argv) < 2:
-        print_help()
-        return
+    frontend = Frontend()
+    frontend.wait_server()
 
-    server_addr = os.environ.get("SERVER_ADDR", "127.0.0.1:7172")
-    listen_port = os.environ.get("LISTEN_PORT", 7173)
-    listen_port = int(listen_port)
-    frontend = Frontend(server_addr, listen_port)
+    command = get_argument(0)
 
-    if argv[1] == "run":
-        if len(argv) < 3:
-            print_help()
-            return
-        file_name = argv[2]
+    if command == "run":
+        file_name = get_argument(1)
+        frontend.run(file_name)
 
-        try:
-            frontend.wait_server()
-            frontend.run_file(file_name)
-            while True:
-                sleep(0.1)
-        except KeyboardInterrupt:
-            logger.info("\rClosed with ^C")
-        frontend.exit()
-
-    if argv[1] == "watch":
-        if len(argv) < 3:
-            print_help()
-            return
-        file_name = argv[2]
-
+    if command == "watch":
+        file_name = get_argument(1)
         frontend.watch(file_name)
-        try:
-            frontend.wait_server()
-            frontend.run_file(file_name)
-            while True:
-                sleep(0.1)
-        except KeyboardInterrupt:
-            logger.info("\rClosed with ^C")
-        frontend.exit()
+
+    frontend.main_loop()
 
 if __name__ == "__main__":
     main()
