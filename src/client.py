@@ -68,6 +68,8 @@ class Frontend(object):
         self.listener.add_method(None, None, self.handle_osc)
         self.listener.start()
 
+        self._running = True
+
     def handle_osc(self, path, msg):
         "Handle OSC events"
         if path == "/ack":
@@ -75,6 +77,11 @@ class Frontend(object):
             self.server_responding = True
         if path == "/error":
             logger.info("/error received: {}".format(msg[0]))
+
+    def handle_command(self, command, *args):
+        "Handle user commands"
+        if command == "exit":
+            self.exit()
 
     def send(self, path, *msg):
         "Send message on a given path"
@@ -103,17 +110,26 @@ class Frontend(object):
 
     def main_loop(self):
         "Keep looping"
+
+        try:  # future proof
+            _input = raw_input
+        except NameError:
+            _input = input
+
         try:
-            while True:
-                sleep(0.1)
+            while self._running:
+                command = _input("> ")  # TODO: use libreadline
+                self.handle_command(command)
         except KeyboardInterrupt:
             logger.info("\rClosed with ^C")
-        self.exit()
+            self.exit()
 
     def exit(self):
         "Ask the server to exit, stop listening and stop all the watchers"
+        self._running = False
         self.send("/exit")
         self.listener.stop()
+        logger.info("Closing watchers")
         for w in self.watchers:
             w.stop()
             w.join()
