@@ -2,6 +2,7 @@
 from __future__ import print_function
 import os
 from sys import argv
+import readline
 from time import sleep
 import logging
 from watchdog.observers import Observer
@@ -54,7 +55,6 @@ class Frontend(object):
     def __init__(self):
         "Init frontend"
         logger.info("Starting frontend")
-        # TODO: repl.command("command-name", method)
 
         server_addr = os.environ.get("SERVER_ADDR", "127.0.0.1:7172")
         listen_port = os.environ.get("LISTEN_PORT", 7173)
@@ -66,9 +66,24 @@ class Frontend(object):
         self.watchers = []
         self.listener = liblo.ServerThread(listen_port)
         self.listener.add_method(None, None, self.handle_osc)
-        self.listener.start()
+        self.listener.start()  # TODO: start outside __init__
 
-        self._running = True
+        self._running = False
+
+        self.commands = {}
+
+        readline.parse_and_bind("tab: complete")
+
+    def add_command(self, name, function=None):
+        "Add a new command to the command line interface"
+        if function:
+            self.commands[name] = function
+        else:
+            # used as decorator
+            def decorator(f):
+                self.commands[name] = f
+                return f
+            return decorator
 
     def handle_osc(self, path, msg):
         "Handle OSC events"
@@ -80,33 +95,13 @@ class Frontend(object):
 
     def handle_command(self, command, *args):
         "Handle user commands"
-        if command == "exit":
-            self.exit()
+        if command in self.commands:
+            self.commands[command](*args)
 
     def send(self, path, *msg):
         "Send message on a given path"
         logger.info("Sending to {0}".format(path))
         liblo.send(self.server, path, *msg)
-
-    def wait_server(self):
-        "Send /ping to the server untill /ack response"
-        logger.info("sending /ping messages to the server")
-        while not self.server_responding:
-            self.send("/ping")
-            sleep(1)
-
-    def run(self, file_name):
-        "Read a file and send its content to /run-code"
-        with open(file_name) as f:
-            logger.info("Sending content of {}".format(file_name))
-            self.send("/run-code", f.read())
-
-    def watch(self, file_name):
-        "Watch for changes in a file and send it to /run-code each time"
-        w = watch_file(file_name,
-                       lambda: self.run(file_name))
-        self.watchers.append(w)
-        self.run(file_name)
 
     def main_loop(self):
         "Keep looping"
@@ -116,59 +111,69 @@ class Frontend(object):
         except NameError:
             _input = input
 
+        self._running = True
         try:
             while self._running:
-                command = _input("> ")  # TODO: use libreadline
-                self.handle_command(command)
+                line = _input("> ").split()
+                if line:
+                    command = line[0]
+                    args = line[1:]
+                    self.handle_command(command, *args)
         except KeyboardInterrupt:
             logger.info("\rClosed with ^C")
-            self.exit()
-
-    def exit(self):
-        "Ask the server to exit, stop listening and stop all the watchers"
-        self._running = False
-        self.send("/exit")
-        self.listener.stop()
-        logger.info("Closing watchers")
-        for w in self.watchers:
-            w.stop()
-            w.join()
+            self.handle_command("exit")
 
 
-def print_help():
-    "Print the help"
-    print("Watch a file for changes and send to pineal server")
-    print("Usage:")
-    print("      ", argv[0], "run file_to_run")
-    print("      ", argv[0], "watch file_to_watch")
+client = Frontend()
 
 
-def get_argument(n):
-    "Get the nth argument, dislay help and close if not present"
-    arguments = argv[1:]
-    if len(arguments) < n+1:
-        print_help()
-        os.exit(1)
-    else:
-        return arguments[n]
+@client.add_command("ping")
+def ping():
+    "Send /ping to the server untill /ack response"
+    logger.info("sending /ping messages to the server")
+    while not client.server_responding:
+        client.send("/ping")
+        sleep(1)
+
+
+@client.add_command("run")
+def run(file_name):
+    "Read a file and send its content to /run-code"
+    with open(file_name) as f:
+        logger.info("Sending content of {}".format(file_name))
+        client.send("/run-code", f.read())
+
+
+@client.add_command("watch")
+def watch(file_name):
+    "Watch for changes in a file and send it to /run-code each time"
+    w = watch_file(file_name,
+                   lambda: client.run(file_name))
+    client.watchers.append(w)
+
+    run(file_name)
+
+
+@client.add_command("exit")
+def exit():
+    "Ask the server to exit, stop listening and stop all the watchers"
+    client._running = False
+    client.send("/exit")
+    client.listener.stop()
+    logger.info("Closing watchers")
+    for w in client.watchers:
+        w.stop()
+        w.join()
 
 
 def main():
     "Main function"
-    frontend = Frontend()
-    frontend.wait_server()
 
-    command = get_argument(0)
+    if argv[1:]:
+        ping()
+        client.handle_command(*argv[1:])
 
-    if command == "run":
-        file_name = get_argument(1)
-        frontend.run(file_name)
-
-    if command == "watch":
-        file_name = get_argument(1)
-        frontend.watch(file_name)
-
-    frontend.main_loop()
+    client.main_loop()
 
 if __name__ == "__main__":
     main()
