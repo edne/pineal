@@ -51,25 +51,14 @@ def check_address(addr):
         return ":".join(["localhost", splitted[0]])
 
 
-class Frontend(object):
-    def __init__(self):
+class Client(object):
+    def __init__(self, server_addr, listen_port):
         "Init frontend"
         logger.info("Starting frontend")
-
-        server_addr = os.environ.get("SERVER_ADDR", "127.0.0.1:7172")
-        listen_port = os.environ.get("LISTEN_PORT", 7173)
-        listen_port = int(listen_port)
-
-        self.server_responding = False
         self.server = liblo.Address("osc.udp://{}/"
                                     .format(check_address(server_addr)))
-        self.watchers = []
-        self.listener = liblo.ServerThread(listen_port)
-        self.listener.add_method(None, None, self.handle_osc)
-        self.listener.start()  # TODO: start outside __init__
-
-        self._running = False
-
+        self.server_responding = False
+        self.running = False
         self.commands = {}
 
         readline.parse_and_bind("tab: complete")
@@ -111,9 +100,9 @@ class Frontend(object):
         except NameError:
             _input = input
 
-        self._running = True
+        self.running = True
         try:
-            while self._running:
+            while self.running:
                 line = _input("> ").split()
                 if line:
                     command = line[0]
@@ -124,7 +113,17 @@ class Frontend(object):
             self.handle_command("exit")
 
 
-client = Frontend()
+server_addr = os.environ.get("SERVER_ADDR", "127.0.0.1:7172")
+listen_port = os.environ.get("LISTEN_PORT", 7173)
+listen_port = int(listen_port)
+
+client = Client(server_addr, listen_port)
+
+watchers = []
+
+listener = liblo.ServerThread(listen_port)
+listener.add_method(None, None, client.handle_osc)
+listener.start()
 
 
 @client.add_command("ping")
@@ -149,7 +148,7 @@ def watch(file_name):
     "Watch for changes in a file and send it to /run-code each time"
     w = watch_file(file_name,
                    lambda: client.run(file_name))
-    client.watchers.append(w)
+    watchers.append(w)
 
     run(file_name)
 
@@ -157,11 +156,11 @@ def watch(file_name):
 @client.add_command("exit")
 def exit():
     "Ask the server to exit, stop listening and stop all the watchers"
-    client._running = False
+    client.running = False
     client.send("/exit")
-    client.listener.stop()
+    listener.stop()
     logger.info("Closing watchers")
-    for w in client.watchers:
+    for w in watchers:
         w.stop()
         w.join()
 
