@@ -8,4 +8,5 @@ export SERVER_ADDR=localhost:7172
 export LISTEN_PORT=7173
 
 bin/pineal &
-python src/client.py watch examples/test.pn
+
+python src/client.py test $(ls examples/*.pn) || echo "TEST FAILED"

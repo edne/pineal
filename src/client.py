@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from __future__ import print_function
 import os
-from sys import argv
+import sys
 import readline
 from time import sleep
 import logging
@@ -57,8 +57,9 @@ class Client(object):
         logger.info("Starting frontend")
         self.server = liblo.Address("osc.udp://{}/"
                                     .format(check_address(server_addr)))
-        self.server_responding = False
         self.running = False
+        self.server_responding = False
+        self.server_errors = False
         self.commands = {}
 
         readline.parse_and_bind("tab: complete")
@@ -79,8 +80,13 @@ class Client(object):
         if path == "/ack":
             logger.info("/ack received, sending code")
             self.server_responding = True
-        if path == "/error":
-            logger.info("/error received: {}".format(msg[0]))
+
+        if path == "/status/error":
+            logger.error("/error received: {}".format(msg[0]))
+            self.server_errors = True
+
+        if path == "/status/working":
+            self.server_errors = False
 
     def handle_command(self, command, *args):
         "Handle user commands"
@@ -149,7 +155,6 @@ def watch(file_name):
     w = watch_file(file_name,
                    lambda: client.run(file_name))
     watchers.append(w)
-
     run(file_name)
 
 
@@ -158,21 +163,29 @@ def exit():
     "Ask the server to exit, stop listening and stop all the watchers"
     client.running = False
     client.send("/exit")
-    listener.stop()
-    logger.info("Closing watchers")
-    for w in watchers:
-        w.stop()
-        w.join()
+
+
+@client.add_command("test")
+def test(*files):
+    "Test given files"
+    for file_name in files:
+        run(file_name)
+        sleep(1)
+        if client.server_errors:
+            logger.error("Errors in file {}".format(file_name))
+            client.send("/exit")
+            sys.exit(1)
+    client.send("/exit")
 
 
 def main():
     "Main function"
-
-    if argv[1:]:
+    if sys.argv[1:]:
         ping()
-        client.handle_command(*argv[1:])
+        client.handle_command(*sys.argv[1:])
+    else:
+        client.main_loop()
 
-    client.main_loop()
 
 if __name__ == "__main__":
     main()
