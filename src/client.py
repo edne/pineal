@@ -2,6 +2,7 @@
 from __future__ import print_function
 import os
 import sys
+import subprocess
 import readline
 from time import sleep
 import logging
@@ -16,6 +17,7 @@ logger.setLevel(logging.INFO)
 logger.addHandler(logging.StreamHandler())
 
 history_file = os.environ.get("HISTORY_FILE", ".pineal_history")
+server_command = os.environ.get("PINEAL_SERVER", "pineal")
 
 server_addr = os.environ.get("SERVER_ADDR", "127.0.0.1:7172")
 listen_port = os.environ.get("LISTEN_PORT", 7173)
@@ -130,6 +132,16 @@ def ping():
         sleep(1)
 
 
+@add_command("start")
+def start_server():
+    try:
+        subprocess.Popen([server_command])
+    except OSError:
+        logger.error("Server command '{}' not found".format(server_command))
+    else:
+        ping()
+
+
 @add_command("run")
 def run(file_name):
     "Read a file and send its content to /run-code"
@@ -157,6 +169,7 @@ def exit():
 @add_command("test")
 def test(*files):
     "Test given files"
+    start_server()
     for file_name in files:
         run(file_name)
         sleep(1)
@@ -195,7 +208,6 @@ def main():
     listener.start()
 
     if sys.argv[1:]:
-        ping()
         handle_command(*sys.argv[1:])
     else:
         try:
