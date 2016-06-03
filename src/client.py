@@ -15,6 +15,8 @@ logger = logging.getLogger("frontend.py")
 logger.setLevel(logging.INFO)
 logger.addHandler(logging.StreamHandler())
 
+history_file = os.environ.get("HISTORY_FILE", ".pineal_history")
+
 server_addr = os.environ.get("SERVER_ADDR", "127.0.0.1:7172")
 listen_port = os.environ.get("LISTEN_PORT", 7173)
 listen_port = int(listen_port)
@@ -196,7 +198,12 @@ def main():
         ping()
         handle_command(*sys.argv[1:])
     else:
+        try:
+            readline.read_history_file(history_file)
+        except IOError:
+            logger.info("History file {} not present".format(history_file))
         main_loop()
+        readline.write_history_file(history_file)
         if watchers:
             for w in watchers:
                 w.stop()
