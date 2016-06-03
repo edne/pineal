@@ -16,35 +16,6 @@
 (background (rgb 0))
 
 
-(defn tag-primo []
-  (def font "monaco.ttf")
-
-  (draw (change (text font "(pineal)")
-                (scale 0.025)
-                (translate 0.25)
-                ))
-
-
-  (def writing (group-for [[i c] (enumerate "(pineal)")]
-                          (change (text font c)
-                                  (scale 0.1)
-                                  (translate (* i 0.05)
-                                             0
-                                             (-> (time) (* i) (sin) (* 0.5)))
-                                  )))
-
-
-  (-> writing
-      (change (rotate-y  (-> (time 2) (sin) (* 0.1) (- 0.1)))
-              (translate (-> (time 4) (sin) (* 0.2) (+ 0.4)))
-              (branch (color (rgb 1))
-                      (compose (turn 13 rotate-z)
-                               (color (rgb 1 0.5))))
-              (rotate-x -1)
-              (scale 0.25)
-              )
-      draw))
-
 (defn beat-test []
   (def some-cubes
     (change (cube)
@@ -72,71 +43,6 @@
       draw))
 
 
-(defn stella-prima []
-  ;(def x1 0.1)
-  (def x1 (/ pi 4))
-  (def y1 (time x1))
-
-  (def stella
-    (change (polygon 4)
-            (scale 0.2)
-            ;(no-fill)
-            (scale 1 0.5)
-            (translate (-> y1 sin (* 1.00) (+ 0.3)))
-            (branch-for [i (range 1 9)]
-                        (rotate-z (-> (/ pi 4) (* i)))
-                        (scale (/ 2 i))
-                        (scale 1 (/ 2 i))
-                        ;(color (% i 2))
-                        (branch (color (rgb 1 0.1))
-                                (compose (color (rgb 1))
-                                         (line-width 4)
-                                         (no-fill)))
-                        (rotate-x (-> y1 (% 2pi)))
-                        (turn 8 rotate-z))
-            (rotate-z (-> (time 0.2) (% 2pi)))
-            (rotate-x -1)
-            (rotate-y (-> (time 0.5) (% 2pi)))
-
-            (scale 0.4)
-            ))
-
-
-  (draw stella))
-
-
-(defn stella-seconda []
-  (def x1 0.1)
-  (def y1 (time x1))
-
-  (def stella
-    (change (polygon 4)
-            (scale 0.2)
-            ;(no-fill)
-            (scale 1 0.5)
-            (translate (-> y1 sin (* 1.00) (+ 0.3)))
-            (branch-for [i (range 1 9)]
-                        (rotate-z (-> (/ pi 4) (* i)))
-                        (scale (/ 2 i))
-                        (scale 1 (/ 2 i))
-                        ;(color (% i 2))
-                        (branch (color (rgb 1 0.1))
-                                (compose (color (rgb 1))
-                                         (line-width 4)
-                                         (no-fill)))
-                        (rotate-x (-> y1 (% 2pi)))
-                        (turn 8 rotate-z))
-            (rotate-x -1)
-
-            (scale 0.4)
-            ))
-
-
-  (draw stella))
-
-
-;(stella-prima)
-
 (defn osc-monitor [path c]
   (draw (change (polygon 30)
                 (scale (get-osc-f path 0.0))
@@ -153,8 +59,5 @@
                 (no-fill)
                 )))
 
-;(osc-monitor "/v1" (rgb 1 0 0))
-;(monitor (amp) (rgb 0 1 1))
-
-(stella-prima)
-;(stella-seconda)
+(osc-monitor "/v1" (rgb 1 0 0))
+(monitor (amp) (rgb 0 1 1))

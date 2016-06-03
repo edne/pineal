@@ -1,0 +1,41 @@
+(defn turn [n rotate-fun]
+  (branch-for [i (range n)]
+              (rotate-fun (-> i (* 2pi) (/ n)))))
+
+
+(background (rgb 0))
+
+
+(defn stella-prima []
+  ;(def x1 0.1)
+  (def x1 (/ pi 4))
+  (def y1 (time x1))
+
+  (def stella
+    (change (polygon 4)
+            (scale 0.2)
+            ;(no-fill)
+            (scale 1 0.5)
+            (translate (-> y1 sin (* 1.00) (+ 0.3)))
+            (branch-for [i (range 1 9)]
+                        (rotate-z (-> (/ pi 4) (* i)))
+                        (scale (/ 2 i))
+                        (scale 1 (/ 2 i))
+                        ;(color (% i 2))
+                        (branch (color (rgb 1 0.1))
+                                (compose (color (rgb 1))
+                                         (line-width 4)
+                                         (no-fill)))
+                        (rotate-x (-> y1 (% 2pi)))
+                        (turn 8 rotate-z))
+            (rotate-z (-> (time 0.2) (% 2pi)))
+            (rotate-x -1)
+            (rotate-y (-> (time 0.5) (% 2pi)))
+
+            (scale 0.4)
+            ))
+
+
+  (draw stella))
+
+(stella-prima)

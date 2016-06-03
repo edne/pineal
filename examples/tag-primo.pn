@@ -1,0 +1,40 @@
+(defn turn [n rotate-fun]
+  (branch-for [i (range n)]
+              (rotate-fun (-> i (* 2pi) (/ n)))))
+
+
+
+(background (rgb 0))
+
+
+(defn tag-primo []
+  (def font "monaco.ttf")
+
+  (draw (change (text font "(pineal)")
+                (scale 0.025)
+                (translate 0.25)
+                ))
+
+
+  (def writing (group-for [[i c] (enumerate "(pineal)")]
+                          (change (text font c)
+                                  (scale 0.1)
+                                  (translate (* i 0.05)
+                                             0
+                                             (-> (time) (* i) (sin) (* 0.5)))
+                                  )))
+
+
+  (-> writing
+      (change (rotate-y  (-> (time 2) (sin) (* 0.1) (- 0.1)))
+              (translate (-> (time 4) (sin) (* 0.2) (+ 0.4)))
+              (branch (color (rgb 1))
+                      (compose (turn 13 rotate-z)
+                               (color (rgb 1 0.5))))
+              (rotate-x -1)
+              (scale 0.25)
+              )
+      draw))
+
+
+(tag-primo)
