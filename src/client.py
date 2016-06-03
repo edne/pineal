@@ -3,9 +3,10 @@ from __future__ import print_function
 import os
 import sys
 import subprocess
+import threading
 import readline
-from time import sleep
 import logging
+from time import sleep
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 import liblo
@@ -47,6 +48,7 @@ def watch_file(file_name, action, *args, **kwargs):
         base_path = "."
 
     observer.schedule(handler, path=base_path)
+    observer.daemon = True
     observer.start()
 
     return observer
@@ -150,33 +152,10 @@ def run(file_name):
         send("/run-code", f.read())
 
 
-@add_command("watch")
-def watch(file_name):
-    "Watch for changes in a file and send it to /run-code each time"
-    w = watch_file(file_name,
-                   lambda: run(file_name))
-    watchers.append(w)
-    run(file_name)
-
-
 @add_command("exit")
 def exit():
     "Ask the server to exit, stop listening and stop all the watchers"
     state.running = False
-    send("/exit")
-
-
-@add_command("test")
-def test(*files):
-    "Test given files"
-    start_server()
-    for file_name in files:
-        run(file_name)
-        sleep(1)
-        if state.server_errors:
-            logger.error("Errors in file {}".format(file_name))
-            send("/exit")
-            sys.exit(1)
     send("/exit")
 
 
@@ -201,6 +180,33 @@ def main_loop():
         exit()
 
 
+@add_command("watch")
+def watch(file_name):
+    "Watch for changes in a file and send it to /run-code each time"
+    start_server()
+    w = watch_file(file_name,
+                   lambda: run(file_name))
+    watchers.append(w)
+    th = threading.Thread(target=lambda: run(file_name))
+    th.daemon = True
+    th.start()
+    main_loop()
+
+
+@add_command("test")
+def test(*files):
+    "Test given files"
+    start_server()
+    for file_name in files:
+        run(file_name)
+        sleep(1)
+        if state.server_errors:
+            logger.error("Errors in file {}".format(file_name))
+            send("/exit")
+            sys.exit(1)
+    exit()
+
+
 def main():
     "Main function"
     listener = liblo.ServerThread(listen_port)
@@ -216,13 +222,17 @@ def main():
             logger.info("History file {} not present".format(history_file))
         main_loop()
         readline.write_history_file(history_file)
-        if watchers:
-            for w in watchers:
-                w.stop()
-            for w in watchers:
-                w.join()
 
-    listener.stop()
+    sys.exit(0)  # it works most of the times
+
+    logger.info("Stopping watchers")
+    for w in watchers:
+        w.stop()
+
+    logger.info("Stopping OSC listener")
+    listener.stop()  # hangs and there is no way to stop it
+
+    logger.info("Closing")
 
 
 if __name__ == "__main__":

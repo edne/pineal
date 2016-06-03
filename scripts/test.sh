@@ -2,7 +2,7 @@
 set -e
 
 # scripts/build.sh
-cp -f src/client.py bin/  # client.py is not preprocessed
+cp src/client.py bin/
 
 export SERVER_ADDR=localhost:7172
 export LISTEN_PORT=7173
@@ -10,4 +10,4 @@ export PINEAL_SERVER=./bin/pineal
 
 touch .pineal_history
 
-python src/client.py test $(ls examples/*.pn) || echo "TEST FAILED"
+python bin/client.py test $(ls examples/*.pn) || echo "TEST FAILED"
