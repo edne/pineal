@@ -8,11 +8,11 @@
      {% endfor %}
 
      (import [math [*]])
-     (import [time [time :as --time--]])
 
      (def 2pi (* 2 pi))
-     (value time --time--)
-     (value amp rms)))
+     (value time (fn [] (get-osc-f "/time" 0.0)))
+     (value amp (fn [] (get-osc-f "/amp" 0.0)))
+     ))
 
 
 (defmacro value [name x]

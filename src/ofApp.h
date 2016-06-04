@@ -34,7 +34,8 @@ class ofApp : public ofBaseApp{
 		ofFbo output;
 
 		ofxOscReceiver oscReceiver;
-		ofxOscSender oscSender;
+		ofxOscSender oscClient;
+		ofxOscSender oscServer;
 
 		py::object vision;
 		ofEasyCam camera;

@@ -33,7 +33,8 @@ void ofApp::setup(){
 	ofSetEscapeQuitsApp(false);
 
 	oscReceiver.setup(7172);
-	oscSender.setup("localhost", 7173);  // frontend address, TODO: read config
+	oscClient.setup("localhost", 7173);  // frontend address, TODO: read config
+	oscServer.setup("localhost", 7172);  // self
 
 	int nOutputs = 2;
 	int nInputs = 2;
@@ -46,6 +47,8 @@ void ofApp::setup(){
 	ofAddListener(beat.gotBeat, this, &ofApp::beatEvent);
 
 	ofSoundStreamSetup(nOutputs, nInputs, this);
+
+	dsl::audio::setup();
 }
 
 void ofApp::exit(){
@@ -89,7 +92,7 @@ void ofApp::update(){
 		if(address == "/ping"){
 			ofxOscMessage m;
 			m.setAddress("/ack");
-			oscSender.sendMessage(m, false);
+			oscClient.sendMessage(m, false);
 		}
 		if(address == "/exit"){
 			std::exit(0);
@@ -106,6 +109,12 @@ void ofApp::update(){
 			dsl::osc::set_value(address, m.getArgAsFloat(0));
 		}
 	}
+
+    // TODO: sendFloat()
+    ofxOscMessage msg;
+    msg.setAddress("/time");
+    msg.addFloatArg(ofGetElapsedTimef());
+    oscServer.sendMessage(msg, false);
 }
 
 void ofApp::draw(){
@@ -123,7 +132,7 @@ void ofApp::draw(){
 			ofxOscMessage m;
 			m.setAddress("/status/working");
 		}
-		oscSender.sendMessage(m, false);
+		oscClient.sendMessage(m, false);
 	}catch(py::error_already_set){
 		PyErr_Print();
 	}

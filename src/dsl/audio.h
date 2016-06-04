@@ -9,10 +9,22 @@
 	float last_onset = 0;
 
 	ofSoundBuffer inBuf;
+	ofxOscSender oscServer;
+
+	void setup(){
+		oscServer.setup("localhost", 7172);
+	}
 
 	void update(){
 		beat_value = false;
 		onset_value = false;
+
+		float amplitude = inBuf.getRMSAmplitude();
+
+		ofxOscMessage m;
+		m.setAddress("/amp");
+		m.addFloatArg(amplitude);
+		oscServer.sendMessage(m, false);
 	}
 
 	void set_inBuf(ofSoundBuffer in){
@@ -53,11 +65,6 @@
 		}else{
 			return false;
 		}
-	}
-
-	{{ module.bind("rms", "rms") }}
-	float rms(){
-		return inBuf.getRMSAmplitude();
 	}
 
 	{{ module.bind("at_event", "at_event") }}
