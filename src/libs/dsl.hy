@@ -69,13 +69,13 @@
   `(~entity (at-beat [~n ~pos ~dur])))
 
 
-(defmacro seq [n &rest args]
-  `(do
-     (setv clips [])
+;(defmacro seq [n &rest args]
+;  `(do
+;     (setv clips [])
 
-     (for [[pos e dur] [~@args]]
-       (setv a (at-beat [~n pos dur]))
-       (.append clips (change e a)))
+;     (for [[pos e dur] [~@args]]
+;       (setv a (at-beat [~n pos dur]))
+;       (.append clips (change e a)))
 
-     (group_c clips)))
+;     (group_c clips)))
 

@@ -21,11 +21,11 @@
             (rotate-y (-> (time (/ pi 4)) (% 2pi)))
             )))
 
+'(draw (seq 4
+            [0 (cubes-zy 64 16) 1]
+            [1 (cubes-zy 16 16) 1]
+            [2 (cubes-zy 32 16) 1]
+            [3 (cubes-zy 12 16) 1]
+            ))
 
-(draw (seq 4
-           [0 (cubes-zy 64 16) 1]
-           [1 (cubes-zy 16 16) 1]
-           [2 (cubes-zy 32 16) 1]
-           [3 (cubes-zy 12 16) 1]
-           ))
-
+(draw (cubes-zy 64 16))

@@ -16,31 +16,31 @@
 (background (rgb 0))
 
 
-(defn beat-test []
-  (def some-cubes
-    (change (cube)
-            (scale 0.5)
-            (concentric-lin 4)
-            (rotate_y (/ pi 4))
-            (translate 0.2)
-            (turn 4 rotate-y)
+'(defn beat-test []
+   (def some-cubes
+     (change (cube)
+             (scale 0.5)
+             (concentric-lin 4)
+             (rotate_y (/ pi 4))
+             (translate 0.2)
+             (turn 4 rotate-y)
 
-            (line-width 4)
-            (no-fill)
-            (color (rgb 0 1 0))))
+             (line-width 4)
+             (no-fill)
+             (color (rgb 0 1 0))))
 
-  (def concentric-squares
-    (change (polygon 4)
-            (concentric 10)
-            (line-width 4)
-            (no-fill)
-            (color (rgb 0 1 1))))
+   (def concentric-squares
+     (change (polygon 4)
+             (concentric 10)
+             (line-width 4)
+             (no-fill)
+             (color (rgb 0 1 1))))
 
-  (-> (seq 2
-           [0 some-cubes 1]
-           [1 concentric-squares 1]
-           )
-      draw))
+   (-> (seq 2
+            [0 some-cubes 1]
+            [1 concentric-squares 1]
+            )
+     draw))
 
 
 (defn osc-monitor [path c]

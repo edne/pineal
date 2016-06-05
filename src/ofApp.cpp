@@ -39,7 +39,6 @@ void ofApp::setup(){
 	int nOutputs = 2;
 	int nInputs = 2;
 
-	osc_beat = false;
 	onset.setup();
 	beat.setup();
 
@@ -47,8 +46,6 @@ void ofApp::setup(){
 	ofAddListener(beat.gotBeat, this, &ofApp::beatEvent);
 
 	ofSoundStreamSetup(nOutputs, nInputs, this);
-
-	dsl::audio::setup();
 }
 
 void ofApp::exit(){
@@ -57,22 +54,16 @@ void ofApp::exit(){
 }
 
 void ofApp::audioIn(float * input, int bufferSize, int nChannels){
-	onset.audioIn(input, bufferSize, nChannels);
-	beat.audioIn(input, bufferSize, nChannels);
-
-	ofSoundBuffer inBuf;
 	inBuf.allocate(bufferSize, nChannels);
-
 	for(int i = 0; i < bufferSize * nChannels; i++){
 		inBuf[i] = input[i];
 	}
 
-	dsl::audio::set_inBuf(inBuf);
+	onset.audioIn(input, bufferSize, nChannels);
+	beat.audioIn(input, bufferSize, nChannels);
 }
 
 void ofApp::update(){
-	dsl::audio::update();
-
 	while(oscReceiver.hasWaitingMessages()){
 		// get the next message
 		ofxOscMessage m;
@@ -89,29 +80,27 @@ void ofApp::update(){
 				PyErr_Print();
 			}
 		}
-		if(address == "/ping"){
+        else if(address == "/ping"){
 			ofxOscMessage m;
 			m.setAddress("/ack");
 			oscClient.sendMessage(m, false);
 		}
-		if(address == "/exit"){
+        else if(address == "/exit"){
 			std::exit(0);
 		}
-		if(address == "/beat/enable"){
-			osc_beat = m.getArgAsBool(0);
-			ofLog() << "Toggled /beat/enable to " << osc_beat;
-		}
-		if(address == "/beat" && osc_beat){
-			dsl::audio::set_beat();
-		}
-		if(dsl::osc::exists_value(address)){
+        else{
 			// TODO: type check
-			dsl::osc::set_value(address, m.getArgAsFloat(0));
+			dsl::osc::set_float(address, m.getArgAsFloat(0));
 		}
 	}
 
     // TODO: sendFloat()
     ofxOscMessage msg;
+
+    msg.setAddress("/amp");
+    msg.addFloatArg(inBuf.getRMSAmplitude());
+    oscServer.sendMessage(msg, false);
+
     msg.setAddress("/time");
     msg.addFloatArg(ofGetElapsedTimef());
     oscServer.sendMessage(msg, false);
@@ -157,11 +146,9 @@ ofTexture ofApp::getTexture(){
 }
 
 void ofApp::onsetEvent(float & time){
-	dsl::audio::set_onset();
+    // TODO: boolean OSC
 }
 
 void ofApp::beatEvent(float & time){
-	if(!osc_beat){
-		dsl::audio::set_beat();
-	}
+    // TODO: boolean OSC
 }

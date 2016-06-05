@@ -41,7 +41,7 @@ class ofApp : public ofBaseApp{
 		ofEasyCam camera;
 		ofFbo master;
 
-		bool osc_beat;
+		ofSoundBuffer inBuf;
 		ofxAubioOnset onset;
 		ofxAubioBeat beat;
 };
