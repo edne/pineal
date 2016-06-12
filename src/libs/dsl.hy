@@ -65,8 +65,8 @@
   `(text_c (str ~font) (str ~s)))
 
 
-(defmacro beat [n entity pos dur]
-  `(~entity (at-beat [~n ~pos ~dur])))
+;(defmacro beat [n entity pos dur]
+;  `(~entity (at-beat [~n ~pos ~dur])))
 
 
 ;(defmacro seq [n &rest args]
