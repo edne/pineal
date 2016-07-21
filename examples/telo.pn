@@ -1,0 +1,25 @@
+(defn turn [n rotate-fun]
+  (branch-for [i (range n)]
+              (rotate-fun (-> i (* 2pi) (/ n)))))
+
+(background (rgb 0))
+
+(defn telo []
+  (change (polygon 3)
+          ;(cube)
+          (line-width 4)
+          ;(rotate-y (% (time) 2pi))
+          (no-fill)
+          (color (rgb 0 1 0 (amp 10 0.2)))
+          (scale 3)
+          (turn 30 rotate-y)
+          (rotate-x (% (- (time)) 2pi))
+          (turn 3 rotate-x)
+          (rotate-y (% (time) 2pi))
+          ;(branch-for [i (range 16)]
+          ;            ;(scale (* 0.1 i))
+          ;            (rotate-y (* (/ 2pi 16) i))
+          ;            )
+          ))
+
+(draw (telo))
