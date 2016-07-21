@@ -80,30 +80,22 @@ void ofApp::update(){
 				PyErr_Print();
 			}
 		}
-        else if(address == "/ping"){
+		else if(address == "/ping"){
 			ofxOscMessage m;
 			m.setAddress("/ack");
 			oscClient.sendMessage(m, false);
 		}
-        else if(address == "/exit"){
+		else if(address == "/exit"){
 			std::exit(0);
 		}
-        else{
+		else{
 			// TODO: type check
 			dsl::osc::set_float(address, m.getArgAsFloat(0));
 		}
 	}
 
-    // TODO: sendFloat()
-    ofxOscMessage msg;
-
-    msg.setAddress("/amp");
-    msg.addFloatArg(inBuf.getRMSAmplitude());
-    oscServer.sendMessage(msg, false);
-
-    msg.setAddress("/time");
-    msg.addFloatArg(ofGetElapsedTimef());
-    oscServer.sendMessage(msg, false);
+	sendFloat("/amp", inBuf.getRMSAmplitude());
+	sendFloat("/time", ofGetElapsedTimef());
 }
 
 void ofApp::draw(){
@@ -141,14 +133,22 @@ void ofApp::draw(){
 	ofDrawBitmapString(fps, 10, 20);
 }
 
+void ofApp::sendFloat(string name, float x){
+	ofxOscMessage msg;
+
+	msg.setAddress(name);
+	msg.addFloatArg(x);
+	oscServer.sendMessage(msg, false);
+}
+
 ofTexture ofApp::getTexture(){
 	return output.getTexture();
 }
 
 void ofApp::onsetEvent(float & time){
-    // TODO: boolean OSC
+	// TODO: boolean OSC
 }
 
 void ofApp::beatEvent(float & time){
-    // TODO: boolean OSC
+	// TODO: boolean OSC
 }

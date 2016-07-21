@@ -22,6 +22,7 @@ class ofApp : public ofBaseApp{
 
 		ofTexture getTexture();
 
+        void sendFloat(string name, float x);
 		void audioIn(float * input, int bufferSize, int nChannels);
 
 		void onsetEvent(float & time);
