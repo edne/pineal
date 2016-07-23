@@ -8,6 +8,6 @@ DSL Reference
    values
    keywords
    colors
-   primitives
+   entities
    transformations
 

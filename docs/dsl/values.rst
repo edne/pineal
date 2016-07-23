@@ -10,8 +10,8 @@ get-osc-f
 
     (get-osc-f "/some/path" default-value)
 
-Subscribe for a given OSC path and return the received float values, if none
-give the default.
+Subscribe for a given OSC path and return the received float values,
+if none give the default.
 
 **TODO:**
  - Type checking on OSC inputs.
