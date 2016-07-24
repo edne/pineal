@@ -19,8 +19,12 @@ def write_file(file_name, content):
         f.write(content)
 
 
-def navigate(path=[], context={}):
+def navigate(path=None, context=None):
     "Explore file tree expanding each file"
+    if not path:
+        path = []
+    if not context:
+        context = {}
 
     source = os.path.join(* [SOURCE] + path)
     dest = os.path.join(* [DEST] + path)
