@@ -32,7 +32,7 @@ def watch_file(file_name, action, *args, **kwargs):
         if not os.path.exists(event.src_path):
             return
 
-        logger.info("Changed %s" % event.src_path)
+        logger.info("Changed {}".format(event.src_path))
 
         if os.path.samefile(event.src_path, file_name):
             action(*args, **kwargs)
