@@ -3,6 +3,8 @@ from libs.utils import hy_eval_code
 
 
 class Vision(object):
+    "Handle the compilation and the drawing of DSL code"
+
     template = """
     (require libs.dsl)
     (--header--)
