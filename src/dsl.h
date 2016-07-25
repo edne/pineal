@@ -7,14 +7,14 @@ namespace dsl{
     {% endfor %}
 
     BOOST_PYTHON_MODULE(core){
-        py::class_<pEntity>("pEntity")
+        py::class_<Entity>("Entity")
             .def(py::init<py::object>())
         ;
 
-        py::class_<pAction>("pAction")
-            .def("__call__", &pAction::__call__)
+        py::class_<Action>("Action")
+            .def("__call__", &Action::__call__)
         ;
 
-        py::class_<pColor>("pColor");
+        py::class_<Color>("Color");
     }
 }

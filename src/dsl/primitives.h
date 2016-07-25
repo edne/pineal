@@ -1,8 +1,8 @@
 {{ begin_module("primitives") }}
 
 	{{ module.bind("cube", "cube") }}
-	pEntity cube(){
-		pEntity e([=](){
+	Entity cube(){
+		Entity e([=](){
 			ofDrawBox(0.5);
 		});
 
@@ -10,8 +10,8 @@
 	}
 
 	{{ module.bind("polygon", "polygon") }}
-	pEntity polygon(float n){
-		pEntity e([=](){
+	Entity polygon(float n){
+		Entity e([=](){
 			ofPushMatrix();
 
 			ofRotateZ(90);
@@ -30,7 +30,7 @@
 	unordered_map<string, ofTrueTypeFont> fonts_map;
 
 	{{ module.bind("text_c", "text") }}
-	pEntity text(string font_name, string s){
+	Entity text(string font_name, string s){
 		float size = 100;
 
 		if(fonts_map.find(font_name) == fonts_map.end()){
@@ -41,7 +41,7 @@
 
 		float scale = 1.0 / size;
 
-		pEntity e([=](){
+		Entity e([=](){
 			ofPushMatrix();
 			ofScale(scale, scale, scale);
 			fonts_map[font_name].drawStringAsShapes(s, 0, 0);

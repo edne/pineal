@@ -4,17 +4,17 @@
 namespace py = boost::python;
 
 
-class pEntity{
+class Entity{
 	public:
-		pEntity(){
+		Entity(){
 			draw = [](){};
 		}
 
-		pEntity(py::object f){
+		Entity(py::object f){
 			draw = [=](){ f(); };
 		}
 
-		pEntity(function<void(void)> f){
+		Entity(function<void(void)> f){
 			draw = f;
 		}
 
@@ -26,50 +26,50 @@ class pEntity{
 		function<void(void)> draw;
 };
 
-class pAction{
+class Action{
 	public:
-		pAction(){  // by default identity
-			apply = [](pEntity& e){
+		Action(){  // by default identity
+			apply = [](Entity& e){
 				return e;
 			};
 		}
 
-		pAction(function<pEntity(pEntity&)> a){
+		Action(function<Entity(Entity&)> a){
 			apply = a;
 		}
 
-		pEntity __call__(pEntity& e){
+		Entity __call__(Entity& e){
 			return apply(e);
 		}
 
-		pEntity operator()(pEntity e) const{
+		Entity operator()(Entity e) const{
 			return apply(e);
 		}
 
 	private:
-		function<pEntity(pEntity&)> apply;
+		function<Entity(Entity&)> apply;
 };
 
-class pValue{
+class Value{
 	public:
-		pValue(){
+		Value(){
 			value = 0.0;
 		}
 
-		pValue(float x){
+		Value(float x){
 			value = x;
 		}
 
-		pValue(py::list args, int index, float default_value) :
-			pValue(args, index, pValue(default_value)){
+		Value(py::list args, int index, float default_value) :
+			Value(args, index, Value(default_value)){
 		}
 
-		pValue(py::list args, int index, pValue default_value){
+		Value(py::list args, int index, Value default_value){
 			if(py::len(args) > index){
-				py::extract<pValue&> extractor(args[index]);
+				py::extract<Value&> extractor(args[index]);
 
 				if(extractor.check()){
-					pValue& s = extractor();
+					Value& s = extractor();
 					value = s.value;
 				}else{
 					value = py::extract<float>(args[index]);
@@ -87,12 +87,12 @@ class pValue{
 		float value;
 };
 
-class pColor{
+class Color{
 	public:
-		pColor(){
+		Color(){
 		}
 
-		pColor(ofColor _c){
+		Color(ofColor _c){
 			c = _c;
 		}
 

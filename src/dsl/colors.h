@@ -7,45 +7,45 @@
 	}
 
 	{{ module.bind("background", "background") }}
-	void background(pColor p){
+	void background(Color p){
 		ofBackground(p.c);
 	}
 
 	{{ module.bind("lerp", "lerp") }}
-	pColor lerp(float amount, pColor p, pColor q){
-		return pColor(p.c.getLerped(q.c, amount));
+	Color lerp(float amount, Color p, Color q){
+		return Color(p.c.getLerped(q.c, amount));
 	}
 
 	{{ module.bind("invert", "invert") }}
-	pColor invert(pColor in_color){
-		return pColor(in_color.c.getInverted());
+	Color invert(Color in_color){
+		return Color(in_color.c.getInverted());
 	}
 
 	{{ module.bind("rgb_c", "rgb") }}
-	pColor rgb(py::list args){
-		pValue r, g, b, a;
+	Color rgb(py::list args){
+		Value r, g, b, a;
 
 		if(py::len(args) <= 2){
-			r = pValue(args, 0, 1.0);
-			g = pValue(r);
-			b = pValue(r);
-			a = pValue(args, 1, 1.0);
+			r = Value(args, 0, 1.0);
+			g = Value(r);
+			b = Value(r);
+			a = Value(args, 1, 1.0);
 		}else{
-			r = pValue(args, 0, 1.0);
-			g = pValue(args, 1, 1.0);
-			b = pValue(args, 2, 1.0);
-			a = pValue(args, 3, 1.0);
+			r = Value(args, 0, 1.0);
+			g = Value(args, 1, 1.0);
+			b = Value(args, 2, 1.0);
+			a = Value(args, 3, 1.0);
 		}
 
-		return pColor(ofColor(255*r(), 255*g(), 255*b(), 255*a()));
+		return Color(ofColor(255*r(), 255*g(), 255*b(), 255*a()));
 	}
 
 	{{ module.bind("color", "color") }}
-	pAction color(pColor p){
+	Action color(Color p){
 		ofColor c = p.c;
 
-		return pAction([=](pEntity& e){
-			return pEntity([=](){
+		return Action([=](Entity& e){
+			return Entity([=](){
 				static ofColor status_color;
 				ofColor old_color = status_color;
 				ofColor new_color = ofColor(c.r, c.g, c.b, c.a);
@@ -61,9 +61,9 @@
 		});
 	}
 
-	pAction fill_status(bool status){
-		return pAction([=](pEntity& e){
-			return pEntity([=](){
+	Action fill_status(bool status){
+		return Action([=](Entity& e){
+			return Entity([=](){
 				static bool status_fill = true;
 				bool old_fill = status_fill;
 				bool new_fill = status;
@@ -88,19 +88,19 @@
 	}
 
 	{{ module.bind("fill", "fill") }}
-	pAction fill(){
+	Action fill(){
 		return fill_status(true);
 	}
 
 	{{ module.bind("no_fill", "no_fill") }}
-	pAction no_fill(){
+	Action no_fill(){
 		return fill_status(false);
 	}
 
 	{{ module.bind("line_width", "line_width") }}
-	pAction line_width(double new_width){
-		return pAction([=](pEntity& e){
-			return pEntity([=](){
+	Action line_width(double new_width){
+		return Action([=](Entity& e){
+			return Entity([=](){
 				static double status_line_width = 1;
 				double old_width = status_line_width;
 
