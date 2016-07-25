@@ -17,7 +17,7 @@
 			ofRotateZ(90);
 
 			ofSetCircleResolution(n);
-			ofDrawCircle(0, 0, 1);
+			ofDrawCircle(0, 0, 0.5);
 
 			ofPopMatrix();
 		});
