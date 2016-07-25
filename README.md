@@ -7,7 +7,7 @@ Graphic synthesis engine, designed for live performances.
 
 Like in an audio (subtractive) synthesizer you have some basic oscillators and
 then chains of effects and filters, here there are primitive _entities_ and
-chains of _transformations_.
+chains of _actions_ applied to them.
 
 
 Simple Example

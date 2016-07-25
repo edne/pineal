@@ -30,10 +30,10 @@ change
 .. code-block:: clj
 
     (change entity
-            transformation
+            action
             ...)
 
-Apply one or more transformations to an entity, return a new,
+Apply one or more actions to an entity, return a new,
 transformed, entity.
 
 
@@ -42,11 +42,11 @@ compose
 
 .. code-block:: clj
 
-    (compose transformation
-             transformation
+    (compose action
+             action
              ...)
 
-Combine transformations "in series", return a new one.
+Combine actions "in series", return a new one.
 
 **TODO**
 - a picture to explain the idea
@@ -57,11 +57,11 @@ branch
 
 .. code-block:: clj
 
-    (branch transformation
-            transformation
+    (branch action
+            action
             ...)
 
-Combine transformations "in parallel", return a new one.
+Combine actions "in parallel", return a new one.
 
 **TODO**
 - a picture also here
@@ -95,7 +95,7 @@ branch-for
 .. code-block:: clj
 
     (group-for [i iterator]
-               ; transformations with i as parameter
+               ; actions with i as parameter
                )
 
-Compose the transformations and create a branch for each iteration.
+Compose the actions and create a branch for each iteration.

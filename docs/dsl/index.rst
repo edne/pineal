@@ -9,5 +9,5 @@ DSL Reference
    keywords
    colors
    entities
-   transformations
+   actions
 

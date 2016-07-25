@@ -1,4 +1,4 @@
-{{ begin_module("transformations") }}
+{{ begin_module("actions") }}
 
 	{{ module.bind("hide", "hide") }}
 	Action hide(){
