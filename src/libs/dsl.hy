@@ -33,16 +33,27 @@
      (-> (~x) (* scale) (+ offset))))
 
 
-(defn change [entity &rest actions] (change_c entity (list actions)))
-
 (defmacro variadic [name name_c]
   `(defn ~name [&rest args] (~name_c (list args))))
 
-(variadic group     group_c)
 (variadic branch    branch_c)
 (variadic rgb       rgb_c)
 (variadic scale     scale_c)
 (variadic translate translate_c)
+(variadic compose   compose_c)
+
+
+(defn change [entity &rest actions]
+  (make-entity (str "change")
+               [entity (compose_c (list actions))]))
+
+(defn group [&rest entities]
+  (make-entity (str "group")
+               (list entities)))
+
+(defn cube    []       (make-entity (str "cube")    []))
+(defn polygon [n]      (make-entity (str "polygon") [n]))
+(defn text    [font s] (make-entity (str "text")    [(str font) (str s)]))
 
 
 (defmacro group-for [item-iterator &rest entities]
@@ -61,10 +72,6 @@
 
 (defmacro get-osc-f [path default]
   `(get-osc-f_c (str ~path) ~default))
-
-
-(defmacro text [font s]
-  `(text_c (str ~font) (str ~s)))
 
 
 ;(defmacro beat [n entity pos dur]

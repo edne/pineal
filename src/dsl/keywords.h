@@ -52,12 +52,6 @@
 		});
 	}
 
-	{{ module.bind("change_c", "change") }}
-	Entity change(Entity& entity, py::list py_actions){
-		Action action = compose(py_actions);
-		return action(entity);
-	}
-
 	{{ module.bind("group_c", "group_exposed") }}
 	Entity group_exposed(py::list l){
 		int n = py::len(l);

@@ -64,3 +64,11 @@
                      (scale 0.5))
              (change (cube)
                      (no-fill))))
+
+(draw (change (polygon 3)
+              (color (rgb 0 1 1 0.2))))
+
+(def font "monaco.ttf")
+(draw (change (text font ":)")
+              (scale 0.1)
+              (translate 0 0 0.5)))
