@@ -40,15 +40,3 @@ invert
 
 Invert a color.
 
-
-background
-----------
-
-.. code-block:: clj
-
-    (background color)
-
-Set a color as background.
-
-**TODO**
-- An idiomatic way to do it

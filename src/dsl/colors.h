@@ -6,11 +6,6 @@
 		ofSetLineWidth(1);
 	}
 
-	{{ module.bind("background", "background") }}
-	void background(Color p){
-		ofBackground(p.c);
-	}
-
 	{{ module.bind("lerp", "lerp") }}
 	Color lerp(float amount, Color p, Color q){
 		return Color(p.c.getLerped(q.c, amount));

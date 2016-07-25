@@ -3,9 +3,6 @@
               (rotate-fun (-> i (* 2pi) (/ n)))))
 
 
-(background (rgb 0))
-
-
 (defn stella-prima []
   ;(def x1 0.1)
   (def x1 (/ pi 4))

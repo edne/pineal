@@ -2,7 +2,6 @@
   (branch-for [i (range n)]
               (rotate-fun (-> i (* 2pi) (/ n)))))
 
-(background (rgb 0))
 
 (defn telo []
   (change (polygon 3)

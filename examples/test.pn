@@ -13,9 +13,6 @@
               (scale (-> 1 (/ n) (* i)))))
 
 
-(background (rgb 0))
-
-
 '(defn beat-test []
    (def some-cubes
      (change (cube)

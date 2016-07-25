@@ -15,9 +15,6 @@ Simple Example
 
 The code:
 ```hy
-(background (rgb 0))
-
-
 (draw (change (cube)
               (no-fill)
               (line-width 4)

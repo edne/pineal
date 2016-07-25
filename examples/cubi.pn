@@ -7,8 +7,6 @@
 (defn turn-z [n] (turn n rotate-z))
 
 
-(background (rgb 0))
-
 (defn cubes-zy [z y]
   (-> (cube)
     (change (scale (amp 2 1.8))

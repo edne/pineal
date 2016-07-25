@@ -102,6 +102,8 @@ void ofApp::draw(){
 	output.allocate(BUFFER_SIZE, BUFFER_SIZE, GL_RGBA);
 	output.begin();
 
+	ofBackground(0);
+
 	camera.begin();
 	try{
 		ofxOscMessage m;

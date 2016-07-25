@@ -3,9 +3,6 @@
               (rotate-fun (-> i (* 2pi) (/ n)))))
 
 
-(background (rgb 0))
-
-
 (defn cerchio [n]
   (change (cube)
           (scale (amp 1 0.5))

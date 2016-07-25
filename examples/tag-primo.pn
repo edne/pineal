@@ -4,9 +4,6 @@
 
 
 
-(background (rgb 0))
-
-
 (defn tag-primo []
   (def font "monaco.ttf")
 
