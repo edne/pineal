@@ -7,6 +7,7 @@ class Vision(object):
 
     template = """
     (require libs.dsl)
+    (import [libs.dsl [*]])
     (--header--)
     (defn --draw-- [] {})
     """

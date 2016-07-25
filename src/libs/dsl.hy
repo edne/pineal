@@ -14,6 +14,9 @@
      (value amp (fn [] (get-osc-f "/amp" 0.0)))
      ))
 
+; To use this file as imported module
+(--header--)
+
 
 (defmacro value [name x]
   "Define a function that return the value and optionally takes a scale and a
@@ -30,17 +33,16 @@
      (-> (~x) (* scale) (+ offset))))
 
 
-(defmacro change [entity &rest actions] `(change_c ~entity [~@actions]))
+(defn change [entity &rest actions] (change_c entity (list actions)))
 
-; TODO: (defmacro varadic ...)
-(defmacro group     [&rest xs] `(group_c     [~@xs]))
-(defmacro compose   [&rest xs] `(compose_c   [~@xs]))
-(defmacro branch    [&rest xs] `(branch_c    [~@xs]))
+(defmacro variadic [name name_c]
+  `(defn ~name [&rest args] (~name_c (list args))))
 
-(defmacro rgb       [&rest xs] `(rgb_c       [~@xs]))
-
-(defmacro scale     [&rest xs] `(scale_c     [~@xs]))
-(defmacro translate [&rest xs] `(translate_c [~@xs]))
+(variadic group     group_c)
+(variadic branch    branch_c)
+(variadic rgb       rgb_c)
+(variadic scale     scale_c)
+(variadic translate translate_c)
 
 
 (defmacro group-for [item-iterator &rest entities]

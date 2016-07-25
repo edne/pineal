@@ -58,3 +58,9 @@
 
 (osc-monitor "/v1" (rgb 1 0 0))
 (monitor (amp) (rgb 0 1 1))
+
+(draw (group (change (cube)
+                     (color (rgb 0.5))
+                     (scale 0.5))
+             (change (cube)
+                     (no-fill))))
