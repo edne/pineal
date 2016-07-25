@@ -1,4 +1,4 @@
-{{ begin_module("primitives") }}
+{{ begin_module("entities") }}
 
 	{{ module.bind("cube", "cube") }}
 	Entity cube(){
