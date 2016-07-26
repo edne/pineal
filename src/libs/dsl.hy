@@ -55,6 +55,10 @@
 (bind-action rotate-x)
 (bind-action rotate-y)
 (bind-action rotate-z)
+(bind-action color)
+(bind-action fill)
+(bind-action no-fill)
+(bind-action line-width)
 
 
 (defn change [entity &rest actions]
