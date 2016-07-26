@@ -10,6 +10,12 @@ const int BUFFER_SIZE = 1366;
 #include <boost/python.hpp>
 namespace py = boost::python;
 
+#include "entity.h"
+#include "action.h"
+#include "value.h"
+#include "color.h"
+
+
 class ofApp : public ofBaseApp{
 	public:
 		ofApp(int argc, char ** argv);
