@@ -71,7 +71,9 @@ void ofApp::update(){
 		string address = m.getAddress();
 
 		if(address == "/run-code"){
-			dsl::colors::setup();
+			ofSetColor(255);
+			ofFill();
+			ofSetLineWidth(1);
 
 			string code = m.getArgAsString(0);
 			try{

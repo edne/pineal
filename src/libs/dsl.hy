@@ -37,12 +37,6 @@
   (entity))
 
 
-(defmacro variadic [name name_c]
-  `(defn ~name [&rest args] (~name_c (list args))))
-
-(variadic rgb       rgb_c)
-
-
 (defmacro bind-action [action]
   `(defn ~action [&rest args]
      (make-action (str '~action) (list args))))
@@ -72,6 +66,10 @@
 (defn cube    []       (make-entity (str "cube")    []))
 (defn polygon [n]      (make-entity (str "polygon") [n]))
 (defn text    [font s] (make-entity (str "text")    [(str font) (str s)]))
+
+(defn rgb    [&rest args] (make-color (str "rgb")    (list args)))
+(defn lerp   [&rest args] (make-color (str "lerp")   (list args)))
+(defn invert [&rest args] (make-color (str "invert") (list args)))
 
 
 (defmacro group-for [item-iterator &rest entities]
