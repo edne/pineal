@@ -63,6 +63,8 @@
                      (color (rgb 0.5))
                      (scale 0.5))
              (change (cube)
+                     (branch-for [i (range 3)]
+                                 (rotate-y i))
                      (no-fill))))
 
 (draw (change (polygon 3)
