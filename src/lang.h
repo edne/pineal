@@ -18,6 +18,10 @@ class Entity{
 			draw = f;
 		}
 
+        void __call__(){
+            draw();
+        }
+
 		void operator()() const{
 			draw();
 		}

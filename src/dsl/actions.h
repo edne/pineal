@@ -1,79 +1,122 @@
 {{ begin_module("actions") }}
 
-	{{ module.bind("hide", "hide") }}
-	Action hide(){
-		return Action([=](Entity& e){
-			return Entity([=](){
-			});
-		});
+	vector<Action> cast_actions_list(py::list py_actions){
+		vector<Action> actions;
+		for(int i = 0; i < py::len(py_actions); i++){
+			py::extract<Action&> extractor(py_actions[i]);
+			if(extractor.check()){
+				Action& action = extractor();
+				actions.push_back(action);
+			}
+		}
+		return actions;
 	}
 
-	{{ module.bind("scale_c", "scale") }}
-	Action scale(py::list args){
-		Value x(args, 0, 1.0);
-		Value y(args, 1, x);
-		Value z(args, 2, x);
+	{{ module.bind("make_action", "make_action") }}
+	Action make_action(string name, py::list args){
 
-		return Action([=](Entity& e){
-			return Entity([=](){
-				ofPushMatrix();
-				ofScale(x(), y(), z());
-				e();
-				ofPopMatrix();
+		if(name=="compose"){
+			vector<Action> actions = cast_actions_list(args);
+
+			return Action([=](Entity& e){
+				for(size_t i = 0; i < actions.size(); i++){
+					e = actions[i](e);
+				}
+				return e;
 			});
-		});
-	}
+		}
 
-	{{ module.bind("translate_c", "translate") }}
-	Action translate(py::list args){
-		Value x(args, 0, 0.0);
-		Value y(args, 1, 0.0);
-		Value z(args, 2, 0.0);
+		if(name=="branch"){
+			vector<Action> actions = cast_actions_list(args);
 
-		return Action([=](Entity& e){
-			return Entity([=](){
-				ofPushMatrix();
-				ofTranslate(x(), y(), z());
-				e();
-				ofPopMatrix();
+			return Action([=](Entity& e){
+				vector<Entity> entities;
+				for(size_t i = 0; i < actions.size(); i++){
+					entities.push_back(actions[i](e));
+				}
+
+				return Entity([=](){
+					for(size_t i = 0; i < entities.size(); i++){
+						entities[i]();
+					}
+				});
 			});
-		});
-	}
+		}
 
-	{{ module.bind("rotate_x", "rotate_x") }}
-	Action rotate_x(double rad){
-		return Action([=](Entity& e){
-			return Entity([=](){
-				ofPushMatrix();
-				ofRotateX(180 * rad / PI);
-				e();
-				ofPopMatrix();
+		if(name=="hide"){
+			return Action([=](Entity& e){
+				return Entity([=](){
+				});
 			});
-		});
-	}
+		}
 
-	{{ module.bind("rotate_y", "rotate_y") }}
-	Action rotate_y(double rad){
-		return Action([=](Entity& e){
-			return Entity([=](){
-				ofPushMatrix();
-				ofRotateY(180 * rad / PI);
-				e();
-				ofPopMatrix();
-			});
-		});
-	}
+		if(name=="scale"){
+			Value x(args, 0, 1.0);
+			Value y(args, 1, x);
+			Value z(args, 2, x);
 
-	{{ module.bind("rotate_z", "rotate_z") }}
-	Action rotate_z(double rad){
-		return Action([=](Entity& e){
-			return Entity([=](){
-				ofPushMatrix();
-				ofRotateZ(180 * rad / PI);
-				e();
-				ofPopMatrix();
+			return Action([=](Entity& e){
+				return Entity([=](){
+					ofPushMatrix();
+					ofScale(x(), y(), z());
+					e();
+					ofPopMatrix();
+				});
 			});
-		});
+		}
+
+		if(name=="translate"){
+			Value x(args, 0, 0.0);
+			Value y(args, 1, 0.0);
+			Value z(args, 2, 0.0);
+
+			return Action([=](Entity& e){
+				return Entity([=](){
+					ofPushMatrix();
+					ofTranslate(x(), y(), z());
+					e();
+					ofPopMatrix();
+				});
+			});
+		}
+
+		if(name=="rotate_x"){
+			Value rad(args, 0, 0.0);
+			return Action([=](Entity& e){
+				return Entity([=](){
+					ofPushMatrix();
+					ofRotateY(180 * rad() / PI);
+					e();
+					ofPopMatrix();
+				});
+			});
+		}
+
+		if(name=="rotate_y"){
+			Value rad(args, 0, 0.0);
+			return Action([=](Entity& e){
+				return Entity([=](){
+					ofPushMatrix();
+					ofRotateY(180 * rad() / PI);
+					e();
+					ofPopMatrix();
+				});
+			});
+		}
+
+		if(name=="rotate_z"){
+			Value rad(args, 0, 0.0);
+			return Action([=](Entity& e){
+				return Entity([=](){
+					ofPushMatrix();
+					ofRotateZ(180 * rad() / PI);
+					e();
+					ofPopMatrix();
+				});
+			});
+		}
+
+		return Action();
 	}
 
 {{ end_module() }}

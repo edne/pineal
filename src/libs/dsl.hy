@@ -33,19 +33,33 @@
      (-> (~x) (* scale) (+ offset))))
 
 
+(defn draw [entity]
+  (entity))
+
+
 (defmacro variadic [name name_c]
   `(defn ~name [&rest args] (~name_c (list args))))
 
-(variadic branch    branch_c)
 (variadic rgb       rgb_c)
-(variadic scale     scale_c)
-(variadic translate translate_c)
-(variadic compose   compose_c)
+
+
+(defmacro bind-action [action]
+  `(defn ~action [&rest args]
+     (make-action (str '~action) (list args))))
+
+(bind-action compose)
+(bind-action branch)
+(bind-action hide)
+(bind-action scale)
+(bind-action translate)
+(bind-action rotate-x)
+(bind-action rotate-y)
+(bind-action rotate-z)
 
 
 (defn change [entity &rest actions]
   (make-entity (str "change")
-               [entity (compose_c (list actions))]))
+               [entity (apply compose actions)]))
 
 (defn group [&rest entities]
   (make-entity (str "group")

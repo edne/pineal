@@ -66,7 +66,8 @@
                      (no-fill))))
 
 (draw (change (polygon 3)
-              (color (rgb 0 1 1 0.2))))
+              (color (rgb 0 1 1 0.2))
+              (rotate-y 2)))
 
 (def font "monaco.ttf")
 (draw (change (text font ":)")
