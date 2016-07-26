@@ -1,6 +1,6 @@
 #include "outApp.h"
 
-outApp::outApp(shared_ptr<ofApp> main){
+outApp::outApp(shared_ptr<Pineal> main){
 	this->main = main;
 }
 

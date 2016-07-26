@@ -1,30 +1,50 @@
-#include "ofApp.h"
+#include "pineal.h"
+
+
+unordered_map<string, float> float_map;
+
+bool exists_float(string name){
+	return float_map.find(name) != float_map.end();
+}
+
+void osc_set_float(string name, float x){
+	float_map[name] = x;
+}
+
+float get_osc_f(string name, float x){
+	if(!exists_float(name)){
+		osc_set_float(name, x);
+	}
+	return float_map[name];
+}
+
 
 namespace dsl{
-    {% for name in py_modules %}
-        #include "dsl/{{ name }}.h"
-    {% endfor %}
-
     BOOST_PYTHON_MODULE(core){
         py::class_<Entity>("Entity")
             .def(py::init<py::object>())
             .def("__call__", &Entity::__call__)
         ;
+		py::def("make_entity", &make_entity);
 
         py::class_<Action>("Action")
             .def("__call__", &Action::__call__)
         ;
+		py::def("make_action", &make_action);
 
         py::class_<Color>("Color");
+		py::def("make_color", &make_color);
+
+		py::def("get_osc_f_c", &get_osc_f);
     }
 }
 
-ofApp::ofApp(int argc, char ** argv){
+Pineal::Pineal(int argc, char ** argv){
 	this->argc = argc;
 	this->argv = argv;
 }
 
-void ofApp::setup(){
+void Pineal::setup(){
 	ofLog() << "Running setup()";
 
 	try{
@@ -32,9 +52,6 @@ void ofApp::setup(){
 		PySys_SetArgv(argc, argv);
 
 		PyImport_AppendInittab("core", &dsl::initcore);
-		{% for name in py_modules %}
-			PyImport_AppendInittab("{{ name }}", &dsl::{{ name }}::init{{ name }});
-		{% endfor %}
 
 		vision = py::import("libs.vision").attr("Vision")();
 	}catch(py::error_already_set){
@@ -60,18 +77,18 @@ void ofApp::setup(){
 	onset.setup();
 	beat.setup();
 
-	ofAddListener(onset.gotOnset, this, &ofApp::onsetEvent);
-	ofAddListener(beat.gotBeat, this, &ofApp::beatEvent);
+	ofAddListener(onset.gotOnset, this, &Pineal::onsetEvent);
+	ofAddListener(beat.gotBeat, this, &Pineal::beatEvent);
 
 	ofSoundStreamSetup(nOutputs, nInputs, this);
 }
 
-void ofApp::exit(){
+void Pineal::exit(){
 	ofSoundStreamStop();
 	ofSoundStreamClose();
 }
 
-void ofApp::audioIn(float * input, int bufferSize, int nChannels){
+void Pineal::audioIn(float * input, int bufferSize, int nChannels){
 	inBuf.allocate(bufferSize, nChannels);
 	for(int i = 0; i < bufferSize * nChannels; i++){
 		inBuf[i] = input[i];
@@ -81,7 +98,7 @@ void ofApp::audioIn(float * input, int bufferSize, int nChannels){
 	beat.audioIn(input, bufferSize, nChannels);
 }
 
-void ofApp::update(){
+void Pineal::update(){
 	while(oscReceiver.hasWaitingMessages()){
 		// get the next message
 		ofxOscMessage m;
@@ -110,7 +127,7 @@ void ofApp::update(){
 		}
 		else{
 			// TODO: type check
-			dsl::osc::set_float(address, m.getArgAsFloat(0));
+			osc_set_float(address, m.getArgAsFloat(0));
 		}
 	}
 
@@ -118,7 +135,7 @@ void ofApp::update(){
 	sendFloat("/time", ofGetElapsedTimef());
 }
 
-void ofApp::draw(){
+void Pineal::draw(){
 	output.allocate(BUFFER_SIZE, BUFFER_SIZE, GL_RGBA);
 	output.begin();
 
@@ -155,7 +172,7 @@ void ofApp::draw(){
 	ofDrawBitmapString(fps, 10, 20);
 }
 
-void ofApp::sendFloat(string name, float x){
+void Pineal::sendFloat(string name, float x){
 	ofxOscMessage msg;
 
 	msg.setAddress(name);
@@ -163,14 +180,14 @@ void ofApp::sendFloat(string name, float x){
 	oscServer.sendMessage(msg, false);
 }
 
-ofTexture ofApp::getTexture(){
+ofTexture Pineal::getTexture(){
 	return output.getTexture();
 }
 
-void ofApp::onsetEvent(float & time){
+void Pineal::onsetEvent(float & time){
 	// TODO: boolean OSC
 }
 
-void ofApp::beatEvent(float & time){
+void Pineal::beatEvent(float & time){
 	// TODO: boolean OSC
 }

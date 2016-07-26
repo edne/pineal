@@ -1,13 +1,9 @@
 (defmacro --header-- []
   "Things to do outside the --draw-- function"
   '(do
-     (import [core [*]])
-
-     {% for name in py_modules %}
-     (import [{{ name }} [*]])
-     {% endfor %}
-
-     (import [math [*]])
+     (import
+       [math [*]]
+       [core [*]])
 
      (def 2pi (* 2 pi))
      (value time (fn [] (get-osc-f "/time" 0.0)))

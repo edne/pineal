@@ -1,4 +1,4 @@
-#include "ofApp.h"
+#include "pineal.h"
 
 Value::Value(){
 	value = 0.0;

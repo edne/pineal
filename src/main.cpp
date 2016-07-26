@@ -1,11 +1,11 @@
 #include "ofMain.h"
 #include "ofAppGLFWWindow.h"
-#include "ofApp.h"
+#include "pineal.h"
 #include "outApp.h"
 
 
 int main(int argc, char ** argv){
-	auto app = make_shared<ofApp>(argc, argv);
+	auto app = make_shared<Pineal>(argc, argv);
 	auto out = make_shared<outApp>(app);
 
 	ofGLFWWindowSettings settings;
