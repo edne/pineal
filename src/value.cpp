@@ -78,12 +78,15 @@ float get_osc_f(string name){
 	return float_map[name];
 }
 
-Value osc_value(string name){
+Value osc_value(string name, py::list args){
+	Value scale(args, 0, 1.0);
+	Value offset(args, 1, 0.0);
+
 	return Value([=](){
 		if(!exists_float(name)){
 			osc_set_float(name, 0.0);
 		}
-		return float_map[name];
+		return float_map[name] * scale() + offset();
 	});
 }
 

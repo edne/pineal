@@ -6,8 +6,8 @@
        [core [*]])
 
      (def 2pi (* 2 pi))
-     (def time (osc_value (str "/time")))
-     (def amp (osc_value (str "/amp")))
+     (def time (osc-value (str "/time") []))
+     (def amp (osc-value (str "/amp") []))
      ))
 
 ; To use this file as imported module
@@ -66,8 +66,8 @@
                    ~iterator)))
 
 
-(defmacro get-osc-f [path]
-  `(get-osc-f_c (str ~path)))
+(defmacro osc [path &rest args]
+  `(osc-value (str ~path) (list ~args)))
 
 
 ;(defmacro beat [n entity pos dur]

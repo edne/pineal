@@ -3,19 +3,20 @@ Values
 ======
 
 
-get-osc-f
----------
+osc
+---
 
 .. code-block:: clj
 
-    (get-osc-f "/some/path" default-value)
+    (osc "/some/path")
+    (osc "/some/path" scale)
+    (osc "/some/path" scale offset)
 
 Subscribe for a given OSC path and return the received float values,
-if none give the default.
+eventually scaled and translated.
 
 **TODO:**
  - Type checking on OSC inputs.
- - Sweeter syntax.
 
 
 time
@@ -27,7 +28,7 @@ time
     (time scale)
     (time scale offset)
 
-Return time in seconds, eventually scaled and translated.
+Return time in seconds.
 
 The value is taken from the `/time` OSC path.
 
@@ -41,7 +42,7 @@ amp
     (amp scale)
     (amp scale offset)
 
-Return audio amplitude, eventually scaled and translated.
+Return audio amplitude.
 
 The value is taken from the `/amp` OSC path.
 

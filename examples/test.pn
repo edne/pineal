@@ -40,25 +40,6 @@
      draw))
 
 
-(defn osc-monitor [path c]
-  (draw (change (polygon 30)
-                (scale (get-osc-f path))
-                (color c)
-                (line-width 4)
-                (no-fill)
-                )))
-
-(defn monitor [value c]
-  (draw (change (polygon 30)
-                (scale value)
-                (color c)
-                (line-width 4)
-                (no-fill)
-                )))
-
-(osc-monitor "/v1" (rgb 1 0 0))
-(monitor (amp) (rgb 0 1 1))
-
 (draw (group (change (cube)
                      (color (rgb 0.5))
                      (scale 0.5))
@@ -77,5 +58,5 @@
 (def font "monaco.ttf")
 (draw (change (text font ":)")
               (scale 0.1)
-              (rotate-y (time (Value 1.5)))
+              (rotate-y (osc "/time" 2))
               (translate 0 0 (Value 0.5))))

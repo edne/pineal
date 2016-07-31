@@ -71,8 +71,7 @@ Action make_action(string name, py::list args);
 Color make_color(string name, py::list args);
 
 void osc_set_float(string name, float x);
-float get_osc_f(string name);
-Value osc_value(string path);
+Value osc_value(string path, py::list args);
 
 
 class Pineal : public ofBaseApp{
