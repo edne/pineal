@@ -40,14 +40,19 @@ class Value{
 	public:
 		Value();
 		Value(float x);
+		Value(function<float()> f);
 		Value(py::list args, int index, Value default_value);
 		Value(py::list args, int index, float default_value) :
 			Value(args, index, Value(default_value)) {
 		};
+
+		float __call__();
+		float __call__scale(float scale);
+		float __call__scale_offset(float scale, float offset);
 		float operator()() const;
 
     private:
-		float value;
+		function<float()> getter;
 };
 
 class Color{
@@ -61,6 +66,10 @@ class Color{
 Entity make_entity(string name, py::list args);
 Action make_action(string name, py::list args);
 Color make_color(string name, py::list args);
+
+void osc_set_float(string name, float x);
+float get_osc_f(string name);
+Value osc_value(string path);
 
 
 class Pineal : public ofBaseApp{

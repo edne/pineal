@@ -6,27 +6,12 @@
        [core [*]])
 
      (def 2pi (* 2 pi))
-     (value time (fn [] (get-osc-f "/time" 0.0)))
-     (value amp (fn [] (get-osc-f "/amp" 0.0)))
+     (def time (osc_value (str "/time")))
+     (def amp (osc_value (str "/amp")))
      ))
 
 ; To use this file as imported module
 (--header--)
-
-
-(defmacro value [name x]
-  "Define a function that return the value and optionally takes a scale and a
-  offset factor"
-  `(defn ~name [&rest args]
-     (setv [scale offset] [1 0])
-
-     (when (> (len args) 0)
-       (setv scale (get args 0)))
-
-     (when (> (len args) 1)
-       (setv offset (get args 1)))
-
-     (-> (~x) (* scale) (+ offset))))
 
 
 (defn draw [entity]
@@ -81,8 +66,8 @@
                    ~iterator)))
 
 
-(defmacro get-osc-f [path default]
-  `(get-osc-f_c (str ~path) ~default))
+(defmacro get-osc-f [path]
+  `(get-osc-f_c (str ~path)))
 
 
 ;(defmacro beat [n entity pos dur]

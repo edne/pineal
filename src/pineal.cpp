@@ -1,24 +1,6 @@
 #include "pineal.h"
 
 
-unordered_map<string, float> float_map;
-
-bool exists_float(string name){
-	return float_map.find(name) != float_map.end();
-}
-
-void osc_set_float(string name, float x){
-	float_map[name] = x;
-}
-
-float get_osc_f(string name, float x){
-	if(!exists_float(name)){
-		osc_set_float(name, x);
-	}
-	return float_map[name];
-}
-
-
 namespace dsl{
     BOOST_PYTHON_MODULE(core){
         py::class_<Entity>("Entity")
@@ -35,7 +17,14 @@ namespace dsl{
         py::class_<Color>("Color");
 		py::def("make_color", &make_color);
 
+        py::class_<Value>("Value")
+            .def(py::init<float>())
+            .def("__call__", &Value::__call__)
+            .def("__call__", &Value::__call__scale)
+            .def("__call__", &Value::__call__scale_offset)
+        ;
 		py::def("get_osc_f_c", &get_osc_f);
+		py::def("osc_value", &osc_value);
     }
 }
 

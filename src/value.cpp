@@ -1,11 +1,15 @@
 #include "pineal.h"
 
 Value::Value(){
-	value = 0.0;
+	getter = [](){ return 0.0; };
 }
 
 Value::Value(float x){
-	value = x;
+	getter = [=](){ return x; };
+}
+
+Value::Value(function<float()> f){
+	getter = f;
 }
 
 Value::Value(py::list args, int index, Value default_value){
@@ -14,16 +18,56 @@ Value::Value(py::list args, int index, Value default_value){
 
 		if(extractor.check()){
 			Value& s = extractor();
-			value = s.value;
+			getter = s.getter;
 		}else{
-			value = py::extract<float>(args[index]);
+			float value = py::extract<float>(args[index]);
+			getter = [=](){ return value; };
 		}
 	}else{
-		value = default_value.value;
+		getter = default_value.getter;
 	}
 }
 
+float Value::__call__(){
+	return getter();
+}
+
+float Value::__call__scale(float scale){
+	return getter() * scale;
+}
+
+float Value::__call__scale_offset(float scale, float offset){
+	return getter() * scale + offset;
+}
+
 float Value::operator()() const{
-	return value;
+	return getter();
+}
+
+
+unordered_map<string, float> float_map;
+
+bool exists_float(string name){
+	return float_map.find(name) != float_map.end();
+}
+
+void osc_set_float(string name, float x){
+	float_map[name] = x;
+}
+
+float get_osc_f(string name){
+	if(!exists_float(name)){
+		osc_set_float(name, 0.0);
+	}
+	return float_map[name];
+}
+
+Value osc_value(string name){
+	return Value([=](){
+		if(!exists_float(name)){
+			osc_set_float(name, 0.0);
+		}
+		return float_map[name];
+	});
 }
 
