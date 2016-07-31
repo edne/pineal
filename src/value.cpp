@@ -28,16 +28,32 @@ Value::Value(py::list args, int index, Value default_value){
 	}
 }
 
+Value Value::__call__scale(float scale){
+	return Value([=](){
+		return getter() * scale;
+	});
+}
+
+Value Value::__call__scale_offset(float scale, float offset){
+	return Value([=](){
+		return getter() * scale + offset;
+	});
+}
+
+Value Value::__call__scale_value(Value scale){
+	return Value([=](){
+		return getter() * scale();
+	});
+}
+
+Value Value::__call__scale_offset_value(Value scale, Value offset){
+	return Value([=](){
+		return getter() * scale() + offset();
+	});
+}
+
 float Value::__call__(){
 	return getter();
-}
-
-float Value::__call__scale(float scale){
-	return getter() * scale;
-}
-
-float Value::__call__scale_offset(float scale, float offset){
-	return getter() * scale + offset;
 }
 
 float Value::operator()() const{

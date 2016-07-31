@@ -46,9 +46,12 @@ class Value{
 			Value(args, index, Value(default_value)) {
 		};
 
+		Value __call__scale(float scale);
+		Value __call__scale_offset(float scale, float offset);
+		Value __call__scale_value(Value scale);
+		Value __call__scale_offset_value(Value scale, Value offset);
+
 		float __call__();
-		float __call__scale(float scale);
-		float __call__scale_offset(float scale, float offset);
 		float operator()() const;
 
     private:

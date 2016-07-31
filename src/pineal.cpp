@@ -22,6 +22,8 @@ namespace dsl{
             .def("__call__", &Value::__call__)
             .def("__call__", &Value::__call__scale)
             .def("__call__", &Value::__call__scale_offset)
+            .def("__call__", &Value::__call__scale_value)
+            .def("__call__", &Value::__call__scale_offset_value)
         ;
 		py::def("get_osc_f_c", &get_osc_f);
 		py::def("osc_value", &osc_value);
