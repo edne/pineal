@@ -32,6 +32,9 @@ namespace dsl{
 Pineal::Pineal(int argc, char ** argv){
 	this->argc = argc;
 	this->argv = argv;
+
+	ofGLFWWindowSettings settings;
+	ofWindow = ofCreateWindow(settings);
 }
 
 void Pineal::setup(){
@@ -190,16 +193,20 @@ void Ear::beatEvent(float & time){
 	// TODO: boolean OSC
 }
 
-outApp::outApp(shared_ptr<Pineal> main){
-	this->main = main;
+View::View(shared_ptr<Pineal> pineal){
+	this->pineal = pineal;
+
+	ofGLFWWindowSettings settings;
+	settings.shareContextWith = pineal->ofWindow;
+	ofWindow = ofCreateWindow(settings);
 }
 
-void outApp::draw(){
+void View::draw(){
 	int w = ofGetWidth();
 	int h = ofGetHeight();
 	int side = max(w, h);
-	main->getTexture().draw((w - side) / 2,
-	                        (h - side) / 2,
-	                        side, side);
+	pineal->getTexture().draw((w - side) / 2,
+	                          (h - side) / 2,
+	                          side, side);
 }
 

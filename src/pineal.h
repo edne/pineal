@@ -101,6 +101,8 @@ class Pineal : public ofBaseApp{
 
 		ofTexture getTexture();
 
+		shared_ptr<ofAppBaseWindow> ofWindow;
+
 	private:
 		Ear ear;
 
@@ -117,12 +119,14 @@ class Pineal : public ofBaseApp{
 		ofFbo master;
 };
 
-class outApp : public ofBaseApp{
+class View : public ofBaseApp{
 	public:
-		outApp(shared_ptr<Pineal> main);
+		View(shared_ptr<Pineal> main);
 		void draw();
 
+		shared_ptr<ofAppBaseWindow> ofWindow;
+
 	private:
-		shared_ptr<Pineal> main;
+		shared_ptr<Pineal> pineal;
 };
 
