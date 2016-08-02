@@ -59,33 +59,8 @@ void Pineal::setup(){
 
 	oscReceiver.setup(7172);
 	oscClient.setup("localhost", 7173);  // frontend address, TODO: read config
-	oscServer.setup("localhost", 7172);  // self
 
-	int nOutputs = 2;
-	int nInputs = 2;
-
-	onset.setup();
-	beat.setup();
-
-	ofAddListener(onset.gotOnset, this, &Pineal::onsetEvent);
-	ofAddListener(beat.gotBeat, this, &Pineal::beatEvent);
-
-	ofSoundStreamSetup(nOutputs, nInputs, this);
-}
-
-void Pineal::exit(){
-	ofSoundStreamStop();
-	ofSoundStreamClose();
-}
-
-void Pineal::audioIn(float * input, int bufferSize, int nChannels){
-	inBuf.allocate(bufferSize, nChannels);
-	for(int i = 0; i < bufferSize * nChannels; i++){
-		inBuf[i] = input[i];
-	}
-
-	onset.audioIn(input, bufferSize, nChannels);
-	beat.audioIn(input, bufferSize, nChannels);
+	ear.setup();
 }
 
 void Pineal::update(){
@@ -121,8 +96,12 @@ void Pineal::update(){
 		}
 	}
 
-	sendFloat("/amp", inBuf.getRMSAmplitude());
-	sendFloat("/time", ofGetElapsedTimef());
+	ear.update();
+}
+
+void Pineal::exit(){
+	ofSoundStreamStop();
+	ofSoundStreamClose();
 }
 
 void Pineal::draw(){
@@ -162,7 +141,40 @@ void Pineal::draw(){
 	ofDrawBitmapString(fps, 10, 20);
 }
 
-void Pineal::sendFloat(string name, float x){
+ofTexture Pineal::getTexture(){
+	return output.getTexture();
+}
+
+void Ear::setup(){
+	oscServer.setup("localhost", 7172);
+
+	onset.setup();
+	beat.setup();
+
+	ofAddListener(onset.gotOnset, this, &Ear::onsetEvent);
+	ofAddListener(beat.gotBeat, this, &Ear::beatEvent);
+
+	int nOutputs = 2;
+	int nInputs = 2;
+	ofSoundStreamSetup(nOutputs, nInputs, this);
+}
+
+void Ear::update(){
+	sendFloat("/amp", inBuf.getRMSAmplitude());
+	sendFloat("/time", ofGetElapsedTimef());
+}
+
+void Ear::audioIn(float * input, int bufferSize, int nChannels){
+	inBuf.allocate(bufferSize, nChannels);
+	for(int i = 0; i < bufferSize * nChannels; i++){
+		inBuf[i] = input[i];
+	}
+
+	onset.audioIn(input, bufferSize, nChannels);
+	beat.audioIn(input, bufferSize, nChannels);
+}
+
+void Ear::sendFloat(string name, float x){
 	ofxOscMessage msg;
 
 	msg.setAddress(name);
@@ -170,14 +182,24 @@ void Pineal::sendFloat(string name, float x){
 	oscServer.sendMessage(msg, false);
 }
 
-ofTexture Pineal::getTexture(){
-	return output.getTexture();
-}
-
-void Pineal::onsetEvent(float & time){
+void Ear::onsetEvent(float & time){
 	// TODO: boolean OSC
 }
 
-void Pineal::beatEvent(float & time){
+void Ear::beatEvent(float & time){
 	// TODO: boolean OSC
 }
+
+outApp::outApp(shared_ptr<Pineal> main){
+	this->main = main;
+}
+
+void outApp::draw(){
+	int w = ofGetWidth();
+	int h = ofGetHeight();
+	int side = max(w, h);
+	main->getTexture().draw((w - side) / 2,
+	                        (h - side) / 2,
+	                        side, side);
+}
+

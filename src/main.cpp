@@ -1,7 +1,6 @@
 #include "ofMain.h"
 #include "ofAppGLFWWindow.h"
 #include "pineal.h"
-#include "outApp.h"
 
 
 int main(int argc, char ** argv){

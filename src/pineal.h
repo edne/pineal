@@ -73,6 +73,23 @@ Color make_color(string name, py::list args);
 void osc_set_float(string name, float x);
 Value osc_value(string path, py::list args);
 
+class Ear : public ofBaseApp{
+	public:
+		void setup();
+		void update();
+
+        void sendFloat(string name, float x);
+		void audioIn(float * input, int bufferSize, int nChannels);
+
+		void onsetEvent(float & time);
+		void beatEvent(float & time);
+
+	private:
+		ofxOscSender oscServer;
+		ofSoundBuffer inBuf;
+		ofxAubioOnset onset;
+		ofxAubioBeat beat;
+};
 
 class Pineal : public ofBaseApp{
 	public:
@@ -84,13 +101,9 @@ class Pineal : public ofBaseApp{
 
 		ofTexture getTexture();
 
-        void sendFloat(string name, float x);
-		void audioIn(float * input, int bufferSize, int nChannels);
-
-		void onsetEvent(float & time);
-		void beatEvent(float & time);
-
 	private:
+		Ear ear;
+
 		int argc;
 		char ** argv;
 
@@ -98,13 +111,18 @@ class Pineal : public ofBaseApp{
 
 		ofxOscReceiver oscReceiver;
 		ofxOscSender oscClient;
-		ofxOscSender oscServer;
 
 		py::object vision;
 		ofEasyCam camera;
 		ofFbo master;
-
-		ofSoundBuffer inBuf;
-		ofxAubioOnset onset;
-		ofxAubioBeat beat;
 };
+
+class outApp : public ofBaseApp{
+	public:
+		outApp(shared_ptr<Pineal> main);
+		void draw();
+
+	private:
+		shared_ptr<Pineal> main;
+};
+
