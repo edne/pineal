@@ -4,14 +4,14 @@
 
 
 int main(int argc, char ** argv){
-	auto app = make_shared<Pineal>(argc, argv);
-	auto out = make_shared<outApp>(app);
+	shared_ptr<Pineal> app = make_shared<Pineal>(argc, argv);
+	shared_ptr<outApp> out = make_shared<outApp>(app);
 
 	ofGLFWWindowSettings settings;
-	auto appWindow = ofCreateWindow(settings);
+	shared_ptr<ofAppBaseWindow> appWindow = ofCreateWindow(settings);
 
 	settings.shareContextWith = appWindow;
-	auto outWindow = ofCreateWindow(settings);
+	shared_ptr<ofAppBaseWindow> outWindow = ofCreateWindow(settings);
 
 	ofRunApp(appWindow, app);
 	ofRunApp(outWindow, out);
