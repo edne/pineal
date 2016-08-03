@@ -80,7 +80,6 @@ class Ear : public ofBaseApp{
 
         void sendFloat(string name, float x);
 		void audioIn(float * input, int bufferSize, int nChannels);
-
 		void onsetEvent(float & time);
 		void beatEvent(float & time);
 
@@ -98,10 +97,9 @@ class Pineal : public ofBaseApp{
 		void update();
 		void exit();
 		void draw();
+		void drawOut(ofEventArgs & args);
 
-		ofTexture getTexture();
-
-		shared_ptr<ofAppBaseWindow> ofWindow;
+		shared_ptr<ofAppBaseWindow> mainWindow;
 
 	private:
 		Ear ear;
@@ -110,6 +108,7 @@ class Pineal : public ofBaseApp{
 		char ** argv;
 
 		ofFbo output;
+		shared_ptr<ofAppBaseWindow> outWindow;
 
 		ofxOscReceiver oscReceiver;
 		ofxOscSender oscClient;
@@ -118,15 +117,3 @@ class Pineal : public ofBaseApp{
 		ofEasyCam camera;
 		ofFbo master;
 };
-
-class View : public ofBaseApp{
-	public:
-		View(shared_ptr<Pineal> main);
-		void draw();
-
-		shared_ptr<ofAppBaseWindow> ofWindow;
-
-	private:
-		shared_ptr<Pineal> pineal;
-};
-

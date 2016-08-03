@@ -34,7 +34,12 @@ Pineal::Pineal(int argc, char ** argv){
 	this->argv = argv;
 
 	ofGLFWWindowSettings settings;
-	ofWindow = ofCreateWindow(settings);
+	mainWindow = ofCreateWindow(settings);
+	// mainWindow->setVerticalSync(false);
+
+	settings.shareContextWith = mainWindow;
+	outWindow = ofCreateWindow(settings);
+	ofAddListener(outWindow->events().draw, this, &Pineal::drawOut);
 }
 
 void Pineal::setup(){
@@ -51,7 +56,7 @@ void Pineal::setup(){
 		PyErr_Print();
 	}
 
-	ofSetVerticalSync(true);
+	// ofSetVerticalSync(true);
 	ofEnableDepthTest();
 	ofEnableSmoothing();
 
@@ -135,17 +140,22 @@ void Pineal::draw(){
 	int w = ofGetWidth();
 	int h = ofGetHeight();
 	int side = max(w, h);
-	getTexture().draw((w - side) / 2,
-	                  (h - side) / 2,
-	                  side, side);
+	output.getTexture().draw((w - side) / 2,
+	                         (h - side) / 2,
+	                         side, side);
 
 	string fps = "FPS: " + ofToString(ofGetFrameRate());
 	ofSetColor(255);
 	ofDrawBitmapString(fps, 10, 20);
 }
 
-ofTexture Pineal::getTexture(){
-	return output.getTexture();
+void Pineal::drawOut(ofEventArgs & args){
+	int w = ofGetWidth();
+	int h = ofGetHeight();
+	int side = max(w, h);
+	output.getTexture().draw((w - side) / 2,
+	                         (h - side) / 2,
+	                         side, side);
 }
 
 void Ear::setup(){
@@ -192,21 +202,3 @@ void Ear::onsetEvent(float & time){
 void Ear::beatEvent(float & time){
 	// TODO: boolean OSC
 }
-
-View::View(shared_ptr<Pineal> pineal){
-	this->pineal = pineal;
-
-	ofGLFWWindowSettings settings;
-	settings.shareContextWith = pineal->ofWindow;
-	ofWindow = ofCreateWindow(settings);
-}
-
-void View::draw(){
-	int w = ofGetWidth();
-	int h = ofGetHeight();
-	int side = max(w, h);
-	pineal->getTexture().draw((w - side) / 2,
-	                          (h - side) / 2,
-	                          side, side);
-}
-
