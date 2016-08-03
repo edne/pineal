@@ -56,6 +56,26 @@ Action fill_status(bool status){
 	});
 }
 
+Action render(int size){
+	ofFbo fbo;
+	fbo.allocate(size, size, GL_RGBA);
+
+	return Action([=](Entity& e){
+		fbo.begin();
+		e();
+		fbo.end();
+
+		return Entity([=](){
+			int w = ofGetWidth();
+			int h = ofGetHeight();
+			int side = max(w, h);
+			fbo.getTexture().draw((w - side) / 2,
+			                      (h - side) / 2,
+			                      side, side);
+		});
+	});
+}
+
 Action make_action(string name, py::list args){
 
 	if(name=="compose"){

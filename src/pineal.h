@@ -5,8 +5,6 @@
 #include "ofxOsc.h"
 #include "ofxAubio.h"
 
-const int BUFFER_SIZE = 1366;
-
 #include <boost/python.hpp>
 namespace py = boost::python;
 
@@ -66,6 +64,8 @@ class Color{
 		ofColor c;
 };
 
+Action render(int size);
+
 Entity make_entity(string name, py::list args);
 Action make_action(string name, py::list args);
 Color make_color(string name, py::list args);
@@ -107,7 +107,8 @@ class Pineal : public ofBaseApp{
 		int argc;
 		char ** argv;
 
-		ofFbo output;
+		Entity rendered;
+
 		shared_ptr<ofAppBaseWindow> outWindow;
 
 		ofxOscReceiver oscReceiver;

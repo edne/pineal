@@ -113,36 +113,31 @@ void Pineal::exit(){
 }
 
 void Pineal::draw(){
-	output.allocate(BUFFER_SIZE, BUFFER_SIZE, GL_RGBA);
-	output.begin();
+	Entity e([=](){
+		ofBackground(0);
 
-	ofBackground(0);
-
-	camera.begin();
-	try{
-		ofxOscMessage m;
-		if(!vision.attr("draw")()){
-			const char* error_msg = py::extract<const char*>(vision.attr("last_error"));
-			m.addStringArg(error_msg);
-			m.setAddress("/status/error");
-		}else{
+		camera.begin();
+		try{
 			ofxOscMessage m;
-			m.setAddress("/status/working");
+			if(!vision.attr("draw")()){
+				const char* error_msg = py::extract<const char*>(vision.attr("last_error"));
+				m.addStringArg(error_msg);
+				m.setAddress("/status/error");
+			}else{
+				ofxOscMessage m;
+				m.setAddress("/status/working");
+			}
+			oscClient.sendMessage(m, false);
+		}catch(py::error_already_set){
+			PyErr_Print();
 		}
-		oscClient.sendMessage(m, false);
-	}catch(py::error_already_set){
-		PyErr_Print();
-	}
-	camera.end();
+		camera.end();
+	});
 
-	output.end();
+	int buffer_size = 1366;
+	rendered = render(buffer_size)(e);
 
-	int w = ofGetWidth();
-	int h = ofGetHeight();
-	int side = max(w, h);
-	output.getTexture().draw((w - side) / 2,
-	                         (h - side) / 2,
-	                         side, side);
+	rendered();
 
 	string fps = "FPS: " + ofToString(ofGetFrameRate());
 	ofSetColor(255);
@@ -150,12 +145,7 @@ void Pineal::draw(){
 }
 
 void Pineal::drawOut(ofEventArgs & args){
-	int w = ofGetWidth();
-	int h = ofGetHeight();
-	int side = max(w, h);
-	output.getTexture().draw((w - side) / 2,
-	                         (h - side) / 2,
-	                         side, side);
+	rendered();
 }
 
 void Ear::setup(){
