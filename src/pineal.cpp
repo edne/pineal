@@ -69,6 +69,30 @@ void Pineal::setup(){
 	oscClient.setup("localhost", 7173);  // frontend address, TODO: read config
 
 	ear.setup();
+
+	drawing = Entity([=](){
+		camera.begin();
+
+		ofBackground(0);
+		ofSetColor(255);
+		ofFill();
+		ofSetLineWidth(1);
+		try{
+			ofxOscMessage m;
+			if(!vision.attr("draw")()){
+				const char* error_msg = py::extract<const char*>(vision.attr("last_error"));
+				m.addStringArg(error_msg);
+				m.setAddress("/status/error");
+			}else{
+				ofxOscMessage m;
+				m.setAddress("/status/working");
+			}
+			oscClient.sendMessage(m, false);
+		}catch(py::error_already_set){
+			PyErr_Print();
+		}
+		camera.end();
+	});
 }
 
 void Pineal::update(){
@@ -79,10 +103,6 @@ void Pineal::update(){
 		string address = m.getAddress();
 
 		if(address == "/run-code"){
-			ofSetColor(255);
-			ofFill();
-			ofSetLineWidth(1);
-
 			string code = m.getArgAsString(0);
 			try{
 				vision.attr("update")(code);
@@ -103,7 +123,6 @@ void Pineal::update(){
 			osc_set_float(address, m.getArgAsFloat(0));
 		}
 	}
-
 	ear.update();
 }
 
@@ -113,29 +132,8 @@ void Pineal::exit(){
 }
 
 void Pineal::draw(){
-	Entity e([=](){
-		ofBackground(0);
-
-		camera.begin();
-		try{
-			ofxOscMessage m;
-			if(!vision.attr("draw")()){
-				const char* error_msg = py::extract<const char*>(vision.attr("last_error"));
-				m.addStringArg(error_msg);
-				m.setAddress("/status/error");
-			}else{
-				ofxOscMessage m;
-				m.setAddress("/status/working");
-			}
-			oscClient.sendMessage(m, false);
-		}catch(py::error_already_set){
-			PyErr_Print();
-		}
-		camera.end();
-	});
-
 	int buffer_size = 1366;
-	rendered = render(buffer_size)(e);
+	rendered = render(buffer_size)(drawing);
 
 	rendered();
 
