@@ -16,29 +16,39 @@ def hy_eval_code(source, namespace):
     eval(code, namespace)
 
 
-class Vision(object):
-    "Handle the compilation and the drawing of DSL code"
-
+def code_to_entity(source):
+    "Get global group from code"
     template = """
     (require libs.dsl)
     (import [libs.dsl [*]])
     (--header--)
-    (defn --draw-- [] {})
-    """
 
+    (setv global-entities [])
+
+    {}
+
+    (setv global-group (make-entity (str "group")
+                                    global-entities))
+    """
+    ns = {}
+    source = template.format(source)
+    hy_eval_code(source, ns)
+    return ns["global_group"]
+
+
+class Vision(object):
+    "Handle the compilation and the drawing of DSL code"
     def __init__(self):
         "Create new vision"
         self.history = []
-        self.ns = {}
         self.last_error = ""
         self.update("")
 
     def update(self, code):
         "Update with new code"
-        code = self.template.format(code)
         try:
-            hy_eval_code(code, self.ns)
-            self.history.append(code)
+            self.entity = code_to_entity(code)
+            self.history.append(self.entity)
         except Exception, e:
             self.handle_error(e)
 
@@ -46,18 +56,18 @@ class Vision(object):
         "Restore old working code"
         if self.history:
             try:
-                hy_eval_code(self.history[-1], self.ns)
+                self.entity = self.history[-1]
             except Exception, e:
                 self.handle_error(e)
 
     def draw(self):
         "Drawing function, if there is an error return False"
         try:
-            self.ns["__draw__"]()
+            self.entity()
             return True
         except Exception as e:
             if self.handle_error(e):
-                self.ns["__draw__"]()
+                self.entity()
             else:
                 self.update("")
             return False

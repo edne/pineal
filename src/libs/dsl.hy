@@ -14,8 +14,8 @@
 (--header--)
 
 
-(defn draw [entity]
-  (entity))
+(defmacro draw [entity]
+  `(.append global-entities ~entity))
 
 
 (defmacro bind-action [action]
