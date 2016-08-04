@@ -45,16 +45,9 @@ Pineal::Pineal(int argc, char ** argv){
 void Pineal::setup(){
 	ofLog() << "Running setup()";
 
-	try{
-		Py_Initialize();
-		PySys_SetArgv(argc, argv);
-
-		PyImport_AppendInittab("core", &dsl::initcore);
-
-		vision = py::import("libs.vision").attr("Vision")();
-	}catch(py::error_already_set){
-		PyErr_Print();
-	}
+	Py_Initialize();
+	PySys_SetArgv(argc, argv);
+	PyImport_AppendInittab("core", &dsl::initcore);
 
 	// ofSetVerticalSync(true);
 	ofEnableDepthTest();
@@ -69,30 +62,6 @@ void Pineal::setup(){
 	oscClient.setup("localhost", 7173);  // frontend address, TODO: read config
 
 	ear.setup();
-
-	drawing = Entity([=](){
-		camera.begin();
-
-		ofBackground(0);
-		ofSetColor(255);
-		ofFill();
-		ofSetLineWidth(1);
-		try{
-			ofxOscMessage m;
-			if(!vision.attr("draw")()){
-				const char* error_msg = py::extract<const char*>(vision.attr("last_error"));
-				m.addStringArg(error_msg);
-				m.setAddress("/status/error");
-			}else{
-				ofxOscMessage m;
-				m.setAddress("/status/working");
-			}
-			oscClient.sendMessage(m, false);
-		}catch(py::error_already_set){
-			PyErr_Print();
-		}
-		camera.end();
-	});
 }
 
 void Pineal::update(){
@@ -104,11 +73,14 @@ void Pineal::update(){
 
 		if(address == "/run-code"){
 			string code = m.getArgAsString(0);
-			try{
-				vision.attr("update")(code);
-			}catch(py::error_already_set){
-				PyErr_Print();
-			}
+
+			py::object vision;
+			vision =  py::import("libs.vision").attr("Vision")();
+
+			vision.attr("update")(code);
+			drawing = Entity([=](){
+				vision.attr("draw")();
+			});
 		}
 		else if(address == "/ping"){
 			ofxOscMessage m;
@@ -132,8 +104,21 @@ void Pineal::exit(){
 }
 
 void Pineal::draw(){
+	Entity e([=](){
+		camera.begin();
+
+		ofBackground(0);
+		ofSetColor(255);
+		ofFill();
+		ofSetLineWidth(1);
+
+		drawing();
+
+		camera.end();
+	});
+
 	int buffer_size = 1366;
-	rendered = render(buffer_size)(drawing);
+	rendered = render(buffer_size)(e);
 
 	rendered();
 

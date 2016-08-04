@@ -115,7 +115,6 @@ class Pineal : public ofBaseApp{
 		ofxOscReceiver oscReceiver;
 		ofxOscSender oscClient;
 
-		py::object vision;
 		ofEasyCam camera;
 		ofFbo master;
 };

@@ -95,6 +95,7 @@ def handle_osc(path, msg):
         state.server_errors = True
 
     if path == "/status/working":
+        logger.info("/working received")
         state.server_errors = False
 
 
