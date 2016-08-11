@@ -62,6 +62,7 @@ void Pineal::setup(){
 	oscClient.setup("localhost", 7173);  // frontend address, TODO: read config
 
 	ear.setup();
+	code_to_entity = py::import("libs.translate").attr("Translator")();
 }
 
 void Pineal::update(){
@@ -73,14 +74,7 @@ void Pineal::update(){
 
 		if(address == "/run-code"){
 			string code = m.getArgAsString(0);
-
-			py::object vision;
-			vision =  py::import("libs.vision").attr("Vision")();
-
-			vision.attr("update")(code);
-			drawing = Entity([=](){
-				vision.attr("draw")();
-			});
+			drawing = code_to_entity(code);
 		}
 		else if(address == "/ping"){
 			ofxOscMessage m;

@@ -103,6 +103,7 @@ class Pineal : public ofBaseApp{
 
 	private:
 		Ear ear;
+		py::object code_to_entity;
 
 		int argc;
 		char ** argv;
