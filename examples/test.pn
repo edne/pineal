@@ -56,7 +56,7 @@
 
 
 (def font "monaco.ttf")
-(draw (change (text font ":)")
+(draw (change (osc-text font "/text")
               (scale 0.1)
               (rotate-y (osc "/time" 2))
               (translate 0 0 (Value 0.5))))

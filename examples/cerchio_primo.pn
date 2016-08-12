@@ -1,0 +1,18 @@
+(defn turn [n rotate-fun]
+  (branch-for [i (range n)]
+              (rotate-fun (-> i (* 2pi) (/ n)))))
+
+
+(defn cerchio [n]
+  (change (cube)
+          (scale 0.6)
+          (translate 0.5 0 0)
+          (line-width 2)
+          (no-fill)
+          (color (rgb 1 0.5))
+          (line-width 4)
+          (turn n rotate-z)
+          ))
+
+
+(draw (cerchio 16))

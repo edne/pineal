@@ -62,6 +62,7 @@ float Value::operator()() const{
 
 
 unordered_map<string, float> float_map;
+unordered_map<string, string> string_map;
 
 bool exists_float(string name){
 	return float_map.find(name) != float_map.end();
@@ -71,11 +72,19 @@ void osc_set_float(string name, float x){
 	float_map[name] = x;
 }
 
-float get_osc_f(string name){
-	if(!exists_float(name)){
-		osc_set_float(name, 0.0);
+bool exists_string(string name){
+	return string_map.find(name) != string_map.end();
+}
+
+void osc_set_string(string name, string x){
+	string_map[name] = x;
+}
+
+string osc_get_string(string name){
+	if(!exists_string(name)){
+		osc_set_string(name, "");
 	}
-	return float_map[name];
+	return string_map[name];
 }
 
 Value osc_value(string name, py::list args){

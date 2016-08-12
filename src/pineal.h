@@ -71,6 +71,8 @@ Action make_action(string name, py::list args);
 Color make_color(string name, py::list args);
 
 void osc_set_float(string name, float x);
+void osc_set_string(string name, string x);
+string osc_get_string(string name);
 Value osc_value(string path, py::list args);
 
 class Ear : public ofBaseApp{
