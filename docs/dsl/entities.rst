@@ -37,3 +37,12 @@ data folder.
 
     (text "monaco.ttf" "Some Text")
 
+
+osc-text
+--------
+
+.. code-block:: clj
+
+    (osc-text font "/some/path")
+
+Like `(text)` but takes the text from an OSC path.

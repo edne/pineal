@@ -86,7 +86,12 @@ void Pineal::update(){
 		}
 		else{
 			// TODO: type check
-			osc_set_float(address, m.getArgAsFloat(0));
+			string type = m.getArgTypeName(0);
+			if(type=="f"){
+				osc_set_float(address, m.getArgAsFloat(0));
+			}else if(type=="s"){
+				osc_set_string(address, m.getArgAsString(0));
+			}
 		}
 	}
 	ear.update();

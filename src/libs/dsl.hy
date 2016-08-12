@@ -44,9 +44,10 @@
   (make-entity (str "group")
                (list entities)))
 
-(defn cube    []       (make-entity (str "cube")    []))
-(defn polygon [n]      (make-entity (str "polygon") [n]))
-(defn text    [font s] (make-entity (str "text")    [(str font) (str s)]))
+(defn cube     []       (make-entity (str "cube")     []))
+(defn polygon  [n]      (make-entity (str "polygon")  [n]))
+(defn text     [font s] (make-entity (str "text")     [(str font) (str s)]))
+(defn osc-text [font s] (make-entity (str "osc-text") [(str font) (str s)]))
 
 (defn rgb    [&rest args] (make-color (str "rgb")    (list args)))
 (defn lerp   [&rest args] (make-color (str "lerp")   (list args)))
