@@ -148,7 +148,7 @@ Action make_action(string name, py::list args){
 		return Action([=](Entity& e){
 			return Entity([=](){
 				ofPushMatrix();
-				ofRotateY(180 * rad() / PI);
+				ofRotateX(180 * rad() / PI);
 				e();
 				ofPopMatrix();
 			});

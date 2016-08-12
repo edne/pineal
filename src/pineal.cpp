@@ -74,6 +74,7 @@ void Pineal::update(){
 
 		if(address == "/run-code"){
 			string code = m.getArgAsString(0);
+			osc_set_string(address, code);
 			drawing = code_to_entity(code);
 		}
 		else if(address == "/ping"){
