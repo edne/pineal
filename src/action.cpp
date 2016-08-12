@@ -62,16 +62,23 @@ Action render(int size){
 
 	return Action([=](Entity& e){
 		fbo.begin();
+		glPushAttrib(GL_ALL_ATTRIB_BITS);
+		glEnable(GL_BLEND);
+		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 		e();
+		glDisable(GL_BLEND);
+		glPopAttrib();
 		fbo.end();
 
 		return Entity([=](){
 			int w = ofGetWidth();
 			int h = ofGetHeight();
 			int side = max(w, h);
+			ofEnableAlphaBlending();
 			fbo.getTexture().draw((w - side) / 2,
 			                      (h - side) / 2,
 			                      side, side);
+			ofDisableAlphaBlending();
 		});
 	});
 }
