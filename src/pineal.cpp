@@ -75,7 +75,14 @@ void Pineal::update(){
 		if(address == "/run-code"){
 			string code = m.getArgAsString(0);
 			osc_set_string(address, code);
-			drawing = code_to_entity(code);
+
+			try{
+				drawing = code_to_entity(code);
+			}catch(const py::error_already_set & e){
+				PyObject *ptype, *pvalue, *ptraceback;
+				PyErr_Fetch(&ptype, &pvalue, &ptraceback);
+				ofLog() << PyString_AsString(pvalue);;
+			}
 		}
 		else if(address == "/ping"){
 			ofxOscMessage m;
