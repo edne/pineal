@@ -118,6 +118,5 @@ class Pineal : public ofBaseApp{
 		ofxOscReceiver oscReceiver;
 		ofxOscSender oscClient;
 
-		ofEasyCam camera;
 		ofFbo master;
 };

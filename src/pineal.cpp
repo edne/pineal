@@ -42,6 +42,7 @@ Pineal::Pineal(int argc, char ** argv){
 	ofAddListener(outWindow->events().draw, this, &Pineal::drawOut);
 }
 
+
 void Pineal::setup(){
 	ofLog() << "Running setup()";
 
@@ -52,9 +53,6 @@ void Pineal::setup(){
 	// ofSetVerticalSync(true);
 	ofEnableDepthTest();
 	ofEnableSmoothing();
-
-	camera.setDistance(1);
-	camera.setNearClip(0.01);
 
 	ofSetEscapeQuitsApp(false);
 
@@ -110,22 +108,10 @@ void Pineal::exit(){
 	ofSoundStreamClose();
 }
 
+
 void Pineal::draw(){
-	Entity e([=](){
-		camera.begin();
-
-		ofBackground(0);
-		ofSetColor(255);
-		ofFill();
-		ofSetLineWidth(1);
-
-		drawing();
-
-		camera.end();
-	});
-
 	int buffer_size = 1366;
-	rendered = render(buffer_size)(e);
+	rendered = render(buffer_size)(drawing);
 
 	rendered();
 

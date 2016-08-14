@@ -56,6 +56,22 @@ Action fill_status(bool status){
 	});
 }
 
+
+Action on_camera(){
+	static ofEasyCam camera;
+	camera.setDistance(1);
+	camera.setNearClip(0.01);
+
+	return Action([&](Entity& e){
+		return Entity([&](){
+			camera.begin();
+			e();
+			camera.end();
+		});
+	});
+}
+
+
 Action render(int size){
 	ofFbo fbo;
 	fbo.allocate(size, size, GL_RGBA);
@@ -65,7 +81,14 @@ Action render(int size){
 		glPushAttrib(GL_ALL_ATTRIB_BITS);
 		glEnable(GL_BLEND);
 		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-		e();
+
+		ofBackground(0);
+		ofSetColor(255);
+		ofFill();
+		ofSetLineWidth(1);
+
+		on_camera()(e)();
+
 		glDisable(GL_BLEND);
 		glPopAttrib();
 		fbo.end();
