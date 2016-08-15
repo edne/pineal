@@ -72,9 +72,9 @@ Action on_camera(){
 }
 
 
-Action render(int size){
+Action render(Value buffer_size){
 	ofFbo fbo;
-	fbo.allocate(size, size, GL_RGBA);
+	fbo.allocate(buffer_size(), buffer_size(), GL_RGBA);
 
 	return Action([=](Entity& e){
 		fbo.begin();
@@ -82,7 +82,7 @@ Action render(int size){
 		glEnable(GL_BLEND);
 		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
-		ofBackground(0);
+		ofClear(255,255,255, 0);
 		ofSetColor(255);
 		ofFill();
 		ofSetLineWidth(1);
@@ -95,7 +95,7 @@ Action render(int size){
 
 		return Entity([=](){
 			ofEnableAlphaBlending();
-			fbo.getTexture().draw(-1, -1, 2, 2);
+			fbo.getTexture().draw(-0.5, -0.5, 1, 1);  // TODO: side 1
 			ofDisableAlphaBlending();
 		});
 	});
@@ -252,7 +252,12 @@ Action make_action(string name, py::list args){
 		});
 	}
 
+	if(name=="render"){
+		Value buffer_size(args, 0, 1366);
+		return render(buffer_size);
+	}
+
+
 	return Action();
 }
-
 

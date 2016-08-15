@@ -60,3 +60,14 @@
               (scale 0.1)
               (rotate-y (osc "/time" 2))
               (translate 0 0 (Value 0.5))))
+
+(def square1 (change (group (polygon 4)
+                            (cube))
+                     ;(scale 0.5)
+                     (line-width 4)
+                     (no-fill)))
+
+(def square2 (change square1
+                     (render)))
+
+(draw square2)

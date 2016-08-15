@@ -83,3 +83,15 @@ no-fill
     (no-fill)
 
 Draw wire-frame.
+
+
+render
+------
+
+.. code-block:: clj
+
+    (render)
+    (render size)
+
+Render the entity, on a square buffer of `size` pixels, by default 1366.
+Resulting a square image of side 1 centered in the origin.

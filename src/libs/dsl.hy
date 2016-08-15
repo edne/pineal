@@ -34,6 +34,7 @@
 (bind-action fill)
 (bind-action no-fill)
 (bind-action line-width)
+(bind-action render)
 
 
 (defn change [entity &rest actions]

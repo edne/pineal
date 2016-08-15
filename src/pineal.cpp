@@ -110,13 +110,15 @@ void Pineal::exit(){
 
 
 void draw_on_window(Entity e){
+	ofBackground(0);
+
 	int w = ofGetWidth();
 	int h = ofGetHeight();
 	int side = max(w, h);
 
 	ofPushMatrix();
 	ofTranslate(w/2, h/2, 0);
-	ofScale(side/2, side/2, 1);
+	ofScale(side, side, 1);
 	e();
 	ofPopMatrix();
 }
@@ -124,7 +126,7 @@ void draw_on_window(Entity e){
 
 void Pineal::draw(){
 	int buffer_size = 1366;
-	rendered = render(buffer_size)(drawing);
+	rendered = render(Value(buffer_size))(drawing);
 
 	draw_on_window(rendered);
 

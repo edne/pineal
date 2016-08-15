@@ -64,7 +64,7 @@ class Color{
 		ofColor c;
 };
 
-Action render(int size);
+Action render(Value size);
 
 Entity make_entity(string name, py::list args);
 Action make_action(string name, py::list args);
