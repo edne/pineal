@@ -109,11 +109,24 @@ void Pineal::exit(){
 }
 
 
+void draw_on_window(Entity e){
+	int w = ofGetWidth();
+	int h = ofGetHeight();
+	int side = max(w, h);
+
+	ofPushMatrix();
+	ofTranslate(w/2, h/2, 0);
+	ofScale(side/2, side/2, 1);
+	e();
+	ofPopMatrix();
+}
+
+
 void Pineal::draw(){
 	int buffer_size = 1366;
 	rendered = render(buffer_size)(drawing);
 
-	rendered();
+	draw_on_window(rendered);
 
 	string fps = "FPS: " + ofToString(ofGetFrameRate());
 	ofSetColor(255);
@@ -121,7 +134,7 @@ void Pineal::draw(){
 }
 
 void Pineal::drawOut(ofEventArgs & args){
-	rendered();
+	draw_on_window(rendered);
 }
 
 void Ear::setup(){

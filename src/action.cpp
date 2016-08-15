@@ -94,13 +94,8 @@ Action render(int size){
 		fbo.end();
 
 		return Entity([=](){
-			int w = ofGetWidth();
-			int h = ofGetHeight();
-			int side = max(w, h);
 			ofEnableAlphaBlending();
-			fbo.getTexture().draw((w - side) / 2,
-			                      (h - side) / 2,
-			                      side, side);
+			fbo.getTexture().draw(-1, -1, 2, 2);
 			ofDisableAlphaBlending();
 		});
 	});
