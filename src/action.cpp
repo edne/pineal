@@ -76,6 +76,9 @@ Action render(Value buffer_size){
 	ofFbo fbo;
 	fbo.allocate(buffer_size(), buffer_size(), GL_RGBA);
 
+	// static so .setDistance is called just once
+	static Action on_camera_action = on_camera();
+
 	return Action([=](Entity& e){
 		fbo.begin();
 		glPushAttrib(GL_ALL_ATTRIB_BITS);
@@ -87,7 +90,7 @@ Action render(Value buffer_size){
 		ofFill();
 		ofSetLineWidth(1);
 
-		on_camera()(e)();
+		on_camera_action(e)();
 
 		glDisable(GL_BLEND);
 		glPopAttrib();
