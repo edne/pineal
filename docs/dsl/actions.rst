@@ -95,3 +95,14 @@ render
 
 Render the entity, on a square buffer of `size` pixels, by default 1366.
 Resulting a square image of side 1 centered in the origin.
+
+
+on-layer
+--------
+
+.. code-block:: clj
+
+    (on-layer "layer-name")
+    (on-layer "layer-name" size)
+
+Render to a named Frambuffer Object, to display it use the `layer` entity.

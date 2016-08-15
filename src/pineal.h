@@ -70,6 +70,9 @@ Entity make_entity(string name, py::list args);
 Action make_action(string name, py::list args);
 Color make_color(string name, py::list args);
 
+Entity get_layer(string name);
+void set_layer(string name, Entity e);
+
 void osc_set_float(string name, float x);
 void osc_set_string(string name, string x);
 string osc_get_string(string name);

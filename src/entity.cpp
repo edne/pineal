@@ -21,6 +21,23 @@ void Entity::operator()() const{
 }
 
 
+unordered_map<string, Entity> layers_map;
+
+
+Entity get_layer(string name){
+	if(layers_map.find(name) == layers_map.end()){
+		return Entity();
+	}else{
+		return layers_map[name];
+	}
+}
+
+
+void set_layer(string name, Entity e){
+	layers_map[name] = e;
+}
+
+
 unordered_map<string, ofTrueTypeFont> fonts_map;
 
 
@@ -102,12 +119,20 @@ Entity make_entity(string name, py::list args){
 		return text(font_name, s);
 	}
 
-	if(name=="osc-text"){
+	if(name=="osc_text"){
 		string font_name = py::extract<string>(args[0]);
 		string path = py::extract<string>(args[1]);
 		Entity e([=](){
 			string s = osc_get_string(path);
 			text(font_name, s)();
+		});
+		return e;
+	}
+
+	if(name=="layer"){
+		string layer_name = py::extract<string>(args[0]);
+		Entity e([=](){
+			get_layer(layer_name)();
 		});
 		return e;
 	}

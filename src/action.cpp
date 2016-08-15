@@ -260,6 +260,17 @@ Action make_action(string name, py::list args){
 		return render(buffer_size);
 	}
 
+	if(name=="on_layer"){
+		string layer_name = py::extract<string>(args[0]);
+		Value buffer_size(args, 1, 1366);
+
+		return Action([=](Entity& e){
+			return Entity([=](){
+				Entity layer = render(buffer_size)(e);
+				set_layer(layer_name, layer);
+			});
+		});
+	}
 
 	return Action();
 }

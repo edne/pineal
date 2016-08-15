@@ -41,6 +41,7 @@
 
 
 (draw (group (change (cube)
+                     (hide)
                      (color (rgb 0.5))
                      (scale 0.5))
              (change (cube)
@@ -61,13 +62,29 @@
               (rotate-y (osc "/time" 2))
               (translate 0 0 (Value 0.5))))
 
-(def square1 (change (group (polygon 4)
-                            (cube))
-                     ;(scale 0.5)
-                     (line-width 4)
-                     (no-fill)))
 
-(def square2 (change square1
-                     (render)))
+(draw (change (group (change (group (polygon 4)
+                                    (cube))
+                             (scale 1.5)
+                             (line-width 8)
+                             (no-fill)
+                             )
+                     (change (layer "sq")
+                             (scale 0.999)
+                             (rotate-z 0.1)))
+              (on-layer "sq")
+              (hide)
+              ))
 
-(draw square2)
+(draw (change (group (cube)
+                     (change (layer "layer1")
+                             (scale 1.2)
+                             ;(rotate-z (time 0.1))
+                             ;(rotate-y (time 10))
+                             ))
+              (no-fill)
+              (line-width 8)
+              (on-layer "layer1" 800)
+              ))
+
+(draw (layer "layer1"))

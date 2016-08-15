@@ -36,6 +36,10 @@
 (bind-action line-width)
 (bind-action render)
 
+(defn on-layer [name &rest args]
+     (make-action (str "on_layer")
+                  (+ [(str name)] (list args))))
+
 
 (defn change [entity &rest actions]
   (make-entity (str "change")
@@ -48,7 +52,8 @@
 (defn cube     []       (make-entity (str "cube")     []))
 (defn polygon  [n]      (make-entity (str "polygon")  [n]))
 (defn text     [font s] (make-entity (str "text")     [(str font) (str s)]))
-(defn osc-text [font s] (make-entity (str "osc-text") [(str font) (str s)]))
+(defn osc-text [font s] (make-entity (str "osc_text") [(str font) (str s)]))
+(defn layer    [name]   (make-entity (str "layer")    [(str name)]))
 
 (defn rgb    [&rest args] (make-color (str "rgb")    (list args)))
 (defn lerp   [&rest args] (make-color (str "lerp")   (list args)))
