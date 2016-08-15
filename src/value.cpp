@@ -99,3 +99,53 @@ Value osc_value(string name, py::list args){
 	});
 }
 
+// TODO: replace it with tempo()
+// where 1 is not 1s but 1beat
+float time(){
+	string name = "/time";
+	if(!exists_float(name)){
+		osc_set_float(name, 0.0);
+	}
+	return float_map[name];
+}
+
+Value make_lfo(string name, py::list args){
+	if(name == "sin"){
+		Value freq  (args, 0, 1.0);
+		Value amp   (args, 1, 1.0);
+		Value offset(args, 2, 0.0);
+		Value phase (args, 3, 0.0);
+
+		return Value([=](){
+			return sin(time()*2*PI * freq() + phase()*2*PI) * amp() + offset();
+		});
+	}
+
+	if(name == "saw"){
+		Value freq  (args, 0, 1.0);
+		Value amp   (args, 1, 1.0);
+		Value offset(args, 2, 0.0);
+		Value phase (args, 3, 0.0);
+
+		return Value([=](){
+			return fmod(time() * freq() + phase(), 1) * amp() + offset();
+		});
+	}
+
+	if(name == "pwm"){
+		Value pwm   (args, 0, 0.5);
+		Value freq  (args, 1, 1.0);
+		Value amp   (args, 2, 1.0);
+		Value offset(args, 3, 0.0);
+		Value phase (args, 4, 0.0);
+
+		return Value([=](){
+			if(fmod(time() * freq() + phase(), 1) > pwm()){
+				return amp() + offset();
+			}
+			return -amp() + offset();
+		});
+	}
+
+	return Value(0);
+}

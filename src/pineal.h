@@ -78,6 +78,8 @@ void osc_set_string(string name, string x);
 string osc_get_string(string name);
 Value osc_value(string path, py::list args);
 
+Value make_lfo(string name, py::list args);
+
 class Ear : public ofBaseApp{
 	public:
 		void setup();

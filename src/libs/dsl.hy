@@ -59,6 +59,10 @@
 (defn lerp   [&rest args] (make-color (str "lerp")   (list args)))
 (defn invert [&rest args] (make-color (str "invert") (list args)))
 
+(defn lfo-sin [&rest args] (make-lfo (str "sin") (list args)))
+(defn lfo-saw [&rest args] (make-lfo (str "saw") (list args)))
+(defn lfo-pwm [&rest args] (make-lfo (str "pwm") (list args)))
+
 
 (defmacro group-for [item-iterator &rest entities]
   (setv [item iterator] item-iterator)

@@ -26,6 +26,7 @@ namespace dsl{
             .def("__call__", &Value::__call__scale_offset_value)
         ;
 		py::def("osc_value", &osc_value);
+		py::def("make_lfo", &make_lfo);
     }
 }
 
