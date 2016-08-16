@@ -29,7 +29,7 @@ Will show:
 
 ![screenshot](https://i.imgur.com/jTpXBbM.png)
 
-Rotating at 0.5 radiants per second.
+Rotating at 1 radiant per second.
 
 Build
 -----
@@ -38,23 +38,24 @@ Build
 - Change `build.cfg` with your OF path, and the Python paths depending from
   your system.
 - Install Python dependencies with `pip install -r requirements.txt`.
-- Run `scripts/build.sh`.
+- Run `build.sh`.
 
 
-Quick Start
------------
-After building run:
-```
-scripts/watch.sh examples/first-example.pn
-```
-it will start the server (`bin/pineal`) and watch `first-example.pn` for
-changes.
+Run Code
+--------
+Pineal is an OSC server waiting for code on the path `/run-code`, (similarly to
+the Sonic PI Ruby back-end).
+
+You can send the code manually with some OSC utility or use the [Python
+Client](https://github.com/edne/pineal-python-client), a small script that
+watches a file for changes and sends its content to the server.
 
 
 Documentation
 -------------
 References are available on
-[Readthedocs](http://pineal.readthedocs.org/en/latest/)
+[Readthedocs](http://pineal.readthedocs.org/en/latest/) and there are some
+examples in the `examples/` folder.
 
 
 License

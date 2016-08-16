@@ -7,7 +7,6 @@ source build.cfg
 # move Python / Hy code in release folder
 mkdir -p bin
 cp -rf src/libs bin/
-cp -f src/client.py bin/
 
 # confugure OpenFrameworks build system
 projectGenerator -a"ofxOsc, ofxAubio" -o"$OF_PATH" .
