@@ -71,8 +71,8 @@ All the lfo arguments are optional and can be values themselves.
 
 Defaults arguments:
  - `freq`: 1 Hz
- - `amp`:  1 (from -1 to 1)
- - `offset`: 0
+ - `amp`:  0.5 (range from -0.5 to 0.5)
+ - `offset`: 0.5 (so the range becomes from 0 to 1)
  - `phase`: 0 (id always as pure number where 1 is a period, not radiants, also
    in sin)
  - `pwm`: 0.5

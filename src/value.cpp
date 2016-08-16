@@ -112,8 +112,8 @@ float time(){
 Value make_lfo(string name, py::list args){
 	if(name == "sin"){
 		Value freq  (args, 0, 1.0);
-		Value amp   (args, 1, 1.0);
-		Value offset(args, 2, 0.0);
+		Value amp   (args, 1, 0.5);
+		Value offset(args, 2, 0.5);
 		Value phase (args, 3, 0.0);
 
 		return Value([=](){
@@ -123,8 +123,8 @@ Value make_lfo(string name, py::list args){
 
 	if(name == "saw"){
 		Value freq  (args, 0, 1.0);
-		Value amp   (args, 1, 1.0);
-		Value offset(args, 2, 0.0);
+		Value amp   (args, 1, 0.5);
+		Value offset(args, 2, 0.5);
 		Value phase (args, 3, 0.0);
 
 		return Value([=](){
@@ -135,8 +135,8 @@ Value make_lfo(string name, py::list args){
 	if(name == "pwm"){
 		Value pwm   (args, 0, 0.5);
 		Value freq  (args, 1, 1.0);
-		Value amp   (args, 2, 1.0);
-		Value offset(args, 3, 0.0);
+		Value amp   (args, 2, 0.5);
+		Value offset(args, 3, 0.5);
 		Value phase (args, 4, 0.0);
 
 		return Value([=](){
