@@ -78,7 +78,12 @@ void osc_set_string(string name, string x);
 string osc_get_string(string name);
 Value osc_value(string path, py::list args);
 
+void update_tempo(float bpm);
+void sync_tempo();
 Value make_lfo(string name, py::list args);
+
+Value time_value();
+Value tempo_value();
 
 class Ear : public ofBaseApp{
 	public:

@@ -1,0 +1,38 @@
+(def font "monaco.ttf")
+
+'(draw (change (osc-text font "/run-code")
+               (scale 0.01)
+               (translate 0.2 0.12)
+               (rotate-z 0.1)
+               (branch-for [i (range 1 4)]
+                           (rotate-y (* i (/ 2pi 3))))
+               (color (rgb 0.9))
+               ))
+
+(draw (change (cube)
+              (hide)
+              (branch (color (rgb 0.05 0.7))
+                      (compose (no-fill)
+                               (line-width 4)))
+              (scale 0.3) 
+              (branch-for [i (range 1 5)]
+                          (scale (* i 0.7)))
+              (rotate-x 1)
+              (rotate-y 1)))
+
+
+(draw (change (cube)
+              (branch (color (rgb 0.05 0.2))
+                      (compose (no-fill)
+                               (color (rgb 1 0.5))
+                               (line-width 4)))
+              (scale 0.2) 
+              (branch-for [i (range 1 9)]
+                          (rotate-y (* i (/ 2pi 100))))
+              (branch-for [i (range 1 9)]
+                          (rotate-x 1))
+              (branch-for [i (range 1 5)]
+                          (scale (* i 0.7)))
+              (rotate-x 1)
+              (rotate-y 1)
+              ))

@@ -60,7 +60,7 @@
 (def font "monaco.ttf")
 (draw (change (osc-text font "/text")
               (scale 0.1)
-              (rotate-y (osc "/time" 2))
+              (rotate-y time)
               (translate 0 0 (Value 0.5))))
 
 
@@ -79,26 +79,31 @@
 
 (draw (change (group (change (cube)
                              (line-width 8)
-                             (color (rgb (lfo-pwm 0.5 4 0.5 0.5)))
+                             ;(color (rgb (lfo-pwm time 0.5 4 0.5 0.5)))
                              (no-fill)
-                             (rotate-z (lfo-saw 0.5 2pi))
+                             (rotate-z (lfo-saw time 0.5 2pi))
                              (scale 0.8))
 
                      (change (cube)
-                             (color (rgb 0 1 (lfo-sin 1 0.5 0.5)))
-                             (translate (lfo-sin 1 2)
-                                        (lfo-sin 1 2 0 0.25))
+                             (color (rgb 0 1 (lfo-sin time 1 0.5 0.5)))
+                             (translate (lfo-sin time 1 2)
+                                        (lfo-sin time 1 2 0 0.25))
                              (scale 0.05))
 
                      (change (layer "layer1")
-                             (rotate-x (lfo-saw 4 1 -0.5))
+                             (rotate-x (lfo-saw time 4 1 -0.5))
                              (scale 0.4))
                      (change (layer "layer1")
                              (scale 1.2)
-                             (rotate-y (lfo-saw 4 1 -0.5))
+                             (rotate-y (lfo-saw time 4 1 -0.5))
                              ;(rotate-y (time 10))
                              ))
               (on-layer "layer1" 800)
+              (hide)
               ))
 
 (draw (change (layer "layer1")))
+
+(draw (change (cube)
+              ;(scale (lfo-sin))
+              (color (rgb 0 (lfo-saw time 1 -1) 1))))

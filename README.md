@@ -19,7 +19,7 @@ The code:
               (no-fill)
               (line-width 4)
               (color (rgb 0 1 0))
-              (rotate-y (time 0.5))
+              (rotate-y time)
               ))
 
 

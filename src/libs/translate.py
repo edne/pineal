@@ -21,7 +21,6 @@ def code_to_entity(code):
     template = """
     (require libs.dsl)
     (import [libs.dsl [*]])
-    (--header--)
 
     (setv global-entities [])
 

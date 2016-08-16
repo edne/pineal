@@ -1,17 +1,11 @@
-(defmacro --header-- []
-  "Things to do outside the --draw-- function"
-  '(do
-     (import
-       [math [*]]
-       [core [*]])
+(import
+  [math [pi]]
+  [core [*]])
 
-     (def 2pi (* 2 pi))
-     (def time (osc-value (str "/time") []))
-     (def amp (osc-value (str "/amp") []))
-     ))
-
-; To use this file as imported module
-(--header--)
+(def 2pi (* 2 pi))
+(def time (time-value))
+(def tempo (tempo-value))
+(def amp (osc-value (str "/amp") []))
 
 
 (defmacro draw [entity]
@@ -37,8 +31,8 @@
 (bind-action render)
 
 (defn on-layer [name &rest args]
-     (make-action (str "on_layer")
-                  (+ [(str name)] (list args))))
+  (make-action (str "on_layer")
+               (+ [(str name)] (list args))))
 
 
 (defn change [entity &rest actions]

@@ -29,13 +29,21 @@ time
 
 .. code-block:: clj
 
-    (time)
-    (time scale)
-    (time scale offset)
+    time
 
-Return time in seconds.
+Time in seconds.
 
-The value is taken from the `/time` OSC path.
+
+tempo
+-----
+
+.. code-block:: clj
+
+    tempo
+
+Keeps track of the tempo (`time * BPM / 60` with some adjustments to
+synchronize it with beats), can be used instead of `time` as first parameter in
+a LFO.
 
 
 amp
@@ -60,16 +68,17 @@ LFO
 ---
 
 Low Frequency Oscillators, used to change parameters.
-All the lfo arguments are optional and can be values themselves.
+All the LFO arguments are optional and can be values themselves.
 
 .. code-block:: clj
 
-    (lfo-sin freq amp offset phase)
-    (lfo-saw freq amp offset phase)
-    (lfo-pwm pwm freq amp offset phase)
+    (lfo-sin x freq amp offset phase)
+    (lfo-saw x freq amp offset phase)
+    (lfo-pwm x pwm freq amp offset phase)
 
 
 Defaults arguments:
+ - `x`: `time`
  - `freq`: 1 Hz
  - `amp`:  0.5 (range from -0.5 to 0.5)
  - `offset`: 0.5 (so the range becomes from 0 to 1)

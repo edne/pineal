@@ -27,6 +27,8 @@ namespace dsl{
         ;
 		py::def("osc_value", &osc_value);
 		py::def("make_lfo", &make_lfo);
+		py::def("time_value", &time_value);
+		py::def("tempo_value", &tempo_value);
     }
 }
 
@@ -167,6 +169,7 @@ void Ear::audioIn(float * input, int bufferSize, int nChannels){
 
 	onset.audioIn(input, bufferSize, nChannels);
 	beat.audioIn(input, bufferSize, nChannels);
+	update_tempo(beat.bpm);
 }
 
 void Ear::sendFloat(string name, float x){
@@ -178,9 +181,8 @@ void Ear::sendFloat(string name, float x){
 }
 
 void Ear::onsetEvent(float & time){
-	// TODO: boolean OSC
 }
 
 void Ear::beatEvent(float & time){
-	// TODO: boolean OSC
+	sync_tempo();
 }
