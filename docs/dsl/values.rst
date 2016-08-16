@@ -7,9 +7,6 @@ immutable. Values are the way to change its appearance in time (they are
 functions called drawing each frame) and can be passed as parameter when creating
 entities and actions.
 
-**FIXME:**
-- Colors evaluates values when created.
-
 
 osc
 ---

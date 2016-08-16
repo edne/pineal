@@ -209,11 +209,12 @@ Action make_action(string name, py::list args){
 
 	if(name=="color"){
 		Color p = py::extract<Color>(args[0]);
-		ofColor c = p.c;
 
 		return Action([=](Entity& e){
 			return Entity([=](){
 				static ofColor status_color;
+
+				ofColor c = p.get_ofColor();
 				ofColor old_color = status_color;
 				ofColor new_color = ofColor(c.r, c.g, c.b, c.a);
 

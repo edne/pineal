@@ -53,6 +53,7 @@
 (draw (change (polygon 3)
               (scale (amp 8))
               (color (rgb 0 1 1 0.2))
+              (hide)
               (rotate-y 2)))
 
 
@@ -78,13 +79,13 @@
 
 (draw (change (group (change (cube)
                              (line-width 8)
-                             (color (rgb 1))
+                             (color (rgb (lfo-pwm 0.5 4 0.5 0.5)))
                              (no-fill)
                              (rotate-z (lfo-saw 0.5 2pi))
                              (scale 0.8))
 
                      (change (cube)
-                             (color (rgb 0 1 0))
+                             (color (rgb 0 1 (lfo-sin 1 0.5 0.5)))
                              (translate (lfo-sin 1 2)
                                         (lfo-sin 1 2 0 0.25))
                              (scale 0.05))

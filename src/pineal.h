@@ -58,10 +58,10 @@ class Value{
 
 class Color{
 	public:
-		Color(){}
-		Color(ofColor _c);
-
-		ofColor c;
+		Color();
+		Color(function<ofColor()> f);
+        Color(Value r, Value g, Value b, Value a);
+		function<ofColor()> get_ofColor;
 };
 
 Action render(Value size);

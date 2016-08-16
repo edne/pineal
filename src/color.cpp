@@ -1,8 +1,22 @@
 #include "pineal.h"
 
 
-Color::Color(ofColor _c){
-	c = _c;
+Color::Color(){
+	get_ofColor = [=](){
+		ofColor c;
+		return c;
+	};
+}
+
+Color::Color(function<ofColor()> f){
+	get_ofColor = f;
+}
+
+Color::Color(Value r, Value g, Value b, Value a){
+	get_ofColor = [=](){
+		ofColor c(255*r(), 255*g(), 255*b(), 255*a());
+		return c;
+	};
 }
 
 Color make_color(string name, py::list args){
@@ -22,7 +36,7 @@ Color make_color(string name, py::list args){
 			a = Value(args, 3, 1.0);
 		}
 
-		return Color(ofColor(255*r(), 255*g(), 255*b(), 255*a()));
+		return Color(r, g, b, a);
 	}
 
 	if(name=="lerp"){
@@ -30,13 +44,21 @@ Color make_color(string name, py::list args){
 		Color p = py::extract<Color>(args[1]);
 		Color q = py::extract<Color>(args[2]);
 
-		return Color(p.c.getLerped(q.c, amount()));
+		return Color([=](){
+			ofColor c1 = p.get_ofColor();
+			ofColor c2 = q.get_ofColor();
+
+			return c1.getLerped(c2, amount());
+		});
 	}
 
 	if(name=="invert"){
 		Color in_color = py::extract<Color>(args[0]);
 
-		return Color(in_color.c.getInverted());
+		return Color([=](){
+			ofColor c = in_color.get_ofColor();
+			return c.getInverted();
+		});
 	}
 
 	return Color();
