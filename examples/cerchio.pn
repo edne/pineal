@@ -1,6 +1,6 @@
 (defn turn [n rotate-fun]
   (branch-for [i (range n)]
-              (rotate-fun (-> i (* 2pi) (/ n)))))
+              (rotate-fun (/ i n))))
 
 
 (defn cerchio [n]

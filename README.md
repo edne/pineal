@@ -29,7 +29,7 @@ Will show:
 
 ![screenshot](https://i.imgur.com/jTpXBbM.png)
 
-Rotating at 1 radiant per second.
+Rotating at 1 turn per second.
 
 Build
 -----

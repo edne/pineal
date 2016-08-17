@@ -36,7 +36,7 @@ rotate-x
 
 .. code-block:: clj
 
-    (rotate-x radiants)
+    (rotate-x turns)
 
 
 rotate-y
@@ -44,7 +44,7 @@ rotate-y
 
 .. code-block:: clj
 
-    (rotate-y radiants)
+    (rotate-y turns)
 
 
 rotate-z
@@ -52,7 +52,7 @@ rotate-z
 
 .. code-block:: clj
 
-    (rotate-z radiants)
+    (rotate-z turns)
 
 
 color

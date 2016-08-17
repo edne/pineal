@@ -1,6 +1,6 @@
 (defn turn [n rotate-fun]
   (branch-for [i (range n)]
-              (rotate-fun (-> i (* 2pi) (/ n)))))
+              (rotate-fun (/ i n))))
 
 
 (defn concentric [n]
@@ -18,7 +18,7 @@
      (change (cube)
              (scale 0.5)
              (concentric-lin 4)
-             (rotate_y (/ pi 4))
+             (rotate_y 0.25)
              (translate 0.2)
              (turn 4 rotate-y)
 
@@ -47,14 +47,14 @@
              (change (cube)
                      (hide)
                      (branch-for [i (range 3)]
-                                 (rotate-y i))
+                                 (rotate-y (/ i 3)))
                      (no-fill))))
 
 (draw (change (polygon 3)
               (scale (amp 8))
               (color (rgb 0 1 1 0.2))
               (hide)
-              (rotate-y 2)))
+              (rotate-y 0.6)))
 
 
 (def font "monaco.ttf")
@@ -81,7 +81,7 @@
                              (line-width 8)
                              ;(color (rgb (lfo-pwm time 0.5 4 0.5 0.5)))
                              (no-fill)
-                             (rotate-z (lfo-saw time 0.5 2pi))
+                             (rotate-z (lfo-saw time 0.5))
                              (scale 0.8))
 
                      (change (cube)

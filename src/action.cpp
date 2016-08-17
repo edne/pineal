@@ -172,11 +172,11 @@ Action make_action(string name, py::list args){
 	}
 
 	if(name=="rotate_x"){
-		Value rad(args, 0, 0.0);
+		Value turns(args, 0, 0.0);
 		return Action([=](Entity& e){
 			return Entity([=](){
 				ofPushMatrix();
-				ofRotateX(180 * rad() / PI);
+				ofRotateX(360 * turns());
 				e();
 				ofPopMatrix();
 			});
@@ -184,11 +184,11 @@ Action make_action(string name, py::list args){
 	}
 
 	if(name=="rotate_y"){
-		Value rad(args, 0, 0.0);
+		Value turns(args, 0, 0.0);
 		return Action([=](Entity& e){
 			return Entity([=](){
 				ofPushMatrix();
-				ofRotateY(180 * rad() / PI);
+				ofRotateY(360 * turns());
 				e();
 				ofPopMatrix();
 			});
@@ -196,11 +196,11 @@ Action make_action(string name, py::list args){
 	}
 
 	if(name=="rotate_z"){
-		Value rad(args, 0, 0.0);
+		Value turns(args, 0, 0.0);
 		return Action([=](Entity& e){
 			return Entity([=](){
 				ofPushMatrix();
-				ofRotateZ(180 * rad() / PI);
+				ofRotateZ(360 * turns());
 				e();
 				ofPopMatrix();
 			});

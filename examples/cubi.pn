@@ -1,6 +1,6 @@
 (defn turn [n rotate-fun]
   (branch-for [i (range n)]
-              (rotate-fun (-> i (* 2pi) (/ n)))))
+              (rotate-fun (/ i n))))
 
 (defn turn-x [n] (turn n rotate-x))
 (defn turn-y [n] (turn n rotate-y))
@@ -9,14 +9,14 @@
 
 (defn cubes-zy [z y]
   (-> (cube)
-    (change (scale (amp 2 1.8))
+    (change ;(scale (amp 2 1.8))
             (line-width 2)
             (no-fill)
-            (color (rgb 1 (amp 1 0.05)))
+            ;(color (rgb 1 (amp 1 0.05)))
             (line-width 4)
             (turn-z z)
             (turn-y y)
-            (rotate-y (-> (time (/ pi 4)) (% 2pi)))
+            (rotate-y (lfo-saw time 0.25))
             )))
 
 '(draw (seq 4
