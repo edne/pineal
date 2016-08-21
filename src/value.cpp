@@ -159,7 +159,7 @@ Value make_lfo(string name, py::list args){
 		Value phase (args, 4, 0.0);
 
 		return Value([=](){
-			return fmod(t() * freq() + phase(), 1) * amp() + offset();
+			return (fmod(t() * freq() + phase(), 1) - 0.5) * 2 * amp() + offset();
 		});
 	}
 
