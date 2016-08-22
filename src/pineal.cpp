@@ -53,6 +53,9 @@ void Pineal::setup(){
 	PySys_SetArgv(argc, argv);
 	PyImport_AppendInittab("core", &dsl::initcore);
 
+	py::object sys_path = py::import("sys").attr("path");
+	sys_path.attr("insert")(0, ofDirectory("data/").getAbsolutePath());
+
 	// ofSetVerticalSync(true);
 	ofEnableDepthTest();
 	ofEnableSmoothing();

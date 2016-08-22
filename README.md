@@ -35,10 +35,10 @@ Build
 -----
 - Install OpenFrameworks and make sure to have `projectGenerator` in your PATH.
 - **TODO:** Linux/Debian build dependencies
-- Change `build.cfg` with your OF path, and the Python paths depending from
-  your system.
+- Generate the project with `projectGenerator -a"ofxOsc, ofxAubio" -o"YOUR_OF_PATH" .`
+- Change `config.make` with your Python paths.
 - Install Python dependencies with `pip install -r requirements.txt`.
-- Run `build.sh`.
+- build with `make`.
 
 
 Run Code
