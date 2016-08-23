@@ -56,6 +56,7 @@ layer
     (layer "layer-name")
 
 Draw the content of the layer, to generate it use the `on-layer` action.
+The layer `master` is already defined and contains the whole output.
 (You can draw a layer on itself ;) )
 
 *TODO:*

@@ -121,7 +121,6 @@ class Pineal : public ofBaseApp{
 		char ** argv;
 
 		Entity drawing;
-		Entity rendered;
 
 		shared_ptr<ofAppBaseWindow> outWindow;
 

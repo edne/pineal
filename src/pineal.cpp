@@ -132,9 +132,11 @@ void draw_on_window(Entity e){
 
 void Pineal::draw(){
 	int buffer_size = 1366;
-	rendered = render(Value(buffer_size))(drawing);
 
-	draw_on_window(rendered);
+	Entity rendered = render(Value(buffer_size))(drawing);
+	set_layer("master", rendered);
+
+	draw_on_window(get_layer("master"));
 
 	string fps = "FPS: " + ofToString(ofGetFrameRate());
 	ofSetColor(255);
@@ -142,7 +144,7 @@ void Pineal::draw(){
 }
 
 void Pineal::drawOut(ofEventArgs & args){
-	draw_on_window(rendered);
+	draw_on_window(get_layer("master"));
 }
 
 void Ear::setup(){
