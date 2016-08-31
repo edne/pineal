@@ -33,7 +33,8 @@ Rotating at 1 turn per second.
 
 Build
 -----
-- Install OpenFrameworks and make sure to have `projectGenerator` in your PATH.
+- Install OpenFrameworks and make sure to have the command-line
+  version of `projectGenerator` in your PATH.
 - **TODO:** Linux/Debian build dependencies
 - Generate the project with `projectGenerator -a"ofxOsc, ofxAubio" -o"YOUR_OF_PATH" .`
 - Change `config.make` with your Python paths.
