@@ -1,0 +1,16 @@
+language: c++
+compiler: gcc
+matrix:
+  include:
+    - os: linux
+      sudo: required
+      dist: trusty
+      before_install:
+      - build-scripts/install-of.sh
+      - build-scripts/generate-project.sh
+      addons:
+        apt:
+          packages:
+          - libpython-dev
+          - libboost-python-dev
+script: make Release

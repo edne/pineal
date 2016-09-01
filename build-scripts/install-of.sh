@@ -10,8 +10,8 @@ if [ ! -d $HOME/openframeworks ]; then
 
     sed -i "s/\#include \"RtAudio\.h\"/\#include \"rtaudio\/RtAudio\.h\"/g" openframeworks/libs/openFrameworks/sound/ofRtAudioSoundStream.cpp
 
-    sudo openframeworks/scripts/linux/debian/install_dependencies.sh
-    sudo openframeworks/scripts/linux/debian/install_codecs.sh
+    sudo openframeworks/scripts/linux/ubuntu/install_dependencies.sh
+    sudo openframeworks/scripts/linux/ubuntu/install_codecs.sh
     openframeworks/scripts/linux/compileOF.sh
 
     mv openframeworks $HOME
