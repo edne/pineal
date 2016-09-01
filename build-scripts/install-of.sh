@@ -20,7 +20,7 @@ if [ ! -d $HOME/openframeworks ]; then
     make
     popd
 
-    pushd pushd $HOME/openframeworks/addond
+    pushd $HOME/openframeworks/addond
     git clone https://github.com/aubio/ofxAubio
     popd
 fi
