@@ -5,12 +5,17 @@
   [time [sleep]]
   [watchdog.observers [Observer]]
   [watchdog.events [FileSystemEventHandler]]
-  [liblo])
+  [liblo]
+  [config]
+  [logging])
 
 (require pineal.macros)
 
 
-(runner coder-runner [conf log]
+(def log (logging.getLogger --name--))
+
+
+(runner coder-runner []
         "
         Wait for changes
         "
@@ -25,19 +30,19 @@
             (= (abspath path)
               (abspath file-name)))
 
-          (liblo.send conf.OSC_EYE
+          (liblo.send config.OSC_EYE
                       "/eye/code" (, (str "s") (get-code)))
 
           (defclass Handler [FileSystemEventHandler]
             [[on-modified
                (fn [self event]
                  (when (valid? event.src-path)
-                   (liblo.send conf.OSC_EYE
+                   (liblo.send config.OSC_EYE
                                "/eye/code" (, (str "s") (get-code)))))]])
           (Handler))
 
         (let [[observer (Observer)]
-              [file-name conf.file-name]]
+              [file-name config.file-name]]
           (.schedule observer
                      (new-handler file-name)
                      (-> file-name

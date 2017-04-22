@@ -3,20 +3,25 @@
   [pineal.audio [hear]]
   [numpy :as np]
   [scipy.signal [iirfilter lfilter]]
-  [liblo])
+  [liblo]
+  [config]
+  [logging])
 
 
 (require pineal.macros)
 
 
-(runner ear-runner [conf log]
+(def log (logging.getLogger --name--))
+
+
+(runner ear-runner []
         (log.info "starting ear.hy")
 
         (setv out-dict {})
 
         (defn hz [f]
           "0Hz -> 0, Nyquist/2 -> 1"
-          (setv ny/2 (/ conf.RATE 2))
+          (setv ny/2 (/ config.RATE 2))
           (/ f ny/2))
 
         (setv (, lp-b lp-a)
@@ -32,11 +37,11 @@
              (defn analyze [name operation]
                (setv values {})
 
-               (for [(, i ch) (enumerate conf.CHANNELS)]
+               (for [(, i ch) (enumerate config.CHANNELS)]
                  (assoc values ch
                    (operation (get data i))))
 
-               (for [ch conf.CHANNELS]
+               (for [ch config.CHANNELS]
                  (assoc out-dict (.format "/{0}/{1}"
                                           ch name)
                    (get values ch)))
@@ -62,12 +67,12 @@
            (fn []
              (running
                (for [(, key val) (.items out-dict)]
-                 (liblo.send conf.OSC_EYE
+                 (liblo.send config.OSC_EYE
                              key (, (str "d") val)))
                (sleep (/ 1 60))))
 
            "jack_client" "Pineal"
-           "channels" (len conf.CHANNELS)
-           "rate"     conf.RATE})
+           "channels" (len config.CHANNELS)
+           "rate"     config.RATE})
 
         (log.info "stopping ear.hy"))

@@ -2,7 +2,11 @@
 
 (import
   [pineal.windows [new-renderer new-master new-overview]]
-  [pineal.nerve [nerve-cb! nerve-start]])
+  [pineal.nerve [nerve-cb! nerve-start]]
+  [logging])
+
+
+(def log (logging.getLogger --name--))
 
 
 (defn eval-str [s namespace]
@@ -26,7 +30,7 @@
          nil))) )
 
 
-(runner eye-runner [conf log]
+(runner eye-runner []
         "
         Handles and draws the vision
         "
@@ -48,8 +52,6 @@
 
 
 (defn new-vision [code]
-  (setv log (new-logger))
-
   ; stack here the loaded codes,
   ; so when everything explodes, we can
   ; always restore the last (hopefully) working vision
