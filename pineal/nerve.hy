@@ -2,8 +2,6 @@
   [config :as conf]
   [liblo])
 
-(require pineal.macros)
-
 
 (def nerve-cbs {})  ; visible from eye
 

@@ -1,24 +1,23 @@
 from time import sleep
-from pineal.eye import eye_runner
-from pineal.ear import ear_runner
-from pineal.coder import coder_runner
+from threading import Thread
+from pineal.eye import eye
+from pineal.ear import ear
+from pineal.coder import coder
+
+
+def run_thread(f):
+    t = Thread(target=f)
+    t.daemon = True
+    t.start()
 
 
 if __name__ == '__main__':
-    eye = eye_runner()
-    ear = ear_runner()
-    coder = coder_runner()
-
-    eye.start()
-    ear.start()
-    coder.start()
+    run_thread(eye)
+    run_thread(ear)
+    run_thread(coder)
 
     try:
         while True:
             sleep(1)
     except KeyboardInterrupt:
         print()
-
-    eye.stop()
-    ear.stop()
-    coder.stop()

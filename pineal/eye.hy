@@ -1,9 +1,9 @@
-(require pineal.macros)
-
 (import
   [pineal.windows [new-renderer new-master new-overview]]
   [pineal.nerve [nerve-cb! nerve-start]]
-  [logging])
+  [pyglet]
+  [logging]
+  [threading [Thread]])
 
 
 (def log (logging.getLogger --name--))
@@ -16,39 +16,25 @@
   (hy-eval `(do ~@(tokenize s)) namespace --name--))
 
 
-(defmacro eye-loop [fps]
-  `(do
-     (import [pyglet])
-     (.schedule_interval pyglet.clock
-                         (fn [dt]
-                           (when (stopped?)
-                             (.exit pyglet.app)))
-                         (/ 1 ~fps))
-     (try
-       (.run pyglet.app)
-       (catch [KeyboardInterrupt]
-         nil))) )
+(defn eye []
+  "
+  Handles and draws the vision
+  "
+  (log.info "starting eye.hy")
 
+  (let [[vision   (new-vision "")]
+        [renderer (new-renderer vision
+                                [800 800])]]
+    (new-master   renderer)
+    (new-overview renderer)
+    (nerve-cb! "/eye/code"
+               (fn [path [code]] (vision code))))
 
-(runner eye-runner []
-        "
-        Handles and draws the vision
-        "
-        (log.info "starting eye.hy")
-
-        (let [[vision   (new-vision "")]
-              [renderer (new-renderer vision
-                                      [800 800])]]
-          (new-master   renderer)
-          (new-overview renderer)
-          (nerve-cb! "/eye/code"
-                     (fn [path [code]] (vision code))))
-
-        (nerve-start)
-
-        (eye-loop 120)
-
-        (log.info "stopping eye.hy"))
+  (nerve-start)
+  (.schedule_interval pyglet.clock
+                      (fn [dt] nil)
+                      (/ 1 120))
+  (.run pyglet.app))
 
 
 (defn new-vision [code]
