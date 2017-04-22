@@ -1,0 +1,3 @@
+pyglet
+pyliblo
+jack-client
