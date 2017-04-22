@@ -11,7 +11,7 @@
   (amp 2 0.5)  ; -> (value of /amp) * 2 + 0.5
   "
   `(defn ~name [&rest args]
-     (import [pineal.nerve [get-source]])
+     (import [pineal.osc [get-source]])
 
      (let [[mult (if args       (car args)   1)]
            [add  (if (cdr args) (get args 1) 0)]

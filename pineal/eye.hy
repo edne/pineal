@@ -1,6 +1,6 @@
 (import
   [pineal.windows [new-renderer new-master new-overview]]
-  [pineal.nerve [nerve-cb! nerve-start]]
+  [pineal.osc :as osc]
   [pyglet]
   [logging]
   [threading [Thread]])
@@ -27,10 +27,10 @@
                                 [800 800])]]
     (new-master   renderer)
     (new-overview renderer)
-    (nerve-cb! "/eye/code"
-               (fn [path [code]] (vision code))))
+    (osc.add-callback "/eye/code"
+                      (fn [path [code]] (vision code))))
 
-  (nerve-start)
+  (osc.start-server)
   (.schedule_interval pyglet.clock
                       (fn [dt] nil)
                       (/ 1 120))
