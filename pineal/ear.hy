@@ -44,7 +44,7 @@
             (get values ch)))
 
         (assoc out-dict (.format "/{}" name)
-          (np.mean (.values values))))
+          (np.mean (->> values .values (map float) list))))
 
       (analyze "amp"
                (fn [xs]

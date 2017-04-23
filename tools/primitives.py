@@ -3,7 +3,7 @@ import pyglet.image
 from pyglet.image.codecs.png import PNGImageDecoder
 
 from pineal.shapes import solid_polygon, wired_polygon
-from colors import color
+from .colors import color
 
 
 psolid_memo = {}
