@@ -1,6 +1,7 @@
 (import
-  [config :as conf]
-  [liblo])
+  [liblo]
+  [atomos.atomic [AtomicFloat]]
+  [config])
 
 
 (def callbacks {})
@@ -14,7 +15,7 @@
 
 
 (defn osc-receiver []
-  (setv server (liblo.ServerThread (second conf.OSC-EYE)))
+  (setv server (liblo.ServerThread (second config.OSC-EYE)))
   (.add-method server nil nil dispatcher)
 
   server.start)
@@ -28,13 +29,12 @@
 
 (defn get-source [name]
   (unless (in name sources)
-    (setv container [0])
+    (setv container (AtomicFloat))
 
     (add-callback name
-                  (fn [path args]
-                    (setv [(car container)] args)))
+                  (fn [path [value]]
+                    (.set container value)))
 
-    (assoc sources
-      name (fn [] (car container))))
+    (assoc sources name container.get))
 
   (get sources name))
