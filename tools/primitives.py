@@ -39,7 +39,7 @@ def image(name):
                               2.0, 2.0)
 
 
-def on_layer(f, name):
+def on_layer(name, f):
     from pineal.framebuffer import Framebuffer
 
     if name not in layer_memo:

@@ -10,13 +10,13 @@ palette hsv: [red, geen, blue, red]
 
 stroke-weight: 4
 
-channel master:
+layer master:
     polygon 4:
         fill: true
         color: grey(0.01)
         scale: 4
 
-    channel:
+    group:
         scale: bass*8 + 0.8
         rotate: pi/6
 

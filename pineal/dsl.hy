@@ -23,17 +23,3 @@
           [args (cdr ef)]]
       `(~name (fn [] ~@body)
               ~@args))))
-
-
-(defmacro on [name &rest body]
-  "
-  Define a layer and draw stuff on it
-
-  Example:
-  (on my-layer
-      (fx [(scale 0.9)]
-          (draw my-other-layer)
-          (pwired 4 (grey 0.5))))
-  "
-  `(fx [(on-layer (str '~name))]
-       ~@body))
