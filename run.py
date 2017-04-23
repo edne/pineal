@@ -1,8 +1,12 @@
 from time import sleep
 from threading import Thread
+import logging
+
 from pineal.eye import eye
 from pineal.ear import ear
 from pineal.coder import coder
+
+logging.basicConfig(level=logging.DEBUG)
 
 
 def run_thread(f):
