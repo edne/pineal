@@ -18,8 +18,5 @@
   (if (cdr efs)
     (unroll (car efs)
             (cdr efs))
-    (let [[ef (car efs)]
-          [name (car ef)]
-          [args (cdr ef)]]
-      `(~name (fn [] ~@body)
-              ~@args))))
+    (let [[ef (car efs)]]
+      `(~ef (fn [] ~@body)))))
