@@ -1,0 +1,33 @@
+module math: all
+#module math: [pi, sin]
+
+osc-in amp: /amp
+osc-in bass: /bass
+osc-in high: /high
+
+palette grey: [black, white]
+palette hsv: [red, geen, blue, red]
+
+stroke-weight: 4
+
+channel master:
+    polygon 4:
+        fill: true
+        color: grey(0.01)
+        scale: 4
+
+    channel:
+        scale: bass*8 + 0.8
+        rotate: pi/6
+
+        polygon 4:
+            fill: false
+            color: hsv(amp*4)
+
+        master:
+            scale: bass + 0.8
+            rotate: pi/4
+
+
+draw: master
+#draw: [ch1, ch2]
