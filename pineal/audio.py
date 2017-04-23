@@ -35,8 +35,6 @@ def hear(callback, channels=2, body=None,
 
         callback(data)
 
-        return jack.CALL_AGAIN
-
     for i in range(channels):
         client.inports.register("input_{0}".format(i+1))
 
