@@ -18,6 +18,9 @@
                 (fx [(scale (bass 1 0.8))
                      (rotate (/ pi 4))
                      ]
-                    (draw "master")))) )
+                    (draw "master")))
+            ((apply-effects (psolid 4 (grey 1))
+                            [(scale 0.5)
+                             (rotate (/ pi 4))]))))
 
 (draw "master")

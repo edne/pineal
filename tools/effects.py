@@ -3,6 +3,19 @@ import pyglet.gl as gl
 from pineal.matrix import push, pop
 
 
+def apply_effects(entity, effects):
+    if not effects:
+        return entity
+
+    def new_entity():
+        effects[0](entity)
+
+    if len(effects) == 1:
+        return new_entity
+    else:
+        return apply_effects(new_entity, effects[1:])
+
+
 def translate(x, y=0.0, z=0.0):
     def effect(entity):
         push()
