@@ -48,6 +48,14 @@ def image(name):
     return entity
 
 
+def group(entities):
+    def entity():
+        for e in entities:
+            e()
+
+    return entity
+
+
 def on_layer(name, f):
     from pineal.framebuffer import Framebuffer
 
