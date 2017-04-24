@@ -47,7 +47,6 @@
   (defn eval-code [code]
     (log.info "evaluating code")
     (eval-str (+ "(import [tools [*]])"
-                "(require pineal.dsl)"
                 "(defn box-draw []"
                 code
                 ")")
