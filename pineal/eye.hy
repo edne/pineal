@@ -42,15 +42,11 @@
   ; so when everything explodes, we can
   ; always restore the last (hopefully) working vision
   (setv stack ["" code])
-  (setv namespace {"box_draw" nil})
+  (setv namespace {"draw" (fn [])})
 
   (defn eval-code [code]
     (log.info "evaluating code")
-    (eval-str (+ "(import [tools [*]])"
-                "(defn box-draw []"
-                code
-                ")")
-              namespace))
+    (eval-str code namespace))
 
   (defn load [code]
     (log.info "loading vision")
@@ -58,9 +54,9 @@
     (.append stack code))
 
   (defn draw []
-    (if-not (get namespace "box_draw")
+    (if-not (get namespace "draw")
       (eval-code (last stack)))
-    ((get namespace "box_draw"))
+    ((get namespace "draw"))
     :working)
 
   (fn [&optional code]

@@ -1,6 +1,5 @@
 from pineal.osc import get_source
 from .colors import from_palette, color
-from .primitives import draw_layer
 
 
 def osc_in(path):
@@ -19,7 +18,3 @@ def palette(colors):
                 a if in_alpha is None else in_alpha]
 
     return f
-
-
-def draw(name):
-    draw_layer(name)
