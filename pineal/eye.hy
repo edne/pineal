@@ -1,5 +1,6 @@
 (import
   [pineal.windows [new-renderer new-master new-overview]]
+  [pineal.parser [parse]]
   [pineal.osc :as osc]
   [pyglet]
   [logging]
@@ -7,13 +8,6 @@
 
 
 (def log (logging.getLogger --name--))
-
-
-(defn eval-str [s namespace]
-  (import
-    [hy.lex [tokenize]]
-    [hy.importer [hy-eval]])
-  (hy-eval `(do ~@(tokenize s)) namespace --name--))
 
 
 (defn eye []
@@ -46,7 +40,7 @@
 
   (defn eval-code [code]
     (log.info "evaluating code")
-    (eval-str code namespace))
+    (parse code namespace))
 
   (defn load [code]
     (log.info "loading vision")

@@ -3,7 +3,7 @@ import pyglet.image
 from pyglet.image.codecs.png import PNGImageDecoder
 
 from pineal.shapes import solid_polygon, wired_polygon
-from .colors import color
+from .colors import color as color_
 
 
 psolid_memo = {}
@@ -12,13 +12,13 @@ image_memo = {}
 layer_memo = {}
 
 
-def psolid(n, c):
+def polygon(sides, color):
     def entity():
-        if n not in psolid_memo:
-            psolid_memo[n] = solid_polygon(n)
+        if sides not in psolid_memo:
+            psolid_memo[sides] = solid_polygon(sides)
 
-        vlist = psolid_memo[n]
-        vlist.colors = color(c) * (n * 3)
+        vlist = psolid_memo[sides]
+        vlist.colors = color_(color) * (sides * 3)
         vlist.draw(gl.GL_TRIANGLES)
 
     return entity
@@ -30,7 +30,7 @@ def pwired(n, c):
             pwired_memo[n] = wired_polygon(n)
 
         vlist = pwired_memo[n]
-        vlist.colors = color(c) * n
+        vlist.colors = color_(c) * n
         vlist.draw(gl.GL_LINE_LOOP)
 
     return entity

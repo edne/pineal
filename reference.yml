@@ -8,19 +8,23 @@ osc-in high: /high
 palette grey: [black, white]
 palette hsv: [red, geen, blue, red]
 
-stroke-weight: 4
 
 layer master:
-    polygon 4:
+    polygon:
+        sides: 4
         fill: true
         color: grey(0.01)
+
         scale: 4
 
     group:
+        stroke-weight: 4
+
         scale: bass*8 + 0.8
         rotate: pi/6
 
-        polygon 4:
+        polygon:
+            sides: 4
             fill: false
             color: hsv(amp*4)
 

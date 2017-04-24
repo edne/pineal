@@ -1,4 +1,4 @@
-file_name = "sample.hy"
+file_name = "test.yml"
 LOG_LEVEL = "debug"
 
 
