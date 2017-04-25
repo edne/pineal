@@ -40,7 +40,7 @@
 
   (defn eval-code [code]
     (log.info "evaluating code")
-    (parse code namespace))
+    (if code (parse code namespace)))
 
   (defn load [code]
     (log.info "loading vision")
