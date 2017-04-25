@@ -1,0 +1,8 @@
+draw:
+- polygon:
+    sides: 8
+    color: w
+
+- polygon:
+    sides: 3
+    color: k
