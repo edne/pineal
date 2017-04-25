@@ -9,30 +9,29 @@ class ParserError(Exception):
     pass
 
 
+# TODO: check in namespace or in a symbol table
 primitives = {'polygon': polygon}
 
 
-def get_entities(tree):
-    entities = []
+def make_entity(tree):
+    # tree: {'polygon': {'sides': 4, ...}}
+    # tree.items(): [('polygon', {...})]
+    name, params = tree.items()[0]
 
-    # tree: [{'polygon': {'sides': 4, ...}}, ...]
-    for branch in tree:
-        # branc.items(): [('polygon', {...})]
-        name, kwargs = branch.items()[0]
+    if name in primitives:
+        entity = primitives[name](**params)
+    else:
+        # TODO: make groups and layers
+        raise ParserError('Invalid entity')
 
-        if name in primitives:
-            # TODO: check in namespace or in a symbol table
-            entity = primitives[name](**kwargs)
-            entities.append(entity)
-
-    return entities
+    return entity
 
 
 def parse_draw(tree, namespace):
     if not isinstance(tree, list):
         raise ParserError('Draw should take a list of items')
 
-    entities = get_entities(tree)
+    entities = [make_entity(branch) for branch in tree]
 
     def draw():
         for entity in entities:
