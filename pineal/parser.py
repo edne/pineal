@@ -25,18 +25,18 @@ def make_effect(name, leaf):
 def make_entity(tree):
     # tree: {'polygon': {'sides': 4, ...}}
     # tree.items(): [('polygon', {...})]
-    name, params = tree.items()[0]
+    name, branch = tree.items()[0]
 
-    effects = [make_effect(k, params[k])
-               for k in params
+    effects = [make_effect(k, branch[k])
+               for k in branch
                if k in _effects]
 
-    params = {key: value
-              for (key, value) in params.items()
+    branch = {key: value
+              for (key, value) in branch.items()
               if key not in _effects}
 
     if name in _primitives:
-        entity = _primitives[name](**params)
+        entity = _primitives[name](**branch)
     else:
         # TODO: make groups and layers
         raise ParserError('Invalid entity')
