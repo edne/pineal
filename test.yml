@@ -1,9 +1,9 @@
 draw:
-- polygon:
-    sides: 4
-    color: w
+    polygon:
+        sides: 4
+        color: 'w'
 
-- polygon:
-    sides: 4
-    color: k
-    scale: 0.5
+    polygon:
+        sides: 4
+        color: 'k'
+        scale: 0.5

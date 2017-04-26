@@ -1,7 +1,7 @@
 import logging
-import yaml
 from tools import apply_effects
 from tools import polygon, scale
+from pineal.tree_parser import make_tree
 
 log = logging.getLogger(__name__)
 
@@ -15,28 +15,27 @@ _primitives = {'polygon': polygon}
 _effects = {'scale': scale}
 
 
-def make_effect(name, leaf):
-    # TODO: multiple arguments
-    arg = leaf
+def make_effect(branch):
+    name, leaf = branch
+    arg = eval(leaf)
     effect = _effects[name](arg)
     return effect
 
 
-def make_entity(tree):
-    # tree: {'polygon': {'sides': 4, ...}}
-    # tree.items(): [('polygon', {...})]
-    name, branch = tree.items()[0]
+def make_entity(tree, namespace):
+    log.debug(tree)
+    name, body = tree
 
-    effects = [make_effect(k, branch[k])
-               for k in branch
-               if k in _effects]
+    effects = [make_effect(branch)
+               for branch in body
+               if branch[0] in _effects]
 
-    branch = {key: value
-              for (key, value) in branch.items()
+    kwargs = {key: eval(value)
+              for (key, value) in body
               if key not in _effects}
 
     if name in _primitives:
-        entity = _primitives[name](**branch)
+        entity = _primitives[name](**kwargs)
     else:
         # TODO: make groups and layers
         raise ParserError('Invalid entity')
@@ -45,10 +44,8 @@ def make_entity(tree):
 
 
 def parse_draw(tree, namespace):
-    if not isinstance(tree, list):
-        raise ParserError('Draw should take a list of items')
-
-    entities = [make_entity(branch) for branch in tree]
+    entities = [make_entity(branch, namespace)
+                for branch in tree]
 
     def draw():
         for entity in entities:
@@ -64,14 +61,13 @@ def parse_top_level(tree, namespace):
     # palette
     # parse_definitions(tree, namespace)  # layer, group
 
-    if 'draw' not in tree:
-        raise ParserError('Missing draw entry')
-    else:
-        parse_draw(tree['draw'], namespace)
+    for head, body in tree:
+        if head == 'draw':
+            parse_draw(body, namespace)
 
 
 def parse(code, namespace):
-    tree = yaml.load(code)
+    tree = make_tree(code)
     log.debug(tree)
 
     parse_top_level(tree, namespace)
