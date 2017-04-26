@@ -7,3 +7,15 @@ draw:
         sides: 4
         color: 'k'
         scale: 0.5
+
+    group:
+        scale: 0.25
+
+        polygon:
+            sides: 4
+            color: 'w'
+
+        polygon:
+            sides: 4
+            color: 'k'
+            scale: 0.5
