@@ -1,7 +1,9 @@
+palette grey: [black, white]
+
 draw:
     polygon:
         sides: 4
-        color: white
+        color: grey(0.5)
 
     polygon:
         sides: 4

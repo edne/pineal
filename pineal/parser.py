@@ -1,7 +1,7 @@
 import logging
 from tools import apply_effects, group
 from tools import polygon, scale
-from tools import default_colors
+from tools import default_colors, palette
 from pineal.tree_parser import make_tree
 
 log = logging.getLogger(__name__)
@@ -74,13 +74,18 @@ def parse_top_level(tree, ns):
     # TODO:
     # module
     # osc-in
-    # palette
     # parse_definitions(tree, ns)  # layer, group
 
     ns.update(default_colors)
 
     for head, body in tree:
-        if head == 'draw':
+        if head.startswith('palette '):
+            name = head.split()[1]
+            ns.update({
+                name: palette(eval(body, ns))
+            })
+
+        elif head == 'draw':
             parse_draw(body, ns)
 
 
