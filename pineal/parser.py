@@ -25,14 +25,12 @@ def make_effect(branch, ns):
 
 
 def make_group(tree, ns):
-    log.debug('Group tree: {}'.format(tree))
     entities = [make_entity(branch, ns)
                 for branch in tree]
     return group(entities)
 
 
 def make_entity(tree, ns):
-    log.debug(tree)
     name, body = tree
 
     effects = [make_effect(branch, ns)
@@ -61,10 +59,10 @@ def make_entity(tree, ns):
 
 
 def parse_draw(tree, ns):
-    entities = [make_entity(branch, ns)
-                for branch in tree]
-
     def draw():
+        entities = [make_entity(branch, ns)
+                    for branch in tree]
+
         for entity in entities:
             entity()
 
