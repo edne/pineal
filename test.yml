@@ -14,15 +14,3 @@ draw:
         color: black
         scale: bass() * 4 + 0.5
         scale: 0.75
-
-    group:
-        scale: 0.25
-
-        polygon:
-            sides: 4
-            color: white
-
-        polygon:
-            sides: 4
-            color: black
-            scale: 0.5

@@ -1,5 +1,4 @@
 import logging
-from tools import group
 from tools import polygon, scale
 from tools import default_colors, palette
 from tools import osc_in
@@ -35,23 +34,17 @@ def eval_leaf(leaf, ns):
     return eval(leaf, ns)
 
 
-def eval_effect(tree, ns):
+def make_effect(tree, ns):
     name, leaf = tree
     arg = eval_leaf(leaf, ns)
     effect = _effects[name](arg)
     return effect
 
 
-def make_group(tree, ns):
-    entities = [make_entity(branch, ns)
-                for branch in tree]
-    return group(entities)
-
-
 def make_entity(tree, ns):
     name, body = tree
 
-    effects = [eval_effect(branch, ns)
+    effects = [make_effect(branch, ns)
                for branch in body
                if branch[0] in _effects]
 
@@ -64,10 +57,6 @@ def make_entity(tree, ns):
                   for (key, value) in body}
 
         entity = _primitives[name](**kwargs)
-
-    elif name == 'group':
-        # TODO: named groups
-        entity = make_group(body, ns)
 
     else:
         # TODO: layers
