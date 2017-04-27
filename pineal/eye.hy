@@ -1,6 +1,6 @@
 (import
   [pineal.windows [new-renderer new-master new-overview]]
-  [pineal.parser [parse]]
+  [pineal.lang [pineal-eval]]
   [pineal.osc :as osc]
   [pyglet]
   [logging]
@@ -40,7 +40,7 @@
 
   (defn eval-code [code]
     (log.info "evaluating code")
-    (if code (parse code namespace)))
+    (if code (pineal-eval code namespace)))
 
   (defn load [code]
     (log.info "loading vision")

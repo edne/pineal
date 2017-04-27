@@ -1,101 +1,94 @@
+from __future__ import print_function
+import sys
 import logging
-from tools import apply_effects, group
-from tools import polygon, scale
-from tools import default_colors, palette
-from tools import osc_in
-from pineal.tree_parser import make_tree
+import tokenize as tkn
+from io import BytesIO
 
+logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
 
 
 class ParserError(Exception):
-    pass
+    'Error in parsing'
 
 
-# TODO: check in namespace or in a symbol table
-_primitives = {'polygon': polygon}
-_effects = {'scale': scale}
-
-
-def make_effect(branch, ns):
-    name, leaf = branch
-    arg = eval(leaf, ns)
-    effect = _effects[name](arg)
-    return effect
-
-
-def make_group(tree, ns):
-    entities = [make_entity(branch, ns)
-                for branch in tree]
-    return group(entities)
-
-
-def make_entity(tree, ns):
-    name, body = tree
-
-    effects = [make_effect(branch, ns)
-               for branch in body
-               if branch[0] in _effects]
-
-    body = [(key, value)
-            for (key, value) in body
-            if key not in _effects]
-
-    if name in _primitives:
-        kwargs = {key: eval(value, ns)
-                  for (key, value) in body}
-
-        entity = _primitives[name](**kwargs)
-
-    elif name == 'group':
-        # TODO: named groups
-        entity = make_group(body, ns)
-
+def to_tokens(code):
+    bytes_stream = BytesIO(code.encode('utf-8'))
+    if sys.version_info > (3, 0):
+        g = tkn.tokenize(bytes_stream.readline)
     else:
-        # TODO: layers
-        raise ParserError('Invalid entity')
+        g = tkn.generate_tokens(bytes_stream.readline)
 
-    return apply_effects(entity, effects)
-
-
-def parse_draw(tree, ns):
-    def draw():
-        entities = [make_entity(branch, ns)
-                    for branch in tree]
-
-        for entity in entities:
-            entity()
-
-    ns['draw'] = draw
+    return [(n, v) for (n, v, _, _, _) in g]
 
 
-def parse_top_level(tree, ns):
-    # TODO:
-    # module
-    # osc-in
-    # parse_definitions(tree, ns)  # layer, group
-
-    ns.update(default_colors)
-
-    for head, body in tree:
-        if head.startswith('source '):
-            name = head.split()[1]
-            ns.update({
-                name: osc_in(eval(body, ns))
-            })
-
-        if head.startswith('palette '):
-            name = head.split()[1]
-            ns.update({
-                name: palette(eval(body, ns))
-            })
-
-        elif head == 'draw':
-            parse_draw(body, ns)
+def is_newline(t):
+    toknum, _ = t
+    return toknum == tkn.NEWLINE or toknum == tkn.NL
 
 
-def parse(code, ns):
-    tree = make_tree(code)
-    log.debug(tree)
+def split_lines(tokens):
+    current_line = []
+    for t in tokens:
+        if t[0] == 59:  # ENCODING
+            pass
 
-    parse_top_level(tree, ns)
+        elif is_newline(t):
+            if current_line:
+                yield current_line
+                current_line = []
+
+        else:
+            if t[0] in (tkn.INDENT, tkn.DEDENT):
+                if current_line:
+                    yield current_line
+                    current_line = []
+
+                yield t[0]
+
+            else:
+                current_line.append(t[1])
+
+
+def make_blocks(lines):
+    nesting = 0
+
+    for i, line in enumerate(lines):
+        if line == tkn.INDENT:
+            if nesting == 0:
+                yield list(make_blocks(lines[i+1:]))
+            nesting += 1
+
+        elif line == tkn.DEDENT:
+            if nesting == 0:
+                return
+            else:
+                nesting -= 1
+
+        else:
+            if nesting == 0:
+                yield line
+
+
+def join_blocks(blocks):
+    for i, block in enumerate(blocks):
+        if ':' in block:
+            colon_index = block.index(':')
+
+            head = ' '.join(block[:colon_index])
+            leaf = ' '.join(block[colon_index+1:])
+
+            if leaf:
+                yield [head, leaf]
+            else:
+                yield [head, list(join_blocks(blocks[i+1]))]
+
+
+def parse(code):
+    tokens = to_tokens(code)
+
+    lines = list(split_lines(tokens))
+    blocks = list(make_blocks(lines))
+    tree = list(join_blocks(blocks))
+
+    return tree
