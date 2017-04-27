@@ -1,3 +1,4 @@
+source amp: "/amp"
 palette grey: [black, white]
 
 draw:

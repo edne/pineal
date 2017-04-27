@@ -2,6 +2,7 @@ import logging
 from tools import apply_effects, group
 from tools import polygon, scale
 from tools import default_colors, palette
+from tools import osc_in
 from pineal.tree_parser import make_tree
 
 log = logging.getLogger(__name__)
@@ -79,6 +80,12 @@ def parse_top_level(tree, ns):
     ns.update(default_colors)
 
     for head, body in tree:
+        if head.startswith('source '):
+            name = head.split()[1]
+            ns.update({
+                name: osc_in(eval(body, ns))
+            })
+
         if head.startswith('palette '):
             name = head.split()[1]
             ns.update({
