@@ -1,11 +1,11 @@
 draw:
     polygon:
         sides: 4
-        color: 'w'
+        color: white
 
     polygon:
         sides: 4
-        color: 'k'
+        color: black
         scale: 0.5
 
     group:
@@ -13,9 +13,9 @@ draw:
 
         polygon:
             sides: 4
-            color: 'w'
+            color: white
 
         polygon:
             sides: 4
-            color: 'k'
+            color: black
             scale: 0.5
