@@ -84,6 +84,9 @@ def eval_top_level(tree, ns):
 
     ns.update(default_colors)
 
+    from time import time
+    ns.update({'time': time})
+
     for head, body in tree:
         if head.startswith('source '):
             name = head.split()[1]

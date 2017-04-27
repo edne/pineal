@@ -13,4 +13,4 @@ draw:
         sides: 4
         color: black
         scale: bass() * 4 + 0.5
-        scale: 0.75
+        scale: 0.75 + time() % 1
