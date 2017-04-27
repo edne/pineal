@@ -13,9 +13,15 @@ _primitives = {'polygon': polygon}
 _effects = {'scale': scale}
 
 
+def eval_leaf(leaf, ns):
+    "Leaf should be a python expression"
+    # TODO: return a funcion
+    return eval(leaf, ns)
+
+
 def make_effect(branch, ns):
     name, leaf = branch
-    arg = eval(leaf, ns)
+    arg = eval_leaf(leaf, ns)
     effect = _effects[name](arg)
     return effect
 
@@ -38,7 +44,7 @@ def make_entity(tree, ns):
             if key not in _effects]
 
     if name in _primitives:
-        kwargs = {key: eval(value, ns)
+        kwargs = {key: eval_leaf(value, ns)
                   for (key, value) in body}
 
         entity = _primitives[name](**kwargs)
@@ -77,13 +83,13 @@ def eval_top_level(tree, ns):
         if head.startswith('source '):
             name = head.split()[1]
             ns.update({
-                name: osc_in(eval(body, ns))
+                name: osc_in(eval_leaf(body, ns))
             })
 
         if head.startswith('palette '):
             name = head.split()[1]
             ns.update({
-                name: palette(eval(body, ns))
+                name: palette(eval_leaf(body, ns))
             })
 
         elif head == 'draw':
