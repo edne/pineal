@@ -15,25 +15,25 @@ _primitives = {'polygon': polygon}
 _effects = {'scale': scale}
 
 
-def make_effect(branch, namespace):
+def make_effect(branch, ns):
     name, leaf = branch
-    arg = eval(leaf)
+    arg = eval(leaf, ns)
     effect = _effects[name](arg)
     return effect
 
 
-def make_group(tree, namespace):
+def make_group(tree, ns):
     log.debug('Group tree: {}'.format(tree))
-    entities = [make_entity(branch, namespace)
+    entities = [make_entity(branch, ns)
                 for branch in tree]
     return group(entities)
 
 
-def make_entity(tree, namespace):
+def make_entity(tree, ns):
     log.debug(tree)
     name, body = tree
 
-    effects = [make_effect(branch, namespace)
+    effects = [make_effect(branch, ns)
                for branch in body
                if branch[0] in _effects]
 
@@ -42,14 +42,14 @@ def make_entity(tree, namespace):
             if key not in _effects]
 
     if name in _primitives:
-        kwargs = {key: eval(value)
+        kwargs = {key: eval(value, ns)
                   for (key, value) in body}
 
         entity = _primitives[name](**kwargs)
 
     elif name == 'group':
         # TODO: named groups
-        entity = make_group(body, namespace)
+        entity = make_group(body, ns)
 
     else:
         # TODO: layers
@@ -58,31 +58,31 @@ def make_entity(tree, namespace):
     return apply_effects(entity, effects)
 
 
-def parse_draw(tree, namespace):
-    entities = [make_entity(branch, namespace)
+def parse_draw(tree, ns):
+    entities = [make_entity(branch, ns)
                 for branch in tree]
 
     def draw():
         for entity in entities:
             entity()
 
-    namespace['draw'] = draw
+    ns['draw'] = draw
 
 
-def parse_top_level(tree, namespace):
+def parse_top_level(tree, ns):
     # TODO:
     # module
     # osc-in
     # palette
-    # parse_definitions(tree, namespace)  # layer, group
+    # parse_definitions(tree, ns)  # layer, group
 
     for head, body in tree:
         if head == 'draw':
-            parse_draw(body, namespace)
+            parse_draw(body, ns)
 
 
-def parse(code, namespace):
+def parse(code, ns):
     tree = make_tree(code)
     log.debug(tree)
 
-    parse_top_level(tree, namespace)
+    parse_top_level(tree, ns)
