@@ -1,6 +1,7 @@
 source amp: "/amp"
 source bass: "/bass"
 source high: "/high"
+
 palette grey: [black, white]
 
 draw:
@@ -12,6 +13,7 @@ draw:
         sides: 4
         color: black
         scale: bass() * 4 + 0.5
+        scale: 0.75
 
     group:
         scale: 0.25
