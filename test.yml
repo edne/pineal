@@ -1,16 +1,4 @@
-source amp: "/amp"
-source bass: "/bass"
-source high: "/high"
-
-palette grey: [black, white]
-
-draw:
-    polygon:
-        sides: 4
-        color: grey(0.5)
-
-    polygon:
-        sides: 4
-        color: black
-        scale: bass() * 4 + 0.5
-        scale: 0.75 + time() % 1
+polygon:
+    sides: 4
+    color: [1, 1, 1, 1]
+    scale: time() % 1

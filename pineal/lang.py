@@ -1,111 +1,170 @@
 import logging
-from tools import polygon, scale
-from tools import default_colors, palette
-from tools import osc_in
+from contextlib import contextmanager
+from math import pi
+from pprint import pprint
 from pineal.parser import parse
+
+import pyglet.gl as gl
+import pyglet.image
+from pyglet.image.codecs.png import PNGImageDecoder
+
+from pineal.shapes import solid_polygon, wired_polygon
+from pineal.colors import color as color_
 
 log = logging.getLogger(__name__)
 
 
-# TODO: check in namespace or in a symbol table
-_primitives = {'polygon': polygon}
-_effects = {'scale': scale}
+_effects = {}
+_primitives = {}
 
 
-def apply_effect(entity, effect):
-    def new_entity():
-        effect(entity)
+def effect(f):
+    @contextmanager
+    def decorated(arg):
+        return f(arg)
 
-    return new_entity
+    name = f.__name__
+    _effects[name] = decorated
 
-
-def apply_effects(entity, effects):
-    log.debug(effects)
-
-    for effect in effects:
-        entity = apply_effect(entity, effect)
-
-    return entity
+    return decorated
 
 
-def eval_leaf(leaf, ns):
-    "Leaf should be a python expression"
-    # TODO: return a funcion
-    return eval(leaf, ns)
+def apply_effect(f, name, arg):
+    def changed(**kwargs):
+        with _effects[name](arg):
+            f(**kwargs)
+
+    return changed
 
 
-def make_effect(tree, ns):
-    name, leaf = tree
-    arg = eval_leaf(leaf, ns)
-    effect = _effects[name](arg)
-    return effect
+def primitive(f):
+    name = f.__name__
+
+    def decorated(**kwargs):
+        changed = f
+        for name, arg in kwargs.items():
+            if name in _effects:
+                changed = apply_effect(changed, name, arg)
+
+        kwargs = {name: value
+                  for (name, value) in kwargs.items()
+                  if name not in _effects}
+
+        changed(**kwargs)
+
+    _primitives[name] = decorated
+    return decorated
 
 
-def make_entity(tree, ns):
-    name, body = tree
+psolid_memo = {}
+pwired_memo = {}
+image_memo = {}
+layer_memo = {}
 
-    effects = [make_effect(branch, ns)
-               for branch in body
-               if branch[0] in _effects]
 
-    body = [(key, value)
-            for (key, value) in body
-            if key not in _effects]
+@primitive
+def polygon(sides, color, fill=True, **kwargs):
+    if fill:
+        if sides not in psolid_memo:
+            psolid_memo[sides] = solid_polygon(sides)
 
-    if name in _primitives:
-        kwargs = {key: eval_leaf(value, ns)
-                  for (key, value) in body}
-
-        entity = _primitives[name](**kwargs)
-
+        vlist = psolid_memo[sides]
+        vlist.colors = color_(color) * (sides * 3)
+        vlist.draw(gl.GL_TRIANGLES)
     else:
-        # TODO: layers
-        raise Exception('Invalid entity')
+        if sides not in pwired_memo:
+            pwired_memo[sides] = wired_polygon(sides)
 
-    return apply_effects(entity, effects)
-
-
-def eval_draw(tree, ns):
-    def draw():
-        entities = [make_entity(branch, ns)
-                    for branch in tree]
-
-        for entity in entities:
-            entity()
-
-    ns['draw'] = draw
+        vlist = pwired_memo[sides]
+        vlist.colors = color_(color) * sides
+        vlist.draw(gl.GL_LINE_LOOP)
 
 
-def eval_top_level(tree, ns):
-    # TODO:
-    # module
-    # osc-in
-    # eval_definitions(tree, ns)  # layer, group
+@primitive
+def image(name):
+    if name not in image_memo:
+        img = pyglet.image.load("images/%s.png" % name,
+                                decoder=PNGImageDecoder())
+        image_memo[name] = img
+        image_memo[name].blit(-1.0, 1.0, 0.0,
+                              2.0, 2.0)
 
-    ns.update(default_colors)
 
-    from time import time
-    ns.update({'time': time})
+@primitive
+def draw_layer(name):
+    if name in layer_memo:
+        layer_memo[name].texture.blit(-1, 1, 0,
+                                      2, -2)
 
-    for head, body in tree:
-        if head.startswith('source '):
-            name = head.split()[1]
-            ns.update({
-                name: osc_in(eval_leaf(body, ns))
-            })
 
-        if head.startswith('palette '):
-            name = head.split()[1]
-            ns.update({
-                name: palette(eval_leaf(body, ns))
-            })
+@effect
+def scale(x):
+    gl.glPushMatrix()
+    gl.glScalef(x, x, x)
+    yield
+    gl.glPopMatrix()
 
-        elif head == 'draw':
-            eval_draw(body, ns)
+
+@effect
+def translate(x):
+    gl.glPushMatrix()
+    gl.glTranslatef(x, 0, 0)
+    yield
+    gl.glPopMatrix()
+
+
+@effect
+def rotate(angle):
+    gl.glPushMatrix()
+    gl.glRotatef(angle * 180 / pi,
+                 0, 0, 1)
+    yield
+    gl.glPopMatrix()
+
+
+@effect
+def on_layer(name):
+    from pineal.framebuffer import Framebuffer
+
+    if name not in layer_memo:
+        layer_memo[name] = Framebuffer(800, 800)
+
+    with layer_memo[name]:
+        yield
+
+
+class Entity:
+    def __init__(self, tree):
+        if not isinstance(tree[0], str):
+            raise Exception('Invalid Entity')
+
+        name = tree[0]
+        if name in _primitives:
+            self.primitive = _primitives[name]
+        else:
+            raise Exception('Not implemented primitive')
+
+        self.params = {branch[0]: branch[1]
+                       for branch in tree[1]}
+        pprint(self.params)
+
+    def draw(self, ns):
+        kwargs = {name: eval(leaf, ns)
+                  for (name, leaf) in self.params.items()}
+
+        self.primitive(**kwargs)
 
 
 def pineal_eval(code, ns):
     tree = parse(code)
     log.debug(tree)
 
-    eval_top_level(tree, ns)
+    entities = [Entity(branch) for branch in tree]
+
+    def draw():
+        for e in entities:
+            e.draw(ns)
+
+    from time import time
+
+    ns.update({'draw': draw, 'time': time})
