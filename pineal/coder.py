@@ -1,46 +1,38 @@
 from os.path import abspath
 from os.path import split as splitpath
-from time import sleep
 from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler
+from watchdog.events import PatternMatchingEventHandler
 import liblo
-import config
 import logging
+import config
 
 log = logging.getLogger(__name__)
 
 
-def coder():
-    def new_handler(file_name):
-        def get_code():
-            with open(file_name) as f:
-                return f.read()
-
-        def is_valid(path):
-            return abspath(path) == abspath(file_name)
-
-        liblo.send(config.OSC_EYE, '/eye/code', ('s', get_code()))
-
-        class Handler(FileSystemEventHandler):
-            def on_modified(self, event):
-                path = event.src_path
-                if abspath(path) == abspath(file_name):
-                    liblo.send(config.OSC_EYE, '/eye/code',
-                               ('s', get_code()))
-
-        return Handler()
-
-    observer = Observer()
+def send_code():
     file_name = config.file_name
 
+    with open(file_name) as f:
+        code = f.read()
+
+    liblo.send(config.OSC_EYE, '/eye/code', ('s', code))
+
+
+class Handler(PatternMatchingEventHandler):
+    def on_modified(self, event):
+        log.debug('Modified: {}'.format(event.src_path))
+        send_code()
+
+
+def coder():
+    send_code()
+
+    file_name = config.file_name
     full_path = abspath(file_name)
     folder, _ = splitpath(full_path)
 
-    observer.schedule(new_handler(file_name), folder, False)
-    observer.start()  # Maybe run() ?
+    handler = Handler(patterns=[abspath(file_name)])
 
-    while True:
-        sleep(1000)
-
-    observer.stop()
-    observer.join()
+    observer = Observer()
+    observer.schedule(handler, folder, False)
+    observer.start()
