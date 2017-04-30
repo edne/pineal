@@ -1,4 +1,9 @@
 polygon:
     sides: 4
-    color: [1, 1, 1, 1]
-    scale: time() % 1
+    color: [0, 1, 1, 1]
+    scale: 0.4*time() % 2
+
+polygon:
+    sides: 4
+    color: [0, 0, 0, 1]
+    scale: 0.2*time() % 1
