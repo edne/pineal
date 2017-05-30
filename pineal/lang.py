@@ -16,26 +16,29 @@ _effects = {}
 
 
 def effect(f):
-    _effects.update({f.__name__: f})
-
     @contextmanager
     def decorated(fx_arg):
         return f(fx_arg)
 
+    _effects.update({f.__name__: decorated})
     return decorated
 
 
-class Primitive:
+class Entity:
     def __init__(self, draw):
         self.draw = draw
 
+    def __getattr__(self, attr):
+        fx = _effects[attr]
 
-def apply_effect(a, fx, fx_arg):
-    def changed(*kargs, **kwargs):
-        with fx(fx_arg):
-            return a.draw()
+        def method(fx_arg):
+            def changed(*kargs, **kwargs):
+                with fx(fx_arg):
+                    return self.draw()
 
-    return Primitive(changed)
+            return Entity(changed)
+
+        return method
 
 
 def primitive(f):
@@ -43,7 +46,7 @@ def primitive(f):
         def draw():
             f(*kargs, **kwargs)
 
-        return Primitive(draw)
+        return Entity(draw)
 
     return decorated
 

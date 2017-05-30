@@ -1,6 +1,8 @@
-from pineal.lang import polygon, scale, apply_effect
+from pineal.lang import polygon
 
 
-p = polygon(4, [1, 1, 1])
-p = apply_effect(p, scale, 0.5)
+p = polygon(4, [1, 1, 1])\
+        .scale(0.25)\
+        .rotate(1)
+
 p.draw()
