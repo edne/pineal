@@ -1,4 +1,4 @@
-file_name = "test.yml"
+file_name = "test.py"
 LOG_LEVEL = "debug"
 
 

@@ -1,8 +1,6 @@
 import logging
 from contextlib import contextmanager
 from math import pi
-from pprint import pprint
-from pineal.parser import parse
 
 import pyglet.gl as gl
 import pyglet.image
@@ -20,39 +18,24 @@ _primitives = {}
 
 def effect(f):
     @contextmanager
-    def decorated(arg):
-        return f(arg)
-
-    name = f.__name__
-    _effects[name] = decorated
+    def decorated(fx_arg):
+        return f(fx_arg)
 
     return decorated
 
 
-def apply_effect(f, name, arg):
-    def changed(**kwargs):
-        with _effects[name](arg):
-            f(**kwargs)
+def apply_effect(f, fx, fx_arg):
+    def changed(*kargs, **kwargs):
+        with fx(fx_arg):
+            return f(*kargs, **kwargs)
 
     return changed
 
 
 def primitive(f):
-    name = f.__name__
+    def decorated(*kargs, **kwargs):
+        return f(*kargs, **kwargs)
 
-    def decorated(**kwargs):
-        changed = f
-        for name, arg in kwargs.items():
-            if name in _effects:
-                changed = apply_effect(changed, name, arg)
-
-        kwargs = {name: value
-                  for (name, value) in kwargs.items()
-                  if name not in _effects}
-
-        changed(**kwargs)
-
-    _primitives[name] = decorated
     return decorated
 
 
@@ -133,38 +116,8 @@ def on_layer(name):
         yield
 
 
-class Entity:
-    def __init__(self, tree):
-        if not isinstance(tree[0], str):
-            raise Exception('Invalid Entity')
-
-        name = tree[0]
-        if name in _primitives:
-            self.primitive = _primitives[name]
-        else:
-            raise Exception('Not implemented primitive')
-
-        self.params = {branch[0]: branch[1]
-                       for branch in tree[1]}
-        pprint(self.params)
-
-    def draw(self, ns):
-        kwargs = {name: eval(leaf, ns)
-                  for (name, leaf) in self.params.items()}
-
-        self.primitive(**kwargs)
-
-
 def pineal_eval(code, ns):
-    tree = parse(code)
-    log.debug(tree)
-
-    entities = [Entity(branch) for branch in tree]
-
     def draw():
-        for e in entities:
-            e.draw(ns)
+        pass
 
-    from time import time
-
-    ns.update({'draw': draw, 'time': time})
+    ns.update({'draw': draw})

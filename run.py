@@ -4,7 +4,6 @@ from threading import Thread
 import logging
 
 from pineal.eye import eye
-from pineal.ear import ear
 from pineal.coder import coder
 
 logging.basicConfig(level=logging.DEBUG)
@@ -18,7 +17,6 @@ def run_thread(f):
 
 if __name__ == '__main__':
     run_thread(eye)
-    run_thread(ear)
     run_thread(coder)
 
     try:
