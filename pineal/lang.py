@@ -13,10 +13,11 @@ log = logging.getLogger(__name__)
 
 
 _effects = {}
-_primitives = {}
 
 
 def effect(f):
+    _effects.update({f.__name__: f})
+
     @contextmanager
     def decorated(fx_arg):
         return f(fx_arg)
@@ -24,17 +25,25 @@ def effect(f):
     return decorated
 
 
-def apply_effect(f, fx, fx_arg):
+class Primitive:
+    def __init__(self, draw):
+        self.draw = draw
+
+
+def apply_effect(a, fx, fx_arg):
     def changed(*kargs, **kwargs):
         with fx(fx_arg):
-            return f(*kargs, **kwargs)
+            return a.draw()
 
-    return changed
+    return Primitive(changed)
 
 
 def primitive(f):
     def decorated(*kargs, **kwargs):
-        return f(*kargs, **kwargs)
+        def draw():
+            f(*kargs, **kwargs)
+
+        return Primitive(draw)
 
     return decorated
 
@@ -118,6 +127,6 @@ def on_layer(name):
 
 def pineal_eval(code, ns):
     def draw():
-        pass
+        exec(code, {})
 
     ns.update({'draw': draw})
