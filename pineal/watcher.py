@@ -24,7 +24,7 @@ class Handler(PatternMatchingEventHandler):
         send_code()
 
 
-def coder():
+def watch():
     send_code()
 
     file_name = config.file_name

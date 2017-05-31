@@ -30,7 +30,7 @@ def safety(stack, namespace):
         eval_last(stack, namespace)
 
 
-def eye():
+def render():
     stack = ['']
     namespace = {}
 
