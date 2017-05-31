@@ -1,4 +1,4 @@
-from pineal.lang import polygon
+from pineal.core import polygon
 
 
 p = polygon(4, [1, 1, 1])\

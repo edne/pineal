@@ -126,10 +126,3 @@ def on_layer(name):
 
     with layer_memo[name]:
         yield
-
-
-def pineal_eval(code, ns):
-    def draw():
-        exec(code, {})
-
-    ns.update({'draw': draw})

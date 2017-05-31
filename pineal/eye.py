@@ -2,10 +2,16 @@ import logging
 from contextlib import contextmanager
 import pyglet
 import pineal.osc as osc
-from pineal.lang import pineal_eval
 from pineal.windows import new_renderer, new_master, new_overview
 
 log = logging.getLogger(__name__)
+
+
+def pineal_eval(code, ns):
+    def draw():
+        exec(code, {})
+
+    ns.update({'draw': draw})
 
 
 def eval_last(stack, namespace):
