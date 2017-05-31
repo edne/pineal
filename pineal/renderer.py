@@ -9,7 +9,7 @@ log = logging.getLogger(__name__)
 
 def pineal_eval(code, ns):
     def draw():
-        exec(code, {})
+        exec(code, ns)
 
     ns.update({'draw': draw})
 
@@ -42,9 +42,6 @@ def render():
 
     def draw():
         with safety(stack, namespace):
-            if 'draw' not in namespace:
-                eval_last(stack, namespace)
-
             namespace['draw']()
 
     renderer = new_renderer(draw, [800, 800])
