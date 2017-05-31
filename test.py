@@ -1,8 +1,9 @@
-from pineal.core import polygon
+from pineal.core import polygon, layer, on_layer
 
+with on_layer('master'):
+    polygon(4, [0, 0, 0]).scale(4).draw()  # TODO: clean_layer() primitive
 
-p = polygon(4, [1, 1, 1])\
-        .scale(0.25)\
-        .rotate(1)
+    polygon(4, [1, 1, 1], fill=False).draw()
+    layer('master').scale(0.5).draw()
 
-p.draw()
+layer('master').draw()

@@ -86,7 +86,7 @@ def image(name):
 
 
 @primitive
-def draw_layer(name):
+def layer(name):
     if name in layer_memo:
         layer_memo[name].texture.blit(-1, 1, 0,
                                       2, -2)
