@@ -17,8 +17,8 @@ _effects = {}
 
 def effect(f):
     @contextmanager
-    def decorated(fx_arg):
-        return f(fx_arg)
+    def decorated(*args, **kwargs):
+        return f(*args, **kwargs)
 
     _effects.update({f.__name__: decorated})
     return decorated
@@ -31,20 +31,20 @@ class Entity:
     def __getattr__(self, attr):
         fx = _effects[attr]
 
-        def method(fx_arg):
-            def changed(*kargs, **kwargs):
-                with fx(fx_arg):
+        def method(*args, **kwargs):
+            def new_draw():
+                with fx(*args, **kwargs):
                     return self.draw()
 
-            return Entity(changed)
+            return Entity(new_draw)
 
         return method
 
 
 def primitive(f):
-    def decorated(*kargs, **kwargs):
+    def decorated(*args, **kwargs):
         def draw():
-            f(*kargs, **kwargs)
+            f(*args, **kwargs)
 
         return Entity(draw)
 
@@ -58,7 +58,7 @@ layer_memo = {}
 
 
 @primitive
-def polygon(sides, color, fill=True, **kwargs):
+def polygon(sides, color, fill=True):
     if fill:
         if sides not in psolid_memo:
             psolid_memo[sides] = solid_polygon(sides)
