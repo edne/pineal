@@ -55,6 +55,7 @@ psolid_memo = {}
 pwired_memo = {}
 image_memo = {}
 layer_memo = {}
+windows_memo = []
 
 
 @primitive
@@ -126,3 +127,41 @@ def on_layer(name):
 
     with layer_memo[name]:
         yield
+
+
+@effect
+def window(name, show_fps=False):
+    with on_layer(name):
+        yield
+
+    if name in windows_memo:
+        return
+    windows_memo.append(name)
+
+    # TODO: hanldle windows closing and show_fps changed runtime
+
+    if show_fps:
+        fps = pyglet.clock.ClockDisplay()
+
+    win = pyglet.window.Window(resizable=True)
+
+    @win.event
+    def on_draw():
+        w, h = win.width, win.height
+        side = max(w, h)
+
+        win.clear()
+
+        gl.glPushMatrix()
+        gl.glTranslatef(w/2, h/2, 0)
+        gl.glScalef(side/2.0, -side/2.0, 1)
+        layer(name).draw()
+        gl.glPopMatrix()
+
+        if show_fps:
+            fps.draw()
+
+    @win.event
+    def on_key_press(symbol, modifiers):
+        if symbol == pyglet.window.key.ESCAPE:
+            return pyglet.event.EVENT_HANDLED
