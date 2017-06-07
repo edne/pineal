@@ -44,10 +44,10 @@ def render():
         with safety(stack, namespace):
             namespace['draw']()
 
-    renderer = new_renderer(draw, [800, 800])
+    new_renderer(draw, [800, 800])
 
-    new_output_window(renderer)
-    new_output_window(renderer, show_fps=True)
+    new_output_window('master')
+    new_output_window('monitor', show_fps=True)
 
     osc.add_callback('/eye/code', callback)
     osc.start_server()

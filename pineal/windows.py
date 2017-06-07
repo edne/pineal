@@ -1,5 +1,6 @@
 import pyglet
 import pyglet.gl as gl
+from pineal.core import layer
 
 
 def new_renderer(draw, size):
@@ -34,7 +35,7 @@ def new_renderer(draw, size):
     return window
 
 
-def new_output_window(renderer, show_fps=False):
+def new_output_window(name, show_fps=False):
     window = pyglet.window.Window(resizable=True)
 
     if show_fps:
@@ -44,14 +45,14 @@ def new_output_window(renderer, show_fps=False):
     def on_draw():
         w, h = window.width, window.height
         side = max(w, h)
-        texture = renderer.texture
 
         window.clear()
-        if texture:
-            texture.blit(-(side - w) / 2,
-                         -(side - h) / 2,
-                         0,
-                         side, side)
+
+        gl.glPushMatrix()
+        gl.glTranslatef(w/2, h/2, 0)
+        gl.glScalef(side/2.0, -side/2.0, 1)
+        layer(name).draw()
+        gl.glPopMatrix()
 
         if show_fps:
             fps.draw()
