@@ -2,20 +2,12 @@ import pyglet
 import pyglet.gl as gl
 
 
-def new_window(*args, **kwargs):
-    window = pyglet.window.Window(*args, **kwargs)
-    return window
-
-
-def new_renderer(vision, size):
-    """
-    Offscreen windows where render stuff
-    """
-    W, H = size
-    window = new_window(caption='(pineal renderer)',
-                        width=W,
-                        height=H,
-                        visible=0)
+def new_renderer(draw, size):
+    w, h = size
+    window = pyglet.window.Window(caption='(pineal renderer)',
+                                  width=w,
+                                  height=h,
+                                  visible=False)
 
     gl.glEnable(gl.GL_BLEND)
     gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA)
@@ -32,23 +24,8 @@ def new_renderer(vision, size):
         pyglet.clock.tick()
         window.clear()
 
-        gl.glMatrixMode(gl.GL_PROJECTION)
         gl.glLoadIdentity()
-        (w, h) = window.get_size()
-        gl.glScalef(
-            float(min(w, h)) / w,
-            -float(min(w, h)) / h,
-            1
-        )
-
-        gl.gluPerspective(45.0, 1, 0.1, 1000.0)
-        gl.gluLookAt(0, 0, 2.4,
-                     0, 0, 0,
-                     0, 1, 0)
-
-        gl.glMatrixMode(gl.GL_MODELVIEW)
-        gl.glLoadIdentity()
-        vision()
+        draw()
 
         buf = pyglet.image.get_buffer_manager().get_color_buffer()
         rawimage = buf.get_image_data()
@@ -57,63 +34,31 @@ def new_renderer(vision, size):
     return window
 
 
-def output_draw(window):
-    w, h = window.width, window.height
-    side = max(w, h)
-    texture = window.source.texture
+def new_output_window(renderer, show_fps=False):
+    window = pyglet.window.Window(resizable=True)
 
-    window.clear()
-    if texture:
-        texture.blit(-(side - w) / 2,
-                     -(side - h) / 2,
-                     0,
-                     side, side)
-
-
-def new_output_window(*args, **kwargs):
-    window = new_window(*args, **kwargs)
+    if show_fps:
+        fps = pyglet.clock.ClockDisplay()
 
     @window.event
     def on_draw():
-        output_draw(window)
+        w, h = window.width, window.height
+        side = max(w, h)
+        texture = renderer.texture
+
+        window.clear()
+        if texture:
+            texture.blit(-(side - w) / 2,
+                         -(side - h) / 2,
+                         0,
+                         side, side)
+
+        if show_fps:
+            fps.draw()
 
     @window.event
     def on_key_press(symbol, modifiers):
         if symbol == pyglet.window.key.ESCAPE:
             return pyglet.event.EVENT_HANDLED
 
-    return window
-
-
-def new_master(source):
-    """
-    Master output, on secondary monitor is exists, hidden otherwise
-    """
-    platform = pyglet.window.get_platform()
-    display = platform.get_default_display()
-    screens = display.get_screens()
-
-    window = new_output_window(caption='(pineal master)',
-                               resizable=True,
-                               screen=screens[-1])
-    window.source = source
-    return window
-
-
-def new_overview(source):
-    """
-    Overview for the programmer, nothing else to say
-    """
-    fps = pyglet.clock.ClockDisplay()
-    window = new_output_window(resizable=True,
-                               caption='(pineal overview)',
-                               width=600,
-                               height=450)
-
-    @window.event
-    def on_draw():
-        output_draw(window)
-        fps.draw()
-
-    window.source = source
     return window

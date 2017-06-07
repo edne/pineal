@@ -2,7 +2,7 @@ import logging
 from contextlib import contextmanager
 import pyglet
 import pineal.osc as osc
-from pineal.windows import new_renderer, new_master, new_overview
+from pineal.windows import new_renderer, new_output_window
 
 log = logging.getLogger(__name__)
 
@@ -46,8 +46,8 @@ def render():
 
     renderer = new_renderer(draw, [800, 800])
 
-    new_master(renderer)
-    new_overview(renderer)
+    new_output_window(renderer)
+    new_output_window(renderer, show_fps=True)
 
     osc.add_callback('/eye/code', callback)
     osc.start_server()
