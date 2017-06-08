@@ -94,17 +94,22 @@ def layer(name):
 
 
 @effect
-def scale(x):
+def scale(x, y=None, z=None):
+    if y is None:
+        y, z = x, x
+    elif z is None:
+        z = 1
+
     gl.glPushMatrix()
-    gl.glScalef(x, x, x)
+    gl.glScalef(x, y, z)
     yield
     gl.glPopMatrix()
 
 
 @effect
-def translate(x):
+def translate(x, y=0, z=0):
     gl.glPushMatrix()
-    gl.glTranslatef(x, 0, 0)
+    gl.glTranslatef(x, y, z)
     yield
     gl.glPopMatrix()
 
@@ -136,14 +141,13 @@ def window(name, show_fps=False):
 
     if name in windows_memo:
         return
+
     windows_memo.append(name)
+    win = pyglet.window.Window(resizable=True)
 
     # TODO: hanldle show_fps changed runtime
-
     if show_fps:
         fps = pyglet.clock.ClockDisplay()
-
-    win = pyglet.window.Window(resizable=True)
 
     @win.event
     def on_draw():
@@ -152,11 +156,10 @@ def window(name, show_fps=False):
 
         win.clear()
 
-        gl.glPushMatrix()
-        gl.glTranslatef(w/2, h/2, 0)
-        gl.glScalef(side/2.0, -side/2.0, 1)
-        layer(name).draw()
-        gl.glPopMatrix()
+        layer(name)\
+            .scale(side/2.0, -side/2.0)\
+            .translate(w/2, h/2)\
+            .draw()
 
         if show_fps:
             fps.draw()
