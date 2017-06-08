@@ -138,7 +138,7 @@ def window(name, show_fps=False):
         return
     windows_memo.append(name)
 
-    # TODO: hanldle windows closing and show_fps changed runtime
+    # TODO: hanldle show_fps changed runtime
 
     if show_fps:
         fps = pyglet.clock.ClockDisplay()
@@ -160,6 +160,10 @@ def window(name, show_fps=False):
 
         if show_fps:
             fps.draw()
+
+    @win.event
+    def on_close():
+        windows_memo.remove(name)
 
     @win.event
     def on_key_press(symbol, modifiers):
