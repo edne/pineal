@@ -77,7 +77,7 @@ def render():
 
     rendering_window(draw, 800, 800)
 
-    osc.add_callback('/eye/code', callback)
+    osc.add_callback('/code', callback)
     osc.start_server()
 
     pyglet.clock.schedule_interval(lambda dt: None, 1/120)
