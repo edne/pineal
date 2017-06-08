@@ -40,46 +40,55 @@ def rendering_window(draw, h, w):
 
 
 def pineal_eval(code, ns):
+    # TODO: avoid the use af an inner draw() function
     def draw():
         exec(code, ns)
 
     ns.update({'draw': draw})
 
 
-def eval_last(stack, namespace):
+def eval_last(stack, ns):
     if stack:
-        pineal_eval(stack[-1], namespace)
+        pineal_eval(stack[-1], ns)
 
 
 @contextmanager
-def safety(stack, namespace):
+def safety(stack, ns):
     try:
         yield
     except Exception as e:
         log.error(str(e))
         if stack:
             stack.pop()
-        eval_last(stack, namespace)
+        eval_last(stack, ns)
 
 
-def render():
-    stack = ['']
-    namespace = {}
+def safe_eval(code, ns, stack):
+    with safety(stack, ns):
+        pineal_eval(code, ns)
+        stack.append(code)
+
+
+def render(file_name):
+    with open(file_name) as f:
+        initial_code = f.read()
+
+    stack = [initial_code]
+    ns = {}
+
+    safe_eval(initial_code, ns, stack)
 
     def callback(path, values):
         code = values[0]
-        with safety(stack, namespace):
-            pineal_eval(code, namespace)
-            stack.append(code)
-
-    def draw():
-        with safety(stack, namespace):
-            namespace['draw']()
-
-    rendering_window(draw, 800, 800)
+        safe_eval(code, ns, stack)
 
     osc.add_callback('/code', callback)
 
+    def draw():
+        with safety(stack, ns):
+            ns['draw']()
+
+    rendering_window(draw, 800, 800)
     pyglet.clock.schedule_interval(lambda dt: None, 1/120)
 
     t = Thread(target=pyglet.app.run)

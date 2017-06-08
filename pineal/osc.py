@@ -1,6 +1,5 @@
 from threading import Thread
 import liblo
-import config
 
 callbacks = {}
 sources = {}
@@ -12,8 +11,7 @@ def dispatcher(path, args, tags):
             callbacks[k](path, args)
 
 
-def receive():
-    _, port = config.osc_addr
+def receive(port):
     server = liblo.Server(port)
     server.add_method(None, None, dispatcher)
     # return server.start
