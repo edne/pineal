@@ -1,3 +1,4 @@
+from threading import Thread
 import liblo
 import config
 
@@ -11,14 +12,19 @@ def dispatcher(path, args, tags):
             callbacks[k](path, args)
 
 
-def osc_receiver():
+def receive():
     _, port = config.osc_addr
-    server = liblo.ServerThread(port)
+    server = liblo.Server(port)
     server.add_method(None, None, dispatcher)
-    return server.start
+    # return server.start
 
+    def recv():
+        while True:
+            server.recv()
 
-start_server = osc_receiver()
+    t = Thread(target=recv)
+    t.daemon = True
+    t.start()
 
 
 def add_callback(key, cb):

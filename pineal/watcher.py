@@ -36,4 +36,5 @@ def watch():
 
     observer = Observer()
     observer.schedule(handler, folder, False)
+    observer.daemon = True
     observer.start()

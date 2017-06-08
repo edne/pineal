@@ -1,4 +1,5 @@
 import logging
+from threading import Thread
 from contextlib import contextmanager
 import pyglet
 import pyglet.gl as gl
@@ -78,7 +79,9 @@ def render():
     rendering_window(draw, 800, 800)
 
     osc.add_callback('/code', callback)
-    osc.start_server()
 
     pyglet.clock.schedule_interval(lambda dt: None, 1/120)
-    pyglet.app.run()
+
+    t = Thread(target=pyglet.app.run)
+    t.daemon = True
+    t.start()
