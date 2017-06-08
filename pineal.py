@@ -5,6 +5,7 @@ import logging
 from pineal.osc import receive
 from pineal.renderer import render
 from pineal.watcher import watch
+from pineal.listener import listen
 
 import config
 
@@ -21,6 +22,7 @@ if __name__ == '__main__':
     receive(port)
     render(file_name)
     watch(file_name, osc_addr)
+    listen('default', 2)
 
     try:
         while True:
