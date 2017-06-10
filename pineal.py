@@ -3,16 +3,11 @@ from sys import argv, exit
 from time import sleep
 import logging
 
-from pineal.osc import receive
 from pineal.renderer import render
 from pineal.watcher import watch
 from pineal.listener import listen
 
-import config
-
-logging.basicConfig(level=(logging.DEBUG
-                           if config.log_level == 'debug'
-                           else logging.WARNING))
+logging.basicConfig(level=logging.DEBUG)
 
 
 if __name__ == '__main__':
@@ -22,12 +17,8 @@ if __name__ == '__main__':
 
     file_name = argv[1]
 
-    osc_addr = config.osc_addr
-    _, port = osc_addr
-
-    receive(port)
     render(file_name)
-    watch(file_name, osc_addr)
+    watch(file_name)
     listen('default', 2)
 
     try:

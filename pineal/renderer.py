@@ -3,7 +3,7 @@ from threading import Thread
 from contextlib import contextmanager
 import pyglet
 import pyglet.gl as gl
-import pineal.osc as osc
+import pineal.watcher as watcher
 
 log = logging.getLogger(__name__)
 
@@ -67,12 +67,8 @@ def render(file_name):
     ns = {}
 
     safe_eval(initial_code, ns, stack)
-
-    def callback(path, values):
-        code = values[0]
-        safe_eval(code, ns, stack)
-
-    osc.add_callback('/code', callback)
+    watcher.add_callback(lambda code:
+                         safe_eval(code, ns, stack))
 
     def draw():
         with safety(stack, ns):
