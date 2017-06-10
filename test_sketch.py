@@ -9,17 +9,17 @@ def rms(x):
     return np.sqrt(np.mean(np.square(x)))
 
 
-stroke_weight(2)
+def draw():
+    stroke_weight(2)
 
-with window('master'):
-    polygon(4, [0, 0, 0, 0.1]).scale(4).draw()  # TODO: fill layer
+    with window('master'):
+        polygon(4, [0, 0, 0, 0.1]).scale(4).draw()  # TODO: fill layer
 
-    polygon(4, [1, 1, 1], fill=False).draw()
-    layer('master').scale(time() % 1).draw()
+        polygon(4, [1, 1, 1], fill=False).draw()
+        layer('master').scale(time() % 1).draw()
 
-    r, l = get_audio_data()
-    polygon(4, [1, 1, 1]).scale(rms(r) * 4).draw()
+        r, l = get_audio_data()
+        polygon(4, [1, 1, 1]).scale(rms(r) * 4).draw()
 
-
-with window('monitor', show_fps=True):
-    layer('master').draw()
+    with window('monitor', show_fps=True):
+        layer('master').draw()

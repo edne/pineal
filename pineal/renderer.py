@@ -29,17 +29,9 @@ def rendering_window(draw, h, w):
         draw()
 
 
-def pineal_eval(code, ns):
-    # TODO: avoid the use af an inner draw() function
-    def draw():
-        exec(code, ns)
-
-    ns.update({'draw': draw})
-
-
 def eval_last(stack, ns):
     if stack:
-        pineal_eval(stack[-1], ns)
+        exec(stack[-1], ns)
 
 
 @contextmanager
@@ -55,7 +47,7 @@ def safety(stack, ns):
 
 def safe_eval(code, ns, stack):
     with safety(stack, ns):
-        pineal_eval(code, ns)
+        exec(code, ns)
         stack.append(code)
 
 
@@ -70,11 +62,14 @@ def render(file_name):
     watcher.add_callback(lambda code:
                          safe_eval(code, ns, stack))
 
-    def draw():
+    if 'draw' not in ns:
+        raise Exception('No draw() function defined')
+
+    def safe_draw():
         with safety(stack, ns):
             ns['draw']()
 
-    rendering_window(draw, 800, 800)
+    rendering_window(safe_draw, 800, 800)
     pyglet.clock.schedule_interval(lambda dt: None, 1/120)
 
     t = Thread(target=pyglet.app.run)
