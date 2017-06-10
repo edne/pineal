@@ -1,4 +1,6 @@
+hy==0.11.1
 pyglet
-pyliblo
-jack-client
+watchdog
 atomos
+pyaudio
+numpy
