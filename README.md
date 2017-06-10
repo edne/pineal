@@ -10,8 +10,8 @@ Disclaimer
 ----------
 
 This project is under an heavy rewriting/refactoring, thigs are changing
-frequently, if you wat to try it anyway (it is more or less working and tested)
-read the following section.
+frequently, if you want to try it anyway (it is more or less working and
+tested) read the following section.
 
 
 Usage
