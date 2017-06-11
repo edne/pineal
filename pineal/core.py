@@ -7,6 +7,8 @@ import pyglet.image
 from pyglet.image.codecs.png import PNGImageDecoder
 
 from pineal.shapes import solid_polygon, wired_polygon
+from pineal.framebuffer import Framebuffer
+
 
 log = logging.getLogger(__name__)
 
@@ -137,8 +139,6 @@ def rotate(angle):
 
 @effect
 def on_layer(name):
-    from pineal.framebuffer import Framebuffer
-
     if name not in layer_memo:
         layer_memo[name] = Framebuffer(800, 800)
 

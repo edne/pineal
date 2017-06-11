@@ -4,14 +4,14 @@ from pyglet.image import Texture
 
 
 def buffer_texture(width, height):
-    _id = gl.GLuint()
-    gl.glGenTextures(1, byref(_id))
+    id_ = gl.GLuint()
+    gl.glGenTextures(1, byref(id_))
 
     gl.glPushAttrib(gl.GL_ENABLE_BIT | gl.GL_TEXTURE_BIT)
     gl.glActiveTexture(gl.GL_TEXTURE0)
     gl.glEnable(gl.GL_TEXTURE_2D)
 
-    gl.glBindTexture(gl.GL_TEXTURE_2D, _id)
+    gl.glBindTexture(gl.GL_TEXTURE_2D, id_)
 
     gl.glTexParameteri(gl.GL_TEXTURE_2D,
                        gl.GL_TEXTURE_MIN_FILTER,
@@ -31,13 +31,10 @@ def buffer_texture(width, height):
     gl.glBindTexture(gl.GL_TEXTURE_2D, 0)
     gl.glPopAttrib()
 
-    return _id
+    return id_
 
 
-class Framebuffer(object):
-    def draw(self):
-        pass
-
+class Framebuffer:
     def __init__(self, width, height):
         if not gl.gl_info.have_extension('GL_EXT_framebuffer_object'):
             raise Exception('framebuffer object extension not available')
@@ -49,12 +46,13 @@ class Framebuffer(object):
         gl.glGenFramebuffersEXT(1, byref(framebuffer_id))
         self.id = framebuffer_id.value
 
-        with self:
-            gl.glFramebufferTexture2DEXT(gl.GL_FRAMEBUFFER_EXT,
-                                         gl.GL_COLOR_ATTACHMENT0_EXT + 0,
-                                         gl.GL_TEXTURE_2D,
-                                         texture_id,
-                                         0)
+        gl.glBindFramebufferEXT(gl.GL_FRAMEBUFFER_EXT, gl.GLuint(self.id))
+        gl.glFramebufferTexture2DEXT(gl.GL_FRAMEBUFFER_EXT,
+                                     gl.GL_COLOR_ATTACHMENT0_EXT + 0,
+                                     gl.GL_TEXTURE_2D,
+                                     texture_id,
+                                     0)
+        gl.glBindFramebufferEXT(gl.GL_FRAMEBUFFER_EXT, 0)
 
     def __enter__(self):
         gl.glBindFramebufferEXT(gl.GL_FRAMEBUFFER_EXT, gl.GLuint(self.id))
