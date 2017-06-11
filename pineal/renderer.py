@@ -1,5 +1,4 @@
 import logging
-from threading import Thread
 from contextlib import contextmanager
 import pyglet
 import pyglet.gl as gl
@@ -15,10 +14,10 @@ def rendering_window(draw, h, w):
     gl.glEnable(gl.GL_BLEND)
     gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA)
 
-    gl.glEnable(gl.GL_LINE_SMOOTH)
-    gl.glEnable(gl.GL_POLYGON_SMOOTH)
-    gl.glHint(gl.GL_LINE_SMOOTH_HINT, gl.GL_NICEST)
-    gl.glHint(gl.GL_POLYGON_SMOOTH_HINT, gl.GL_NICEST)
+    # gl.glEnable(gl.GL_LINE_SMOOTH)
+    # gl.glEnable(gl.GL_POLYGON_SMOOTH)
+    # gl.glHint(gl.GL_LINE_SMOOTH_HINT, gl.GL_NICEST)
+    # gl.glHint(gl.GL_POLYGON_SMOOTH_HINT, gl.GL_NICEST)
 
     @window.event
     def on_draw():
@@ -27,6 +26,9 @@ def rendering_window(draw, h, w):
         window.clear()
         gl.glLoadIdentity()
         draw()
+
+    pyglet.clock.set_fps_limit(30)
+    pyglet.clock.schedule_interval(lambda dt: None, 1.0/30)
 
 
 def eval_last(stack, ns):
@@ -70,8 +72,4 @@ def render(file_name):
             ns['draw']()
 
     rendering_window(safe_draw, 800, 800)
-    pyglet.clock.schedule_interval(lambda dt: None, 1/120)
-
-    t = Thread(target=pyglet.app.run)
-    t.daemon = True
-    t.start()
+    pyglet.app.run()

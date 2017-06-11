@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 from sys import argv, exit
-from time import sleep
 import logging
 
 from pineal.renderer import render
@@ -17,12 +16,10 @@ if __name__ == '__main__':
 
     file_name = argv[1]
 
-    render(file_name)
     watch(file_name)
     listen('default', 2)
 
     try:
-        while True:
-            sleep(1)
+        render(file_name)  # blocking
     except KeyboardInterrupt:
         print()
