@@ -7,7 +7,6 @@ import pyglet.image
 from pyglet.image.codecs.png import PNGImageDecoder
 
 from pineal.shapes import solid_polygon, wired_polygon
-from pineal.colors import color as color_
 
 log = logging.getLogger(__name__)
 
@@ -51,6 +50,19 @@ def primitive(f):
     return decorated
 
 
+def make_color(x):
+    "try to cast x to (r, g, b, a)"
+
+    if len(x) == 4:
+        return tuple(x)
+
+    elif len(x) == 3:
+        return tuple(x) + (1, )
+
+    else:
+        raise TypeError("Invalid color")
+
+
 psolid_memo = {}
 pwired_memo = {}
 image_memo = {}
@@ -65,14 +77,14 @@ def polygon(sides, color, fill=True):
             psolid_memo[sides] = solid_polygon(sides)
 
         vlist = psolid_memo[sides]
-        vlist.colors = color_(color) * (sides * 3)
+        vlist.colors = make_color(color) * (sides * 3)
         vlist.draw(gl.GL_TRIANGLES)
     else:
         if sides not in pwired_memo:
             pwired_memo[sides] = wired_polygon(sides)
 
         vlist = pwired_memo[sides]
-        vlist.colors = color_(color) * sides
+        vlist.colors = make_color(color) * sides
         vlist.draw(gl.GL_LINE_LOOP)
 
 
@@ -172,3 +184,9 @@ def window(name, show_fps=False):
     def on_key_press(symbol, modifiers):
         if symbol == pyglet.window.key.ESCAPE:
             return pyglet.event.EVENT_HANDLED
+
+
+def stroke_weight(w):
+    "OpenGL lines width"
+    # TODO: make it an effect
+    gl.glLineWidth(w)

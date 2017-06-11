@@ -1,7 +1,6 @@
 from time import time
 import numpy as np
-from pineal.core import polygon, layer, window
-from pineal.colors import stroke_weight
+from pineal.core import polygon, layer, window, stroke_weight
 from pineal.listener import get_audio_data
 
 
