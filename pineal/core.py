@@ -42,7 +42,7 @@ class Entity:
         return method
 
 
-def primitive(f):
+def entity(f):
     def decorated(*args, **kwargs):
         def draw():
             f(*args, **kwargs)
@@ -72,7 +72,7 @@ layer_memo = {}
 windows_memo = []
 
 
-@primitive
+@entity
 def polygon(sides, color, fill=True):
     if fill:
         if sides not in psolid_memo:
@@ -90,7 +90,7 @@ def polygon(sides, color, fill=True):
         vlist.draw(gl.GL_LINE_LOOP)
 
 
-@primitive
+@entity
 def image(name):
     if name not in image_memo:
         img = pyglet.image.load("images/%s.png" % name,
@@ -100,7 +100,7 @@ def image(name):
                               2.0, 2.0)
 
 
-@primitive
+@entity
 def layer(name):
     if name in layer_memo:
         layer_memo[name].texture.blit(-1, 1, 0,
