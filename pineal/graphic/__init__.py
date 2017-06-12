@@ -62,6 +62,15 @@ def make_color(x):
     elif len(x) == 3:
         return tuple(x) + (1, )
 
+    # TODO: return from palette
+    elif len(x) == 2:
+        v, a = x
+        return (v, v, v) + (a, )
+
+    elif len(x) == 1:
+        v, = x
+        return (v, v, v) + (1, )
+
     else:
         raise TypeError("Invalid color")
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from time import time
+# from time import time
 import numpy as np
 import pineal
 from pineal.graphic import polygon, layer, window, stroke_weight
@@ -14,24 +14,29 @@ def rms(x):
 
 
 def draw():
-    stroke_weight(2)
+    stroke_weight(4)
     r, l = get_audio_data()
 
     with window('master'):
         # TODO: fill layer
-        polygon(4, [0, 0, 0, 0.1])\
+        polygon(4, [0, 0.5], fill=True)\
             .scale(4)\
             .draw()
 
-        polygon(4, [1, 1, 1], fill=False)\
+        polygon(4, [1], fill=False)\
+            .draw()
+
+        polygon(4, [1], fill=False)\
+            .scale(rms(r) * 0.4)\
+            .rotate(0*rms(l), [1, 0, 0])\
             .draw()
 
         layer('master')\
-            .scale(time() % 1)\
+            .scale(0.1 + rms(r))\
             .draw()
 
-        polygon(4, [1, 1, 1])\
-            .scale(rms(r) * 4)\
+        layer('master')\
+            .scale(0.99 + rms(r))\
             .draw()
 
     with window('monitor', show_fps=True):
