@@ -2,7 +2,7 @@
 from time import time
 import numpy as np
 import pineal
-from pineal.core import polygon, layer, window, stroke_weight
+from pineal.graphic import polygon, layer, window, stroke_weight
 from pineal.listener import get_audio_data
 
 

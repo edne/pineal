@@ -6,8 +6,9 @@ import pyglet.gl as gl
 import pyglet.image
 from pyglet.image.codecs.png import PNGImageDecoder
 
-from pineal.shapes import solid_polygon, wired_polygon
-from pineal.framebuffer import Framebuffer
+import hy  # TODO: move content of shapes.hy here
+from .shapes import solid_polygon, wired_polygon
+from .framebuffer import Framebuffer
 
 
 log = logging.getLogger(__name__)
