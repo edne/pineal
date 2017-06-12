@@ -129,10 +129,9 @@ def translate(x, y=0, z=0):
 
 
 @effect
-def rotate(angle):
+def rotate(angle, axis=(0, 0, 1)):
     gl.glPushMatrix()
-    gl.glRotatef(angle * 180 / pi,
-                 0, 0, 1)
+    gl.glRotatef(angle * 180 / pi, *axis)
     yield
     gl.glPopMatrix()
 
