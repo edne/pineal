@@ -58,7 +58,7 @@ def render(file_name):
         initial_code = f.read()
 
     stack = [initial_code]
-    ns = {}
+    ns = {'__file__': ''}
 
     safe_eval(initial_code, ns, stack)
     watcher.add_callback(lambda code:

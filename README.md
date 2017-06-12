@@ -26,7 +26,7 @@ pip install -r requirements.txt
 and run:
 
 ```
-./pineal.py test_sketch.py
+./test_sketch.py
 ```
 
 then open `test_sketch.py` with your favorite editor and start messing with it.
