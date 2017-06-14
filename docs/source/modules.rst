@@ -5,4 +5,3 @@ pineal
    :maxdepth: 4
 
    pineal
-   test_sketch
