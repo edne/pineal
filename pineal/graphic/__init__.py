@@ -6,7 +6,6 @@ import pyglet.gl as gl
 import pyglet.image
 from pyglet.image.codecs.png import PNGImageDecoder
 
-import hy  # TODO: move content of shapes.hy here
 from .shapes import solid_polygon, wired_polygon
 from .framebuffer import Framebuffer
 
@@ -54,7 +53,7 @@ def entity(f):
 
 
 def make_color(x):
-    "try to cast x to (r, g, b, a)"
+    'Try to cast x to (r, g, b, a)'
 
     if len(x) == 4:
         return tuple(x)
@@ -72,7 +71,7 @@ def make_color(x):
         return (v, v, v) + (1, )
 
     else:
-        raise TypeError("Invalid color")
+        raise TypeError('Invalid color')
 
 
 psolid_memo = {}
