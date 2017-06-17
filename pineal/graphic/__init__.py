@@ -6,8 +6,8 @@ import pyglet.gl as gl
 import pyglet.image
 from pyglet.image.codecs.png import PNGImageDecoder
 
-from .shapes import solid_polygon, wired_polygon
-from .framebuffer import Framebuffer
+from pineal.graphic.shapes import solid_polygon, wired_polygon
+from pineal.graphic.framebuffer import Framebuffer
 
 
 log = logging.getLogger(__name__)
@@ -17,6 +17,31 @@ _effects = {}
 
 
 def effect(f):
+    '''Effects are the transformations applied to the drawing elements.
+
+    A new effect is defined with a decorator:
+        >>> @effect
+        ... def my_effect(a, b, c):
+        ...     print('before')
+        ...     yield
+        ...     print('after')
+
+    And then used as a context manager:
+        >>> with my_effect(1, 2, 3):
+        ...     print('here draw something')
+        before
+        here draw something
+        after
+
+    Or as method of an entity:
+        >>> e = Entity(lambda: print('here draw something'))
+        >>> e.my_effect(1, 2, 3).draw()
+        before
+        here draw something
+        after
+
+    '''
+
     @contextmanager
     def decorated(*args, **kwargs):
         return f(*args, **kwargs)
@@ -26,6 +51,12 @@ def effect(f):
 
 
 class Entity:
+    '''Entity object, a "thing" with a `.draw()` method.
+
+        >>> e = Entity(lambda: print('draw something'))
+        >>> e.draw()
+        draw something
+    '''
     def __init__(self, draw):
         self.draw = draw
 
@@ -43,6 +74,16 @@ class Entity:
 
 
 def entity(f):
+    '''Decorator to define entities.
+
+    Usage:
+        >>> @entity
+        ... def my_entity(a, b, c):
+        ...     print('draw something', a, b, c)
+
+        >>> my_entity(1, 2, 3).draw()
+        draw something 1 2 3
+    '''
     def decorated(*args, **kwargs):
         def draw():
             f(*args, **kwargs)
