@@ -21,25 +21,28 @@ def effect(f):
     '''Effects are the transformations applied to the drawing elements.
 
     A new effect is defined with a decorator:
-        >>> @effect
-        ... def my_effect(a, b, c):
-        ...     print('before')
-        ...     yield
-        ...     print('after')
+
+    >>> @effect
+    ... def my_effect(a, b, c):
+    ...     print('before')
+    ...     yield
+    ...     print('after')
 
     And then used as a context manager:
-        >>> with my_effect(1, 2, 3):
-        ...     print('here draw something')
-        before
-        here draw something
-        after
+
+    >>> with my_effect(1, 2, 3):
+    ...     print('here draw something')
+    before
+    here draw something
+    after
 
     Or as method of an entity:
-        >>> e = Entity(lambda: print('here draw something'))
-        >>> e.my_effect(1, 2, 3).draw()
-        before
-        here draw something
-        after
+
+    >>> e = Entity(lambda: print('here draw something'))
+    >>> e.my_effect(1, 2, 3).draw()
+    before
+    here draw something
+    after
 
     '''
 
@@ -54,9 +57,9 @@ def effect(f):
 class Entity:
     '''Entity object, a "thing" with a `.draw()` method.
 
-        >>> e = Entity(lambda: print('draw something'))
-        >>> e.draw()
-        draw something
+    >>> e = Entity(lambda: print('draw something'))
+    >>> e.draw()
+    draw something
     '''
     def __init__(self, draw):
         self.draw = draw
@@ -78,12 +81,13 @@ def entity(f):
     '''Decorator to define entities.
 
     Usage:
-        >>> @entity
-        ... def my_entity(a, b, c):
-        ...     print('draw something', a, b, c)
 
-        >>> my_entity(1, 2, 3).draw()
-        draw something 1 2 3
+    >>> @entity
+    ... def my_entity(a, b, c):
+    ...     print('draw something', a, b, c)
+
+    >>> my_entity(1, 2, 3).draw()
+    draw something 1 2 3
     '''
     def decorated(*args, **kwargs):
         def draw():
@@ -95,7 +99,7 @@ def entity(f):
 
 
 def make_color(*args):
-    '''Cornvert args in an (r, g, b, a) tuple.
+    '''Convert args in an (r, g, b, a) tuple.
 
     >>> make_color(1, 0, 0, 0.5)
     (1, 0, 0, 0.5)

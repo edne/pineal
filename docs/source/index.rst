@@ -10,5 +10,4 @@ Welcome to pineal's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   pineal
-   pineal.graphic
+   apis
