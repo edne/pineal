@@ -93,22 +93,39 @@ def entity(f):
     return decorated
 
 
-def make_color(x):
-    'Try to cast x to (r, g, b, a)'
+def make_color(*args):
+    '''Cornvert args in an (r, g, b, a) tuple.
 
-    if len(x) == 4:
-        return tuple(x)
+    >>> make_color(1, 0, 0, 0.5)
+    (1, 0, 0, 0.5)
 
-    elif len(x) == 3:
-        return tuple(x) + (1, )
+    >>> make_color(0, 1, 0)
+    (0, 1, 0, 1)
 
-    # TODO: return from palette
-    elif len(x) == 2:
-        v, a = x
+    >>> make_color(0.3, 0.6)
+    (0.3, 0.3, 0.3, 0.6)
+
+    TODO: use the first item as index in a palette.
+
+    >>> make_color(0.3)
+    (0.3, 0.3, 0.3, 1)
+
+    TODO: from string with hex html notation
+
+    '''
+
+    if len(args) == 4:
+        return tuple(args)
+
+    elif len(args) == 3:
+        return tuple(args) + (1, )
+
+    elif len(args) == 2:
+        v, a = args
         return (v, v, v) + (a, )
 
-    elif len(x) == 1:
-        v, = x
+    elif len(args) == 1:
+        v, = args
         return (v, v, v) + (1, )
 
     else:
@@ -129,14 +146,14 @@ def polygon(sides, color, fill=True):
             psolid_memo[sides] = solid_polygon(sides)
 
         vlist = psolid_memo[sides]
-        vlist.colors = make_color(color) * (sides * 3)
+        vlist.colors = make_color(*color) * (sides * 3)
         vlist.draw(gl.GL_TRIANGLES)
     else:
         if sides not in pwired_memo:
             pwired_memo[sides] = wired_polygon(sides)
 
         vlist = pwired_memo[sides]
-        vlist.colors = make_color(color) * sides
+        vlist.colors = make_color(*color) * sides
         vlist.draw(gl.GL_LINE_LOOP)
 
 
