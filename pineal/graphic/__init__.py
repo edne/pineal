@@ -4,6 +4,7 @@ from math import pi
 
 import pyglet.gl as gl
 import pyglet.image
+from pyglet.graphics import vertex_list
 from pyglet.image.codecs.png import PNGImageDecoder
 
 from pineal.graphic.shapes import solid_polygon, wired_polygon
@@ -140,20 +141,24 @@ windows_memo = []
 
 
 @entity
-def polygon(sides, color, fill=True):
+def polygon(n, color, fill=True):
     if fill:
-        if sides not in psolid_memo:
-            psolid_memo[sides] = solid_polygon(sides)
+        if n not in psolid_memo:
+            psolid_memo[n] = vertex_list(n*3,
+                                         ('v2f/static', solid_polygon(n)),
+                                         ('c4f/stream', [1]*4 * 3*n))
 
-        vlist = psolid_memo[sides]
-        vlist.colors = make_color(*color) * (sides * 3)
+        vlist = psolid_memo[n]
+        vlist.colors = make_color(*color) * n*3
         vlist.draw(gl.GL_TRIANGLES)
     else:
-        if sides not in pwired_memo:
-            pwired_memo[sides] = wired_polygon(sides)
+        if n not in pwired_memo:
+            pwired_memo[n] = vertex_list(n,
+                                         ('v2f/static', wired_polygon(n)),
+                                         ('c4f/stream', [1]*4 * n))
 
-        vlist = pwired_memo[sides]
-        vlist.colors = make_color(*color) * sides
+        vlist = pwired_memo[n]
+        vlist.colors = make_color(*color) * n
         vlist.draw(gl.GL_LINE_LOOP)
 
 
