@@ -31,25 +31,21 @@ def rendering_window(draw, h, w):
     pyglet.clock.schedule_interval(lambda dt: None, 1.0/30)
 
 
-def eval_last(stack, ns):
-    if stack:
-        exec(stack[-1], ns)
-
-
 @contextmanager
-def safety(stack, ns):
+def safety(stack, ns, exec_fn):
     try:
         yield
     except Exception as e:
         log.error(str(e))
         if stack:
             stack.pop()
-        eval_last(stack, ns)
+        if stack:
+            exec_fn(stack[-1], ns)
 
 
-def safe_eval(code, ns, stack):
-    with safety(stack, ns):
-        exec(code, ns)
+def safe_eval(code, ns, stack, exec_fn):
+    with safety(stack, ns, exec_fn):
+        exec_fn(code, ns)
         stack.append(code)
 
 
@@ -60,15 +56,15 @@ def render(file_name):
     stack = [initial_code]
     ns = {'__file__': ''}
 
-    safe_eval(initial_code, ns, stack)
+    safe_eval(initial_code, ns, stack, exec)
     watcher.add_callback(lambda code:
-                         safe_eval(code, ns, stack))
+                         safe_eval(code, ns, stack, exec))
 
     if 'draw' not in ns:
         raise Exception('No draw() function defined')
 
     def safe_draw():
-        with safety(stack, ns):
+        with safety(stack, ns, exec):
             ns['draw']()
 
     rendering_window(safe_draw, 800, 800)
