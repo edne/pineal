@@ -1,5 +1,8 @@
 import logging
 from contextlib import contextmanager
+from hy.lex import tokenize
+from hy.importer import hy_eval
+from hy.models import HyList
 import pyglet
 import pyglet.gl as gl
 import pineal.watcher as watcher
@@ -50,8 +53,17 @@ def safe_eval(code, ns, stack, exec_fn):
 
 
 def render(file_name):
-    def exec_fn(code, ns):
-        exec(code, ns)  # in Python2 exec is not a function
+    if file_name.endswith('.py'):
+        def exec_fn(code, ns):
+            exec(code, ns)  # in Python2 exec is not a function
+
+    elif file_name.endswith('.hy'):
+        def exec_fn(code, ns):
+            tokens = HyList(tokenize(code))
+            hy_eval(tokens, ns, '__pineal__')
+
+    else:
+        raise Exception('Invalid file format')
 
     with open(file_name) as f:
         initial_code = f.read()
