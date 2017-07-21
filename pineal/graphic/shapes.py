@@ -6,7 +6,7 @@ def vertex(n, i):
     return cos(theta), sin(theta)
 
 
-def face(n, i):
+def make_face(n, i):
     return [(0, 0),
             vertex(n, i),
             vertex(n, i+1)]
@@ -25,7 +25,7 @@ def wired_polygon(n):
 
 def solid_polygon(n):
     'Make the pyglet.vertex_list for a solid color polygon.'
-    faces = [face(n, i)
+    faces = [make_face(n, i)
              for i in range(n)]
     coords = [coord
               for face in faces

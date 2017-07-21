@@ -50,21 +50,24 @@ def safe_eval(code, ns, stack, exec_fn):
 
 
 def render(file_name):
+    def exec_fn(code, ns):
+        exec(code, ns)  # in Python2 exec is not a function
+
     with open(file_name) as f:
         initial_code = f.read()
 
     stack = [initial_code]
     ns = {'__file__': ''}
 
-    safe_eval(initial_code, ns, stack, exec)
+    safe_eval(initial_code, ns, stack, exec_fn)
     watcher.add_callback(lambda code:
-                         safe_eval(code, ns, stack, exec))
+                         safe_eval(code, ns, stack, exec_fn))
 
     if 'draw' not in ns:
         raise Exception('No draw() function defined')
 
     def safe_draw():
-        with safety(stack, ns, exec):
+        with safety(stack, ns, exec_fn):
             ns['draw']()
 
     rendering_window(safe_draw, 800, 800)
